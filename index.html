@@ -753,8 +753,10 @@
             <div class="text-[10px] mono text-gray-400 mb-2">🧬 Granger 인과 (시차 + p값)</div>
             <div id="causal-granger-list" class="space-y-1 text-[10px]"></div>
           </div>
-          <div class="glass-light rounded-lg p-3" style="max-height:200px; overflow-y:auto;">
+          <div class="glass-light rounded-lg p-3" style="max-height:420px; overflow-y:auto;">
             <div class="text-[10px] mono text-gray-400 mb-2">↔ Pearson 상관 (|r|)</div>
+            <svg id="causal-pearson-matrix" width="100%" viewBox="0 0 220 220" style="display:block;margin:0 auto 8px"></svg>
+            <div id="causal-pearson-tooltip" class="text-[9px] mono text-gray-400 mb-2" style="min-height:14px"></div>
             <div id="causal-pearson-list" class="space-y-1 text-[10px]"></div>
           </div>
           <div class="glass-light rounded-lg p-3">

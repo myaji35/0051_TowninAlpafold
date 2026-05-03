@@ -3604,6 +3604,96 @@ function drawCausalGraph() {
   fillCausalLists();
 }
 
+// [CORR_MATRIX-001] 5x5 Pearson 상관 매트릭스 — pLDDT 팔레트 (>=0.9 hi / >=0.7 mid / >=0.5 low / poor)
+const PEARSON_LAYERS = ['biz_count','biz_cafe','visitors_total','tx_volume','land_price'];
+function pearsonHexByR(absR){
+  if (absR >= 0.9) return '#00529B';
+  if (absR >= 0.7) return '#5BC0EB';
+  if (absR >= 0.5) return '#FED766';
+  return '#C9485B';
+}
+function renderPearsonMatrix(pairs){
+  const svg = document.getElementById('causal-pearson-matrix');
+  const tip = document.getElementById('causal-pearson-tooltip');
+  if (!svg) return;
+  const labels = (CAUSAL && CAUSAL.meta && CAUSAL.meta.layer_label) || {};
+  const layers = PEARSON_LAYERS;
+  const N = layers.length;
+  const lookup = {};
+  (pairs||[]).forEach(p => {
+    lookup[p.a + '|' + p.b] = p;
+    lookup[p.b + '|' + p.a] = p;
+  });
+  const left = 56, top = 16, cell = 30;
+  const w = left + cell * N + 8;
+  const h = top + cell * N + 24;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  let s = '';
+  // 행 라벨 (왼쪽)
+  for (let i = 0; i < N; i++){
+    const lbl = labels[layers[i]] || layers[i];
+    s += `<text x="${left-6}" y="${top + cell*i + cell/2 + 3}" text-anchor="end" fill="#A4B0C0" font-size="9" font-family="ui-sans-serif,-apple-system">${lbl}</text>`;
+  }
+  // 열 라벨 (아래)
+  for (let j = 0; j < N; j++){
+    const lbl = labels[layers[j]] || layers[j];
+    s += `<text x="${left + cell*j + cell/2}" y="${top + cell*N + 14}" text-anchor="middle" fill="#A4B0C0" font-size="9" font-family="ui-sans-serif,-apple-system">${lbl}</text>`;
+  }
+  // 셀
+  for (let i = 0; i < N; i++){
+    for (let j = 0; j < N; j++){
+      const x = left + cell * j;
+      const y = top + cell * i;
+      let fill, txt, abs, r;
+      if (i === j){
+        fill = '#1A2330'; txt = '·'; abs = 1; r = 1;
+      } else {
+        const p = lookup[layers[i] + '|' + layers[j]];
+        if (!p){
+          fill = '#0F1419'; txt = ''; abs = 0; r = NaN;
+        } else {
+          r = p.r; abs = Math.abs(r);
+          fill = pearsonHexByR(abs);
+          // 3자리 정밀도 — 0.999 vs 0.998 같은 미세차이 보존. 선행 0은 공간 절약 위해 제거.
+          txt = abs >= 1 ? '1.00' : '.' + abs.toFixed(3).slice(2);
+        }
+      }
+      const dataAttr = (i === j || isNaN(r)) ? '' : `data-i="${i}" data-j="${j}" data-r="${r}"`;
+      s += `<rect x="${x}" y="${y}" width="${cell-2}" height="${cell-2}" rx="3" fill="${fill}" stroke="#2A3445" stroke-width="0.5" ${dataAttr}><title>${(labels[layers[i]]||layers[i])} ↔ ${(labels[layers[j]]||layers[j])}${isNaN(r)?'':' · r='+r}</title></rect>`;
+      const textColor = (abs >= 0.9 || abs < 0.5) ? '#FFFFFF' : '#0F1419';
+      if (txt) s += `<text x="${x + (cell-2)/2}" y="${y + (cell-2)/2 + 3}" text-anchor="middle" fill="${textColor}" font-size="9" font-family="ui-monospace,SF Mono" pointer-events="none">${txt}</text>`;
+    }
+  }
+  // 범례
+  const legendY = top + cell*N + 22;
+  const legend = [['≥.9','#00529B'],['≥.7','#5BC0EB'],['≥.5','#FED766'],['<.5','#C9485B']];
+  let lx = left;
+  legend.forEach(([t,c])=>{
+    s += `<rect x="${lx}" y="${legendY-7}" width="9" height="9" rx="1.5" fill="${c}"/>`;
+    s += `<text x="${lx+12}" y="${legendY+1}" fill="#A4B0C0" font-size="8" font-family="ui-monospace,SF Mono">${t}</text>`;
+    lx += 32;
+  });
+  svg.innerHTML = s;
+  if (tip) tip.textContent = pairs && pairs.length ? `n=60 · ${pairs.length}쌍 · 셀 hover로 상세` : '데이터 없음';
+  // hover → 좌하단 텍스트 갱신
+  if (tip){
+    svg.querySelectorAll('rect[data-r]').forEach(rect => {
+      rect.style.cursor = 'pointer';
+      rect.addEventListener('mouseenter', e => {
+        const i = +rect.getAttribute('data-i');
+        const j = +rect.getAttribute('data-j');
+        const r = +rect.getAttribute('data-r');
+        const a = labels[layers[i]] || layers[i];
+        const b = labels[layers[j]] || layers[j];
+        tip.innerHTML = `<span style="color:#5BC0EB">${a}</span> ↔ <span style="color:#5BC0EB">${b}</span> · r=${r.toFixed(3)} · n=60`;
+      });
+    });
+    svg.addEventListener('mouseleave', () => {
+      tip.textContent = `n=60 · ${(pairs||[]).length}쌍 · 셀 hover로 상세`;
+    });
+  }
+}
+
 function fillCausalLists() {
   if (!CAUSAL) return;
   const labels = CAUSAL.meta.layer_label || {};
@@ -3629,6 +3719,7 @@ function fillCausalLists() {
     });
     document.getElementById('causal-pearson-list').innerHTML =
       '<div class="text-[10px] text-gray-500">전국 모드에서는 Pearson 미표시 (동별 모드에서 확인)</div>';
+    renderPearsonMatrix([]);
 
     document.getElementById('causal-insight').innerHTML = `
       <div class="space-y-1">
@@ -3657,6 +3748,8 @@ function fillCausalLists() {
         </div>
       `);
     });
+
+    renderPearsonMatrix(dc.pearson || []);
 
     const pearsonEl = document.getElementById('causal-pearson-list');
     pearsonEl.innerHTML = '';

@@ -97,6 +97,143 @@
         "passed": true,
         "verify_all": "6/6"
       }
+    },
+    {
+      "id": "CORR_MATRIX-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "5x5 Pearson 상관 매트릭스 히트맵 — 리스트 → 격자 시각화",
+      "detail": "현재 Pearson 상관(|r|) 값이 9~15개 페어 리스트로 렌더되어 0.5초 룰 위반. 5x5 격자 + pLDDT 팔레트(brand-dna 재사용)로 한눈에 비교 가능하게 변경. AlphaFold contact map 메타포와 정합.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T05:12:27.839395Z",
+      "files": [
+        "app.js",
+        "index.html (style if needed)"
+      ],
+      "acceptance": [
+        "5개 지표 (소상공/유동/카페/거래/지가)로 5x5 grid 렌더",
+        "pLDDT 4단계 색상 (>=0.9 #00529B / >=0.7 #5BC0EB / >=0.5 #FED766 / < #C9485B)",
+        "대각선 셀은 'self' 표시 (값 1.00 노출)",
+        "셀 hover 시 'r=0.xxx, n=60' 툴팁",
+        "verify_all 6/6 PASS 유지"
+      ],
+      "payload": {
+        "files_changed": []
+      },
+      "completed_at": "2026-05-03T05:23:33.768456Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6",
+        "matrix_cells": 20,
+        "screenshots": [
+          "screenshots/corr_matrix_zoom.png"
+        ]
+      }
+    },
+    {
+      "id": "GRAPHRAG_PHASE2_FINISH-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[선행] Phase 2 Workflow Editor 마무리 — GraphRAG 착수 전 완료 필요",
+      "detail": "대표님 결정 (2026-05-03): GraphRAG 도입은 옵션 B로 승인. Phase 2 Workflow Editor (드래그/포트연결/localStorage 기본 동작 검증 완료된 상태)를 사용자 시나리오 수준까지 마무리한 뒤 GRAPHRAG-001 시작. 본 이슈는 GRAPHRAG-001의 선행 게이트.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T14:25:00.000000Z",
+      "files": [
+        "app.js",
+        "index.html",
+        "components/workflow-editor.* (있을 시)"
+      ],
+      "acceptance": [
+        "Workflow Editor에서 노드 3개 이상 연결 → 실행 결과가 Explore/Decide 모드와 연동",
+        "localStorage 저장된 워크플로우를 새 세션에서 복원 가능",
+        "Playwright 캐릭터 저니 (마스터 1명) PASS — 노드 추가/연결/실행/저장/복원",
+        "verify_all 6/6 PASS 유지",
+        "스크린샷 증거 저장 (screenshots/v07_workflow_*.png)"
+      ],
+      "payload": {
+        "files_changed": [],
+        "blocks": [
+          "GRAPHRAG-001"
+        ]
+      }
+    },
+    {
+      "id": "GRAPHRAG-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "TowninGraph-RAG 도입 — causal.json 기반 자연어 질의 응답 (옵션 C 경량 자체 구현)",
+      "detail": "대표님 결정 (2026-05-03): GraphRAG 도입 옵션 B 승인 (Phase 2 Workflow Editor 마무리 후 착수). 검토 보고에서 옵션 C(자체 경량 GraphRAG = NetworkX + SQLite + Claude API)를 아키텍처로 채택. causal.json(Pearson 1,300쌍 + Granger 2,578트리플렛) + forecasts.json을 그래프로 변환하고, 마스터의 자연어 질의에 자연어+시각화 점프 응답. Microsoft GraphRAG 풀패키지/Neo4j/Vector DB 도입은 과잉이라 명시 배제. 6개월 사이드(주 20h, 월 100만 이내) 제약 부합.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-03T14:25:00.000000Z",
+      "files": [
+        "graph_rag/build_graph.py (신규)",
+        "graph_rag/server.py (FastAPI 신규)",
+        "app.js (검색 UI 통합)",
+        "index.html (검색바 + 답변 패널)"
+      ],
+      "blocked_by": [
+        "GRAPHRAG_PHASE2_FINISH-001"
+      ],
+      "phases": [
+        {
+          "id": "G-1",
+          "estimate_h": 8,
+          "task": "causal.json → NetworkX DiGraph 변환 + 직렬화 저장",
+          "verify": "g.number_of_nodes() == 130*5 + 130 (동+레이어), g.number_of_edges() >= 2578"
+        },
+        {
+          "id": "G-2",
+          "estimate_h": 12,
+          "task": "FastAPI /ask 엔드포인트 — Intent Parser(Haiku) + Graph Retrieval(BFS depth 2) + Answer Generation(Sonnet)",
+          "verify": "'성수1가1동에서 카페 매출이 늘면 어떤 동에 영향?' 질의 → 인용 엣지 ID + 자연어 답변 응답"
+        },
+        {
+          "id": "G-3",
+          "estimate_h": 8,
+          "task": "UI 통합 — 우상단 검색바 + 답변 패널 + 인용 엣지 하이라이트 + 모드 자동 점프",
+          "verify": "Playwright 캐릭터 저니: 질의 → 답변 표시 → Explore 모드 진입 → 인용 동 포커스"
+        },
+        {
+          "id": "G-4",
+          "estimate_h": 20,
+          "task": "[선택] 외부 텍스트 코퍼스 추가 (뉴스 RSS / Townin 파트너 글) — BM25 검색",
+          "verify": "BM25 hit율 >= 70% on 50 샘플 질의"
+        },
+        {
+          "id": "G-5",
+          "estimate_h": 16,
+          "task": "[선택] Community Detection (Louvain) + 권역 자동 보고서 생성",
+          "verify": "성수권역 5개 동 동시 분석 보고서 1편 PDF 자동 생성"
+        }
+      ],
+      "acceptance": [
+        "G-1 ~ G-3 (28h / ~1.5주) MVP 동작",
+        "비용 가드레일: 월 1,000회 질의 한도 ($10 예상)",
+        "Mock 금지 — 실제 130개 동 데이터로 검증",
+        "캐릭터 저니 검증 (마스터 1명) PASS + 스크린샷 증거",
+        "Karpathy #2 Simplicity First 부합 — 코드량 800줄 이하"
+      ],
+      "non_goals": [
+        "Neo4j 도입 금지 (130 노드 × 4,000 엣지는 NetworkX in-memory 충분)",
+        "Vector DB 도입 금지 (텍스트 코퍼스 부재 — 시기상조)",
+        "LangChain 풀체인 금지 (추상화 과잉, Claude API 직접 호출)"
+      ],
+      "decision_log": {
+        "decided_at": "2026-05-03",
+        "decided_by": "대표님",
+        "options_considered": [
+          "A. Microsoft GraphRAG 풀패키지 — 거부 (수치 그래프엔 과잉)",
+          "B. LlamaIndex PropertyGraph + Neo4j — 후보였으나 보류",
+          "C. 자체 경량 GraphRAG (NetworkX + SQLite + Claude API) — 채택"
+        ],
+        "schedule_option": "B (Phase 2 Workflow Editor 마무리 후 착수)"
+      },
+      "payload": {
+        "files_changed": []
+      }
     }
   ],
   "hooks": {
@@ -141,13 +278,45 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 3,
+        "timestamp": "2026-05-03T14:11:35.898771",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/5)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 5,
+          "done": 0,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 4,
+        "timestamp": "2026-05-03T14:13:36.625477",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/6)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 6,
+          "done": 0,
+          "in_progress": 1,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
-    "total_issues": 5,
-    "completed": 5,
+    "total_issues": 8,
+    "completed": 6,
     "failed": 0,
-    "evolved": 2
+    "evolved": 4
   }
 }
