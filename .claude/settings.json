@@ -109,6 +109,13 @@
             "timeout": 30,
             "statusMessage": "Meta Agent reviewing...",
             "asyncRewake": true
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/auto-detect.sh",
+            "timeout": 20,
+            "statusMessage": "Auto-detecting new issues...",
+            "asyncRewake": true
           }
         ]
       }

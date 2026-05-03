@@ -14,6 +14,7 @@
     "verify:workflow": "node verify_workflow.mjs",
     "verify:decision_tree": "node verify_decision_tree.mjs",
     "train:tree": ".venv/bin/python decision_tree_train.py",
+    "auto:detect": "bash .claude/hooks/auto-detect.sh",
     "verify:all": "node verify_all.mjs",
     "capture": "node capture_screens.mjs"
   },

@@ -626,6 +626,490 @@
           "screenshots/v07_decision_tree.png"
         ]
       }
+    },
+    {
+      "id": "VIZ_PACK-001",
+      "type": "EPIC",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[Phase 2.5] Map Visualization Pack — 9종 차트의 단일 엔진 통합 (확장성 우선)",
+      "detail": "대표님 결정 (2026-05-03): 추천한 9종 차트(Violin/Ridgeline/Sankey/CalendarHeatmap/Spiral/SmallMultiples/Slope/MapTreemap/Bullet) + 기존 4종(3D기둥/히트맵/육각/5x5 Pearson 매트릭스) = 총 13종 시각화를 '의미있게 연결' 한다. 핵심 원칙: 차트 13개를 따로 만드는 것이 아니라, '단일 시각화 엔진(VizEngine)'을 도입하여 모든 차트가 동일한 데이터 큐레이터/색상 토큰/시간축/필터를 공유한다. 확장성: 신규 차트 추가 시 plugin 형태로 50줄 이내 등록만 하면 동작. 데이터 흐름: 마스터 모드(Workflow Editor) → 동/레이어/시간 선택 → VizEngine.render(chartType, scope) → 자동 색상/축/필터 적용. AlphaFold 메타포 일관성: 모든 차트는 pLDDT 4단계 팔레트(>=0.9 #00529B / >=0.7 #5BC0EB / >=0.5 #FED766 / <.5 #C9485B) 채택.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "depends_on": [
+        "GRAPHRAG_PHASE2_FINISH-001"
+      ],
+      "blocks": [],
+      "files": [
+        "app.js (VizEngine 도입 + 기존 차트 마이그레이션)",
+        "index.html (시각화 모드 셀렉터 확장)",
+        "viz/engine.js (신규 — 단일 엔진)",
+        "viz/charts/*.js (신규 — 13개 차트 모듈)",
+        "viz/tokens.js (신규 — 디자인 토큰 = brand-dna 동기화)",
+        "verify_viz.mjs (신규 — 13종 모두 렌더 검증)"
+      ],
+      "architecture": {
+        "pattern": "Plugin-based VizEngine",
+        "core_modules": {
+          "VizEngine": "단일 진입점 — render(chartType, scope, options)",
+          "DataCurator": "simula_data_real / forecasts / causal에서 chartType 적합 데이터 자동 추출",
+          "ScaleResolver": "시간축/색상/사이즈 스케일 자동 결정",
+          "ScopeManager": "동 선택/레이어 선택/시간 윈도우 통합 관리 (Workflow Editor와 양방향 sync)",
+          "ChartPlugin (interface)": "{ id, label, icon, render(svg|deck, scope, scales), supports(scope) }"
+        },
+        "data_flow": "ScopeManager(scope) → DataCurator(scope, chartType) → ScaleResolver(data) → ChartPlugin.render(svg|deck, data, scales) → VizEngine.notifyHover(scope) → 다른 차트로 cross-highlight",
+        "cross_chart_link": "한 차트에서 동을 hover하면 다른 모든 차트의 해당 동이 동시 강조 (linked brushing)"
+      },
+      "meta_acceptance": [
+        "13종 차트 전부 단일 VizEngine.render(type, scope) 호출로 렌더",
+        "신규 차트 추가 = ChartPlugin 50줄 + register() 1줄",
+        "cross-chart linked brushing 동작 (한 차트 hover → 다른 차트 동시 강조)",
+        "Workflow Editor 노드에서 차트 13종 선택 가능 (drag-drop)",
+        "13종 모두 pLDDT 팔레트 일관 적용 — 시각적 통일성 확인",
+        "Playwright 캐릭터 저니: 각 차트별 1회 렌더 + linked brushing 1회 = 14 PASS",
+        "verify_viz.mjs 통과 (13/13 렌더 + cross-link 1)",
+        "verify_all 6/6 PASS 유지",
+        "코드량: VizEngine 코어 ≤ 600줄, 차트 플러그인 평균 ≤ 80줄",
+        "메모리: 130개 동 × 60개월 데이터 동시 렌더 시 GPU 메모리 ≤ 200MB"
+      ],
+      "sub_issues": [
+        "VIZ_ENGINE_CORE-001",
+        "VIZ_RIDGELINE-001",
+        "VIZ_SANKEY_MAP-001",
+        "VIZ_CALENDAR_HEAT-001",
+        "VIZ_VIOLIN-001",
+        "VIZ_SPIRAL-001",
+        "VIZ_SMALL_MULTIPLES-001",
+        "VIZ_SLOPE-001",
+        "VIZ_MAP_TREEMAP-001",
+        "VIZ_BULLET-001",
+        "VIZ_LINKED_BRUSHING-001"
+      ],
+      "phases": [
+        {
+          "id": "V-0",
+          "name": "엔진 코어",
+          "estimate_h": 16,
+          "sub": [
+            "VIZ_ENGINE_CORE-001"
+          ]
+        },
+        {
+          "id": "V-1",
+          "name": "TOP3 차트",
+          "estimate_h": 20,
+          "sub": [
+            "VIZ_RIDGELINE-001",
+            "VIZ_SANKEY_MAP-001",
+            "VIZ_CALENDAR_HEAT-001"
+          ]
+        },
+        {
+          "id": "V-2",
+          "name": "확장 차트",
+          "estimate_h": 24,
+          "sub": [
+            "VIZ_VIOLIN-001",
+            "VIZ_SPIRAL-001",
+            "VIZ_SMALL_MULTIPLES-001",
+            "VIZ_SLOPE-001",
+            "VIZ_MAP_TREEMAP-001",
+            "VIZ_BULLET-001"
+          ]
+        },
+        {
+          "id": "V-3",
+          "name": "연결성",
+          "estimate_h": 8,
+          "sub": [
+            "VIZ_LINKED_BRUSHING-001"
+          ]
+        }
+      ],
+      "total_estimate_h": 68,
+      "non_goals": [
+        "D3.js 풀패키지 도입 금지 — 필요한 KDE/scale 함수만 직접 구현 또는 micro 라이브러리",
+        "React/Vue 도입 금지 — vanilla JS 유지 (현재 스택 일관성)",
+        "WebGL 직접 셰이더 작성 금지 — deck.gl 레이어로 충분",
+        "13종을 한 화면에 동시 표시 금지 — 마스터 인지 부하 위험. 모드/탭으로 전환"
+      ],
+      "decision_log": {
+        "decided_at": "2026-05-03",
+        "decided_by": "대표님",
+        "context": "바이올린 차트 추천 후 \"추천한 모든 차트를 의미있게 연결 구현\" 요청",
+        "principle": "확장성 우선 — 차트 13개 따로 만들지 않고 단일 엔진으로 통합"
+      }
+    },
+    {
+      "id": "VIZ_ENGINE_CORE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[V-0] VizEngine 코어 — 13종 차트의 단일 진입점",
+      "detail": "확장성 우선: 신규 차트 추가 시 ChartPlugin 인터페이스 50줄 + register() 1줄로 동작. VizEngine은 (1) DataCurator: scope+chartType→data 자동 추출, (2) ScaleResolver: 시간/색/크기 스케일 자동, (3) ScopeManager: 동·레이어·시간윈도우 통합 상태, (4) Plugin Registry. 기존 4종 차트(3D기둥/히트맵/육각/5x5 Pearson)를 새 엔진 위로 마이그레이션하여 검증.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [],
+      "files": [
+        "viz/engine.js (신규)",
+        "viz/curator.js (신규)",
+        "viz/scales.js (신규)",
+        "viz/scope.js (신규)",
+        "viz/plugin-registry.js (신규)",
+        "viz/tokens.js (신규)",
+        "app.js (기존 4종 마이그레이션)"
+      ],
+      "acceptance": [
+        "VizEngine.register(plugin) / VizEngine.render(type, scope) API 동작",
+        "ChartPlugin 인터페이스 = { id, label, icon, render(target, data, scales), supports(scope) }",
+        "기존 4종 차트가 모두 새 엔진 위에서 렌더 (회귀 0)",
+        "ScopeManager 변경 → 모든 활성 차트 자동 재렌더 (event-driven)",
+        "tokens.js가 brand-dna.json design_tokens와 동기화",
+        "코어 코드 ≤ 600줄",
+        "Playwright: 4종 기존 차트 회귀 검증 PASS"
+      ],
+      "estimate_h": 16,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_RIDGELINE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-1] Ridgeline (Joy Plot) — 130개 동의 시계열 분포 누적",
+      "detail": "각 동의 60개월 KDE 곡선을 위→아래로 130개 쌓는 산봉우리 차트. TG 핵심 가치: 130개 동 패턴 비교를 한 화면에. y-offset stack + KDE bandwidth 자동 결정. AlphaFold 메타포: contact map 고도 단면도. 필터: 권역(서울 25구 / 부산 5동) / 레이어(5종) / 시간 윈도우 슬라이드.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/ridgeline.js (신규)",
+        "viz/utils/kde.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(ridgelinePlugin) 동작",
+        "KDE Gaussian kernel + Silverman bandwidth 자동",
+        "130개 동을 권역(vibe)별로 그룹핑 정렬",
+        "레이어 변경 시 곡선 자연스러운 transition (200ms)",
+        "pLDDT 팔레트 적용 (각 봉우리 색)",
+        "hover → 동 이름 + 평균값 툴팁",
+        "코드 ≤ 200줄"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_SANKEY_MAP-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-1] Sankey on Map — 동 간 인과 흐름 곡선",
+      "detail": "causal.json의 Granger 인과 트리플렛(2,559)을 deck.gl ArcLayer로 동A→동B 곡선 흐름으로 시각화. 두께=영향 강도(support_count). 색상=레이어. 시간 슬라이드로 lag 재생. TG 정체성 메시지 ('많은 데이터의 연결' — 대표님 핵심 피드백) 강화. 필터: 인과 강도 임계값 슬라이더 + Top-N 제한.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/sankey-map.js (신규)",
+        "app.js (deck.gl ArcLayer 통합)"
+      ],
+      "acceptance": [
+        "VizEngine.register(sankeyMapPlugin) 동작",
+        "Granger 트리플렛 로드 + ArcLayer로 곡선 렌더",
+        "두께 = support_count * scale, 색 = 레이어 카테고리",
+        "시간 슬라이더로 lag 재생 (1~6mo)",
+        "Top-N 슬라이더 (상위 10/50/200/전체)",
+        "hover → \"동A → 동B (lag 2mo, 67개 동에서 발견)\" 툴팁",
+        "코드 ≤ 250줄"
+      ],
+      "estimate_h": 10,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_CALENDAR_HEAT-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-1] Calendar Heatmap — 동 카드 안 60개월 격자",
+      "detail": "Explore 모드에서 동 hover 시 팝업에 12열×5행 색상 격자. 셀 = 한 달 강도. 코로나(2020-3) / 정책 충격 시점이 색으로 즉시 식별. AlphaFold 메타포: 잔기 위치별 confidence 히트맵. Workflow Editor 노드 결과 미리보기에도 활용 가능.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/calendar-heat.js (신규)",
+        "app.js (Explore 모드 통합)"
+      ],
+      "acceptance": [
+        "VizEngine.register(calHeatPlugin) 동작",
+        "12×5 SVG rect 격자 (60개월)",
+        "pLDDT 팔레트 + 5단계 양자화 (정규화 분위)",
+        "셀 hover → \"2021-06: 카페 1,247개\" 툴팁",
+        "동 hover 시 1초 이내 렌더",
+        "SHOCKS 시점 (covid_start 등) 위에 마커 오버레이",
+        "코드 ≤ 150줄"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_VIOLIN-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-2] Violin Chart — 지도 위 KDE 좌우 대칭 분포",
+      "detail": "각 동 위치에서 deck.gl PathLayer로 위/아래 KDE 두께 곡선. x축=시간, y축=분포 두께. 시각화 모드 4번째 옵션 '🎻 바이올린'으로 추가. LOD: 줌 멀어지면 단순 기둥, 가까우면 바이올린.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/violin.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(violinPlugin) 동작",
+        "KDE → PathLayer 폴리곤 변환",
+        "줌 레벨 기반 LOD (zoom < 11 단순화)",
+        "pLDDT 팔레트",
+        "지도 모드 셀렉터 4번째 옵션 등장",
+        "코드 ≤ 200줄"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_SPIRAL-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-2] Spiral / Polar Time Map — 1년 = 360°",
+      "detail": "5년 = 5바퀴 나선. 같은 달이 같은 각도에 위치하여 계절성/명절/이벤트 시각 정렬. AlphaFold 메타포: 알파 헬릭스. 동 카드 안 미니 스파이럴 + 마스터 콘솔 풀스크린 모드 둘 다 지원.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/spiral.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(spiralPlugin) 동작",
+        "d=r(t) 나선 좌표 변환",
+        "계절성 강한 레이어(visitors, sales) 우선",
+        "SHOCKS 시점 동심원 가이드라인",
+        "코드 ≤ 200줄"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_SMALL_MULTIPLES-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-2] Small Multiples (Trellis) — 5×5 mini chart 격자",
+      "detail": "성수권 5개 동 × 5개 레이어 = 25개 mini chart. Decide 모드에서 권역 비교 보고서. 각 셀 = 60개월 sparkline. AlphaFold 메타포: 도메인별 단면도 매트릭스.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/small-multiples.js (신규)",
+        "app.js (Decide 모드 통합)"
+      ],
+      "acceptance": [
+        "VizEngine.register(smallMultPlugin) 동작",
+        "5×5 SVG 격자 + sparkline 25개",
+        "동 선택/레이어 선택 동적 변경",
+        "셀 클릭 → 해당 동·레이어 풀차트 점프",
+        "PDF 보고서 export 호환",
+        "코드 ≤ 200줄"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_SLOPE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-2] Slope Graph — 두 시점 비교",
+      "detail": "코로나 전(2020-1) vs 후(2024-12) 또는 마스터 지정 두 시점. 각 동을 두 점 + 연결선으로 표시. 기울기 = 변화율. PDF 보고서 핵심 페이지에 적합.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/slope.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(slopePlugin) 동작",
+        "두 시점 선택 UI + slope 그래프",
+        "상위 N개 동 라벨 (변화율 절댓값 기준)",
+        "pLDDT 팔레트 (증가=청, 감소=빨강)",
+        "코드 ≤ 150줄"
+      ],
+      "estimate_h": 3,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_MAP_TREEMAP-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-2] Map Cartogram — 데이터 비율로 폴리곤 왜곡",
+      "detail": "동 폴리곤을 실제 면적이 아닌 데이터(인구/매출/소상공)로 왜곡. 지도 자체가 데이터가 됨. 인사이트 보고서 표지용 임팩트. topojson + Dorling/Demers cartogram 알고리즘.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/cartogram.js (신규)",
+        "viz/utils/cartogram-algo.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(cartoPlugin) 동작",
+        "Dorling cartogram (원형 변형) 또는 Demers (사각 변형) 중 1종",
+        "레이어 선택 시 부드러운 transition",
+        "실제 위치 추정 가능한 정도의 변형 강도",
+        "코드 ≤ 250줄"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_BULLET-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-2] Bullet Chart — 목표 vs 실적 KPI",
+      "detail": "동·레이어별 목표(분기별 expected) 대비 실적. Townin 마스터 KPI 대시보드용. forecasts.json의 yhat을 목표선으로 활용.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/bullet.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(bulletPlugin) 동작",
+        "실적 막대 + 목표 마커 + 임계값 배경",
+        "5개 KPI 동시 표시 (가로형)",
+        "pLDDT 팔레트 (실적 ≥ 목표 청, < 목표 빨강)",
+        "코드 ≤ 120줄"
+      ],
+      "estimate_h": 3,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "VIZ_LINKED_BRUSHING-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[V-3] Linked Brushing — 13종 차트 간 cross-highlight",
+      "detail": "한 차트에서 동/시점/레이어를 hover/select 시 다른 모든 활성 차트가 동시 강조. VizEngine.notifyHover(scope) → 모든 ChartPlugin.onHighlight(scope). 성능: 130개 동 × 13 차트 동시 강조 시 60fps 유지.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_RIDGELINE-001",
+        "VIZ_SANKEY_MAP-001",
+        "VIZ_CALENDAR_HEAT-001",
+        "VIZ_VIOLIN-001",
+        "VIZ_SPIRAL-001",
+        "VIZ_SMALL_MULTIPLES-001",
+        "VIZ_SLOPE-001",
+        "VIZ_MAP_TREEMAP-001",
+        "VIZ_BULLET-001"
+      ],
+      "files": [
+        "viz/engine.js (notifyHover/onHighlight 추가)",
+        "viz/charts/*.js (각 플러그인 onHighlight 구현)"
+      ],
+      "acceptance": [
+        "VizEngine.notifyHover(scope) 이벤트 시스템 동작",
+        "13종 차트 모두 onHighlight(scope) 구현",
+        "동 hover → 다른 차트의 같은 동 동시 강조 (200ms 이내)",
+        "시점 hover → 시간축 가진 차트 모두 동기화",
+        "requestAnimationFrame 기반 throttle",
+        "60fps 유지 (Chrome DevTools Performance 검증)",
+        "Playwright: 캐릭터 저니로 cross-link 검증 PASS"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "ISS-018",
+      "type": "DATA_INTEGRITY",
+      "priority": "P2",
+      "status": "READY",
+      "title": "실데이터 부착 비율 낮음 (0/130 = 0%)",
+      "detail": "simula_data_real.json의 real_data_attached=True 동이 0%. 80% 미만이면 분석 신뢰도 영향. ETL 점검 또는 REAL_DATA_INGEST-001 진행 권고.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T07:29:14.670379Z",
+      "files": [
+        "etl_real_data.py",
+        "simula_data_real.json"
+      ],
+      "detect_signature": "f939ff2876e2",
+      "auto_detected": true
+    },
+    {
+      "id": "ISS-019",
+      "type": "REFACTOR",
+      "priority": "P2",
+      "status": "READY",
+      "title": "simula_data_real.json 갱신 후 tree_model.json 미재학습",
+      "detail": "simula_data_real.json이 tree_model.json보다 최신. 입력 데이터가 바뀌었으니 npm run train:tree 재실행 권고.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T07:29:14.670379Z",
+      "files": [
+        "simula_data_real.json",
+        "tree_model.json",
+        "decision_tree_train.py"
+      ],
+      "detect_signature": "04908a670cab",
+      "auto_detected": true
     }
   ],
   "hooks": {
@@ -835,14 +1319,46 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 10,
+        "timestamp": "2026-05-03T15:11:36.606367",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 19,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 11,
+        "timestamp": "2026-05-03T15:14:47.316628",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 19,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
-    "total_issues": 19,
+    "total_issues": 33,
     "completed": 15,
     "failed": 0,
-    "evolved": 9
+    "evolved": 11
   },
   "opus_budget_state": {
     "daily": {
@@ -881,5 +1397,9 @@
       "reason": "DEFER (디시전 트리부터 진행 후 재검토)",
       "at": "2026-05-03T14:57:59.423898"
     }
-  ]
+  ],
+  "auto_detect_state": {
+    "date": "2026-05-03",
+    "count": 1
+  }
 }
