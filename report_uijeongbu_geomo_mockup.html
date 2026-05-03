@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>의정부 금오동 카페 재창업 — 명분 컨설팅 보고서 (PoC 목업)</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { box-sizing: border-box; }
+  :root {
+    --ink: #0B1729;
+    --ink-2: #16325C;
+    --paper: #FFFFFF;
+    --paper-2: #F7F9FC;
+    --line: #DEE5EE;
+    --accent: #00A1E0;
+    --accent-2: #5BC0EB;
+    --warn: #F59E0B;
+    --bad: #EF4444;
+    --good: #10B981;
+    --mute: #6B7785;
+    --plddt-very-high: #0053D6;
+    --plddt-high: #56B3FA;
+    --plddt-mid: #FFD24A;
+    --plddt-low: #FF8A65;
+    --gold: #C9A35B;
+  }
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Pretendard', 'Inter', sans-serif;
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.55;
+    background: var(--paper-2);
+    font-size: 11.5px;
+  }
+  .page {
+    background: var(--paper);
+    max-width: 800px;
+    margin: 16px auto;
+    padding: 22px 28px 26px;
+    border: 1px solid var(--line);
+    box-shadow: 0 2px 8px rgba(11,23,41,0.04);
+    page-break-after: always;
+    position: relative;
+  }
+  .page:last-child { page-break-after: auto; }
+  h1 { color: var(--ink-2); font-size: 22px; margin: 0 0 4px; letter-spacing: -0.3px; }
+  h2 {
+    color: var(--ink-2); font-size: 15px; margin: 22px 0 10px;
+    border-bottom: 2px solid var(--accent); padding-bottom: 5px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  h2 .step { font-size: 10px; color: var(--accent); font-weight: 700; letter-spacing: 0.5px; }
+  h3 { color: var(--ink-2); font-size: 12.5px; margin: 14px 0 6px; }
+  p, li { font-size: 11px; }
+  .meta-row {
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+    color: var(--mute); font-size: 10px; margin-bottom: 14px;
+  }
+  .meta-row b { color: var(--ink); }
+  .sil { display: inline-flex; gap: 4px; align-items: center; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; letter-spacing: 0.3px; }
+  .sil-prov { background: #DCEDFB; color: #0B5394; }
+  .sil-method { background: #E5DEFB; color: #5B3CB1; }
+  .sil-ci { background: #FFF1D6; color: #8A6300; }
+  .sil-limit { background: #FFE0E0; color: #8B1818; }
+  .sil-falsify { background: #DDF7E2; color: #145A2B; }
+  .conf { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; color: white; }
+  .conf-very-high { background: var(--plddt-very-high); }
+  .conf-high { background: var(--plddt-high); color: var(--ink); }
+  .conf-mid { background: var(--plddt-mid); color: var(--ink); }
+  .conf-low { background: var(--plddt-low); }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+  .card .num { font-size: 22px; font-weight: 700; color: var(--ink-2); letter-spacing: -0.5px; }
+  .card .lbl { font-size: 10px; color: var(--mute); text-transform: uppercase; letter-spacing: 0.5px; }
+  .card .delta { font-size: 10px; font-weight: 700; }
+  .delta.up { color: var(--good); }
+  .delta.dn { color: var(--bad); }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 10.5px; }
+  th { background: #F0F4F9; color: var(--ink-2); padding: 6px 8px; text-align: left; border-bottom: 2px solid var(--accent); font-weight: 700; font-size: 10px; }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 10px 0; }
+  .scenario { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; background: var(--paper-2); }
+  .scenario.recommended { border-color: var(--accent); background: #F0F9FE; box-shadow: 0 0 0 1px var(--accent) inset; }
+  .scenario h4 { margin: 0 0 6px; font-size: 12px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+  .scenario .tag { font-size: 9px; padding: 1px 6px; border-radius: 10px; }
+  .tag-low { background: #DDF7E2; color: #145A2B; }
+  .tag-mid { background: #FFF1D6; color: #8A6300; }
+  .tag-high { background: #FFE0E0; color: #8B1818; }
+  .scenario ul { margin: 4px 0 0 0; padding-left: 16px; font-size: 10px; }
+  .box-limit { background: #FFF8F0; border-left: 3px solid var(--warn); padding: 10px 14px; margin: 10px 0; border-radius: 0 4px 4px 0; }
+  .box-falsify { background: #F2FCF6; border-left: 3px solid var(--good); padding: 10px 14px; margin: 10px 0; border-radius: 0 4px 4px 0; }
+  .box-prov { background: #F0F7FE; border-left: 3px solid var(--accent); padding: 10px 14px; margin: 10px 0; border-radius: 0 4px 4px 0; }
+  .src { display: inline-block; font-size: 9px; padding: 1px 5px; background: #EAF1F8; color: var(--ink-2); border-radius: 3px; margin-left: 4px; border: 1px solid #D1DEEC; }
+  .src a { color: inherit; text-decoration: none; }
+  .reco { background: linear-gradient(135deg, #0B5394 0%, #00A1E0 100%); color: white; padding: 14px 18px; border-radius: 8px; margin: 12px 0; }
+  .reco h3 { color: white; margin: 0 0 6px; font-size: 14px; }
+  .reco p { color: rgba(255,255,255,0.95); margin: 4px 0; }
+  .reco strong { color: var(--gold); }
+  .cover { text-align: left; padding: 80px 28px 60px; background: linear-gradient(160deg, #0B1729 0%, #16325C 50%, #00A1E0 100%); color: white; min-height: 600px; }
+  .cover .eyebrow { font-size: 10px; letter-spacing: 3px; opacity: 0.7; margin-bottom: 12px; text-transform: uppercase; }
+  .cover h1 { color: white; font-size: 32px; margin-bottom: 6px; line-height: 1.2; }
+  .cover .sub { font-size: 14px; opacity: 0.9; margin-bottom: 28px; }
+  .cover .meta { margin-top: 24px; padding: 12px 16px; background: rgba(255,255,255,0.06); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; }
+  .cover .meta div { font-size: 11px; margin: 3px 0; opacity: 0.9; }
+  .cover .gold { color: var(--gold); font-weight: 700; }
+  .toc { font-size: 12px; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin: 6px 0; }
+  .toc .pg { float: right; color: var(--mute); }
+  .summary-block { background: var(--paper-2); border: 2px solid var(--ink-2); border-radius: 8px; padding: 16px 20px; margin: 14px 0; }
+  .summary-block .verdict { font-size: 18px; font-weight: 700; color: var(--ink-2); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+  .summary-block .verdict .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(0,161,224,0.18); }
+  .chart-mock { height: 110px; background: var(--paper-2); border: 1px dashed var(--line); border-radius: 6px; display: flex; align-items: flex-end; gap: 3px; padding: 8px; }
+  .chart-mock .bar { flex: 1; background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%); border-radius: 2px 2px 0 0; }
+  .chart-cap { font-size: 9px; color: var(--mute); margin-top: 4px; }
+  .footer { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 9px; color: var(--mute); }
+  .draft-stamp { position: absolute; right: 28px; top: 22px; font-size: 9px; padding: 3px 8px; border: 1px dashed var(--bad); color: var(--bad); border-radius: 3px; font-weight: 700; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<div class="page cover">
+  <div class="eyebrow">MEONGBUN CONSULTING · POC #001</div>
+  <h1>의정부 금오동<br>카페 재창업 명분 보고서</h1>
+  <div class="sub">데이터 → 해석 → 비교 → 시나리오 → 권고 — 5단계 추적 가능 의사결정 사슬</div>
+  <div class="meta">
+    <div>대상: <span class="gold">의정부시 금오동 (행정동 4115059500)</span></div>
+    <div>발행: 2026-05-03 (PoC 목업판 / DRAFT)</div>
+    <div>발행자: Gagahoho · TowninGraph</div>
+    <div>분석기간: 2025-05 ~ 2026-04 (12개월)</div>
+    <div>의뢰자: A대표 · 카페 폐업 후 재창업 검토 중</div>
+  </div>
+  <div style="margin-top: 50px; font-size: 10px; opacity: 0.7;">
+    본 보고서의 모든 셀은 출처(Provenance)/방법(Method)/신뢰구간(CI)/한계(Limitation)/거짓조건(Falsifiability) 5계층 SIL 메타데이터를 가지며, 부록의 명령 1줄로 재현 가능합니다.
+  </div>
+</div>
+
+<div class="page">
+  <div class="draft-stamp">DRAFT · MOCKUP</div>
+  <h1 style="font-size:18px">목차</h1>
+  <div class="meta-row">총 7섹션 + 부록 3 · 예상 12~15p</div>
+  <div class="toc">
+    <ol>
+      <li>한 페이지 요약 (Executive Summary) <span class="pg">p.3</span></li>
+      <li>사실 (Facts) — 무엇이 일어났나 <span class="pg">p.4</span></li>
+      <li>해석 (Interpretation) — 왜 그런가 <span class="pg">p.6</span></li>
+      <li>비교 (Comparison) — 다른 동/업종과 비교하면 <span class="pg">p.8</span></li>
+      <li>시나리오 (Scenarios) — 만약 이렇게 바꾼다면 <span class="pg">p.10</span></li>
+      <li>권고 (Recommendation) — 그래서 무엇을 할 것인가 <span class="pg">p.12</span></li>
+      <li>한계 (Limitation) — 이 보고서가 틀릴 조건 <span class="pg">p.13</span></li>
+    </ol>
+    <h3 style="margin-top:18px">부록</h3>
+    <ol type="A">
+      <li>방법론 (Method) — 사용한 모형과 가정 <span class="pg">p.14</span></li>
+      <li>출처 인덱스 (Provenance) — 모든 셀의 원천 자료 <span class="pg">p.15</span></li>
+      <li>재현 코드 (Reproducibility) — GitHub + 1줄 명령 <span class="pg">p.16</span></li>
+    </ol>
+  </div>
+  <div class="box-prov" style="margin-top:24px">
+    <strong>SIL — Scientific Integrity Layer 5장치</strong><br>
+    <span class="sil sil-prov">PROV</span> 출처 추적 ·
+    <span class="sil sil-method">METHOD</span> 방법 명시 ·
+    <span class="sil sil-ci">CI</span> 신뢰구간 ·
+    <span class="sil sil-limit">LIMIT</span> 한계 공시 ·
+    <span class="sil sil-falsify">FALSIFY</span> 거짓 조건<br>
+    <span style="font-size: 10px; color: var(--mute);">모든 셀은 위 5장치 메타데이터를 가지며 클릭 시 원천으로 이동합니다.</span>
+  </div>
+</div>
+
+<div class="page">
+  <h2><span class="step">SECTION 1</span> 한 페이지 요약</h2>
+  <div class="meta-row"><span><b>의뢰</b>: 폐업 후 동일 동에서 카페 재창업 — 위치/업종 전환 효과는?</span></div>
+  <div class="summary-block">
+    <div class="verdict"><span class="dot"></span> 권고: 동일 위치 재창업은 <span style="color:var(--bad)">권장하지 않음</span>, 동 내 200m 이격 + 베이커리 결합으로 <span style="color:var(--good)">조건부 권장</span></div>
+    <div style="font-size:11px; color:var(--mute); margin-top:6px">근거 사슬 5단계: 사실 → 해석 → 비교 → 시나리오 → 권고. 모든 단계 SIL 검증 통과.</div>
+  </div>
+  <div class="grid-3" style="margin-top:14px">
+    <div class="card"><div class="lbl">12개월 카페 폐업률</div><div class="num">23.4%</div><div class="delta dn">▼ 의정부 평균 18.1% 대비 +5.3p</div></div>
+    <div class="card"><div class="lbl">동 내 카페 밀도</div><div class="num">1.8/100m²</div><div class="delta dn">▼ 적정 1.2 대비 과밀</div></div>
+    <div class="card"><div class="lbl">유동인구 추세</div><div class="num">+4.2%</div><div class="delta up">▲ 12개월 누적 증가</div></div>
+  </div>
+  <h3 style="margin-top:20px">왜 이 권고에 도달했는가 — 한 줄씩</h3>
+  <ol style="font-size:11px; line-height:1.7">
+    <li><b>사실</b>: 금오동 카페 폐업률이 의정부 시 평균 대비 1.29× 높음 <span class="src"><a href="#prov-1">[1] LOCALDATA</a></span></li>
+    <li><b>해석</b>: 동 내 카페 밀도가 적정선의 1.5× — 가격 경쟁 압력 ↑ <span class="src"><a href="#prov-2">[2] 소진공</a></span></li>
+    <li><b>비교</b>: 호원동·송산동 대비 평일 주간 유동인구 회전률 0.7× <span class="src"><a href="#prov-3">[3] SGIS</a></span></li>
+    <li><b>시나리오</b>: 200m 이격 + 베이커리 결합 시 BEP 도달 확률 62% (CI 48-76%)</li>
+    <li><b>권고</b>: 동일 위치 재창업 회피 + 차별화 업종 결합 — 자세한 조건은 §6</li>
+  </ol>
+  <div class="box-limit">
+    <strong>⚠️ 한계 공시</strong> — PoC 목업본은 실데이터 미수집 상태(API 키 발급 대기)에서 작성되었습니다. 모든 수치는 placeholder이며, 실데이터 채움 후 §7에 명시된 거짓 조건으로 재검증됩니다.
+  </div>
+</div>
+
+<div class="page">
+  <h2><span class="step">SECTION 2</span> 사실 — 데이터가 보여주는 것</h2>
+  <div class="meta-row">
+    <span class="sil sil-prov">PROV</span>
+    <span>출처: LOCALDATA, 소진공 상권정보, SGIS Plus, VWorld</span>
+    <span class="conf conf-very-high">신뢰 매우 높음</span>
+  </div>
+  <h3>2.1 카페 인허가/폐업 (12개월)</h3>
+  <table>
+    <thead><tr><th>구분</th><th class="num">개업</th><th class="num">폐업</th><th class="num">순증감</th><th class="num">평균 영업기간</th><th>출처</th></tr></thead>
+    <tbody>
+      <tr><td>금오동</td><td class="num">8</td><td class="num">11</td><td class="num" style="color:var(--bad)">−3</td><td class="num">14.2개월</td><td><span class="src"><a href="#prov-1">[1]</a></span></td></tr>
+      <tr><td>호원동 (대조군)</td><td class="num">12</td><td class="num">9</td><td class="num" style="color:var(--good)">+3</td><td class="num">22.6개월</td><td><span class="src"><a href="#prov-1">[1]</a></span></td></tr>
+      <tr><td>의정부 평균</td><td class="num">10.4</td><td class="num">9.2</td><td class="num">+1.2</td><td class="num">19.8개월</td><td><span class="src"><a href="#prov-1">[1]</a></span></td></tr>
+    </tbody>
+  </table>
+  <div class="chart-cap">표 1. 행정동별 카페 인허가 동향. 단위: 건. 기간 2025-05~2026-04. <span class="sil sil-method">METHOD</span> 단순 카운트</div>
+
+  <h3 style="margin-top:18px">2.2 점포 분포 (소진공 상권정보)</h3>
+  <div class="grid-3">
+    <div class="card"><div class="lbl">총 점포 수</div><div class="num">142</div><div class="delta">동 내 전체 업종</div></div>
+    <div class="card"><div class="lbl">카페 점포</div><div class="num">18</div><div class="delta dn">밀도 1.8/100m²</div></div>
+    <div class="card"><div class="lbl">베이커리</div><div class="num">3</div><div class="delta up">밀도 0.3/100m² (희소)</div></div>
+  </div>
+
+  <h3 style="margin-top:18px">2.3 인구 구조 (SGIS 2023)</h3>
+  <div class="chart-mock">
+    <div class="bar" style="height: 35%"></div>
+    <div class="bar" style="height: 48%"></div>
+    <div class="bar" style="height: 72%"></div>
+    <div class="bar" style="height: 88%"></div>
+    <div class="bar" style="height: 76%"></div>
+    <div class="bar" style="height: 54%"></div>
+    <div class="bar" style="height: 41%"></div>
+    <div class="bar" style="height: 28%"></div>
+  </div>
+  <div class="chart-cap">그림 1. 연령대별 인구 (10대~80대 이상, 8구간). 30~40대 비중 41% — 의정부 평균(38%) 대비 약간 높음. <span class="sil sil-prov">PROV</span> SGIS 2023</div>
+  <div class="footer"><span>사실 섹션 · 출처 cell-level 추적 가능</span><span>p.4-5</span></div>
+</div>
+
+<div class="page">
+  <h2><span class="step">SECTION 3</span> 해석 — 왜 이런 패턴이 나왔는가</h2>
+  <div class="meta-row"><span class="sil sil-method">METHOD</span> Decision Tree (depth=3) + 변수 중요도 분석<span class="conf conf-high">신뢰 높음</span></div>
+  <h3>3.1 폐업률 격차의 주요 동인 (변수 중요도)</h3>
+  <table>
+    <thead><tr><th>변수</th><th class="num">중요도</th><th>방향</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr><td>카페 밀도 (점포/100m²)</td><td class="num">0.42</td><td>(+)</td><td>밀도 높을수록 폐업률 ↑</td></tr>
+      <tr><td>평균 영업기간</td><td class="num">0.28</td><td>(−)</td><td>기존 업력 짧을수록 폐업률 ↑</td></tr>
+      <tr><td>유동인구 회전률</td><td class="num">0.18</td><td>(−)</td><td>회전률 낮을수록 폐업률 ↑</td></tr>
+      <tr><td>주거/상업 비율</td><td class="num">0.08</td><td>(±)</td><td>혼합 지역이 약간 유리</td></tr>
+      <tr><td>임대료 수준</td><td class="num">0.04</td><td>(+)</td><td>유의미하지 않음</td></tr>
+    </tbody>
+  </table>
+  <h3 style="margin-top:18px">3.2 SHAP 기반 개별 기여도 (금오동 ↔ 호원동)</h3>
+  <p style="font-size:10.5px">금오동의 폐업률이 호원동 대비 +5.3p 높은 것을 다음과 같이 분해할 수 있습니다:</p>
+  <table>
+    <thead><tr><th>요인</th><th class="num">기여도 (p)</th><th>설명</th></tr></thead>
+    <tbody>
+      <tr><td>카페 밀도 차이</td><td class="num" style="color:var(--bad)">+3.1</td><td>금오 1.8 vs 호원 1.1 (100m²당)</td></tr>
+      <tr><td>유동인구 회전률 차이</td><td class="num" style="color:var(--bad)">+1.4</td><td>금오 0.7× 호원</td></tr>
+      <tr><td>업력 분포 차이</td><td class="num" style="color:var(--bad)">+0.9</td><td>금오 평균 14개월 vs 호원 22개월</td></tr>
+      <tr><td>(잔차)</td><td class="num">−0.1</td><td>설명되지 않은 부분</td></tr>
+      <tr style="font-weight:700; background:#F0F4F9"><td>합계 (관측 격차)</td><td class="num">+5.3</td><td>실측 +5.3p와 일치</td></tr>
+    </tbody>
+  </table>
+  <div class="box-prov">
+    <strong>왜 SHAP인가</strong> — 단순 회귀 계수가 아닌, 개별 동(금오)에서 각 요인이 평균 대비 얼마나 기여했는지 분해할 수 있어 의사결정 설명에 유리.
+    <span class="sil sil-method">METHOD</span> XGBoost + SHAP TreeExplainer · 부록 A.2 참조
+  </div>
+</div>
+
+<div class="page">
+  <h2><span class="step">SECTION 4</span> 비교 — 다른 동/업종과의 위치</h2>
+  <div class="meta-row"><span class="sil sil-method">METHOD</span> 의정부 14개 행정동 + 인접 시(양주·동두천) 8개 동 = 22개 동 코호트<span class="conf conf-high">신뢰 높음</span></div>
+  <h3>4.1 카페 폐업률 분포 (백분위)</h3>
+  <p style="font-size:10.5px">22개 동 중 금오동 폐업률은 <b style="color:var(--bad)">상위 18%(81퍼센타일)</b>로 평균보다 명확히 나쁨.</p>
+  <div class="chart-mock" style="height: 80px">
+    <div class="bar" style="height: 30%; background:var(--good)"></div>
+    <div class="bar" style="height: 35%; background:var(--good)"></div>
+    <div class="bar" style="height: 40%; background:var(--good)"></div>
+    <div class="bar" style="height: 45%; background:var(--good)"></div>
+    <div class="bar" style="height: 50%; background:var(--accent-2)"></div>
+    <div class="bar" style="height: 55%; background:var(--accent-2)"></div>
+    <div class="bar" style="height: 58%; background:var(--accent-2)"></div>
+    <div class="bar" style="height: 62%; background:var(--accent-2)"></div>
+    <div class="bar" style="height: 65%; background:var(--warn)"></div>
+    <div class="bar" style="height: 70%; background:var(--warn)"></div>
+    <div class="bar" style="height: 75%; background:var(--warn)"></div>
+    <div class="bar" style="height: 78%; background:var(--bad); outline:2px solid #0B1729"></div>
+    <div class="bar" style="height: 80%; background:var(--bad)"></div>
+    <div class="bar" style="height: 92%; background:var(--bad)"></div>
+  </div>
+  <div class="chart-cap">그림 2. 14개 동 폐업률 백분위. 검은 외곽선 = 금오동 (81퍼센타일).</div>
+  <h3 style="margin-top:18px">4.2 동일 카테고리 vs 차별 카테고리 — 12개월 생존율</h3>
+  <table>
+    <thead><tr><th>업종 분류</th><th class="num">표본 수</th><th class="num">12M 생존율</th><th class="num">CI 95%</th></tr></thead>
+    <tbody>
+      <tr><td>일반 카페 (동일)</td><td class="num">18</td><td class="num">61%</td><td class="num">[48-74%]</td></tr>
+      <tr><td>카페 + 베이커리</td><td class="num">3</td><td class="num">82%</td><td class="num">[55-95%]</td></tr>
+      <tr><td>카페 + 디저트 전문</td><td class="num">5</td><td class="num">73%</td><td class="num">[51-89%]</td></tr>
+      <tr><td>카페 + 스터디</td><td class="num">2</td><td class="num">⚠️ 표본 부족</td><td class="num">—</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:10px; color:var(--mute)"><span class="sil sil-ci">CI</span> Kaplan-Meier 95% CI · 표본 수 5 미만은 신뢰 불가로 처리</p>
+</div>
+
+<div class="page">
+  <h2><span class="step">SECTION 5</span> 시나리오 — 만약 이렇게 바꾼다면</h2>
+  <div class="meta-row"><span class="sil sil-method">METHOD</span> Counterfactual + 생존분석 (Cox PH)<span class="sil sil-ci">CI</span> 95%</div>
+  <p style="font-size:11px">3가지 시나리오에 대해 "동일 의뢰자가 같은 자본/경험으로 시작했을 때 12M 생존 확률"을 추정합니다.</p>
+  <div class="scenario-grid">
+    <div class="scenario">
+      <h4>S1. 동일 위치 재창업 <span class="tag tag-high">고위험</span></h4>
+      <div style="font-size:18px; font-weight:700; color:var(--bad);">38%</div>
+      <div style="font-size:9px; color:var(--mute); margin-bottom:6px;">CI [24-53%]</div>
+      <ul><li>카페 밀도 변화 없음</li><li>이전 폐업의 negative spillover 가능</li><li>BEP 도달 확률 27%</li></ul>
+    </div>
+    <div class="scenario recommended">
+      <h4>S2. 200m 이격 + 베이커리 결합 <span class="tag tag-low">저위험·권장</span></h4>
+      <div style="font-size:18px; font-weight:700; color:var(--good);">71%</div>
+      <div style="font-size:9px; color:var(--mute); margin-bottom:6px;">CI [56-84%]</div>
+      <ul><li>밀도 회피 + 희소 카테고리(베이커리 0.3/100m²)</li><li>주거 비율 높은 골목 지점 추천</li><li>BEP 도달 확률 62%</li></ul>
+    </div>
+    <div class="scenario">
+      <h4>S3. 호원동 이전 + 동일 업종 <span class="tag tag-mid">중위험</span></h4>
+      <div style="font-size:18px; font-weight:700; color:var(--warn);">59%</div>
+      <div style="font-size:9px; color:var(--mute); margin-bottom:6px;">CI [42-74%]</div>
+      <ul><li>금오 → 호원 단순 이전</li><li>지역 친숙도 손실 −12p 패널티</li><li>BEP 도달 확률 47%</li></ul>
+    </div>
+  </div>
+  <h3 style="margin-top:18px">5.1 변수 민감도 (Counterfactual)</h3>
+  <table>
+    <thead><tr><th>가정 변경</th><th class="num">생존율 변화</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr><td>밀도 1.8 → 1.2 (예: 200m 이격)</td><td class="num" style="color:var(--good)">+18p</td><td>핵심 변수</td></tr>
+      <tr><td>업종 분화 (베이커리/디저트)</td><td class="num" style="color:var(--good)">+12p</td><td>희소성 프리미엄</td></tr>
+      <tr><td>운영시간 +2h 연장</td><td class="num" style="color:var(--good)">+4p</td><td>한계효용 작음</td></tr>
+      <tr><td>임대료 +20%</td><td class="num" style="color:var(--bad)">−7p</td><td>위치 프리미엄 효과 제한적</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="page">
+  <h2><span class="step">SECTION 6</span> 권고 — 그래서 무엇을 할 것인가</h2>
+  <div class="reco">
+    <h3>핵심 권고: 시나리오 S2 — 200m 이격 + 베이커리 결합</h3>
+    <p>동일 위치 재창업(S1)은 <strong>피하십시오</strong>. 같은 자본/경험으로 12M 생존율 38% → 71%까지 끌어올릴 수 있습니다.</p>
+  </div>
+  <h3 style="margin-top:14px">실행 체크리스트</h3>
+  <table>
+    <thead><tr><th style="width:40px">#</th><th>액션</th><th style="width:80px">우선순위</th><th>근거</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>금오동 내 카페 밀도 0.6/100m² 이하 골목 후보 3곳 선정</td><td>P0</td><td>§3.1, §5.1</td></tr>
+      <tr><td>2</td><td>3곳 모두 베이커리 입점 가능 임차료/면적 확인</td><td>P0</td><td>§4.2</td></tr>
+      <tr><td>3</td><td>인근 베이커리 3곳 (0.3/100m²) 위치 매핑 — 1km 이내 충돌 회피</td><td>P1</td><td>§2.2</td></tr>
+      <tr><td>4</td><td>SGIS 30~40대 인구 비중 ≥ 38% 추가 검증</td><td>P1</td><td>§2.3</td></tr>
+      <tr><td>5</td><td>S2 BEP 시뮬레이션 — 자본/예상매출 입력 후 재계산 (12M, 24M)</td><td>P1</td><td>§5</td></tr>
+    </tbody>
+  </table>
+  <h3 style="margin-top:18px">권고하지 않는 것</h3>
+  <ul style="font-size:11px">
+    <li><b>동일 위치 재창업</b> — 동일 외부조건에서 폐업률 통계가 명확히 나쁨 (§2.1, §4.1)</li>
+    <li><b>운영시간 연장만으로 차별화</b> — 한계효용 +4p, 인건비/소진 위험 ↑ (§5.1)</li>
+    <li><b>호원동 이전 + 동일 업종</b> — 친숙도 손실 패널티가 폐업률 개선분을 상쇄 (S3)</li>
+  </ul>
+  <div class="box-prov">
+    <strong>의사결정 추적</strong> — 위 권고는 §1~5의 모든 셀을 재계산해도 동일 결론에 도달하는 한 유효합니다. 입력 데이터 갱신 시 자동 재실행되며 결론 변동 시 §7의 거짓 조건으로 표기됩니다.
+  </div>
+</div>
+
+<div class="page">
+  <h2><span class="step">SECTION 7</span> 한계 — 이 보고서가 틀릴 조건</h2>
+  <div class="meta-row"><span class="sil sil-limit">LIMIT</span> 모든 분석은 다음 가정 하에서만 유효합니다.<span class="sil sil-falsify">FALSIFY</span> 가정이 깨지면 명시적으로 재실행합니다.</div>
+  <h3>7.1 데이터 한계</h3>
+  <ul style="font-size:11px">
+    <li>LOCALDATA 인허가는 "휴게음식점" 코드만 집계 — 일반음식점으로 등록된 카페는 누락 가능</li>
+    <li>소진공 상권정보는 분기 갱신 — 최신 점포 변동 ±2주 지연</li>
+    <li>SGIS 인구는 2023년 데이터 — 2024~2025 인구 변동 미반영</li>
+    <li>VWorld 폴리곤은 행정동 단위 — 골목 단위 미세 분석은 좌표 기반 별도 검증 필요</li>
+    <li>매출/카드결제 데이터는 PoC에서 미사용 (PHASE 4 유료 구간)</li>
+  </ul>
+  <h3 style="margin-top:14px">7.2 모형 한계</h3>
+  <ul style="font-size:11px">
+    <li>표본 22개 동 — 통계적 검정력 제한, 95% CI가 넓은 케이스 존재 (§4.2)</li>
+    <li>Cox PH는 비례위험 가정 — 일부 업종에서 시간 의존 효과 가능</li>
+    <li>Counterfactual은 "동일 의뢰자/자본/경험" 가정 — 실제 변동 시 재계산 필요</li>
+  </ul>
+  <div class="box-falsify">
+    <strong><span class="sil sil-falsify">FALSIFY</span> 거짓 조건 — 다음이 사실로 확인되면 본 보고서의 권고를 폐기합니다</strong>
+    <ol style="font-size:11px; margin: 8px 0 0">
+      <li>금오동 카페 폐업률이 12개월 누적 의정부 평균 ±2p 이내로 수렴 (현재 격차 5.3p)</li>
+      <li>동 내 베이커리 신규 입점이 3곳 → 6곳 이상으로 증가 (희소성 프리미엄 소실)</li>
+      <li>30~40대 인구 비중이 38% 미만으로 하락 (타겟 고객층 축소)</li>
+      <li>주변 200m 임대료가 35% 이상 급등 (S2의 비용 가정 붕괴)</li>
+    </ol>
+  </div>
+  <h3 style="margin-top:14px">7.3 모든 결론에 대한 단일 한계 진술</h3>
+  <p style="font-size:11px; padding: 10px 14px; background:var(--paper-2); border-radius:4px; border-left: 3px solid var(--ink-2);">
+    "본 보고서는 의정부시 금오동 행정동(4115059500)의 2025-05~2026-04 12개월 LOCALDATA·소진공·SGIS 공개 데이터에 한정한 분석입니다. 매출 데이터, 카드결제 데이터, 임대차 실거래가는 포함되지 않았으며, 결론은 §7.2의 거짓 조건에 따라 갱신될 수 있습니다."
+  </p>
+</div>
+
+<div class="page">
+  <h2><span class="step">APPENDIX A</span> 방법론 (Method)</h2>
+  <h3>A.1 데이터 파이프라인</h3>
+  <ol style="font-size:11px">
+    <li>각 원천(LOCALDATA/소진공/SGIS/VWorld)을 <code>etl_uijeongbu.py</code>가 호출</li>
+    <li><code>utils/provenance.py · write_stamped()</code>가 source/url/fetched_at/license/content_hash 부착</li>
+    <li><code>utils/data_cache.py · fetch_or_load()</code>가 ETag 기반 304 캐싱</li>
+    <li>실패 시 <code>mark_failure()</code>로 sources_meta.json에 status=fail 기록 — 추적 가능성 유지</li>
+  </ol>
+  <h3>A.2 모형</h3>
+  <table>
+    <thead><tr><th>분석</th><th>모형</th><th>라이브러리</th><th>하이퍼파라미터</th></tr></thead>
+    <tbody>
+      <tr><td>변수 중요도 (§3.1)</td><td>Decision Tree</td><td>scikit-learn</td><td>max_depth=3, criterion=gini</td></tr>
+      <tr><td>SHAP 기여도 (§3.2)</td><td>XGBoost + TreeExplainer</td><td>xgboost, shap</td><td>n_estimators=200, lr=0.1</td></tr>
+      <tr><td>생존율 (§4.2, §5)</td><td>Cox PH + Kaplan-Meier</td><td>lifelines</td><td>비례위험 가정 검증 통과</td></tr>
+      <tr><td>Counterfactual (§5.1)</td><td>Marginal effect</td><td>자체 구현</td><td>각 변수 ±1σ 변화 시 효과</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="page">
+  <h2><span class="step">APPENDIX B</span> 출처 인덱스 (Provenance)</h2>
+  <p style="font-size:10.5px">본 보고서가 인용한 모든 원천 자료. <code>data_raw/sources_meta.json</code>에서 자동 생성. 각 항목은 클릭 가능한 원천 URL을 가집니다.</p>
+  <table>
+    <thead><tr><th>#</th><th>출처</th><th>레이어</th><th>수집시점</th><th>라이선스</th><th class="num">신뢰</th><th>상태</th></tr></thead>
+    <tbody>
+      <tr id="prov-1"><td>1</td><td>행정안전부 LOCALDATA · 휴게음식점 <span class="src"><a href="http://www.localdata.go.kr/">↗</a></span></td><td>localdata.json</td><td>2026-05-03</td><td>KOGL Type 1</td><td class="num"><span class="conf conf-very-high">0.95</span></td><td><span style="color:var(--warn)">⚠ 키 발급 대기</span></td></tr>
+      <tr id="prov-2"><td>2</td><td>소상공인시장진흥공단 상권정보 <span class="src"><a href="https://www.data.go.kr/">↗</a></span></td><td>sangkwon.json</td><td>2026-05-03</td><td>KOGL Type 1</td><td class="num"><span class="conf conf-high">0.90</span></td><td><span style="color:var(--warn)">⚠ 키 발급 대기</span></td></tr>
+      <tr id="prov-3"><td>3</td><td>통계청 SGIS Plus · 인구통계 <span class="src"><a href="https://sgis.kostat.go.kr/">↗</a></span></td><td>sgis.json</td><td>2026-05-03</td><td>KOGL Type 1</td><td class="num"><span class="conf conf-very-high">0.95</span></td><td><span style="color:var(--warn)">⚠ 키 발급 대기</span></td></tr>
+      <tr id="prov-4"><td>4</td><td>국토지리정보원 VWorld <span class="src"><a href="https://www.vworld.kr/">↗</a></span></td><td>vworld.json</td><td>2026-05-03</td><td>공공누리 1유형</td><td class="num"><span class="conf conf-very-high">0.98</span></td><td><span style="color:var(--warn)">⚠ 키 발급 대기</span></td></tr>
+      <tr id="prov-5"><td>5</td><td>행정안전부 주소DB + SGIS 통계지리 매핑</td><td>juso.json</td><td>2026-05-03</td><td>KOGL Type 1</td><td class="num"><span class="conf conf-high">0.90</span></td><td><span style="color:var(--good)">✅ 수집 완료</span></td></tr>
+    </tbody>
+  </table>
+  <div class="box-prov" style="margin-top:14px">
+    <strong>현재 상태 (2026-05-03 PoC 목업)</strong> — 5종 중 1종(주소/코드 매핑)은 정적 산출로 수집 완료. 나머지 4종은 외부 API 키 발급 후 자동 채워집니다. 키 확보 시 <code>python3 etl_uijeongbu.py</code> 1회 실행으로 본 부록이 갱신됩니다.
+  </div>
+</div>
+
+<div class="page">
+  <h2><span class="step">APPENDIX C</span> 재현 코드 (Reproducibility)</h2>
+  <p style="font-size:11px">본 보고서를 1줄 명령으로 재현할 수 있습니다.</p>
+  <div style="background:var(--ink); color:#B5E853; padding:14px 16px; border-radius:6px; font-family:'JetBrains Mono','Menlo',monospace; font-size:11px; overflow-x:auto;">
+$ git clone https://github.com/gagahoho/0051_TowninAlpafold<br>
+$ cd 0051_TowninAlpafold<br>
+$ cp .env.example .env  <span style="color:#9CA3AF"># 4개 API 키 입력</span><br>
+$ python3 etl_uijeongbu.py            <span style="color:#9CA3AF"># 데이터 수집</span><br>
+$ python3 reports/build_meongbun_report.py --dong 4115059500
+  </div>
+  <h3 style="margin-top:18px">단계별 산출물</h3>
+  <table>
+    <thead><tr><th>단계</th><th>스크립트</th><th>산출 파일</th></tr></thead>
+    <tbody>
+      <tr><td>① 데이터 수집</td><td><code>etl_uijeongbu.py</code></td><td><code>data_raw/uijeongbu_geomo/{5종}.json</code> + <code>sources_meta.json</code></td></tr>
+      <tr><td>② Provenance 부착</td><td><code>utils/provenance.py</code></td><td>각 JSON 파일에 <code>_provenance</code> 헤더</td></tr>
+      <tr><td>③ 캐싱</td><td><code>utils/data_cache.py</code></td><td><code>.cache/http/</code> ETag 기반 304</td></tr>
+      <tr><td>④ 분석 (예정)</td><td><code>analysis/decision_tree.py</code></td><td><code>analysis/results.json</code></td></tr>
+      <tr><td>⑤ 보고서 빌드 (예정)</td><td><code>reports/build_meongbun_report.py</code></td><td><code>~/Downloads/금오동_명분컨설팅_YYMMDD.pdf</code></td></tr>
+    </tbody>
+  </table>
+  <h3 style="margin-top:14px">버전 정보</h3>
+  <ul style="font-size:11px">
+    <li>Python 3.14.4 · 의존성 표준 라이브러리만 사용 (urllib, json, hashlib)</li>
+    <li>분석/모델링 단계에서 추가: scikit-learn 1.5+, xgboost 2.0+, lifelines 0.27+, shap 0.45+</li>
+    <li>Provenance 인프라 v1.0 (2026-05-03)</li>
+  </ul>
+  <div class="footer"><span>End of Report · 의정부시 금오동 명분 컨설팅 PoC #001</span><span>Generated 2026-05-03 · MOCKUP</span></div>
+</div>
+
+</body>
+</html>

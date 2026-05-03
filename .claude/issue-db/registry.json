@@ -1503,6 +1503,358 @@
           "app.js"
         ]
       }
+    },
+    {
+      "id": "MEONGBUN_CONSULTING-001",
+      "type": "EPIC",
+      "priority": "P1",
+      "status": "APPROVED",
+      "title": "[EPIC] 의정부 금오동 명분 컨설팅 보고서 시스템 — 근거→권고 5단계 사슬",
+      "detail": "대표님 결정 (2026-05-03): 허울 보고서가 아닌 '근거→해석→비교→시나리오→권고' 5단계 명분 사슬을 가진 의사결정 보고서. TG 정체성 전환: '데이터 시각화 도구' → '명분 추적 가능한 의사결정 코치'. 케이스: 의정부시 금오동 카페 재창업 (위치/업종전환 효과). PoC 1편 → 사업화 결정 → 풀 확장. 객관성/과학성 보장 의무: SIL(Scientific Integrity Layer) 5장치 동시 통합.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "sub_issues": [
+        "DATA_UIJEONGBU_PHASE1-001",
+        "META_DATA_INFRA-001",
+        "DATA_UIJEONGBU_PHASE2-001",
+        "DATA_UIJEONGBU_PHASE3-001",
+        "MODULE_SURVIVAL-001",
+        "MODULE_DECISION_TREE_REASONS-001",
+        "MODULE_COUNTERFACTUAL-001",
+        "MODULE_SHAP-001",
+        "MEONGBUN_REPORT_TEMPLATE-001",
+        "SIL_INTEGRATION-001",
+        "DATA_UIJEONGBU_PHASE4_PAID-001"
+      ],
+      "meta_acceptance": [
+        "의정부 금오동 1편 명분 보고서 PDF 자동 생성",
+        "5단계 논리 사슬 모든 단계 검증 통과",
+        "SIL 5장치 (Provenance/Method/CI/Limitation/Falsifiability) 모든 셀에 부착",
+        "재현 가능: GitHub 코드 + 명령 1줄로 동일 보고서 재생성",
+        "비용 가드레일: 무료 데이터만으로 PoC 완성"
+      ],
+      "decision_log": {
+        "decided_at": "2026-05-03",
+        "decided_by": "대표님",
+        "recommend_option": "A (10개 이슈 모두 등록)",
+        "execution_strategy": "CLI에서 구현 (Claude Code CLI 자동 디스패치)",
+        "self_implementation_forbidden": true
+      },
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "DATA_UIJEONGBU_PHASE1-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE_PARTIAL",
+      "title": "[D-1] 의정부 금오동 명분 등급 S 데이터 골격 (LOCALDATA + 소진공 + SGIS + VWorld)",
+      "detail": "의정부시 금오동 1동의 명분 등급 S 데이터 5종 수집:\n1) LOCALDATA 인허가 (D1) — 카페 창업/폐업 1년치\n2) 소진공 상권정보 (D2) — 동 내 점포 수 + 카페 분포\n3) SGIS 인구 (B1) — 연령/성별 인구 (의정부시 금오동 행정동 코드)\n4) VWorld 행정경계 (A1) — 폴리곤\n5) 행안부 주소DB (A2) + SGIS 통계지리 (A3) — 코드 매핑\n출처/시점/신뢰도 메타데이터 자동 부착 (Provenance Stamp 준비).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [],
+      "files": [
+        "data_raw/uijeongbu_geomo/ 디렉토리 (신규)",
+        "etl_uijeongbu.py (신규)",
+        "data_raw/sources_meta.json (신규 — Provenance 인덱스)"
+      ],
+      "acceptance": [
+        "data_raw/uijeongbu_geomo/{localdata,sgis,vworld,sangkwon}.json 5개 파일 생성",
+        "각 파일에 source/url/fetched_at/license 메타 헤더 의무",
+        "의정부 금오동 행정동 코드(예: 41150...) 정확히 매칭",
+        "카페 인허가 최소 30건, 점포 정보 최소 100건 수집",
+        "Playwright 검증: data_raw/sources_meta.json에서 5종 모두 status=ok"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "META_DATA_INFRA-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[META] data_raw 캐싱 + Provenance Stamp 인프라",
+      "detail": "의정부 컨설팅 + 향후 모든 동 확장을 위한 공통 데이터 수집 인프라:\n1) data_raw/{source}/{dong_code}/{layer}.json 디렉토리 표준\n2) Provenance Stamp 자동 부착 함수 (utils/provenance.py)\n3) ETag/Last-Modified 캐싱 (재수집 시 변경분만)\n4) datago-fetch skill 통합 (공공데이터포털 키 자동 관리)\nPhase D-1과 병렬 진행 가능.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [],
+      "files": [
+        "utils/provenance.py (신규)",
+        "utils/data_cache.py (신규)",
+        "data_raw/README.md (신규 — 표준 명세)"
+      ],
+      "acceptance": [
+        "provenance.stamp(data, source, url, license) 함수 동작",
+        "data_cache.fetch_or_load(url, key) ETag 기반 캐싱",
+        "의정부 PHASE1 데이터에 자동 적용 검증"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "DATA_UIJEONGBU_PHASE2-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[D-2] 의정부 금오동 명분 등급 S 완성 (공시지가 + 실거래가 + TAGO)",
+      "detail": "명분 등급 S 나머지 데이터 4종:\n1) 공시지가 (C1) — 국토부 부동산공시가격 OpenAPI\n2) 실거래가 (C2) — 국토부 실거래가 API (5년치 월별)\n3) TAGO 정류장 이용객 (B4) — 통신사 회피 핵심\n4) TAGO 정류장 위치 (A5) — 동 내 정류장 매핑\nsimula_data_real.json에 의정부 금오동 1동 추가 → 16 레이어 채움.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "DATA_UIJEONGBU_PHASE1-001",
+        "META_DATA_INFRA-001"
+      ],
+      "files": [
+        "data_raw/uijeongbu_geomo/{molit,tago}.json (신규)",
+        "simula_data_real.json (의정부 금오동 1동 추가)",
+        "etl_uijeongbu.py (확장)"
+      ],
+      "acceptance": [
+        "simula_data_real.json의 dongs 배열에 의정부 금오동 1개 추가 확인",
+        "land_price/tx_volume/visitors_total/transit_score 등 16 레이어 채움",
+        "causal_extract.py 실행 시 의정부 동 포함 정상 처리"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "DATA_UIJEONGBU_PHASE3-001",
+      "type": "USER_STORY",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[D-3] 카카오 경쟁 분석 + 보너스 무료 데이터",
+      "detail": "명분 등급 A 일부 + 보너스:\n1) 카카오 로컬 API (F1) — 반경 500m 카페/베이커리/음식점/편의점\n2) VWorld 항공사진 시계열 (보너스) — 2020 vs 2024 시각 비교\n3) 공공데이터 대학캠퍼스/오피스 (보너스) — 수요 예측 명분\n카카오 키는 월요일 발급 후 진행. 그 전엔 다른 데이터 수집.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "DATA_UIJEONGBU_PHASE2-001"
+      ],
+      "files": [
+        "data_raw/uijeongbu_geomo/kakao_pois.json (신규)",
+        "data_raw/uijeongbu_geomo/vworld_aerial.json (신규)",
+        "data_raw/uijeongbu_geomo/poi_universities.json (신규)"
+      ],
+      "acceptance": [
+        "반경 500m 내 카페 N개 + 인접업종 4종 수집",
+        "항공사진 2020/2024 2장 다운",
+        "대학/오피스/대형 수요 시설 매핑 완료"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MODULE_SURVIVAL-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[모듈1] Survival Analysis — 창업 후 N개월 생존률 (Kaplan-Meier)",
+      "detail": "명분 사슬 [3] 비교 단계의 핵심 모듈:\n\"금오동 카페 24개월 생존률 67% vs 의정부 평균 78%\" 같은 비교 가능.\n알고리즘: lifelines 또는 statsmodels Kaplan-Meier (무료).\n입력: LOCALDATA 인허가 (D1) 창업일/폐업일.\n출력: 생존 곡선 + 95% CI + log-rank test (군집 비교).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "DATA_UIJEONGBU_PHASE2-001"
+      ],
+      "files": [
+        "analysis/survival.py (신규)",
+        "analysis/__init__.py (신규)",
+        "requirements.txt (lifelines 추가)"
+      ],
+      "acceptance": [
+        "Kaplan-Meier 곡선 계산 함수 동작",
+        "95% 신뢰구간 동시 출력",
+        "log-rank test로 두 군집 비교 가능 (예: 금오동 vs 의정부 평균)",
+        "결과 JSON 스키마: {months, survival, ci_low, ci_high, n, events}"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MODULE_DECISION_TREE_REASONS-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[모듈3] Decision Tree with Reasons — 이유 추적 의사결정 트리",
+      "detail": "명분 사슬 [5] 권고 단계의 핵심:\n기존 decision_tree.json 확장. 각 분기점에 \"왜 이 분기?\" 데이터 근거 부착.\n잎 노드 = 권고 + 모든 근거 사슬 (역추적 가능).\n알고리즘: sklearn DecisionTreeClassifier + 분기 이유 자동 캡처.\n입력: simula_data_real (130+1 동) + 라벨 (생존/폐업).\n출력: 트리 구조 + 각 노드에 sample_count/gini/reason 메타.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "DATA_UIJEONGBU_PHASE2-001"
+      ],
+      "files": [
+        "analysis/decision_tree_reasons.py (신규)",
+        "decision_tree_v2.json (출력)",
+        "app.js (트리 시각화 확장)"
+      ],
+      "acceptance": [
+        "sklearn DT로 트리 학습 + 노드별 근거 텍스트 자동 생성",
+        "잎 노드에서 root까지 역추적 가능 (모든 분기 근거 나열)",
+        "JSON 스키마: {node_id, feature, threshold, reason, samples, gini, children}",
+        "UI에서 클릭 시 명분 사슬 5단계 표시"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MODULE_COUNTERFACTUAL-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[모듈2] Counterfactual Scenario — \"만약 베이커리였다면?\" 반사실 시뮬",
+      "detail": "명분 사슬 [4] 시나리오 단계의 핵심:\n\"만약 같은 자리에 베이커리/무인 24시였다면 어땠을까?\" 시뮬.\n알고리즘: Propensity Score Matching (sklearn 무료) + 시계열 이식.\n입력: simula_data_real + 업종별 시계열 패턴.\n출력: 3개 옵션별 12개월 예측 cone (p10~p90).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_SURVIVAL-001",
+        "MODULE_DECISION_TREE_REASONS-001"
+      ],
+      "files": [
+        "analysis/counterfactual.py (신규)",
+        "requirements.txt (causalinference 또는 자체 구현)"
+      ],
+      "acceptance": [
+        "동 1개 + 옵션 3개 입력 → 각 옵션별 12개월 cone 출력",
+        "Propensity Score 매칭 검증 (treatment vs control balance)",
+        "결과 JSON: {option_id, predicted_revenue: {p10, p50, p90}, matched_n, balance_score}"
+      ],
+      "estimate_h": 10,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MODULE_SHAP-001",
+      "type": "USER_STORY",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[모듈4] SHAP Explainability — 권고 변수별 기여도",
+      "detail": "명분 사슬 [5] 권고 보조:\n\"베이커리 권고: 인접 베이커리 부재 +35%, 30대 인구 +28%, ...\" 변수별 기여도.\n알고리즘: shap 라이브러리 (TreeExplainer, MODULE3 트리 활용).\n출력: 변수별 SHAP value + waterfall plot 데이터.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_DECISION_TREE_REASONS-001"
+      ],
+      "files": [
+        "analysis/shap_explain.py (신규)",
+        "requirements.txt (shap 추가)"
+      ],
+      "acceptance": [
+        "SHAP TreeExplainer로 권고 1건 → 변수별 기여도 출력",
+        "상위 5개 기여 변수 + 기여 % 명시",
+        "결과 JSON: {recommendation, top_features: [{name, shap_value, pct}]}"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MEONGBUN_REPORT_TEMPLATE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[보고서] 명분 컨설팅 PDF 7섹션 + 부록 3 자동 생성",
+      "detail": "명분 사슬 5단계 + 한계공시 + 부록을 1편 PDF로 자동 생성:\n구조: ① 한페이지 요약 ② 사실 ③ 해석 ④ 비교 ⑤ 시나리오 ⑥ 권고 ⑦ 한계 + 부록 (Method/Provenance/재현코드).\n템플릿: report-pdf-builder skill 확장.\n디자인: SLDS 다크 + pLDDT 4단계 팔레트.\n출력: ~/Downloads/{동명}_명분컨설팅_{YYMMDD}.pdf",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_COUNTERFACTUAL-001",
+        "MODULE_SHAP-001",
+        "DATA_UIJEONGBU_PHASE3-001"
+      ],
+      "files": [
+        "reports/meongbun_template.html (신규)",
+        "reports/build_meongbun_report.py (신규)",
+        "docs/methods/*.md (Method Card 9종 신규)"
+      ],
+      "acceptance": [
+        "의정부 금오동 1편 PDF 자동 생성 (12~15 페이지)",
+        "7섹션 + 부록 3 모두 포함",
+        "각 셀이 출처 URL 클릭 가능 (PDF 하이퍼링크)",
+        "재현 명령 1줄 명시: python3 reports/build_meongbun_report.py --dong 41150...",
+        "wkhtmltopdf 12mm 마진 룰 준수 (report-pdf-builder skill)"
+      ],
+      "estimate_h": 10,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "SIL_INTEGRATION-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[보장] SIL 객관성 보장 5장치 통합 (Provenance + Method + CI + Limitation + Falsifiability)",
+      "detail": "TG의 brand-dna \"분석가의 절제\" + \"학술/공공 시연\" frame 보장:\nA. Provenance Stamp — 모든 셀에 출처 (META_DATA_INFRA에서 부착, 보고서에 노출)\nB. Method Card — 9종 분석 방법 1장씩 (docs/methods/)\nC. CI Mandate — 단일 숫자 금지, 모든 수치 cone (p10~p90)\nD. Limitation Disclosure — 모든 보고서 의무 섹션\nE. Falsifiability Test — 반증 기준 명시 (12개월 후 cone 밖이면 폐기)\n명분 보고서 템플릿과 통합.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MEONGBUN_REPORT_TEMPLATE-001"
+      ],
+      "files": [
+        "sil/provenance_renderer.py (신규)",
+        "sil/method_card_renderer.py (신규)",
+        "sil/limitation_section.py (신규)",
+        "sil/falsifiability.py (신규)",
+        "reports/meongbun_template.html (확장)"
+      ],
+      "acceptance": [
+        "모든 PDF 셀이 source 메타 보유 + 부록에 자동 노출",
+        "9종 Method Card 부록에 자동 포함",
+        "단일 점추정 수치가 보고서에 0개 (모두 range)",
+        "한계 섹션 7항목 자동 채움",
+        "반증 기준 4종 자동 명시 (cone 도달, 폐업률 ±50%, 인과 5쌍 중 3 무관, 12개월 갱신)"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "DATA_UIJEONGBU_PHASE4_PAID-001",
+      "type": "USER_STORY",
+      "priority": "P3",
+      "status": "DEFERRED",
+      "title": "[D-4 보류] 유료 데이터 통합 (부동산플래닛/KB/나이스)",
+      "detail": "회색지대 + 유료 데이터 5종 (PoC 성공 + 사업화 결정 시 활성):\n1) C3 부동산플래닛 임대시세 (회색 — robots.txt 검토 후)\n2) C4 점포라인 권리금 (회색)\n3) D5 나이스 비즈맵 (월 50만)\n4) E1 KB 데이터플러스 (월 20만)\n5) G3 나이스 매출 추정 (건당 10만)\n트리거: 의정부 금오동 명분 보고서 1편 발행 + 사업화 의사결정.",
+      "assign_to": "observer",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [],
+      "files": [
+        "추후 결정"
+      ],
+      "acceptance": [
+        "(트리거 후) 변호사 검토 보고 1건",
+        "(트리거 후) 비용 가드레일 설정 (월 100만 이내)",
+        "(트리거 후) 활성화 시 ETL 확장"
+      ],
+      "estimate_h": 0,
+      "payload": {
+        "files_changed": []
+      }
     }
   ],
   "hooks": {
@@ -1872,14 +2224,94 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 20,
+        "timestamp": "2026-05-03T18:22:23.565226",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 35,
+          "done": 7,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 21,
+        "timestamp": "2026-05-03T18:25:30.298129",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 35,
+          "done": 7,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 22,
+        "timestamp": "2026-05-03T18:51:18.217995",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 7,
+          "in_progress": 2,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 23,
+        "timestamp": "2026-05-03T18:54:29.473056",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, code-quality, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 7,
+          "in_progress": 2,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 24,
+        "timestamp": "2026-05-03T19:06:41.282121",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 7,
+          "in_progress": 2,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
-    "total_issues": 35,
+    "total_issues": 47,
     "completed": 31,
     "failed": 0,
-    "evolved": 19
+    "evolved": 24
   },
   "opus_budget_state": {
     "daily": {
