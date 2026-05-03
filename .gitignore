@@ -42,6 +42,10 @@ Thumbs.db
 .claude/issue-db/dispatch-lock
 .claude/race-artifacts/
 .claude/trace/
+.claude/cli-dispatch-logs/
+.claude/cli-dispatch-prompts/
+.claude/hooks/cli-auto-dispatch.sh
+.claude/hooks/cli-on-complete.sh
 
 # Conductor / 로컬 임시
 .conductor/

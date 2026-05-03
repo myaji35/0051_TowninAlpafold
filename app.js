@@ -615,6 +615,24 @@ function buildAnalyzeLayers() {
   const filter = document.getElementById('m-filter').value;
   const dongs = filterDongs(filter);
 
+  // V-0: VizEngine 위임 — 등록된 플러그인이 있으면 그쪽으로 라우팅
+  const VIZ_TYPE = mode === 'columns' ? 'columns3d'
+                 : mode === 'heat'    ? 'heatmap'
+                 : mode === 'hex'     ? 'hexagon' : null;
+  if (VIZ_TYPE && typeof window.VizEngine !== 'undefined' && window.VizEngine.has(VIZ_TYPE)) {
+    const scope = {
+      dongs, monthIndex: currentMonth, totalMonths: (DATA && DATA.meta && DATA.meta.months) ? DATA.meta.months.length : 60,
+      height: heightLayer, color: colorLayer,
+      dongCode: selectedDong ? selectedDong.code : null,
+      onPick: onPickAnalyze,
+    };
+    // ScopeManager에 silent 동기화 (재렌더 무한 루프 방지) — 변경 통지는 setProps가 담당
+    window.VizScope.instance.setSilent(scope);
+    const scales = window.VizScales.resolve(scope);
+    const data   = window.VizCurator.curate(VIZ_TYPE, scope, scales);
+    return window.VizEngine.get(VIZ_TYPE).render(null, data, scales, scope);
+  }
+
   const allH = dongs.flatMap(d => d.layers[heightLayer]);
   const maxH = Math.max(...allH);
   const allC = dongs.flatMap(d => d.layers[colorLayer]);
@@ -1420,14 +1438,18 @@ function renderDecisionTree() {
   const maxDepth = Math.max(...allNodes.map(n=>n.depth));
   const leafNodes = allNodes.filter(n=>n.leaf);
   const nLeaves = leafNodes.length;
-  // 좌표 정규화
-  const W = 720, H = 320;
-  const padX = 40, padY = 28;
+  // 잎 박스 폭 보장: 최소 75px/잎 → viewBox 동적 확장 (겹침 방지)
+  const LEAF_W = 56, LEAF_GAP = 14;
+  const padX = 48, padY = 28;
+  const W = Math.max(720, padX*2 + nLeaves * (LEAF_W + LEAF_GAP));
+  const H = 320;
   const innerW = W - padX*2, innerH = H - padY*2;
   allNodes.forEach(n => {
     n.px = padX + (n.x / Math.max(1, nLeaves - 1)) * innerW;
     n.py = padY + (n.depth / Math.max(1, maxDepth)) * innerH;
   });
+  // viewBox 동적 갱신 (가로 스크롤 발생, 라벨 겹침 0)
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   // 선택된 동의 분기 경로
   const dong = (typeof selectedDong !== 'undefined' && selectedDong) ? selectedDong : null;
   const path = dong ? _classifyDong(TREE_MODEL, layout, dong) : [];
@@ -1450,16 +1472,20 @@ function renderDecisionTree() {
     const isOn = onPath.has(n.id);
     if (n.leaf) {
       const color = VIBE_COLOR[n.class] || '#9CA3AF';
-      s += `<rect x="${n.px-30}" y="${n.py-10}" width="60" height="20" rx="4" fill="${color}" stroke="${isOn?'#fff':'#2A3445'}" stroke-width="${isOn?2:0.5}"/>`;
-      s += `<text x="${n.px}" y="${n.py+3}" text-anchor="middle" fill="#0F1419" font-size="9" font-family="ui-sans-serif" font-weight="700">${n.class}</text>`;
+      // 클래스명 길이로 폰트 사이즈 자동 조정 (rising_star 11자도 LEAF_W 56px에 들어가도록)
+      const labelLen = String(n.class || '').length;
+      const fz = labelLen >= 11 ? 7.5 : labelLen >= 8 ? 8.5 : 9.5;
+      s += `<rect x="${n.px - LEAF_W/2}" y="${n.py-10}" width="${LEAF_W}" height="20" rx="4" fill="${color}" stroke="${isOn?'#fff':'#2A3445'}" stroke-width="${isOn?2:0.5}"/>`;
+      s += `<text x="${n.px}" y="${n.py+3}" text-anchor="middle" fill="#0F1419" font-size="${fz}" font-family="ui-sans-serif" font-weight="700">${n.class}</text>`;
       s += `<text x="${n.px}" y="${n.py+18}" text-anchor="middle" fill="#A4B0C0" font-size="8" font-family="ui-monospace">n=${n.samples}</text>`;
     } else {
       const fill = isOn ? '#5BC0EB' : '#1A2330';
       const txtColor = isOn ? '#0F1419' : '#E8EEF6';
       s += `<circle cx="${n.px}" cy="${n.py}" r="4.5" fill="${fill}" stroke="#2A3445" stroke-width="1"/>`;
-      // 분기 라벨
+      // 분기 라벨 — 깊이가 짝수면 위, 홀수면 아래로 (인접 노드 라벨 충돌 방지)
       const fmtThr = (Math.abs(n.threshold) >= 100) ? n.threshold.toFixed(0) : n.threshold.toFixed(2);
-      s += `<text x="${n.px}" y="${n.py-8}" text-anchor="middle" fill="${txtColor}" font-size="8" font-family="ui-monospace">${n.feature_name} ≤ ${fmtThr}</text>`;
+      const labelDy = (n.depth % 2 === 0) ? -8 : 14;
+      s += `<text x="${n.px}" y="${n.py + labelDy}" text-anchor="middle" fill="${txtColor}" font-size="8" font-family="ui-monospace">${n.feature_name} ≤ ${fmtThr}</text>`;
     }
   });
   svg.innerHTML = s;
@@ -1550,6 +1576,42 @@ function switchDsPane() {
   else if (dsActiveTab === 'ai') renderDsAi();
   else if (dsActiveTab === 'causal') renderDsCausal();
   else if (dsActiveTab === 'stack') renderDsStack();
+  else if (dsActiveTab === 'vizpack') renderDsVizPack();
+}
+
+// [V-1/V-2/V-3] Viz Pack — 9종 ChartPlugin 일괄 렌더
+function renderDsVizPack() {
+  if (!window.VizEngine || !DATA) return;
+  const scope = {
+    dongs: DATA.dongs,
+    dongCode: selectedDong ? selectedDong.code : (DATA.dongs[0] && DATA.dongs[0].code),
+    monthIndex: 59,
+    height: 'land_price',
+    color: 'biz_cafe',
+    causal: CAUSAL,
+  };
+  const charts = [
+    ['ridgeline',        'viz-ridgeline'],
+    ['sankey-map',       'viz-sankey-map'],
+    ['calendar-heat',    'viz-calendar-heat'],
+    ['violin',           'viz-violin'],
+    ['spiral',           'viz-spiral'],
+    ['small-multiples',  'viz-small-multiples'],
+    ['slope',            'viz-slope'],
+    ['bullet',           'viz-bullet'],
+    ['map-treemap',      'viz-map-treemap'],
+  ];
+  charts.forEach(([id, target]) => {
+    try {
+      const plugin = window.VizEngine.get(id);
+      if (!plugin) return;
+      plugin.render(target, { dongs: DATA.dongs, causal: CAUSAL }, null, scope);
+    } catch (e) {
+      console.warn(`[VizPack] ${id} 렌더 실패:`, e.message);
+    }
+  });
+  // Linked Brushing 활성
+  if (window.VizLinkedBrushing) window.VizLinkedBrushing.bind();
 }
 
 // ─────────────────────────────────────────────

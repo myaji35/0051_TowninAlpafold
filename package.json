@@ -13,6 +13,7 @@
     "verify:responsive": "node verify_responsive.mjs",
     "verify:workflow": "node verify_workflow.mjs",
     "verify:decision_tree": "node verify_decision_tree.mjs",
+    "verify:viz_pack": "node verify_viz_pack.mjs",
     "train:tree": ".venv/bin/python decision_tree_train.py",
     "auto:detect": "bash .claude/hooks/auto-detect.sh",
     "verify:all": "node verify_all.mjs",

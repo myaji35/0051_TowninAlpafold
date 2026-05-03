@@ -538,6 +538,7 @@
       <button data-ds="ai" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🤖 AI Pipeline</button>
       <button data-ds="causal" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🧬 Causal Graph</button>
       <button data-ds="stack" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🚀 6개월 Stack</button>
+      <button data-ds="vizpack" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">📊 Viz Pack</button>
       <span class="ml-auto text-[10px] mono text-gray-500">마지막 ETL: <span class="text-cyan-300">2026-05-01 03:00</span></span>
     </div>
 
@@ -862,6 +863,53 @@
       </div>
     </div>
 
+    <!-- ─── Viz Pack — VizEngine 9종 차트 갤러리 ─── -->
+    <div id="ds-vizpack" class="ds-pane hidden">
+      <div class="glass-light rounded-lg p-3 mb-3 text-[11px] mono text-gray-300 leading-relaxed">
+        📊 <strong style="color:#5BC0EB">Viz Pack</strong> — VizEngine 단일 엔진 + 9종 ChartPlugin 갤러리.
+        모든 차트는 동일 데이터/스코프/팔레트 공유 (pLDDT 4단계).
+        한 차트 hover 시 다른 차트의 같은 동이 동시 강조 (Linked Brushing).
+      </div>
+      <div class="grid grid-cols-12 gap-3">
+        <div class="col-span-6 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🎚 Ridgeline (Joy Plot) — 30개 동 시계열 누적</div>
+          <svg id="viz-ridgeline" width="100%" height="320" viewBox="0 0 720 360"></svg>
+        </div>
+        <div class="col-span-6 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🌊 Sankey on Map — 5지표 인과 흐름</div>
+          <svg id="viz-sankey-map" width="100%" height="280" viewBox="0 0 640 320"></svg>
+        </div>
+        <div class="col-span-6 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🗓 Calendar Heatmap — 60개월 (선택 동)</div>
+          <svg id="viz-calendar-heat" width="100%" height="220" viewBox="0 0 480 220"></svg>
+        </div>
+        <div class="col-span-6 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🎻 Violin (KDE) — 시나리오별 분포</div>
+          <svg id="viz-violin" width="100%" height="280" viewBox="0 0 720 320"></svg>
+        </div>
+        <div class="col-span-4 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🌀 Spiral — 1년=360°, 5년 spiral</div>
+          <svg id="viz-spiral" width="100%" height="320" viewBox="0 0 360 360"></svg>
+        </div>
+        <div class="col-span-8 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">▦ Small Multiples — 5×5 mini chart 격자</div>
+          <svg id="viz-small-multiples" width="100%" height="380" viewBox="0 0 720 420"></svg>
+        </div>
+        <div class="col-span-8 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">↗ Slope Graph — 두 시점 비교 (Top 25)</div>
+          <svg id="viz-slope" width="100%" height="320" viewBox="0 0 720 360"></svg>
+        </div>
+        <div class="col-span-4 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🎯 Bullet — KPI vs 목표</div>
+          <svg id="viz-bullet" width="100%" height="240" viewBox="0 0 640 260"></svg>
+        </div>
+        <div class="col-span-12 glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🗺 Cartogram (Squarified Treemap) — 데이터 비율로 영역 왜곡 (Top 50)</div>
+          <svg id="viz-map-treemap" width="100%" height="320" viewBox="0 0 720 360"></svg>
+        </div>
+      </div>
+    </div>
+
     <!-- ─── Catalog ─── -->
     <div id="ds-catalog" class="ds-pane hidden">
       <div class="glass-light rounded-lg p-3 mb-3 flex items-center gap-3">
@@ -1018,6 +1066,28 @@
 
 </main>
 
+<!-- VizEngine 코어 (V-0): 13종 차트의 단일 진입점 -->
+<script src="viz/tokens.js"></script>
+<script src="viz/scales.js"></script>
+<script src="viz/curator.js"></script>
+<script src="viz/scope.js"></script>
+<script src="viz/plugin-registry.js"></script>
+<script src="viz/engine.js"></script>
+<script src="viz/plugins/columns3d.js"></script>
+<script src="viz/plugins/heatmap.js"></script>
+<script src="viz/plugins/hexagon.js"></script>
+<script src="viz/plugins/pearson5x5.js"></script>
+<!-- V-1 + V-2 + V-3 차트 플러그인 -->
+<script src="viz/plugins/ridgeline.js"></script>
+<script src="viz/plugins/sankey-map.js"></script>
+<script src="viz/plugins/calendar-heat.js"></script>
+<script src="viz/plugins/violin.js"></script>
+<script src="viz/plugins/spiral.js"></script>
+<script src="viz/plugins/small-multiples.js"></script>
+<script src="viz/plugins/slope.js"></script>
+<script src="viz/plugins/map-treemap.js"></script>
+<script src="viz/plugins/bullet.js"></script>
+<script src="viz/plugins/linked-brushing.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

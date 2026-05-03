@@ -16,6 +16,7 @@ const SUITES = [
   { name: 'responsive', file: 'verify_responsive.mjs' },
   { name: 'workflow',   file: 'verify_workflow.mjs' },
   { name: 'decision_tree', file: 'verify_decision_tree.mjs' },
+  { name: 'viz_pack', file: 'verify_viz_pack.mjs' },
 ];
 
 const MIME = {
