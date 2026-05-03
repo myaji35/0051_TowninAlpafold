@@ -501,17 +501,17 @@
 
     <!-- [DECISION_TREE-001] 분류 트리 + 변수 중요도 -->
     <div class="grid grid-cols-12 gap-4 mt-4">
-      <div class="col-span-8 glass-light rounded-lg p-4">
+      <div class="col-span-7 glass-light rounded-lg p-4" style="overflow-x:auto">
         <div class="flex items-baseline justify-between mb-2">
           <div class="text-[10px] mono text-gray-400">🌳 Vibe 분류 트리 (Decision Tree)</div>
           <div class="text-[9px] mono" id="d-tree-meta" style="color:#A78BFA">—</div>
         </div>
-        <svg id="d-tree-canvas" width="100%" height="320" viewBox="0 0 720 320"></svg>
+        <svg id="d-tree-canvas" width="100%" height="320" viewBox="0 0 720 320" preserveAspectRatio="xMidYMid meet"></svg>
         <div class="text-[9px] text-gray-500 mt-2 leading-snug">분기 조건은 학습 데이터 기준 임계값. 동을 선택하면 해당 동의 분기 경로가 하이라이트됩니다. <span style="color:#FED766">합성 데이터 위 학습</span> — 실데이터 도입(<a href="docs/data-integrity-diagnosis.md" target="_blank" class="text-cyan-400 underline">ISS-018</a>) 시 정확도 변동 예상.</div>
       </div>
-      <div class="col-span-4 glass-light rounded-lg p-4">
+      <div class="col-span-5 glass-light rounded-lg p-4">
         <div class="text-[10px] mono text-gray-400 mb-2">📊 변수 중요도 (Feature Importance)</div>
-        <svg id="d-tree-importance" width="100%" height="200" viewBox="0 0 240 200"></svg>
+        <svg id="d-tree-importance" width="100%" height="220" viewBox="0 0 280 220"></svg>
         <div class="text-[9px] text-gray-500 mt-1 leading-snug">의사결정에 기여하는 정도. 합산 1.0.</div>
       </div>
     </div>

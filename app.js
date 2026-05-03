@@ -1438,9 +1438,9 @@ function renderDecisionTree() {
   const maxDepth = Math.max(...allNodes.map(n=>n.depth));
   const leafNodes = allNodes.filter(n=>n.leaf);
   const nLeaves = leafNodes.length;
-  // 잎 박스 폭 보장: 최소 75px/잎 → viewBox 동적 확장 (겹침 방지)
-  const LEAF_W = 56, LEAF_GAP = 14;
-  const padX = 48, padY = 28;
+  // 잎 박스 폭 보장: 최소 60px/잎 → viewBox 동적 확장 (겹침 방지) + 좌측 블록 폭 절감
+  const LEAF_W = 52, LEAF_GAP = 8;
+  const padX = 32, padY = 28;
   const W = Math.max(720, padX*2 + nLeaves * (LEAF_W + LEAF_GAP));
   const H = 320;
   const innerW = W - padX*2, innerH = H - padY*2;
@@ -1474,7 +1474,7 @@ function renderDecisionTree() {
       const color = VIBE_COLOR[n.class] || '#9CA3AF';
       // 클래스명 길이로 폰트 사이즈 자동 조정 (rising_star 11자도 LEAF_W 56px에 들어가도록)
       const labelLen = String(n.class || '').length;
-      const fz = labelLen >= 11 ? 7.5 : labelLen >= 8 ? 8.5 : 9.5;
+      const fz = labelLen >= 11 ? 7 : labelLen >= 8 ? 8 : 9;
       s += `<rect x="${n.px - LEAF_W/2}" y="${n.py-10}" width="${LEAF_W}" height="20" rx="4" fill="${color}" stroke="${isOn?'#fff':'#2A3445'}" stroke-width="${isOn?2:0.5}"/>`;
       s += `<text x="${n.px}" y="${n.py+3}" text-anchor="middle" fill="#0F1419" font-size="${fz}" font-family="ui-sans-serif" font-weight="700">${n.class}</text>`;
       s += `<text x="${n.px}" y="${n.py+18}" text-anchor="middle" fill="#A4B0C0" font-size="8" font-family="ui-monospace">n=${n.samples}</text>`;
@@ -1504,8 +1504,8 @@ function renderFeatureImportance() {
     return;
   }
   const items = TREE_MODEL.feature_importance.filter(f => f.importance > 0).slice(0, 8);
-  const W = 240, H = 200;
-  const padL = 80, padR = 8, padT = 6, padB = 6;
+  const W = 280, H = 220;
+  const padL = 92, padR = 40, padT = 8, padB = 8;
   const innerW = W - padL - padR;
   const rowH = (H - padT - padB) / Math.max(1, items.length);
   let s = '';
