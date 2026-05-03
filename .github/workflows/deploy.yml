@@ -47,6 +47,7 @@ jobs:
           [ -f tree_model.json ] && cp tree_model.json _site/
           [ -d screenshots ] && cp -r screenshots _site/screenshots
           [ -d docs ] && cp -r docs _site/docs
+          [ -d viz ] && cp -r viz _site/viz
           ls -la _site/
           du -sh _site/
 
