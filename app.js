@@ -143,13 +143,21 @@ fetch('tree_model.json')
   .catch(() => { /* tree_model.json 없으면 조용히 무시 */ });
 
 function init() {
-  // v0.7: 데이터 모드 + 실데이터 부착 비율 표시
+  // v0.7: 데이터 모드 + 실데이터 부착 비율 표시 (ISS-018: 진실 라벨)
   const realCount = DATA.dongs.filter(d => d.real_data_attached || d.polygon_geo).length;
+  const total = DATA.dongs.length;
   const layerCount = DATA.dongs[0] && DATA.dongs[0].layers ? Object.keys(DATA.dongs[0].layers).length : 0;
-  const modeBadge = DATA_MODE === 'real'
-    ? `<span style="color:#5BC0EB; font-weight:700">REAL POLY</span> · ${realCount}/${DATA.dongs.length} 동`
-    : `SIMULA only`;
-  document.getElementById('meta-info').innerHTML = `${modeBadge} · ${DATA.dongs.length} dongs · 60mo · ${layerCount} layers`;
+  // 부착 비율 기반 정직 라벨
+  let modeBadge;
+  if (realCount >= total * 0.8) {
+    modeBadge = `<span style="color:#5BC0EB; font-weight:700" title="실데이터 부착 ${realCount}/${total}동">REAL POLY</span>`;
+  } else if (realCount > 0) {
+    modeBadge = `<span style="color:#FED766; font-weight:700" title="부분 실데이터 ${realCount}/${total}동, 80% 미달">PARTIAL REAL</span>`;
+  } else {
+    // simula 또는 real 파일이지만 부착 0% — 사실은 합성
+    modeBadge = `<span style="color:#C9485B; font-weight:700" title="실데이터 부착 0/${total}동 (ISS-018) — 합성 데이터로 운영 중">SIMULA · 0% real</span>`;
+  }
+  document.getElementById('meta-info').innerHTML = `${modeBadge} · ${total} dongs · 60mo · ${layerCount} layers`;
   selectedDong = DATA.dongs.find(d => d.name.includes('성수1가1')) || DATA.dongs[0];
 
   // dong selectors

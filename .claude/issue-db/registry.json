@@ -1096,7 +1096,7 @@
       "id": "ISS-018",
       "type": "DATA_INTEGRITY",
       "priority": "P2",
-      "status": "READY",
+      "status": "COMPLETED",
       "title": "실데이터 부착 비율 낮음 (0/130 = 0%)",
       "detail": "simula_data_real.json의 real_data_attached=True 동이 0%. 80% 미만이면 분석 신뢰도 영향. ETL 점검 또는 REAL_DATA_INGEST-001 진행 권고.",
       "assign_to": "agent-harness",
@@ -1106,7 +1106,35 @@
         "simula_data_real.json"
       ],
       "detect_signature": "f939ff2876e2",
-      "auto_detected": true
+      "auto_detected": true,
+      "started_at": "2026-05-03T07:38:34.622863Z",
+      "owner": "agent-harness",
+      "scope_clarification": "진단/문서화/UI 가시화로 한정 (실데이터 발급은 REAL_DATA_INGEST-001 DEFER 상태 유지)",
+      "payload": {
+        "files_changed": []
+      },
+      "completed_at": "2026-05-03T07:43:56.357425Z",
+      "result": {
+        "passed": true,
+        "scope": "diagnosis_only",
+        "verify_all": "8/8",
+        "diagnosis": {
+          "real_data_attached_count": 0,
+          "polygon_geo_count": 0,
+          "real_adm_nm_count": 0,
+          "simula_real_vs_simula_diff": "0/40 layers (100% identical)",
+          "interpretation": "simula_data_real.json은 simula_data.json과 완전 동일. real 라벨이 거짓이었음."
+        },
+        "ui_label_corrected": "SIMULA · 0% real (red, ISS-018 hover tooltip)",
+        "doc": "docs/data-integrity-diagnosis.md",
+        "files_changed": [
+          "app.js (init modeBadge 분기 정정)",
+          "index.html (트리 패널 카피)",
+          "docs/data-integrity-diagnosis.md (신규)",
+          "screenshots/v07_data_integrity_label.png (신규)"
+        ],
+        "out_of_scope": "실데이터 발급/ETL 작동 = REAL_DATA_INGEST-001 (CLOSED, 사용자 결정 시 재오픈)"
+      }
     },
     {
       "id": "ISS-019",
@@ -1393,14 +1421,30 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 13,
+        "timestamp": "2026-05-03T16:37:49.052161",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 1,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
     "total_issues": 33,
-    "completed": 16,
+    "completed": 17,
     "failed": 0,
-    "evolved": 12
+    "evolved": 13
   },
   "opus_budget_state": {
     "daily": {
