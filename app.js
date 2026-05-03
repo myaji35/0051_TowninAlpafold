@@ -129,6 +129,19 @@ fetch('causal.json')
   })
   .catch(() => { /* causal.json 없으면 조용히 무시 */ });
 
+// [DECISION_TREE-001] 트리 모델 — 선택적 로드
+let TREE_MODEL = null;
+fetch('tree_model.json')
+  .then(r => r.ok ? r.json() : null)
+  .then(t => {
+    if (t && t.nodes) {
+      TREE_MODEL = t;
+      console.log(`✅ 디시전 트리 로드: ${t.meta.n_dongs}동, depth=${t.meta.depth}, acc=${t.meta.train_accuracy}`);
+      if (typeof DATA !== 'undefined' && DATA && currentMode === 'decide') renderDecide();
+    }
+  })
+  .catch(() => { /* tree_model.json 없으면 조용히 무시 */ });
+
 function init() {
   // v0.7: 데이터 모드 + 실데이터 부착 비율 표시
   const realCount = DATA.dongs.filter(d => d.real_data_attached || d.polygon_geo).length;
@@ -1303,6 +1316,174 @@ function renderDecide() {
     causalEl.innerHTML = '<div class="text-[10px] text-gray-500">causal.json 미로드</div>';
     if (causalMetaEl) causalMetaEl.textContent = '인과 추출 결과 없음';
   }
+
+  // [DECISION_TREE-001] 트리 + 변수 중요도 렌더
+  renderDecisionTree();
+  renderFeatureImportance();
+}
+
+// ─────────────────────────────────────────────
+// [DECISION_TREE-001] 분류 트리 시각화
+// ─────────────────────────────────────────────
+const VIBE_COLOR = {
+  premium: '#A78BFA', rising_star: '#FF8FB1', rising: '#5BC0EB',
+  youth: '#B5E853', stable: '#9CA3AF', traditional: '#FED766',
+  developing: '#FCA5A5', industrial: '#6B7280', residential: '#7DD3FC',
+  rising_twin: '#F472B6',
+};
+
+function _treeLayout(model) {
+  // 간단한 BFS 위치 계산 — 깊이별 등간격 + 형제 간 균등
+  const nodes = model.nodes;
+  const byId = {};
+  nodes.forEach(n => { byId[n.id] = { ...n, x: 0, y: 0, depth: 0 }; });
+  // 깊이 계산
+  function setDepth(id, d) {
+    const n = byId[id];
+    if (!n) return;
+    n.depth = d;
+    if (!n.leaf) { setDepth(n.left, d+1); setDepth(n.right, d+1); }
+  }
+  setDepth(0, 0);
+  // 잎 카운트로 x 위치
+  let leafIdx = 0;
+  function place(id) {
+    const n = byId[id];
+    if (n.leaf) { n.x = leafIdx++; return; }
+    place(n.left); place(n.right);
+    n.x = (byId[n.left].x + byId[n.right].x) / 2;
+  }
+  place(0);
+  return byId;
+}
+
+function _classifyDong(model, layout, dong) {
+  // dong의 특성을 트리에 통과시켜 분기 경로 반환 (node id 배열)
+  if (!dong || !dong.layers) return [];
+  const path = [0];
+  let cur = 0;
+  while (true) {
+    const n = layout[cur];
+    if (n.leaf) break;
+    const fname = n.feature_name;
+    let val = 0;
+    // feat_name 패턴: "{ko}_평균" or "{ko}_추세" or "인과_lag평균"
+    const ko2en = { '소상공': 'biz_count', '카페': 'biz_cafe', '유동': 'visitors_total', '거래': 'tx_volume', '지가': 'land_price' };
+    if (fname === '인과_lag평균') {
+      const dc = (typeof CAUSAL !== 'undefined' && CAUSAL && CAUSAL.dongs && CAUSAL.dongs[dong.name]) || null;
+      if (dc && dc.granger && dc.granger.length) {
+        val = dc.granger.reduce((s, g) => s + (g.lag || 0), 0) / dc.granger.length;
+      }
+    } else {
+      const [ko, kind] = fname.split('_');
+      const layer = ko2en[ko];
+      const arr = dong.layers[layer] || [];
+      if (kind === '평균') {
+        val = (arr.reduce((s,v)=>s+v,0) / Math.max(1,arr.length)) / 1e6;
+      } else if (kind === '추세') {
+        const last12 = arr.slice(-12);
+        const mean = last12.reduce((s,v)=>s+v,0) / Math.max(1,last12.length);
+        if (mean > 0 && last12.length >= 2) {
+          const xs = last12.map((_,i)=>i);
+          const mx = (last12.length-1)/2;
+          const num = xs.reduce((s,x,i)=>s+(x-mx)*(last12[i]-mean),0);
+          const den = xs.reduce((s,x)=>s+(x-mx)**2,0);
+          val = den ? (num/den)/mean : 0;
+        }
+      }
+    }
+    cur = val <= n.threshold ? n.left : n.right;
+    path.push(cur);
+  }
+  return path;
+}
+
+function renderDecisionTree() {
+  const svg = document.getElementById('d-tree-canvas');
+  const meta = document.getElementById('d-tree-meta');
+  if (!svg) return;
+  if (!TREE_MODEL) {
+    svg.innerHTML = '<text x="360" y="160" text-anchor="middle" fill="#9CA3AF" font-size="12" font-family="JetBrains Mono">tree_model.json 미로드 — python decision_tree_train.py 먼저 실행</text>';
+    if (meta) meta.textContent = '—';
+    return;
+  }
+  const layout = _treeLayout(TREE_MODEL);
+  const allNodes = Object.values(layout);
+  const maxDepth = Math.max(...allNodes.map(n=>n.depth));
+  const leafNodes = allNodes.filter(n=>n.leaf);
+  const nLeaves = leafNodes.length;
+  // 좌표 정규화
+  const W = 720, H = 320;
+  const padX = 40, padY = 28;
+  const innerW = W - padX*2, innerH = H - padY*2;
+  allNodes.forEach(n => {
+    n.px = padX + (n.x / Math.max(1, nLeaves - 1)) * innerW;
+    n.py = padY + (n.depth / Math.max(1, maxDepth)) * innerH;
+  });
+  // 선택된 동의 분기 경로
+  const dong = (typeof selectedDong !== 'undefined' && selectedDong) ? selectedDong : null;
+  const path = dong ? _classifyDong(TREE_MODEL, layout, dong) : [];
+  const onPath = new Set(path);
+
+  let s = '';
+  // 엣지
+  allNodes.forEach(n => {
+    if (n.leaf) return;
+    const left = layout[n.left], right = layout[n.right];
+    const onL = onPath.has(n.id) && onPath.has(n.left);
+    const onR = onPath.has(n.id) && onPath.has(n.right);
+    const stroke = (onL || onR) ? '#5BC0EB' : '#2A3445';
+    const sw = (onL || onR) ? 2 : 1;
+    s += `<path d="M${n.px},${n.py}L${left.px},${left.py}" stroke="${onL?'#5BC0EB':stroke}" stroke-width="${onL?2.5:sw}" fill="none" />`;
+    s += `<path d="M${n.px},${n.py}L${right.px},${right.py}" stroke="${onR?'#5BC0EB':stroke}" stroke-width="${onR?2.5:sw}" fill="none" />`;
+  });
+  // 노드
+  allNodes.forEach(n => {
+    const isOn = onPath.has(n.id);
+    if (n.leaf) {
+      const color = VIBE_COLOR[n.class] || '#9CA3AF';
+      s += `<rect x="${n.px-30}" y="${n.py-10}" width="60" height="20" rx="4" fill="${color}" stroke="${isOn?'#fff':'#2A3445'}" stroke-width="${isOn?2:0.5}"/>`;
+      s += `<text x="${n.px}" y="${n.py+3}" text-anchor="middle" fill="#0F1419" font-size="9" font-family="ui-sans-serif" font-weight="700">${n.class}</text>`;
+      s += `<text x="${n.px}" y="${n.py+18}" text-anchor="middle" fill="#A4B0C0" font-size="8" font-family="ui-monospace">n=${n.samples}</text>`;
+    } else {
+      const fill = isOn ? '#5BC0EB' : '#1A2330';
+      const txtColor = isOn ? '#0F1419' : '#E8EEF6';
+      s += `<circle cx="${n.px}" cy="${n.py}" r="4.5" fill="${fill}" stroke="#2A3445" stroke-width="1"/>`;
+      // 분기 라벨
+      const fmtThr = (Math.abs(n.threshold) >= 100) ? n.threshold.toFixed(0) : n.threshold.toFixed(2);
+      s += `<text x="${n.px}" y="${n.py-8}" text-anchor="middle" fill="${txtColor}" font-size="8" font-family="ui-monospace">${n.feature_name} ≤ ${fmtThr}</text>`;
+    }
+  });
+  svg.innerHTML = s;
+
+  if (meta) {
+    const acc = TREE_MODEL.meta.train_accuracy;
+    meta.textContent = `acc=${(acc*100).toFixed(1)}% · depth=${TREE_MODEL.meta.depth} · 잎 ${TREE_MODEL.meta.n_leaves}` + (dong ? ` · 선택: ${dong.name}` : '');
+  }
+}
+
+function renderFeatureImportance() {
+  const svg = document.getElementById('d-tree-importance');
+  if (!svg) return;
+  if (!TREE_MODEL) {
+    svg.innerHTML = '<text x="120" y="100" text-anchor="middle" fill="#9CA3AF" font-size="11" font-family="JetBrains Mono">데이터 없음</text>';
+    return;
+  }
+  const items = TREE_MODEL.feature_importance.filter(f => f.importance > 0).slice(0, 8);
+  const W = 240, H = 200;
+  const padL = 80, padR = 8, padT = 6, padB = 6;
+  const innerW = W - padL - padR;
+  const rowH = (H - padT - padB) / Math.max(1, items.length);
+  let s = '';
+  items.forEach((it, i) => {
+    const y = padT + i * rowH;
+    const w = it.importance * innerW;
+    const color = it.importance >= 0.3 ? '#00529B' : it.importance >= 0.1 ? '#5BC0EB' : it.importance >= 0.05 ? '#FED766' : '#C9485B';
+    s += `<text x="${padL-4}" y="${y + rowH/2 + 3}" text-anchor="end" fill="#A4B0C0" font-size="9" font-family="ui-sans-serif">${it.feature}</text>`;
+    s += `<rect x="${padL}" y="${y+2}" width="${w}" height="${rowH-4}" rx="2" fill="${color}"/>`;
+    s += `<text x="${padL + w + 3}" y="${y + rowH/2 + 3}" fill="#A4B0C0" font-size="8" font-family="ui-monospace">${(it.importance*100).toFixed(1)}%</text>`;
+  });
+  svg.innerHTML = s;
 }
 
 // ─────────────────────────────────────────────

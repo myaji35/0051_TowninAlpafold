@@ -44,6 +44,7 @@ jobs:
           [ -f simula_data.json ] && cp simula_data.json _site/
           [ -f forecasts.json ] && cp forecasts.json _site/
           [ -f causal.json ] && cp causal.json _site/
+          [ -f tree_model.json ] && cp tree_model.json _site/
           [ -d screenshots ] && cp -r screenshots _site/screenshots
           [ -d docs ] && cp -r docs _site/docs
           ls -la _site/

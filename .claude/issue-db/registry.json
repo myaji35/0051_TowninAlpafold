@@ -171,7 +171,7 @@
       "id": "GRAPHRAG-001",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "AWAITING_USER",
+      "status": "CLOSED",
       "title": "TowninGraph-RAG 도입 — causal.json 기반 자연어 질의 응답 (옵션 C 경량 자체 구현)",
       "detail": "대표님 결정 (2026-05-03): GraphRAG 도입 옵션 B 승인 (Phase 2 Workflow Editor 마무리 후 착수). 검토 보고에서 옵션 C(자체 경량 GraphRAG = NetworkX + SQLite + Claude API)를 아키텍처로 채택. causal.json(Pearson 1,300쌍 + Granger 2,578트리플렛) + forecasts.json을 그래프로 변환하고, 마스터의 자연어 질의에 자연어+시각화 점프 응답. Microsoft GraphRAG 풀패키지/Neo4j/Vector DB 도입은 과잉이라 명시 배제. 6개월 사이드(주 20h, 월 100만 이내) 제약 부합.",
       "assign_to": "product-manager",
@@ -246,14 +246,17 @@
       "unblocked_reason": "GRAPHRAG_PHASE2_FINISH-001 COMPLETED — 게이트 해제",
       "started_at": "2026-05-03T05:36:22.906780Z",
       "owner": "product-manager",
-      "awaiting_since": "2026-05-03T14:36:53.673228",
       "user_confirm": [
         {
           "category": "DIRECTION",
           "question": "GRAPHRAG-001 (TowninGraph-RAG 도입, 옵션 C: NetworkX+SQLite+Claude API) 시작 직전 컨펌\n\n[T2 트리거 — DIRECTION + BUDGET 동시 해당]\n- DIRECTION: 정적 사이트 → FastAPI 백엔드 신설 (graph_rag/ 디렉터리, 새 Python 의존성)\n- BUDGET: 외부 Claude API 호출 (월 1,000회 한도, ~$10 예상). API 키 시크릿 관리 변경\n\n[작업 규모]\n- G-1 (8h): causal.json → NetworkX DiGraph + 직렬화\n- G-2 (12h): FastAPI /ask — Intent(Haiku) + Retrieval(BFS) + Answer(Sonnet)\n- G-3 (8h): UI 통합 — 검색바 + 답변 패널 + 인용 엣지 하이라이트\n- G-4/G-5 (선택, 36h): 외부 코퍼스 / 권역 보고서\n- 총 28h MVP, 64h 풀\n\n[합의 검증]\n- decision_log: 옵션 C 채택 (Microsoft GraphRAG / Neo4j / LangChain 명시 배제)\n- 본 세션의 직전 합의는 'A안: 매트릭스 먼저, 그 다음 디시전 트리'\n- GRAPHRAG-001 결정은 이전 세션 컨텍스트로 추정\n\n[선택지]\n1. PROCEED — 옵션 C 그대로 G-1부터 즉시 착수 (이전 결정 유효)\n2. PIVOT — DECISION_TREE-001을 먼저 진행 (직전 세션 합의 우선)\n3. REOPEN — 옵션 A/B 재검토 (Microsoft GraphRAG / Neo4j 등)\n4. DEFER — 본 이슈 보류, 다른 READY 이슈로 이동",
-          "asked_at": "2026-05-03T14:36:53.673228"
+          "asked_at": "2026-05-03T14:36:53.673228",
+          "responded_at": "2026-05-03T14:57:55.785493",
+          "decision": "reject",
+          "response_payload": "DEFER (대표님 직전 합의: 디시전 트리 먼저)"
         }
-      ]
+      ],
+      "closed_reason": "user_rejected: DEFER (대표님 직전 합의: 디시전 트리 먼저)"
     },
     {
       "id": "ISS-009",
@@ -459,7 +462,7 @@
       "id": "REAL_DATA_INGEST-001",
       "type": "USER_STORY",
       "priority": "P2",
-      "status": "AWAITING_USER",
+      "status": "CLOSED",
       "title": "실데이터 도입 — SGIS/카드사/통신사로 simula 대체 (페어별 r 분포 자연 분리)",
       "detail": "현재 simula_data*.json은 단일 트렌드 가정으로 r≈1로 몰려 매트릭스/트리 변별력 부족. .env에 SGIS_CONSUMER_KEY/SECRET 슬롯 이미 존재. data_raw/ → etl_real_data.py 파이프라인 연결.",
       "assign_to": "product-manager",
@@ -474,20 +477,23 @@
         "r 분포가 4단계 색상에 모두 등장 (모두 짙은 파랑이 아님)",
         "verify_all 7/7 PASS 유지"
       ],
-      "awaiting_since": "2026-05-03T14:52:51.668562",
       "user_confirm": [
         {
           "category": "EXTERNAL",
           "question": "REAL_DATA_INGEST-001 (실데이터 도입) 시작 직전 컨펌\n\n[T2 트리거 — EXTERNAL + DIRECTION]\n- EXTERNAL: SGIS_CONSUMER_KEY/SECRET 신규 발급 + API 호출 (.env 시크릿 변경)\n- DIRECTION: simula 합성 데이터 → 실데이터 라인으로 데이터 파이프라인 패러다임 전환\n\n[배경]\n- CORR_VARIANCE-001 분석 결과: 1,300페어 100% r≥0.9 (시뮬레이션 한계)\n- DECISION_TREE-001 진행 시 다중공선성 함정 회피를 위해 권고된 후속\n\n[작업 규모 추정]\n- SGIS 키 발급 + 동의 (수 시간, 사용자 작업)\n- etl_real_data.py 보강 — 데이터 매핑 (8h)\n- simula_data*.json → 새 스키마 검증 (4h)\n- verify_all 7/7 PASS 유지 + 매트릭스 r 분포 stdev≥0.15 검증 (4h)\n\n[합의 필요 사항]\n- SGIS 외 데이터 소스 (카드사/통신사) 사용 여부\n- 라이선스 / 비용 (SGIS 무료, 카드사·통신사는 유료/제휴 필요)\n- 본 이슈를 GRAPHRAG-001 / DECISION_TREE-001 보다 먼저 진행할지\n\n[선택지]\n1. PROCEED — SGIS만으로 진행 (무료, 빠름)\n2. EXPAND — SGIS + 카드사/통신사 제휴까지 (T2 BUDGET 추가 발생)\n3. SIMULA_FIRST — SIMULA_NOISE-001 (P3, 합성 데이터 노이즈 강화)을 먼저 (실데이터 도입 미뤄도 매트릭스/트리 변별력 회복)\n4. DEFER — 본 이슈 보류, GRAPHRAG-001 컨펌 답변에 집중",
-          "asked_at": "2026-05-03T14:52:51.668562"
+          "asked_at": "2026-05-03T14:52:51.668562",
+          "responded_at": "2026-05-03T14:57:59.423898",
+          "decision": "reject",
+          "response_payload": "DEFER (디시전 트리부터 진행 후 재검토)"
         }
-      ]
+      ],
+      "closed_reason": "user_rejected: DEFER (디시전 트리부터 진행 후 재검토)"
     },
     {
       "id": "SIMULA_NOISE-001",
       "type": "REFACTOR",
       "priority": "P3",
-      "status": "AWAITING_USER",
+      "status": "DEFERRED",
       "title": "simula_generate.py — 지표별 독립 노이즈 채널 추가 (실데이터 도입 전 임시 보강)",
       "detail": "5개 지표(소상공/카페/유동/거래/지가)에 동기 곱셈 변형이 아닌 독립 노이즈 채널 도입. 시뮬레이션 모드에서도 r 분포 stdev >= 0.15 달성.",
       "assign_to": "agent-harness",
@@ -500,7 +506,8 @@
         "기존 vibe_label 시나리오 유지",
         "verify_all 7/7 PASS 유지"
       ],
-      "awaiting_reason": "REAL_DATA_INGEST-001과 상호 배타적 — 대표님 답변 후 둘 중 하나만 진행"
+      "awaiting_reason": "REAL_DATA_INGEST-001과 상호 배타적 — 대표님 답변 후 둘 중 하나만 진행",
+      "defer_reason": "사용자 결정: 전부 DEFER 후 디시전 트리만"
     },
     {
       "id": "ISS-017",
@@ -548,6 +555,77 @@
         "기존 진짜 핑퐁 케이스(lint→fix→lint 반복)는 여전히 감지"
       ],
       "defer_reason": "OUT_OF_PROJECT_SCOPE — 작업 위치는 GH_Harness 글로벌 레포. 본 프로젝트에서 변경 불가."
+    },
+    {
+      "id": "DECISION_TREE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "Decide 모드 — 디시전 트리(분류) 도입 (vibe_label 분기 규칙 + 변수 중요도)",
+      "detail": "5개 지표(소상공/카페/유동/거래/지가) + Granger lag feature를 입력으로 vibe_label(premium/rising_star/rising/youth/stable/traditional/developing/industrial/residential) 분류. sklearn DecisionTreeClassifier max_depth=4. 변수 중요도 막대 차트 + 트리 dendrogram 시각화. CORR_VARIANCE-001의 다중공선성 권고 적용 — 동기 + lag feature 혼합.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T05:58:26.131307Z",
+      "started_at": "2026-05-03T05:58:26.131307Z",
+      "owner": "agent-harness",
+      "files": [
+        "decision_tree_train.py (신규)",
+        "tree_model.json (산출)",
+        "app.js (Decide 트리 렌더)",
+        "index.html (Decide 패널)"
+      ],
+      "acceptance": [
+        "tree_model.json 생성 (nodes/edges/feature_importance 포함)",
+        "Decide 모드에 SVG 트리 dendrogram 렌더",
+        "변수 중요도 5개 막대 차트 표시 (pLDDT 팔레트)",
+        "verify_decision_tree.mjs 캐릭터 저니 PASS",
+        "verify_all 8/8 PASS (workflow + decision_tree)",
+        "Karpathy #2 — 코드량 ≤ 400줄 (tree_train.py + app.js 추가분)"
+      ],
+      "rationale": "직전 합의 A안 (매트릭스 → 트리). CORR_VARIANCE-001 권고에 따라 동기 변수만 쓰지 않고 Granger lag(causal.json 2,578 트리플렛)도 활용해 다중공선성 회피.",
+      "payload": {
+        "files_changed": []
+      },
+      "completed_at": "2026-05-03T06:08:15.988827Z",
+      "result": {
+        "passed": true,
+        "verify_all": "8/8",
+        "tree_journey": "5/5",
+        "model": {
+          "algorithm": "DecisionTreeClassifier",
+          "depth": 6,
+          "n_leaves": 14,
+          "n_dongs": 130,
+          "n_features": 11,
+          "train_accuracy": 0.7692
+        },
+        "feature_importance_top3": [
+          {
+            "feature": "지가_평균",
+            "importance": 0.476
+          },
+          {
+            "feature": "소상공_평균",
+            "importance": 0.185
+          },
+          {
+            "feature": "소상공_추세",
+            "importance": 0.141
+          }
+        ],
+        "files_changed": [
+          "decision_tree_train.py (신규)",
+          "tree_model.json (산출 23KB)",
+          "app.js (renderDecisionTree + renderFeatureImportance)",
+          "index.html (Decide 패널 2개)",
+          "verify_decision_tree.mjs (신규)",
+          "verify_all.mjs (등록)",
+          "package.json",
+          "deploy.yml"
+        ],
+        "screenshots": [
+          "screenshots/v07_decision_tree.png"
+        ]
+      }
     }
   ],
   "hooks": {
@@ -741,14 +819,30 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 9,
+        "timestamp": "2026-05-03T14:54:21.172753",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 18,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
-    "total_issues": 18,
+    "total_issues": 19,
     "completed": 15,
     "failed": 0,
-    "evolved": 8
+    "evolved": 9
   },
   "opus_budget_state": {
     "daily": {
@@ -772,6 +866,20 @@
         "total": 7,
         "coverage": null
       }
+    }
+  ],
+  "learned_patterns": [
+    {
+      "type": "user_rejected_t2",
+      "issue_id": "GRAPHRAG-001",
+      "reason": "DEFER (대표님 직전 합의: 디시전 트리 먼저)",
+      "at": "2026-05-03T14:57:55.785493"
+    },
+    {
+      "type": "user_rejected_t2",
+      "issue_id": "REAL_DATA_INGEST-001",
+      "reason": "DEFER (디시전 트리부터 진행 후 재검토)",
+      "at": "2026-05-03T14:57:59.423898"
     }
   ]
 }

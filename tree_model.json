@@ -1,0 +1,1250 @@
+{
+  "meta": {
+    "algorithm": "DecisionTreeClassifier",
+    "max_depth": 6,
+    "min_samples_leaf": 5,
+    "random_state": 42,
+    "train_accuracy": 0.7692,
+    "depth": 6,
+    "n_leaves": 14,
+    "n_dongs": 130,
+    "n_features": 11,
+    "classes": [
+      "developing",
+      "industrial",
+      "premium",
+      "residential",
+      "rising",
+      "rising_star",
+      "rising_twin",
+      "stable",
+      "traditional",
+      "youth"
+    ]
+  },
+  "feature_names": [
+    "소상공_평균",
+    "소상공_추세",
+    "카페_평균",
+    "카페_추세",
+    "유동_평균",
+    "유동_추세",
+    "거래_평균",
+    "거래_추세",
+    "지가_평균",
+    "지가_추세",
+    "인과_lag평균"
+  ],
+  "nodes": [
+    {
+      "id": 0,
+      "leaf": false,
+      "feature_idx": 8,
+      "feature_name": "지가_평균",
+      "threshold": 12.7323,
+      "samples": 130,
+      "left": 1,
+      "right": 24
+    },
+    {
+      "id": 1,
+      "leaf": false,
+      "feature_idx": 0,
+      "feature_name": "소상공_평균",
+      "threshold": 0.0006,
+      "samples": 108,
+      "left": 2,
+      "right": 9
+    },
+    {
+      "id": 2,
+      "leaf": false,
+      "feature_idx": 8,
+      "feature_name": "지가_평균",
+      "threshold": 4.6914,
+      "samples": 27,
+      "left": 3,
+      "right": 6
+    },
+    {
+      "id": 3,
+      "leaf": false,
+      "feature_idx": 0,
+      "feature_name": "소상공_평균",
+      "threshold": 0.0004,
+      "samples": 10,
+      "left": 4,
+      "right": 5
+    },
+    {
+      "id": 4,
+      "leaf": true,
+      "class": "industrial",
+      "samples": 5,
+      "value": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": 5,
+      "leaf": true,
+      "class": "industrial",
+      "samples": 5,
+      "value": [
+        0.0,
+        0.8,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        0.0
+      ]
+    },
+    {
+      "id": 6,
+      "leaf": false,
+      "feature_idx": 3,
+      "feature_name": "카페_추세",
+      "threshold": 0.0899,
+      "samples": 17,
+      "left": 7,
+      "right": 8
+    },
+    {
+      "id": 7,
+      "leaf": true,
+      "class": "traditional",
+      "samples": 12,
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "id": 8,
+      "leaf": true,
+      "class": "traditional",
+      "samples": 5,
+      "value": [
+        0.2,
+        0.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6,
+        0.0
+      ]
+    },
+    {
+      "id": 9,
+      "leaf": false,
+      "feature_idx": 1,
+      "feature_name": "소상공_추세",
+      "threshold": 0.1035,
+      "samples": 81,
+      "left": 10,
+      "right": 17
+    },
+    {
+      "id": 10,
+      "leaf": false,
+      "feature_idx": 8,
+      "feature_name": "지가_평균",
+      "threshold": 7.8963,
+      "samples": 41,
+      "left": 11,
+      "right": 16
+    },
+    {
+      "id": 11,
+      "leaf": false,
+      "feature_idx": 6,
+      "feature_name": "거래_평균",
+      "threshold": 0.0001,
+      "samples": 34,
+      "left": 12,
+      "right": 15
+    },
+    {
+      "id": 12,
+      "leaf": false,
+      "feature_idx": 4,
+      "feature_name": "유동_평균",
+      "threshold": 0.0449,
+      "samples": 26,
+      "left": 13,
+      "right": 14
+    },
+    {
+      "id": 13,
+      "leaf": true,
+      "class": "residential",
+      "samples": 12,
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.08333333333333333,
+        0.16666666666666666,
+        0.0
+      ]
+    },
+    {
+      "id": 14,
+      "leaf": true,
+      "class": "stable",
+      "samples": 14,
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.14285714285714285,
+        0.0,
+        0.0,
+        0.0,
+        0.7142857142857143,
+        0.07142857142857142,
+        0.07142857142857142
+      ]
+    },
+    {
+      "id": 15,
+      "leaf": true,
+      "class": "residential",
+      "samples": 8,
+      "value": [
+        0.125,
+        0.0,
+        0.0,
+        0.875,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": 16,
+      "leaf": true,
+      "class": "developing",
+      "samples": 7,
+      "value": [
+        0.2857142857142857,
+        0.0,
+        0.14285714285714285,
+        0.14285714285714285,
+        0.2857142857142857,
+        0.0,
+        0.0,
+        0.0,
+        0.14285714285714285,
+        0.0
+      ]
+    },
+    {
+      "id": 17,
+      "leaf": false,
+      "feature_idx": 8,
+      "feature_name": "지가_평균",
+      "threshold": 5.9246,
+      "samples": 40,
+      "left": 18,
+      "right": 19
+    },
+    {
+      "id": 18,
+      "leaf": true,
+      "class": "youth",
+      "samples": 8,
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "id": 19,
+      "leaf": false,
+      "feature_idx": 9,
+      "feature_name": "지가_추세",
+      "threshold": 0.118,
+      "samples": 32,
+      "left": 20,
+      "right": 23
+    },
+    {
+      "id": 20,
+      "leaf": false,
+      "feature_idx": 3,
+      "feature_name": "카페_추세",
+      "threshold": 0.1218,
+      "samples": 27,
+      "left": 21,
+      "right": 22
+    },
+    {
+      "id": 21,
+      "leaf": true,
+      "class": "rising",
+      "samples": 22,
+      "value": [
+        0.045454545454545456,
+        0.0,
+        0.0,
+        0.045454545454545456,
+        0.5909090909090909,
+        0.0,
+        0.045454545454545456,
+        0.0,
+        0.0,
+        0.2727272727272727
+      ]
+    },
+    {
+      "id": 22,
+      "leaf": true,
+      "class": "rising_star",
+      "samples": 5,
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        0.6,
+        0.2,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": 23,
+      "leaf": true,
+      "class": "developing",
+      "samples": 5,
+      "value": [
+        0.8,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": 24,
+      "leaf": false,
+      "feature_idx": 0,
+      "feature_name": "소상공_평균",
+      "threshold": 0.001,
+      "samples": 22,
+      "left": 25,
+      "right": 26
+    },
+    {
+      "id": 25,
+      "leaf": true,
+      "class": "premium",
+      "samples": 17,
+      "value": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": 26,
+      "leaf": true,
+      "class": "premium",
+      "samples": 5,
+      "value": [
+        0.2,
+        0.0,
+        0.6,
+        0.0,
+        0.0,
+        0.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "feature_importance": [
+    {
+      "feature": "지가_평균",
+      "importance": 0.4758
+    },
+    {
+      "feature": "소상공_평균",
+      "importance": 0.1851
+    },
+    {
+      "feature": "소상공_추세",
+      "importance": 0.1413
+    },
+    {
+      "feature": "유동_평균",
+      "importance": 0.0708
+    },
+    {
+      "feature": "카페_추세",
+      "importance": 0.047
+    },
+    {
+      "feature": "지가_추세",
+      "importance": 0.0445
+    },
+    {
+      "feature": "거래_평균",
+      "importance": 0.0355
+    },
+    {
+      "feature": "카페_평균",
+      "importance": 0.0
+    },
+    {
+      "feature": "유동_추세",
+      "importance": 0.0
+    },
+    {
+      "feature": "거래_추세",
+      "importance": 0.0
+    },
+    {
+      "feature": "인과_lag평균",
+      "importance": 0.0
+    }
+  ],
+  "predictions": [
+    {
+      "dong": "강남구 A1동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "강남구 A2동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "강남구 A3동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "강남구 A4동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "강남구 A5동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "강동구 D1동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "강동구 D2동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "강동구 D3동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "강동구 D4동",
+      "true": "stable",
+      "pred": "residential",
+      "correct": false
+    },
+    {
+      "dong": "강동구 D5동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "강북구 E1동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "강북구 E2동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "강북구 E3동",
+      "true": "traditional",
+      "pred": "residential",
+      "correct": false
+    },
+    {
+      "dong": "강북구 E4동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "강북구 E5동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "강서구 F1동",
+      "true": "developing",
+      "pred": "developing",
+      "correct": true
+    },
+    {
+      "dong": "강서구 F2동",
+      "true": "developing",
+      "pred": "premium",
+      "correct": false
+    },
+    {
+      "dong": "강서구 F3동",
+      "true": "developing",
+      "pred": "traditional",
+      "correct": false
+    },
+    {
+      "dong": "강서구 F4동",
+      "true": "developing",
+      "pred": "developing",
+      "correct": true
+    },
+    {
+      "dong": "강서구 F5동",
+      "true": "developing",
+      "pred": "developing",
+      "correct": true
+    },
+    {
+      "dong": "관악구 C1동",
+      "true": "youth",
+      "pred": "stable",
+      "correct": false
+    },
+    {
+      "dong": "관악구 C2동",
+      "true": "youth",
+      "pred": "youth",
+      "correct": true
+    },
+    {
+      "dong": "관악구 C3동",
+      "true": "youth",
+      "pred": "youth",
+      "correct": true
+    },
+    {
+      "dong": "관악구 C4동",
+      "true": "youth",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "관악구 C5동",
+      "true": "youth",
+      "pred": "youth",
+      "correct": true
+    },
+    {
+      "dong": "광진구 B1동",
+      "true": "rising",
+      "pred": "rising_star",
+      "correct": false
+    },
+    {
+      "dong": "광진구 B2동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "광진구 B3동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "광진구 B4동",
+      "true": "rising",
+      "pred": "developing",
+      "correct": false
+    },
+    {
+      "dong": "광진구 B5동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "구로구 G1동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "구로구 G2동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "구로구 G3동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "구로구 G4동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "구로구 G5동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "금천구 G1동",
+      "true": "industrial",
+      "pred": "traditional",
+      "correct": false
+    },
+    {
+      "dong": "금천구 G2동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "금천구 G3동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "금천구 G4동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "금천구 G5동",
+      "true": "industrial",
+      "pred": "industrial",
+      "correct": true
+    },
+    {
+      "dong": "노원구 H1동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "노원구 H2동",
+      "true": "residential",
+      "pred": "stable",
+      "correct": false
+    },
+    {
+      "dong": "노원구 H3동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "노원구 H4동",
+      "true": "residential",
+      "pred": "stable",
+      "correct": false
+    },
+    {
+      "dong": "노원구 H5동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "도봉구 H1동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "도봉구 H2동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "도봉구 H3동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "도봉구 H4동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "도봉구 H5동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "동대문구 E1동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "동대문구 E2동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "동대문구 E3동",
+      "true": "traditional",
+      "pred": "residential",
+      "correct": false
+    },
+    {
+      "dong": "동대문구 E4동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "동대문구 E5동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "동작구 H1동",
+      "true": "residential",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "동작구 H2동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "동작구 H3동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "동작구 H4동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "동작구 H5동",
+      "true": "residential",
+      "pred": "developing",
+      "correct": false
+    },
+    {
+      "dong": "마포구 B1동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "마포구 B2동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "마포구 B3동",
+      "true": "rising",
+      "pred": "developing",
+      "correct": false
+    },
+    {
+      "dong": "마포구 B4동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "마포구 B5동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "서대문구 C1동",
+      "true": "youth",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "서대문구 C2동",
+      "true": "youth",
+      "pred": "youth",
+      "correct": true
+    },
+    {
+      "dong": "서대문구 C3동",
+      "true": "youth",
+      "pred": "youth",
+      "correct": true
+    },
+    {
+      "dong": "서대문구 C4동",
+      "true": "youth",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "서대문구 C5동",
+      "true": "youth",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "서초구 A1동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "서초구 A2동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "서초구 A3동",
+      "true": "premium",
+      "pred": "developing",
+      "correct": false
+    },
+    {
+      "dong": "서초구 A4동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "서초구 A5동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "성수1가1동",
+      "true": "rising_star",
+      "pred": "premium",
+      "correct": false
+    },
+    {
+      "dong": "성수1가2동",
+      "true": "rising_star",
+      "pred": "rising_star",
+      "correct": true
+    },
+    {
+      "dong": "성수2가1동",
+      "true": "rising_star",
+      "pred": "rising_star",
+      "correct": true
+    },
+    {
+      "dong": "성수2가3동",
+      "true": "rising_star",
+      "pred": "rising_star",
+      "correct": true
+    },
+    {
+      "dong": "송정동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "성북구 C1동",
+      "true": "youth",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "성북구 C2동",
+      "true": "youth",
+      "pred": "youth",
+      "correct": true
+    },
+    {
+      "dong": "성북구 C3동",
+      "true": "youth",
+      "pred": "youth",
+      "correct": true
+    },
+    {
+      "dong": "성북구 C4동",
+      "true": "youth",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "성북구 C5동",
+      "true": "youth",
+      "pred": "youth",
+      "correct": true
+    },
+    {
+      "dong": "송파구 A1동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "송파구 A2동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "송파구 A3동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "송파구 A4동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "송파구 A5동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "양천구 H1동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "양천구 H2동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "양천구 H3동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "양천구 H4동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "양천구 H5동",
+      "true": "residential",
+      "pred": "residential",
+      "correct": true
+    },
+    {
+      "dong": "영등포구 B1동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "영등포구 B2동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "영등포구 B3동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "영등포구 B4동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "영등포구 B5동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "용산구 A1동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "용산구 A2동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "용산구 A3동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "용산구 A4동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "용산구 A5동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    },
+    {
+      "dong": "은평구 F1동",
+      "true": "developing",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "은평구 F2동",
+      "true": "developing",
+      "pred": "developing",
+      "correct": true
+    },
+    {
+      "dong": "은평구 F3동",
+      "true": "developing",
+      "pred": "developing",
+      "correct": true
+    },
+    {
+      "dong": "은평구 F4동",
+      "true": "developing",
+      "pred": "residential",
+      "correct": false
+    },
+    {
+      "dong": "은평구 F5동",
+      "true": "developing",
+      "pred": "developing",
+      "correct": true
+    },
+    {
+      "dong": "종로구 E1동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "종로구 E2동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "종로구 E3동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "종로구 E4동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "종로구 E5동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "중구 E1동",
+      "true": "traditional",
+      "pred": "industrial",
+      "correct": false
+    },
+    {
+      "dong": "중구 E2동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "중구 E3동",
+      "true": "traditional",
+      "pred": "developing",
+      "correct": false
+    },
+    {
+      "dong": "중구 E4동",
+      "true": "traditional",
+      "pred": "traditional",
+      "correct": true
+    },
+    {
+      "dong": "중구 E5동",
+      "true": "traditional",
+      "pred": "stable",
+      "correct": false
+    },
+    {
+      "dong": "중랑구 D1동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "중랑구 D2동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "중랑구 D3동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "중랑구 D4동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "중랑구 D5동",
+      "true": "stable",
+      "pred": "stable",
+      "correct": true
+    },
+    {
+      "dong": "부산_전포1동",
+      "true": "rising_twin",
+      "pred": "rising",
+      "correct": false
+    },
+    {
+      "dong": "부산_전포2동",
+      "true": "rising_twin",
+      "pred": "rising_star",
+      "correct": false
+    },
+    {
+      "dong": "부산_부전1동",
+      "true": "rising",
+      "pred": "developing",
+      "correct": false
+    },
+    {
+      "dong": "부산_광안1동",
+      "true": "rising",
+      "pred": "rising",
+      "correct": true
+    },
+    {
+      "dong": "부산_해운대1동",
+      "true": "premium",
+      "pred": "premium",
+      "correct": true
+    }
+  ]
+}
