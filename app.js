@@ -2576,6 +2576,10 @@ function renderWorkflow() {
   document.getElementById('wf-run').onclick = () => animateWfRun();
   document.getElementById('wf-insp-close').onclick = () => document.getElementById('wf-node-inspector').style.display = 'none';
   document.getElementById('wf-apply-analyze').onclick = () => applyWfToAnalyze();
+  const wfExploreBtn = document.getElementById('wf-apply-explore');
+  if (wfExploreBtn) wfExploreBtn.onclick = () => applyWfToMode('explore');
+  const wfDecideBtn = document.getElementById('wf-apply-decide');
+  if (wfDecideBtn) wfDecideBtn.onclick = () => applyWfToMode('decide');
 
   // Editor mode toggles
   document.getElementById('wf-mode-preview').onclick = () => setWfMode(false);
@@ -3404,6 +3408,20 @@ function emitParticles(fromNid, wf, nodeMap) {
     // tmp path 정리
     setTimeout(() => tmpPath.remove(), 1200);
   });
+}
+
+// [GRAPHRAG_PHASE2_FINISH-001] Workflow → Explore/Decide 연동
+// src_dong 노드의 select 파라미터를 selectedDong으로 매핑하고 모드 전환.
+function applyWfToMode(mode) {
+  const wf = WORKFLOWS[activeWorkflowId];
+  if (!wf || !DATA) return;
+  const dongNode = wf.nodes.find(n => n.lib_id === 'src_dong' && n.params && n.params.select);
+  if (dongNode) {
+    const target = DATA.dongs.find(d => d.name === dongNode.params.select)
+                || DATA.dongs.find(d => d.name.includes(dongNode.params.select));
+    if (target) selectedDong = target;
+  }
+  switchMode(mode);
 }
 
 function applyWfToAnalyze() {

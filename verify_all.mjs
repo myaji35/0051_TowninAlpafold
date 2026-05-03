@@ -14,6 +14,7 @@ const SUITES = [
   { name: 'p2',         file: 'verify_p2.mjs' },
   { name: 'prophet',    file: 'verify_prophet.mjs' },
   { name: 'responsive', file: 'verify_responsive.mjs' },
+  { name: 'workflow',   file: 'verify_workflow.mjs' },
 ];
 
 const MIME = {

@@ -11,6 +11,7 @@
     "verify:p2": "node verify_p2.mjs",
     "verify:prophet": "node verify_prophet.mjs",
     "verify:responsive": "node verify_responsive.mjs",
+    "verify:workflow": "node verify_workflow.mjs",
     "verify:all": "node verify_all.mjs",
     "capture": "node capture_screens.mjs"
   },
