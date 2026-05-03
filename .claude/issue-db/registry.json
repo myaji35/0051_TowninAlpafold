@@ -631,7 +631,7 @@
       "id": "VIZ_PACK-001",
       "type": "EPIC",
       "priority": "P1",
-      "status": "READY",
+      "status": "AWAITING_USER",
       "title": "[Phase 2.5] Map Visualization Pack — 9종 차트의 단일 엔진 통합 (확장성 우선)",
       "detail": "대표님 결정 (2026-05-03): 추천한 9종 차트(Violin/Ridgeline/Sankey/CalendarHeatmap/Spiral/SmallMultiples/Slope/MapTreemap/Bullet) + 기존 4종(3D기둥/히트맵/육각/5x5 Pearson 매트릭스) = 총 13종 시각화를 '의미있게 연결' 한다. 핵심 원칙: 차트 13개를 따로 만드는 것이 아니라, '단일 시각화 엔진(VizEngine)'을 도입하여 모든 차트가 동일한 데이터 큐레이터/색상 토큰/시간축/필터를 공유한다. 확장성: 신규 차트 추가 시 plugin 형태로 50줄 이내 등록만 하면 동작. 데이터 흐름: 마스터 모드(Workflow Editor) → 동/레이어/시간 선택 → VizEngine.render(chartType, scope) → 자동 색상/축/필터 적용. AlphaFold 메타포 일관성: 모든 차트는 pLDDT 4단계 팔레트(>=0.9 #00529B / >=0.7 #5BC0EB / >=0.5 #FED766 / <.5 #C9485B) 채택.",
       "assign_to": "product-manager",
@@ -738,13 +738,23 @@
         "decided_by": "대표님",
         "context": "바이올린 차트 추천 후 \"추천한 모든 차트를 의미있게 연결 구현\" 요청",
         "principle": "확장성 우선 — 차트 13개 따로 만들지 않고 단일 엔진으로 통합"
-      }
+      },
+      "started_at": "2026-05-03T07:34:56.289213Z",
+      "owner": "product-manager",
+      "awaiting_since": "2026-05-03T16:35:50.655365",
+      "user_confirm": [
+        {
+          "category": "DIRECTION",
+          "question": "VIZ_PACK-001 (Map Visualization Pack 13종 + VizEngine 단일 엔진) 시작 직전 컨펌\n\n[T2 트리거 — DIRECTION 카테고리]\n- 신규 디렉터리 viz/ 도입 (engine.js, charts/*.js, tokens.js)\n- 새 아키텍처 패러다임: 기존 SVG 직접 코드 → Plugin-based VizEngine\n- deck.gl 의존성 신규 (현재 미사용)\n- 11개 sub-issue 자동 등록됨 (VIZ_RIDGELINE/SANKEY_MAP/CALENDAR_HEAT/VIOLIN/SPIRAL/SMALL_MULTIPLES/SLOPE/MAP_TREEMAP/BULLET/LINKED_BRUSHING + ENGINE_CORE)\n\n[작업 규모]\n- 총 68시간 (V-0 엔진 16h, V-1 TOP3 20h, V-2 확장 6종 24h, V-3 연결성 8h)\n- 4-phase 에픽 — 1~2주 풀타임 또는 4~6주 사이드\n\n[합의 검증 — 컨텍스트 모순 가능성]\n- decision_log: '대표님 결정 (2026-05-03), 바이올린 차트 추천 후 13종 통합 요청'\n- 본 세션의 직전 합의(같은 날)는 '전부 DEFER 후 디시전 트리만'\n- 디시전 트리(DECISION_TREE-001)는 이미 COMPLETED — 다음 자연 수순으로 시각화 확장이 합리적이긴 함\n- 그러나 68h 에픽은 직전 'DEFER' 합의의 정신과 다름\n\n[Karpathy 원칙 정합성 점검]\n- #2 Simplicity First: 13종 차트 vs \"50줄로 풀 수 있는데 200줄 쓰면 다시 써라\"\n  · 현재 콘솔에 이미 5종 시각화(KPI, 5종 시계열, 트리, 매트릭스, 인과 그래프) 작동 중\n  · 추가 8종은 정말 필요한 차트인가, 아니면 \"있어 보이는\" 차트인가?\n- #4 Goal-Driven: 각 차트가 어떤 의사결정 질문에 답하는가? meta_acceptance에 명시 없음\n- 단 VizEngine 추상화 자체는 #2 Simplicity 부합 (13개 따로 만들기보다 1개 엔진)\n\n[선택지]\n1. PROCEED FULL — 13종 + VizEngine 풀스택 (68h 에픽)\n2. PROCEED MVP — V-0 (엔진 코어 16h) + V-1 TOP3 (20h) = 36h만 먼저, V-2/V-3는 결과 보고 결정\n3. PIVOT — VizEngine만 (V-0 16h), 차트는 기존 5종 그대로 마이그레이션. 신규 차트는 보류\n4. SCALE_DOWN — 신규 차트 1~2개만 추가 (예: Calendar Heatmap만, 8h)\n5. DEFER — 본 에픽 보류, ISS-018/019(자동 감지된 P2) 먼저 처리\n\n[권고]\n- 직전 자동 감지 결과: ISS-018(실데이터 0%), ISS-019(tree_model 노후)는 진짜 데이터 신뢰성 이슈\n- 시각화 13종이 0% 실데이터 위에서 더 화려해져도 의사결정 가치는 의문\n- \"옵션 4 SCALE_DOWN (Calendar Heatmap만 추가) + ISS-018 데이터 부착 작업\" 조합이 가장 균형",
+          "asked_at": "2026-05-03T16:35:50.655365"
+        }
+      ]
     },
     {
       "id": "VIZ_ENGINE_CORE-001",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "READY",
+      "status": "BLOCKED",
       "title": "[V-0] VizEngine 코어 — 13종 차트의 단일 진입점",
       "detail": "확장성 우선: 신규 차트 추가 시 ChartPlugin 인터페이스 50줄 + register() 1줄로 동작. VizEngine은 (1) DataCurator: scope+chartType→data 자동 추출, (2) ScaleResolver: 시간/색/크기 스케일 자동, (3) ScopeManager: 동·레이어·시간윈도우 통합 상태, (4) Plugin Registry. 기존 4종 차트(3D기둥/히트맵/육각/5x5 Pearson)를 새 엔진 위로 마이그레이션하여 검증.",
       "assign_to": "agent-harness",
@@ -772,7 +782,11 @@
       "estimate_h": 16,
       "payload": {
         "files_changed": []
-      }
+      },
+      "blocked_by": [
+        "VIZ_PACK-001"
+      ],
+      "block_reason": "부모 EPIC AWAITING_USER — 컨펌 후 unblock"
     },
     {
       "id": "VIZ_RIDGELINE-001",
@@ -1098,7 +1112,7 @@
       "id": "ISS-019",
       "type": "REFACTOR",
       "priority": "P2",
-      "status": "READY",
+      "status": "COMPLETED",
       "title": "simula_data_real.json 갱신 후 tree_model.json 미재학습",
       "detail": "simula_data_real.json이 tree_model.json보다 최신. 입력 데이터가 바뀌었으니 npm run train:tree 재실행 권고.",
       "assign_to": "agent-harness",
@@ -1109,7 +1123,19 @@
         "decision_tree_train.py"
       ],
       "detect_signature": "04908a670cab",
-      "auto_detected": true
+      "auto_detected": true,
+      "started_at": "2026-05-03T07:37:06.682500Z",
+      "completed_at": "2026-05-03T07:37:06.682500Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "action": "npm run train:tree 재실행",
+        "train_accuracy_before": 0.7692,
+        "train_accuracy_after": 0.762,
+        "delta": -0.007,
+        "interpretation": "0.7%p 하락 — simula_data_real이 학습 후 갱신되었음을 확인. 임계값(0.70) 위.",
+        "tree_journey": "5/5 PASS"
+      }
     }
   ],
   "hooks": {
@@ -1351,25 +1377,41 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 12,
+        "timestamp": "2026-05-03T16:34:19.197962",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 4,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
     "total_issues": 33,
-    "completed": 15,
+    "completed": 16,
     "failed": 0,
-    "evolved": 11
+    "evolved": 12
   },
   "opus_budget_state": {
     "daily": {
       "date": "2026-05-03",
-      "cost_usd": 3.02,
-      "calls": 4
+      "cost_usd": 3.7,
+      "calls": 5
     },
     "monthly": {
       "month": "2026-05",
-      "cost_usd": 3.02,
-      "calls": 4
+      "cost_usd": 3.7,
+      "calls": 5
     },
     "demotion_active": false
   },
