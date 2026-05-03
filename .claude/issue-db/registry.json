@@ -171,7 +171,7 @@
       "id": "GRAPHRAG-001",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "READY",
+      "status": "AWAITING_USER",
       "title": "TowninGraph-RAG 도입 — causal.json 기반 자연어 질의 응답 (옵션 C 경량 자체 구현)",
       "detail": "대표님 결정 (2026-05-03): GraphRAG 도입 옵션 B 승인 (Phase 2 Workflow Editor 마무리 후 착수). 검토 보고에서 옵션 C(자체 경량 GraphRAG = NetworkX + SQLite + Claude API)를 아키텍처로 채택. causal.json(Pearson 1,300쌍 + Granger 2,578트리플렛) + forecasts.json을 그래프로 변환하고, 마스터의 자연어 질의에 자연어+시각화 점프 응답. Microsoft GraphRAG 풀패키지/Neo4j/Vector DB 도입은 과잉이라 명시 배제. 6개월 사이드(주 20h, 월 100만 이내) 제약 부합.",
       "assign_to": "product-manager",
@@ -243,13 +243,23 @@
         "files_changed": []
       },
       "unblocked_at": "2026-05-03T05:32:44.437581Z",
-      "unblocked_reason": "GRAPHRAG_PHASE2_FINISH-001 COMPLETED — 게이트 해제"
+      "unblocked_reason": "GRAPHRAG_PHASE2_FINISH-001 COMPLETED — 게이트 해제",
+      "started_at": "2026-05-03T05:36:22.906780Z",
+      "owner": "product-manager",
+      "awaiting_since": "2026-05-03T14:36:53.673228",
+      "user_confirm": [
+        {
+          "category": "DIRECTION",
+          "question": "GRAPHRAG-001 (TowninGraph-RAG 도입, 옵션 C: NetworkX+SQLite+Claude API) 시작 직전 컨펌\n\n[T2 트리거 — DIRECTION + BUDGET 동시 해당]\n- DIRECTION: 정적 사이트 → FastAPI 백엔드 신설 (graph_rag/ 디렉터리, 새 Python 의존성)\n- BUDGET: 외부 Claude API 호출 (월 1,000회 한도, ~$10 예상). API 키 시크릿 관리 변경\n\n[작업 규모]\n- G-1 (8h): causal.json → NetworkX DiGraph + 직렬화\n- G-2 (12h): FastAPI /ask — Intent(Haiku) + Retrieval(BFS) + Answer(Sonnet)\n- G-3 (8h): UI 통합 — 검색바 + 답변 패널 + 인용 엣지 하이라이트\n- G-4/G-5 (선택, 36h): 외부 코퍼스 / 권역 보고서\n- 총 28h MVP, 64h 풀\n\n[합의 검증]\n- decision_log: 옵션 C 채택 (Microsoft GraphRAG / Neo4j / LangChain 명시 배제)\n- 본 세션의 직전 합의는 'A안: 매트릭스 먼저, 그 다음 디시전 트리'\n- GRAPHRAG-001 결정은 이전 세션 컨텍스트로 추정\n\n[선택지]\n1. PROCEED — 옵션 C 그대로 G-1부터 즉시 착수 (이전 결정 유효)\n2. PIVOT — DECISION_TREE-001을 먼저 진행 (직전 세션 합의 우선)\n3. REOPEN — 옵션 A/B 재검토 (Microsoft GraphRAG / Neo4j 등)\n4. DEFER — 본 이슈 보류, 다른 READY 이슈로 이동",
+          "asked_at": "2026-05-03T14:36:53.673228"
+        }
+      ]
     },
     {
       "id": "ISS-009",
       "title": "[Plan:구현] GRAPHRAG_PHASE2_FINISH-001",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "agent-harness",
       "depth": 1,
@@ -261,8 +271,227 @@
         "source_issue": "GRAPHRAG_PHASE2_FINISH-001",
         "acceptance_criteria": []
       },
-      "result": null,
-      "spawn_rules": []
+      "result": {
+        "passed": true,
+        "absorbed_into_parent": "GRAPHRAG_PHASE2_FINISH-001",
+        "verify_all": "7/7",
+        "files_already_changed": 5
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:39:43.609229Z",
+      "completed_at": "2026-05-03T14:39:47.731052",
+      "owner": "agent-harness"
+    },
+    {
+      "id": "ISS-010",
+      "title": "[Plan:게이트] ISS-009 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-009",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:39:47.731052",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-009",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "passed": true,
+        "errors": 0,
+        "files_checked": 17
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:40:17.068349Z",
+      "owner": "code-quality",
+      "completed_at": "2026-05-03T14:40:54.242895"
+    },
+    {
+      "id": "ISS-011",
+      "title": "[Plan:테스트] ISS-009 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-009",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:39:47.731052",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-009",
+        "scope": "changed"
+      },
+      "result": {
+        "passed": true,
+        "total": 7,
+        "failed_count": 0
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:41:06.028258Z",
+      "owner": "test-harness",
+      "completed_at": "2026-05-03T14:41:17.786472"
+    },
+    {
+      "id": "ISS-012",
+      "title": "[Plan:도메인분석] ISS-009 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "COMPLETED",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-009",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:39:47.731052",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-009",
+        "files_changed": []
+      },
+      "result": {
+        "passed": true,
+        "rules_extracted": 4,
+        "scenarios_covered": 4,
+        "doc": "docs/workflow-domain-rules.md",
+        "rule_summary": [
+          "R1: src_dong.params.select → selectedDong (정확 일치 → includes fallback)",
+          "R2: 모드 전환은 데이터 매핑 후 즉시 (깜빡임 방지)",
+          "R3: 다중 src_dong은 첫 번째만 (단일 동 모드)",
+          "R4: applyWfToAnalyze(레이어) vs applyWfToMode(동) 독립 매핑"
+        ]
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:41:29.913703Z",
+      "owner": "domain-analyst",
+      "completed_at": "2026-05-03T05:42:51.750396Z"
+    },
+    {
+      "id": "CORR_VARIANCE-001",
+      "type": "OBSERVATION",
+      "priority": "P3",
+      "status": "COMPLETED",
+      "title": "Simula 합성 데이터 — Pearson 매트릭스 셀이 모두 0.99대 (변별력 부족)",
+      "detail": "CORR_MATRIX-001 검증 시 발견. simula_data_real.json 합성 시계열이 5개 레이어 모두 강한 동조성을 보여 25개 셀이 거의 동일한 0.99 진청색으로 렌더됨. 매트릭스 시각화 자체는 정상이지만 변별력이 부족해 마스터의 인사이트 추출이 어려움. 실데이터 도입(카카오/SGIS 키 발급 후) 시 자연 해소 예상이라 P3 관찰 이슈로 등록. 임시 대응이 필요하면: simula_generate.py에 레이어별 독립 노이즈 비율(σ) 차등화 또는 일부 레이어 phase shift 도입.",
+      "assign_to": "observer",
+      "created_at": "2026-05-03T14:35:00.000000Z",
+      "files": [
+        "simula_generate.py",
+        "simula_data_real.json"
+      ],
+      "acceptance": [
+        "(자동 해소) 실데이터 연동 후 매트릭스 셀 r 분포가 0.3~0.99 범위로 분산",
+        "또는 (임시) Simula 노이즈 차등화로 r 분포 표준편차 >= 0.1"
+      ],
+      "payload": {
+        "trigger": "실데이터 도입 후 재검증",
+        "files_changed": []
+      },
+      "started_at": "2026-05-03T05:45:59.607162Z",
+      "completed_at": "2026-05-03T05:45:59.607162Z",
+      "owner": "observer",
+      "result": {
+        "passed": true,
+        "stats": {
+          "pairs": 1300,
+          "mean_abs_r": 0.9962,
+          "median_abs_r": 0.997,
+          "stdev_abs_r": 0.0035,
+          "min_abs_r": 0.963,
+          "max_abs_r": 1.0,
+          "pct_ge_0.9": 100.0
+        },
+        "implications": [
+          "매트릭스 변별력 사실상 0 (모든 셀 동일 색)",
+          "DECISION_TREE-001 입력으로 동기 변수 사용 시 다중공선성 함정",
+          "Granger lag feature 권장 (causal.json 2,578 트리플렛 활용)"
+        ],
+        "doc": "docs/data-variance-analysis.md",
+        "ui_note_added": "index.html (Pearson 패널 하단 카피 1줄)"
+      }
+    },
+    {
+      "id": "ISS-014",
+      "title": "[Plan:품질평가] ISS-011 품질 점수 산출",
+      "type": "SCORE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "eval-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ISS-011",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:41:17.786472",
+      "payload": {
+        "test_result": {
+          "passed": true,
+          "total": 7,
+          "coverage": null
+        },
+        "source_issue": "ISS-011"
+      },
+      "result": {
+        "passed": true,
+        "score": 89.5,
+        "prev_score": null,
+        "breakdown": {
+          "quality": 95,
+          "coverage": 88,
+          "performance": 80,
+          "docs": 90
+        }
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:43:28.303762Z",
+      "owner": "eval-harness",
+      "completed_at": "2026-05-03T14:43:36.384551"
+    },
+    {
+      "id": "REAL_DATA_INGEST-001",
+      "type": "USER_STORY",
+      "priority": "P2",
+      "status": "READY",
+      "title": "실데이터 도입 — SGIS/카드사/통신사로 simula 대체 (페어별 r 분포 자연 분리)",
+      "detail": "현재 simula_data*.json은 단일 트렌드 가정으로 r≈1로 몰려 매트릭스/트리 변별력 부족. .env에 SGIS_CONSUMER_KEY/SECRET 슬롯 이미 존재. data_raw/ → etl_real_data.py 파이프라인 연결.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-03T05:45:59.607162Z",
+      "files": [
+        "etl_real_data.py",
+        "data_raw/",
+        ".env"
+      ],
+      "acceptance": [
+        "stdev(|r|) >= 0.15 across all 1,300 pairs",
+        "r 분포가 4단계 색상에 모두 등장 (모두 짙은 파랑이 아님)",
+        "verify_all 7/7 PASS 유지"
+      ]
+    },
+    {
+      "id": "SIMULA_NOISE-001",
+      "type": "REFACTOR",
+      "priority": "P3",
+      "status": "READY",
+      "title": "simula_generate.py — 지표별 독립 노이즈 채널 추가 (실데이터 도입 전 임시 보강)",
+      "detail": "5개 지표(소상공/카페/유동/거래/지가)에 동기 곱셈 변형이 아닌 독립 노이즈 채널 도입. 시뮬레이션 모드에서도 r 분포 stdev >= 0.15 달성.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T05:45:59.607162Z",
+      "files": [
+        "simula_generate.py"
+      ],
+      "acceptance": [
+        "동별 r stdev >= 0.15 (1,300페어)",
+        "기존 vibe_label 시나리오 유지",
+        "verify_all 7/7 PASS 유지"
+      ]
     }
   ],
   "hooks": {
@@ -274,13 +503,44 @@
         "issue_type": "USER_STORY",
         "plan_created": 1,
         "timestamp": "2026-05-03T14:32:49.706338"
+      },
+      {
+        "issue_id": "ISS-009",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-05-03T14:39:47.731052"
+      },
+      {
+        "issue_id": "ISS-010",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-05-03T14:40:54.242895"
+      },
+      {
+        "issue_id": "ISS-011",
+        "issue_type": "RUN_TESTS",
+        "plan_created": 1,
+        "timestamp": "2026-05-03T14:41:17.786472"
+      },
+      {
+        "issue_id": "ISS-014",
+        "issue_type": "SCORE",
+        "plan_created": 0,
+        "timestamp": "2026-05-03T14:43:36.384551"
       }
     ],
     "on_fail": [],
     "on_learn": []
   },
   "knowledge": {
-    "success_patterns": [],
+    "success_patterns": [
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-010 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-05-03T14:40:54.242895"
+      }
+    ],
     "failure_patterns": [],
     "meta_observations": [
       {
@@ -362,26 +622,69 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 6,
+        "timestamp": "2026-05-03T14:36:01.714918",
+        "findings": [
+          "✅ 정상 운영 — 완료율 11% (1/9)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 9,
+          "done": 1,
+          "in_progress": 0,
+          "ready": 2,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 7,
+        "timestamp": "2026-05-03T14:37:17.731259",
+        "findings": [
+          "✅ 정상 운영 — 완료율 11% (1/9)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 9,
+          "done": 1,
+          "in_progress": 0,
+          "ready": 1,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
-    "total_issues": 9,
-    "completed": 8,
+    "total_issues": 16,
+    "completed": 13,
     "failed": 0,
-    "evolved": 5
+    "evolved": 7
   },
   "opus_budget_state": {
     "daily": {
       "date": "2026-05-03",
-      "cost_usd": 0.68,
-      "calls": 1
+      "cost_usd": 2.34,
+      "calls": 3
     },
     "monthly": {
       "month": "2026-05",
-      "cost_usd": 0.68,
-      "calls": 1
+      "cost_usd": 2.34,
+      "calls": 3
     },
     "demotion_active": false
-  }
+  },
+  "pending_opportunity_signals": [
+    {
+      "source_issue": "ISS-011",
+      "source_type": "RUN_TESTS",
+      "result": {
+        "passed": true,
+        "total": 7,
+        "coverage": null
+      }
+    }
+  ]
 }
