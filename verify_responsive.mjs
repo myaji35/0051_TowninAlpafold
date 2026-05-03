@@ -8,10 +8,11 @@ const VIEWPORTS = [
   { name: '2560_3k',     width: 2560, height: 1440 },
 ];
 
+const PORT = process.env.PW_PORT || '8765';
 for (const vp of VIEWPORTS) {
   const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1 });
   const page = await ctx.newPage();
-  await page.goto('http://localhost:8765/index.html', { waitUntil: 'networkidle', timeout: 15000 });
+  await page.goto(`http://localhost:${PORT}/index.html`, { waitUntil: 'networkidle', timeout: 15000 });
   await page.waitForFunction(() => typeof DATA !== 'undefined' && DATA && DATA.dongs && DATA.dongs.length > 100, { timeout: 10000 });
 
   // Explore 모드

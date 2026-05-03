@@ -10,7 +10,8 @@ page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text());
 page.on('pageerror', e => errors.push('PAGEERROR: ' + e.message));
 
 console.log('📡 v0.7 + Prophet 로드');
-await page.goto('http://localhost:8765/index.html', { waitUntil: 'networkidle', timeout: 15000 });
+const PORT = process.env.PW_PORT || '8765';
+await page.goto(`http://localhost:${PORT}/index.html`, { waitUntil: 'networkidle', timeout: 15000 });
 await page.waitForFunction(() => typeof DATA !== 'undefined' && DATA && DATA.dongs.length > 100, { timeout: 10000 });
 
 // FORECASTS 로드 대기 (비동기)

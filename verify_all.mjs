@@ -47,7 +47,10 @@ function startServer() {
 
 function runSuite(file) {
   return new Promise((ok) => {
-    const child = spawn(process.execPath, [file], { stdio: ['ignore', 'pipe', 'pipe'] });
+    const child = spawn(process.execPath, [file], {
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, PW_PORT: String(PORT) },
+    });
     let out = '', err = '';
     child.stdout.on('data', d => out += d.toString());
     child.stderr.on('data', d => err += d.toString());

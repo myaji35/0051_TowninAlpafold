@@ -9,7 +9,8 @@ const errors = [];
 page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
 page.on('pageerror', e => errors.push('PAGEERROR: ' + e.message));
 
-await page.goto('http://localhost:3051/index.html', { waitUntil: 'networkidle' });
+const PORT = process.env.PW_PORT || '8765';
+await page.goto(`http://localhost:${PORT}/index.html`, { waitUntil: 'networkidle' });
 await page.waitForFunction(() => typeof CAUSAL !== 'undefined' && CAUSAL, { timeout: 10000 });
 
 const causalStatus = await page.evaluate(() => ({

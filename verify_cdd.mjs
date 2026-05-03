@@ -9,7 +9,8 @@ const errors = [];
 page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
 page.on('pageerror', e => errors.push('PAGEERROR: ' + e.message));
 
-await page.goto('http://localhost:3051/index.html', { waitUntil: 'networkidle', timeout: 15000 });
+const PORT = process.env.PW_PORT || '8765';
+await page.goto(`http://localhost:${PORT}/index.html`, { waitUntil: 'networkidle', timeout: 15000 });
 await page.waitForFunction(() => typeof FORECASTS !== 'undefined' && FORECASTS, { timeout: 10000 });
 
 console.log('========== (C) Explore 단백질 호흡 ==========');
