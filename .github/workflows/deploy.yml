@@ -1,0 +1,62 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: []
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify required static assets exist
+        run: |
+          for f in index.html app.js manual.html report_v07_alpha.html; do
+            [ -f "$f" ] || { echo "::error::missing $f"; exit 1; }
+          done
+          echo "✓ static assets present"
+
+      - name: Stage site (exclude dev/heavy artifacts)
+        run: |
+          mkdir -p _site
+          # 정적 사이트 자산 — index가 fetch하는 JSON 포함
+          cp -r index.html app.js manual.html report_v07_alpha.html _site/
+          [ -f simula_data_real.json ] && cp simula_data_real.json _site/
+          [ -f simula_data.json ] && cp simula_data.json _site/
+          [ -f forecasts.json ] && cp forecasts.json _site/
+          [ -f causal.json ] && cp causal.json _site/
+          [ -d screenshots ] && cp -r screenshots _site/screenshots
+          [ -d docs ] && cp -r docs _site/docs
+          ls -la _site/
+          du -sh _site/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

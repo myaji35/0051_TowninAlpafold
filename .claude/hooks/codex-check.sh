@@ -1,0 +1,1 @@
+/Users/gangseungsig/.claude/harness-core/hooks/codex-check.sh

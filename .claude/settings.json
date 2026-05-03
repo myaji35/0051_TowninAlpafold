@@ -1,0 +1,137 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(bash *)",
+      "Bash(python3 *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(bun *)",
+      "Bash(pnpm *)",
+      "Bash(yarn *)",
+      "Bash(chmod *)",
+      "Bash(mkdir *)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(pwd)",
+      "Bash(which *)",
+      "Bash(echo *)",
+      "Bash(touch *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(test *)",
+      "Bash(lsof *)",
+      "Bash(curl *)",
+      "Bash(gh *)",
+      "Bash(ruby *)",
+      "Bash(rails *)",
+      "Bash(bundle *)",
+      "Bash(bin/*)",
+      "Bash(jq *)",
+      "Bash(rm /tmp/harness-freeze.env)",
+      "Bash(/Users/gangseungsig/.claude/skills/gstack/browse/dist/browse *)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob",
+      "Grep",
+      "Agent"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-resume.sh",
+            "timeout": 10,
+            "statusMessage": "Restoring harness state..."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/freeze-guard.sh",
+            "timeout": 5,
+            "statusMessage": "Checking freeze boundary..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/sandbox-enforce.sh",
+            "timeout": 5,
+            "statusMessage": "Sandbox policy check..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-code-change.sh",
+            "timeout": 10,
+            "statusMessage": "Tracking code change..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/on-agent-complete.sh",
+            "timeout": 15,
+            "statusMessage": "Checking next issue...",
+            "asyncRewake": true
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/meta-review.sh",
+            "timeout": 30,
+            "statusMessage": "Meta Agent reviewing...",
+            "asyncRewake": true
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/on-agent-complete.sh",
+            "timeout": 15,
+            "statusMessage": "Dispatching next agent...",
+            "asyncRewake": true
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/meta-review.sh",
+            "timeout": 30,
+            "statusMessage": "Meta Agent reviewing...",
+            "asyncRewake": true
+          }
+        ]
+      }
+    ]
+  }
+}

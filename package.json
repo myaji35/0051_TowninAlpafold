@@ -1,0 +1,23 @@
+{
+  "name": "towninalpafold",
+  "version": "0.7.0",
+  "description": "Townin × AlphaFold — 지역 상권/인구/예측 데이터를 단백질 구조 시각화 메타포로 분석",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify:v07": "node verify_v07.mjs",
+    "verify:causal": "node verify_causal.mjs",
+    "verify:cdd": "node verify_cdd.mjs",
+    "verify:p2": "node verify_p2.mjs",
+    "verify:prophet": "node verify_prophet.mjs",
+    "verify:responsive": "node verify_responsive.mjs",
+    "verify:all": "node verify_all.mjs",
+    "capture": "node capture_screens.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

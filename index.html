@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>TowninGraph · Master Console v0.3</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://unpkg.com/deck.gl@9.0.30/dist.min.js"></script>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif; background: #07101F; color: #E8EDF3; margin: 0; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .glass { background: rgba(15, 25, 42, 0.78); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.06); }
+  .glass-light { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+  .plddt-90 { background: #00529B; } .plddt-70 { background: #5BC0EB; }
+  .plddt-50 { background: #FED766; } .plddt-low { background: #C9485B; }
+  input[type=range].time-slider { accent-color: #00A1E0; }
+  .glow-cta { box-shadow: 0 0 24px rgba(0, 161, 224, 0.45); }
+  #map, #map-explore { background: #07101F !important; }
+  .maplibregl-canvas { outline: none; }
+  .maplibregl-ctrl-attrib { background: rgba(0,0,0,0.4) !important; color: rgba(255,255,255,0.4) !important; font-size: 9px; }
+  .maplibregl-ctrl-attrib a { color: rgba(255,255,255,0.5) !important; }
+  .aa-bar { height: 9px; border-radius: 1px; transition: all 0.25s ease; }
+  .aa-bar:hover { height: 14px; transform: scaleY(1.5); }
+  .pip-row { display: grid; grid-template-columns: repeat(60, 1fr); gap: 1px; }
+  .pip { height: 4px; border-radius: 0.5px; }
+  .vibe-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 3px; font-size: 9px; font-family: 'JetBrains Mono'; font-weight: 600; }
+  .vibe-rising_star { background: #00A1E0; color: white; }
+  .vibe-rising { background: #5BC0EB; color: #07101F; }
+  .vibe-premium { background: #B5E853; color: #07101F; }
+  .vibe-youth { background: #FF8FB1; color: white; }
+  .vibe-stable { background: #9CA3AF; color: #07101F; }
+  .vibe-traditional { background: #E0B062; color: #07101F; }
+  .vibe-developing { background: #7FD8E5; color: #07101F; }
+  .vibe-industrial { background: #6B7280; color: white; }
+  .vibe-residential { background: #94A3B8; color: #07101F; }
+  .vibe-rising_twin { background: #FF8FB1; color: white; }
+
+  /* 모드 탭 */
+  .mode-btn { padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+  .mode-btn.active { background: linear-gradient(135deg, #00A1E0 0%, #5BC0EB 100%); color: white; box-shadow: 0 4px 12px rgba(0,161,224,0.3); }
+  .mode-btn:not(.active) { background: rgba(255,255,255,0.04); color: #9CA3AF; }
+  .mode-btn:not(.active):hover { background: rgba(255,255,255,0.08); color: white; }
+
+  /* 갤러리 카드 */
+  .theme-card {
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: rgba(20, 32, 52, 0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .theme-card:hover {
+    transform: translateY(-3px);
+    border-color: #5BC0EB;
+    box-shadow: 0 8px 24px rgba(91, 192, 235, 0.18);
+  }
+
+  /* 자동 인사이트 카드 */
+  .insight-card {
+    border-left: 3px solid;
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .insight-positive { border-color: #5BC0EB; }
+  .insight-warning { border-color: #FED766; }
+  .insight-alert { border-color: #C9485B; }
+
+  /* Tableau 좌측 패널 */
+  .data-pill {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 8px; border-radius: 4px;
+    font-size: 11px; font-family: 'JetBrains Mono';
+    background: rgba(91, 192, 235, 0.08);
+    border: 1px solid rgba(91, 192, 235, 0.15);
+    cursor: grab; transition: all 0.15s;
+  }
+  .data-pill:hover { background: rgba(91, 192, 235, 0.14); transform: translateX(2px); }
+  .data-pill.measure { background: rgba(254, 215, 102, 0.06); border-color: rgba(254, 215, 102, 0.15); }
+
+  /* 매핑 슬롯 */
+  .mapping-slot {
+    border: 1px dashed rgba(255,255,255,0.12);
+    border-radius: 5px;
+    min-height: 32px;
+    padding: 5px 8px;
+    background: rgba(0,0,0,0.15);
+  }
+  .mapping-slot.has-value {
+    border-style: solid;
+    border-color: rgba(91, 192, 235, 0.3);
+    background: rgba(91, 192, 235, 0.08);
+  }
+
+  /* Decide KPI big */
+  .kpi-big { font-size: 28px; font-weight: 800; }
+  .kpi-delta-up { color: #5BC0EB; }
+  .kpi-delta-down { color: #FF8FB1; }
+
+  /* Data Studio */
+  @keyframes pulse-r {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.6); }
+  }
+  .grid-cols-24 { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 2px; }
+  .ds-tab { transition: all 0.2s; }
+  .ds-tab:hover { background: rgba(255,255,255,0.06); }
+
+  /* Command Palette */
+  .cmd-item { transition: background 0.1s; }
+  .cmd-item.cmd-active {
+    background: linear-gradient(90deg, rgba(91,192,235,0.15), rgba(91,192,235,0.05));
+    border-left: 2px solid #5BC0EB;
+  }
+  .cmd-item:not(.cmd-active):hover { background: rgba(255,255,255,0.04); }
+
+  /* Workflow particle glow */
+  @keyframes wf-glow {
+    0% { filter: drop-shadow(0 0 2px currentColor); }
+    50% { filter: drop-shadow(0 0 12px currentColor); }
+    100% { filter: drop-shadow(0 0 2px currentColor); }
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ───── COMMAND PALETTE (⌘K) ───── -->
+<div id="cmd-palette" class="hidden fixed inset-0 z-[100]" style="background:rgba(7,16,31,0.85); backdrop-filter:blur(8px);">
+  <div class="max-w-xl mx-auto mt-32 glass rounded-xl shadow-2xl overflow-hidden" style="border:1px solid rgba(91,192,235,0.3)">
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-white/10">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5BC0EB" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="cmd-input" type="text" placeholder="주제·동·모드 검색 (Tab 자동완성, ↑↓ 이동, Enter 실행)" class="flex-1 bg-transparent outline-none text-sm text-white placeholder-gray-500">
+      <span class="text-[10px] mono text-gray-500 px-1.5 py-0.5 rounded bg-white/5">ESC</span>
+    </div>
+    <div id="cmd-results" class="max-h-96 overflow-y-auto"></div>
+    <div class="px-4 py-2 border-t border-white/10 flex items-center justify-between text-[9px] mono text-gray-500">
+      <span>↑↓ 이동 · ↵ 실행 · ESC 닫기</span>
+      <span>TowninGraph Master Console</span>
+    </div>
+  </div>
+</div>
+
+<!-- ───── HEADER ───── -->
+<header class="glass sticky top-0 z-50 px-6 py-3">
+  <div class="flex items-center justify-between max-w-[1920px] mx-auto">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-md flex items-center justify-center" style="background: linear-gradient(135deg, #00A1E0 0%, #5BC0EB 100%);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12c2-3 6-3 9 0s7 3 9 0"/><path d="M3 18c2-3 6-3 9 0s7 3 9 0"/><path d="M3 6c2-3 6-3 9 0s7 3 9 0"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-base font-bold text-white tracking-tight">TowninGraph · Master Console</h1>
+        <p class="text-[10px] text-gray-400 mono">Townin 운영자용 지역 경제구조 분석 도구 · v0.3</p>
+      </div>
+    </div>
+    <nav class="flex items-center gap-2">
+      <button data-mode="gallery" class="mode-btn active">🎨 갤러리</button>
+      <button data-mode="explore" class="mode-btn">🧬 Explore</button>
+      <button data-mode="analyze" class="mode-btn">📊 Analyze</button>
+      <button data-mode="decide" class="mode-btn">🎯 Decide</button>
+      <button data-mode="datastudio" class="mode-btn">🗄️ Data Studio</button>
+      <button data-mode="workflow" class="mode-btn">🧩 Workflow</button>
+      <span class="mx-2 text-gray-600">|</span>
+      <a href="manual.html" target="_blank" class="px-2 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 hover:text-white" title="사용자 매뉴얼 (새 창)">📖 매뉴얼</a>
+      <span class="text-[10px] mono text-gray-500" id="meta-info">SIMULA · loading…</span>
+    </nav>
+  </div>
+</header>
+
+<main class="px-6 py-5 max-w-[1920px] mx-auto">
+
+  <!-- ════════════ 0. GALLERY ════════════ -->
+  <section id="view-gallery" class="block">
+    <div class="mb-5">
+      <h2 class="text-2xl font-bold text-white tracking-tight mb-1">🎨 주제 갤러리</h2>
+      <p class="text-sm text-gray-400">자주 보는 12개 분석 주제. 카드를 클릭하면 즉시 해당 모드로 진입합니다.</p>
+    </div>
+
+    <!-- Search bar -->
+    <div class="glass-light rounded-lg p-3 mb-5 flex items-center gap-3">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="주제 검색 (예: 성수, 코로나, 카페)" class="flex-1 bg-transparent outline-none text-sm text-white placeholder-gray-500">
+      <span class="text-[10px] mono text-gray-500">⌘K</span>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="flex items-center gap-2 mb-4 overflow-x-auto">
+      <button class="px-3 py-1.5 rounded-md text-[11px] font-semibold text-white" style="background:#00A1E0">전체 (12)</button>
+      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5">🔥 트렌드 (4)</button>
+      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5">⚠️ 이상 탐지 (3)</button>
+      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5">🤝 파트너/매출 (3)</button>
+      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5">🌐 비교 분석 (2)</button>
+    </div>
+
+    <!-- Gallery grid -->
+    <div id="gallery-grid" class="grid grid-cols-3 gap-4"></div>
+  </section>
+
+  <!-- ════════════ 1. EXPLORE MODE ════════════ -->
+  <section id="view-explore" class="hidden">
+    <div class="mb-5">
+      <div class="flex items-baseline justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-white tracking-tight">🧬 Explore — 자동 인사이트</h2>
+          <p class="text-sm text-gray-400">알파폴드 시그니처 + 패턴 자동 탐지. 마스터의 첫 진입점.</p>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] mono text-gray-400">현재 시점</div>
+          <div class="text-base font-bold text-white mono" id="explore-month">2024-12</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-4">
+      <!-- LEFT: 자동 인사이트 -->
+      <div class="col-span-2 space-y-3">
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">⚠️ 이상 탐지 (Top 5)</div>
+          <div id="anomaly-list" class="space-y-2"></div>
+        </div>
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🔥 급상승 동 (Top 5)</div>
+          <div id="rising-list" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- CENTER: 알파폴드 지도 (col-span 6→8, 높이 540→640) -->
+      <div class="col-span-8">
+        <div id="map-explore" class="rounded-lg" style="height: 640px; position: relative;"></div>
+        <div class="mt-3 flex items-center gap-3">
+          <button id="explore-play" class="w-10 h-10 rounded-full glow-cta flex items-center justify-center" style="background:#00A1E0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <input id="explore-slider" type="range" min="0" max="59" value="59" class="time-slider flex-1">
+          <span id="explore-month-mini" class="text-xs mono text-gray-300 w-16 text-right">2024-12</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: 선택 동 디테일 (col-span 3→2) -->
+      <div class="col-span-2 space-y-3">
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-1">선택 동</div>
+          <div id="explore-selected-name" class="text-base font-bold text-white">—</div>
+          <div id="explore-selected-vibe" class="mt-1.5"></div>
+          <div class="grid grid-cols-2 gap-2 mt-3 text-[11px]">
+            <div><div class="text-gray-400 text-[9px]">유동인구</div><div id="ex-kpi-visitors" class="font-bold mono text-white">—</div></div>
+            <div><div class="text-gray-400 text-[9px]">공시지가</div><div id="ex-kpi-price" class="font-bold mono text-white">—</div></div>
+            <div><div class="text-gray-400 text-[9px]">카페</div><div id="ex-kpi-cafe" class="font-bold mono text-white">—</div></div>
+            <div><div class="text-gray-400 text-[9px]">pLDDT</div><div id="ex-kpi-plddt" class="font-bold mono">—</div></div>
+          </div>
+        </div>
+        <div class="glass-light rounded-lg p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-[10px] mono text-gray-400">단백질 호흡</div>
+            <div class="text-[9px] mono" style="color:#5BC0EB">▶ Prophet 12mo</div>
+          </div>
+          <svg id="explore-trace" width="100%" height="160" viewBox="0 0 360 160" preserveAspectRatio="none"></svg>
+          <div class="flex flex-wrap gap-1.5 mt-2 text-[8px] mono">
+            <span style="color:#00A1E0">━ 지가</span>
+            <span style="color:#FED766">━ 거래</span>
+            <span style="color:#5BC0EB">━ 유동</span>
+            <span style="color:#B5E853">━ 소상공</span>
+            <span style="color:#FF8FB1">━ 카페</span>
+          </div>
+        </div>
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">💡 자동 코멘트</div>
+          <div id="auto-comment" class="text-[11px] text-gray-200 leading-relaxed">동을 클릭하면 자동 분석 코멘트가 생성됩니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ 2. ANALYZE MODE ════════════ -->
+  <section id="view-analyze" class="hidden">
+    <div class="mb-5">
+      <h2 class="text-2xl font-bold text-white tracking-tight">📊 Analyze — Tableau 자유 매핑</h2>
+      <p class="text-sm text-gray-400">데이터 패널 + 매핑 슬롯 + 캔버스. 어떤 주제든 직접 만들기.</p>
+    </div>
+
+    <div class="grid grid-cols-12 gap-4">
+      <!-- LEFT: DATA PANEL -->
+      <div class="col-span-2 glass-light rounded-lg p-3 space-y-3" style="max-height: 660px; overflow-y: auto;">
+        <div>
+          <div class="text-[10px] mono text-gray-400 mb-2">📂 5종 카테고리</div>
+          <div class="space-y-2 mono text-[10px]">
+            <div class="text-gray-400">▾ 위치 / 접근성</div>
+            <div class="ml-2 space-y-1">
+              <div class="data-pill">⊞ transit_score</div>
+              <div class="data-pill">⊞ walkability</div>
+              <div class="data-pill">⊞ subway_distance_m</div>
+              <div class="data-pill">⊞ bus_stop_density</div>
+            </div>
+            <div class="text-gray-400 mt-2">▾ 공시지가 / 임대</div>
+            <div class="ml-2 space-y-1">
+              <div class="data-pill measure">Σ land_price</div>
+              <div class="data-pill measure">Σ rent_price</div>
+            </div>
+            <div class="text-gray-400 mt-2">▾ 부동산 거래</div>
+            <div class="ml-2 space-y-1">
+              <div class="data-pill measure">Σ tx_volume</div>
+              <div class="data-pill measure">Σ tx_apt_count</div>
+            </div>
+            <div class="text-gray-400 mt-2">▾ 이용객</div>
+            <div class="ml-2 space-y-1">
+              <div class="data-pill measure">Σ visitors_total</div>
+              <div class="data-pill measure">Σ visitors_20s</div>
+              <div class="data-pill measure">Σ visitors_30s</div>
+              <div class="data-pill measure">Σ visitors_inflow</div>
+            </div>
+            <div class="text-gray-400 mt-2">▾ 소상공인</div>
+            <div class="ml-2 space-y-1">
+              <div class="data-pill measure">Σ biz_count</div>
+              <div class="data-pill measure">Σ biz_cafe</div>
+              <div class="data-pill measure">Σ biz_new</div>
+              <div class="data-pill measure">Σ biz_closed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER: CANVAS (col-span 7→8, 매핑 슬롯+지도) -->
+      <div class="col-span-8 space-y-3">
+        <!-- Mapping bar (Tableau-style) -->
+        <div class="glass-light rounded-lg p-3 grid grid-cols-5 gap-2">
+          <div>
+            <div class="text-[9px] mono text-gray-400 mb-1">높이 (Y)</div>
+            <div class="mapping-slot has-value">
+              <select id="m-height" class="bg-transparent outline-none text-[11px] text-white w-full mono">
+                <option value="visitors_total">visitors_total</option>
+                <option value="land_price">land_price</option>
+                <option value="biz_count">biz_count</option>
+                <option value="biz_cafe">biz_cafe</option>
+                <option value="tx_volume">tx_volume</option>
+                <option value="visitors_20s">visitors_20s</option>
+                <option value="biz_new">biz_new</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="text-[9px] mono text-gray-400 mb-1">색상</div>
+            <div class="mapping-slot has-value">
+              <select id="m-color" class="bg-transparent outline-none text-[11px] text-white w-full mono">
+                <option value="biz_cafe">biz_cafe</option>
+                <option value="visitors_20s">visitors_20s</option>
+                <option value="biz_new">biz_new</option>
+                <option value="biz_closed">biz_closed</option>
+                <option value="land_price">land_price</option>
+                <option value="tx_volume">tx_volume</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="text-[9px] mono text-gray-400 mb-1">필터 (지역)</div>
+            <div class="mapping-slot">
+              <select id="m-filter" class="bg-transparent outline-none text-[11px] text-white w-full mono">
+                <option value="all">전체</option>
+                <option value="seoul">서울만</option>
+                <option value="busan">부산만</option>
+                <option value="rising">급상승 동만</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="text-[9px] mono text-gray-400 mb-1">시각화 모드</div>
+            <div class="mapping-slot has-value">
+              <select id="m-mode" class="bg-transparent outline-none text-[11px] text-white w-full mono">
+                <option value="columns">3D 기둥</option>
+                <option value="heat">히트맵</option>
+                <option value="hex">육각 그리드</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="text-[9px] mono text-gray-400 mb-1">시간 (X축)</div>
+            <div class="mapping-slot has-value flex items-center justify-center">
+              <span class="text-[11px] mono text-cyan-300" id="m-time-current">2024-12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div id="map" class="rounded-lg" style="height: 580px; position: relative;"></div>
+
+        <!-- Time slider -->
+        <div class="flex items-center gap-3">
+          <button id="play-btn" class="w-10 h-10 rounded-full glow-cta flex items-center justify-center" style="background:#00A1E0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <input id="time-slider" type="range" min="0" max="59" value="59" class="time-slider flex-1">
+          <select id="play-speed" class="bg-white/5 border border-white/10 rounded-md text-xs px-2 py-1 text-white mono">
+            <option value="400">1x</option><option value="200" selected>2x</option><option value="120">4x</option><option value="60">8x</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- RIGHT: MARKS / WHEEL (col-span 3→2) -->
+      <div class="col-span-2 space-y-3">
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-1">선택 동</div>
+          <div id="selected-name" class="text-sm font-bold text-white">—</div>
+          <div id="selected-vibe" class="mt-1.5"></div>
+          <div class="grid grid-cols-2 gap-2 mt-3 text-[10px]">
+            <div><div class="text-gray-400 text-[9px]">유동</div><div id="kpi-visitors" class="font-bold mono text-white">—</div></div>
+            <div><div class="text-gray-400 text-[9px]">지가</div><div id="kpi-price" class="font-bold mono text-white">—</div></div>
+            <div><div class="text-gray-400 text-[9px]">카페</div><div id="kpi-cafe" class="font-bold mono text-white">—</div></div>
+            <div><div class="text-gray-400 text-[9px]">pLDDT</div><div id="kpi-plddt" class="font-bold mono">—</div></div>
+          </div>
+        </div>
+
+        <div class="glass-light rounded-lg p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-[10px] mono text-gray-400">Profile Wheel</div>
+            <button id="find-twin" class="text-[9px] mono text-cyan-300 hover:text-white">🔍 자동 Twin</button>
+          </div>
+          <div class="flex items-center gap-1 text-[10px] mono mb-2">
+            <span class="text-gray-400">A</span>
+            <select id="dong-a" class="bg-white/5 border border-white/10 rounded text-[10px] px-1 py-0.5 text-white flex-1"></select>
+          </div>
+          <div class="flex items-center gap-1 text-[10px] mono mb-2">
+            <span class="text-gray-400">B</span>
+            <select id="dong-b" class="bg-white/5 border border-white/10 rounded text-[10px] px-1 py-0.5 text-white flex-1"></select>
+          </div>
+          <svg id="wheel" width="100%" viewBox="0 0 280 280"></svg>
+          <div class="text-center mt-1">
+            <span class="text-[9px] mono text-gray-400">TWIN</span>
+            <span id="twin-score" class="text-2xl font-bold mono ml-2" style="color:#5BC0EB">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ 3. DECIDE MODE ════════════ -->
+  <section id="view-decide" class="hidden">
+    <div class="mb-5">
+      <h2 class="text-2xl font-bold text-white tracking-tight">🎯 Decide — 임원/시연용 KPI</h2>
+      <p class="text-sm text-gray-400">한 화면에 의사결정 핵심만. 회의실 모니터에 띄우는 용도.</p>
+    </div>
+
+    <!-- 4 Big KPIs -->
+    <div class="grid grid-cols-4 gap-4 mb-5">
+      <div class="glass-light rounded-lg p-4">
+        <div class="text-[10px] mono text-gray-400 mb-2">서울 전체 평균 유동 (2024-12)</div>
+        <div class="kpi-big text-white" id="d-visitors">—</div>
+        <div class="text-[11px] mono mt-1"><span class="kpi-delta-up">▲ 18.2%</span> <span class="text-gray-500">vs 2020-01</span></div>
+      </div>
+      <div class="glass-light rounded-lg p-4">
+        <div class="text-[10px] mono text-gray-400 mb-2">평균 공시지가</div>
+        <div class="kpi-big text-white" id="d-price">—</div>
+        <div class="text-[11px] mono mt-1"><span class="kpi-delta-up">▲ 23.7%</span> <span class="text-gray-500">5년</span></div>
+      </div>
+      <div class="glass-light rounded-lg p-4">
+        <div class="text-[10px] mono text-gray-400 mb-2">신규 창업 (월 평균)</div>
+        <div class="kpi-big text-white" id="d-newbiz">—</div>
+        <div class="text-[11px] mono mt-1"><span class="kpi-delta-up">▲ 12.4%</span> <span class="text-gray-500">트렌드 시프트 후</span></div>
+      </div>
+      <div class="glass-light rounded-lg p-4">
+        <div class="text-[10px] mono text-gray-400 mb-2">평균 pLDDT</div>
+        <div class="kpi-big" id="d-plddt" style="color:#5BC0EB">—</div>
+        <div class="text-[11px] mono mt-1"><span class="kpi-delta-down">▼ 5pt</span> <span class="text-gray-500">충격기 평균</span></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-4">
+      <!-- 5종 시계열 비교 -->
+      <div class="col-span-8 glass-light rounded-lg p-4">
+        <div class="text-[10px] mono text-gray-400 mb-3">서울 전체 5종 데이터 60개월 트렌드</div>
+        <svg id="d-chart" width="100%" height="280" viewBox="0 0 720 280"></svg>
+        <div class="flex flex-wrap gap-3 mt-3 text-[10px] mono">
+          <span style="color:#00A1E0">━ 공시지가</span>
+          <span style="color:#FED766">━ 거래량</span>
+          <span style="color:#5BC0EB">━ 유동인구</span>
+          <span style="color:#B5E853">━ 소상공인</span>
+          <span style="color:#FF8FB1">━ 카페 수</span>
+        </div>
+      </div>
+
+      <!-- 우측: Top 동 + 충격 + 인과 패널 -->
+      <div class="col-span-4 space-y-3">
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">🏆 5년 누적 성장 Top 5</div>
+          <div id="d-top-growth" class="space-y-2 text-[11px]"></div>
+        </div>
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">⚠️ 외부 충격 5건</div>
+          <div class="space-y-1.5 text-[10px] mono" id="d-shocks"></div>
+        </div>
+        <!-- [C-5] 전국 Top 인과 패턴 -->
+        <div class="glass-light rounded-lg p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-[10px] mono text-gray-400">🧬 전국 Top 인과 패턴</div>
+            <div class="text-[9px] mono" style="color:#A78BFA">Granger</div>
+          </div>
+          <div id="d-top-causal" class="space-y-1 text-[10px]"></div>
+          <div class="text-[9px] text-gray-500 mt-2 leading-tight" id="d-causal-meta">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ 4. DATA STUDIO ════════════ -->
+  <section id="view-datastudio" class="hidden">
+    <div class="mb-5 flex items-baseline justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-white tracking-tight">🗄️ Data Studio</h2>
+        <p class="text-sm text-gray-400">소스 연결, ETL 파이프라인, 품질 검증, 레이어 카탈로그.</p>
+      </div>
+      <div class="text-[10px] mono text-gray-500">
+        <span class="text-cyan-300">●</span> 9 sources · <span class="text-yellow-300">●</span> 3 pending · 40/100 layers
+      </div>
+    </div>
+
+    <!-- DS sub-tabs -->
+    <div class="flex items-center gap-2 mb-4">
+      <button data-ds="sources" class="ds-tab px-3 py-1.5 rounded-md text-xs font-semibold text-white" style="background:#00A1E0">📥 Sources (9)</button>
+      <button data-ds="etl"     class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🔄 ETL Pipeline</button>
+      <button data-ds="quality" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">✅ Quality</button>
+      <button data-ds="catalog" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">📚 Catalog (40)</button>
+      <button data-ds="ai" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🤖 AI Pipeline</button>
+      <button data-ds="causal" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🧬 Causal Graph</button>
+      <button data-ds="stack" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🚀 6개월 Stack</button>
+      <span class="ml-auto text-[10px] mono text-gray-500">마지막 ETL: <span class="text-cyan-300">2026-05-01 03:00</span></span>
+    </div>
+
+    <!-- ─── Sources ─── -->
+    <div id="ds-sources" class="ds-pane block">
+      <div class="grid grid-cols-12 gap-4">
+        <!-- Public sources -->
+        <div class="col-span-7 glass-light rounded-lg p-4">
+          <div class="text-[11px] mono text-gray-400 mb-3">🏛️ 공공 데이터 소스</div>
+          <div id="public-sources" class="space-y-2"></div>
+        </div>
+        <!-- Townin internal -->
+        <div class="col-span-5 glass-light rounded-lg p-4">
+          <div class="text-[11px] mono text-gray-400 mb-3">🏢 Townin 내부 데이터</div>
+          <div id="townin-sources" class="space-y-2"></div>
+        </div>
+        <!-- Schedule -->
+        <div class="col-span-12 glass-light rounded-lg p-4">
+          <div class="text-[11px] mono text-gray-400 mb-3">⏰ 갱신 스케줄 (다음 24시간)</div>
+          <div id="schedule-strip"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ETL ─── -->
+    <div id="ds-etl" class="ds-pane hidden">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-9 glass-light rounded-lg p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-[11px] mono text-gray-400">ETL 파이프라인 (DAG) <span class="text-gray-500 ml-2">노드 클릭으로 상세 보기</span></div>
+            <div class="flex gap-2">
+              <button id="etl-run-all" class="px-2 py-1 text-[10px] mono rounded text-white" style="background:#5BC0EB">▶ 전체 재실행</button>
+              <button class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">📜 로그</button>
+            </div>
+          </div>
+          <svg id="etl-dag" width="100%" height="380" viewBox="0 0 880 380"></svg>
+        </div>
+        <div class="col-span-3 space-y-3">
+          <!-- 노드 상세 패널 (클릭 시) -->
+          <div id="etl-node-detail" class="glass-light rounded-lg p-3 border border-cyan-400/20" style="display:none">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] mono text-cyan-300" id="etl-detail-cat">SOURCE</span>
+              <button id="etl-detail-close" class="text-gray-500 hover:text-white text-xs">✕</button>
+            </div>
+            <div class="text-sm font-bold text-white mb-1" id="etl-detail-name">—</div>
+            <div class="text-[10px] text-gray-400 mb-3" id="etl-detail-desc">—</div>
+            <div class="grid grid-cols-2 gap-2 text-[10px]">
+              <div><div class="text-gray-500 text-[9px]">실행 시간</div><div class="font-bold mono text-white" id="etl-detail-runtime">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">처리 rows</div><div class="font-bold mono text-white" id="etl-detail-rows">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">마지막</div><div class="font-bold mono text-white" id="etl-detail-last">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">상태</div><div class="font-bold mono" id="etl-detail-status">—</div></div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-white/5">
+              <div class="text-[9px] mono text-gray-500 mb-1">파라미터</div>
+              <div class="text-[10px] mono text-gray-300" id="etl-detail-params">—</div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-white/5">
+              <div class="text-[9px] mono text-gray-500 mb-1">최근 실행 로그 (5)</div>
+              <div id="etl-detail-log" class="space-y-0.5"></div>
+            </div>
+            <div class="mt-3 flex gap-1">
+              <button class="flex-1 px-2 py-1 text-[10px] mono rounded text-white" style="background:#5BC0EB">▶ 재실행</button>
+              <button class="flex-1 px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">⚙ 설정</button>
+            </div>
+          </div>
+
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">최근 24시간 처리량</div>
+            <div class="text-2xl font-bold text-white">2.4M<span class="text-xs text-gray-400 ml-1">rows</span></div>
+            <div class="text-[10px] mono text-cyan-300 mt-1">▲ 12% vs yesterday</div>
+          </div>
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">평균 ETL 소요</div>
+            <div class="text-2xl font-bold text-white">8.4<span class="text-xs text-gray-400 ml-1">min</span></div>
+          </div>
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">최근 실패 (7일)</div>
+            <div class="text-2xl font-bold" style="color:#FF8FB1">2<span class="text-xs text-gray-400 ml-1">건</span></div>
+            <div class="text-[10px] text-gray-400 mt-1">SGIS 4/29 · KLIS 4/27</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Quality ─── -->
+    <div id="ds-quality" class="ds-pane hidden">
+      <div class="grid grid-cols-12 gap-4">
+        <!-- pLDDT distribution -->
+        <div class="col-span-5 glass-light rounded-lg p-4">
+          <div class="text-[11px] mono text-gray-400 mb-3">📊 레이어별 pLDDT 분포</div>
+          <svg id="quality-plddt-bars" width="100%" height="320" viewBox="0 0 380 320"></svg>
+        </div>
+        <!-- Missing heatmap -->
+        <div class="col-span-7 glass-light rounded-lg p-4">
+          <div class="text-[11px] mono text-gray-400 mb-3">🟦 결측/품질 매트릭스 (동 × 시점)</div>
+          <svg id="quality-heatmap" width="100%" height="320" viewBox="0 0 720 320"></svg>
+          <div class="flex items-center gap-3 mt-2 text-[9px] mono">
+            <span class="flex items-center gap-1"><span class="w-3 h-2 plddt-90 inline-block"></span>높음</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-2 plddt-70 inline-block"></span>양호</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-2 plddt-50 inline-block"></span>주의</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-2 plddt-low inline-block"></span>위험</span>
+          </div>
+        </div>
+        <!-- Alarms -->
+        <div class="col-span-12 glass-light rounded-lg p-4">
+          <div class="text-[11px] mono text-gray-400 mb-3">🚨 품질 알람</div>
+          <div id="quality-alarms" class="grid grid-cols-3 gap-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── AI Pipeline ─── -->
+    <div id="ds-ai" class="ds-pane hidden">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-9 glass-light rounded-lg p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <div class="text-[11px] mono text-gray-400">AI 분석 파이프라인 — TimesFM 2.5 + GraphRAG + Anomaly Detection</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">5단계 추론 흐름 · 노드 클릭으로 모델 상세 확인</div>
+            </div>
+            <div class="flex gap-2">
+              <button id="ai-run-all" class="px-2 py-1 text-[10px] mono rounded text-white" style="background:#FF8FB1">🤖 추론 시뮬</button>
+              <button class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">📊 모델 메트릭</button>
+            </div>
+          </div>
+          <svg id="ai-dag" width="100%" height="420" viewBox="0 0 880 420"></svg>
+        </div>
+        <div class="col-span-3 space-y-3">
+          <div id="ai-node-detail" class="glass-light rounded-lg p-3 border border-pink-400/20" style="display:none">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] mono" id="ai-detail-cat">MODEL</span>
+              <button id="ai-detail-close" class="text-gray-500 hover:text-white text-xs">✕</button>
+            </div>
+            <div class="text-sm font-bold text-white mb-1" id="ai-detail-name">—</div>
+            <div class="text-[10px] text-gray-400 mb-3" id="ai-detail-desc">—</div>
+            <div class="grid grid-cols-2 gap-2 text-[10px]">
+              <div><div class="text-gray-500 text-[9px]">모델</div><div class="font-bold mono text-white" id="ai-detail-model">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">정확도</div><div class="font-bold mono text-white" id="ai-detail-acc">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">추론 시간</div><div class="font-bold mono text-white" id="ai-detail-time">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">상태</div><div class="font-bold mono text-cyan-300" id="ai-detail-status">—</div></div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-white/5">
+              <div class="text-[9px] mono text-gray-500 mb-1">Hyperparameters</div>
+              <div class="text-[10px] mono text-gray-300" id="ai-detail-params">—</div>
+            </div>
+          </div>
+
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">전체 파이프라인 KPI</div>
+            <div class="space-y-2 text-[11px]">
+              <div class="flex justify-between"><span class="text-gray-400">평균 pLDDT</span><span class="font-bold mono" style="color:#5BC0EB">87.4</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">예측 horizon</span><span class="font-bold mono text-white">60mo</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">알람 발화/일</span><span class="font-bold mono" style="color:#FED766">12</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">GraphRAG 추출</span><span class="font-bold mono text-white">428 facts</span></div>
+            </div>
+          </div>
+
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">최신 인사이트 (top 3)</div>
+            <div class="space-y-1.5 text-[10px]">
+              <div class="insight-card insight-positive rounded-md p-2">
+                <div class="text-[11px] font-semibold text-white">🔥 성수1가1동 급상승</div>
+                <div class="text-[9px] text-gray-400 mt-0.5">5년 +127% · 신뢰도 92</div>
+              </div>
+              <div class="insight-card insight-warning rounded-md p-2">
+                <div class="text-[11px] font-semibold text-white">⚠️ 중구 D3동 폐업↑</div>
+                <div class="text-[9px] text-gray-400 mt-0.5">예측 신뢰구간 이탈</div>
+              </div>
+              <div class="insight-card insight-positive rounded-md p-2">
+                <div class="text-[11px] font-semibold text-white">🌐 부산 전포 = 성수 Twin</div>
+                <div class="text-[9px] text-gray-400 mt-0.5">코사인 0.89</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 6개월 Solution Stack ─── -->
+    <!-- ─── Causal Graph ─── -->
+    <div id="ds-causal" class="ds-pane hidden">
+      <div class="grid grid-cols-12 gap-4">
+        <!-- 좌: 동 셀렉트 + 메타 -->
+        <div class="col-span-2 space-y-3">
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">분석 동 선택</div>
+            <select id="causal-dong-select" class="w-full bg-white/5 border border-white/10 rounded-md text-[11px] px-2 py-1.5 text-white"></select>
+            <div class="text-[9px] text-gray-500 mt-2 leading-tight" id="causal-dong-info">—</div>
+          </div>
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">표시 모드</div>
+            <div class="space-y-1">
+              <label class="flex items-center gap-2 text-[10px] text-gray-300 cursor-pointer">
+                <input type="radio" name="causal-mode" value="dong" checked class="accent-cyan-500">
+                <span>선택 동 인과 (Granger)</span>
+              </label>
+              <label class="flex items-center gap-2 text-[10px] text-gray-300 cursor-pointer">
+                <input type="radio" name="causal-mode" value="national" class="accent-cyan-500">
+                <span>전국 메타 인과 (Top 20)</span>
+              </label>
+            </div>
+          </div>
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">메서드</div>
+            <div class="space-y-1.5 text-[10px]">
+              <div class="flex justify-between"><span class="text-gray-400">Pearson</span><span class="mono" style="color:#B5E853">|r|≥0.5</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">Granger</span><span class="mono" style="color:#A78BFA">p&lt;0.05</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">max lag</span><span class="mono text-white">6mo</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">전국 통계</span><span class="mono text-white" id="causal-stat-total">—</span></div>
+            </div>
+            <div class="mt-2 pt-2 border-t border-white/5 text-[9px] text-gray-500 leading-tight">
+              압축 로드맵 v2 Tier 2 — LlamaIndex Property Graph 대체 (비용 1/30, 재현성 ↑)
+            </div>
+          </div>
+        </div>
+        <!-- 중: 인과 그래프 캔버스 -->
+        <div class="col-span-7 glass-light rounded-lg p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <div class="text-[11px] mono text-gray-400">Causal Graph — Pearson 상관 + Granger 인과성 검정</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">노드=레이어, 엣지=인과 관계, 두께=지지율(전국) / 시차(동별), 화살표=원인→결과</div>
+            </div>
+            <button id="causal-replay" class="px-2 py-1 text-[10px] mono rounded text-white" style="background:#A78BFA">▶ 인과 흐름 재생</button>
+          </div>
+          <svg id="causal-canvas" width="100%" height="480" viewBox="0 0 880 480"></svg>
+        </div>
+        <!-- 우: 인과 트리플렛 리스트 -->
+        <div class="col-span-3 space-y-3">
+          <div class="glass-light rounded-lg p-3" style="max-height:240px; overflow-y:auto;">
+            <div class="text-[10px] mono text-gray-400 mb-2">🧬 Granger 인과 (시차 + p값)</div>
+            <div id="causal-granger-list" class="space-y-1 text-[10px]"></div>
+          </div>
+          <div class="glass-light rounded-lg p-3" style="max-height:200px; overflow-y:auto;">
+            <div class="text-[10px] mono text-gray-400 mb-2">↔ Pearson 상관 (|r|)</div>
+            <div id="causal-pearson-list" class="space-y-1 text-[10px]"></div>
+          </div>
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">💡 인사이트</div>
+            <div id="causal-insight" class="text-[10px] text-gray-300 leading-relaxed">동을 선택하면 자동 분석이 표시됩니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ds-stack" class="ds-pane hidden">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-9 glass-light rounded-lg p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <div class="text-[11px] mono text-gray-400">6개월 솔루션 도입 로드맵 (DAG)</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">Month 1-2: 인프라 → Month 3: 예측 → Month 4: 인과 → Month 5: 차트 → Month 6: 시연</div>
+            </div>
+            <div class="flex gap-2">
+              <button id="stack-play" class="px-2 py-1 text-[10px] mono rounded text-white" style="background:#5BC0EB">▶ 6개월 도입 재생</button>
+              <button id="stack-cost-toggle" class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">💰 비용 표시</button>
+            </div>
+          </div>
+          <svg id="stack-dag" width="100%" height="480" viewBox="0 0 880 480"></svg>
+        </div>
+        <div class="col-span-3 space-y-3">
+          <!-- 솔루션 상세 패널 -->
+          <div id="stack-node-detail" class="glass-light rounded-lg p-3 border border-cyan-400/20" style="display:none">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] mono" id="stack-detail-month">MONTH</span>
+              <button id="stack-detail-close" class="text-gray-500 hover:text-white text-xs">✕</button>
+            </div>
+            <div class="text-sm font-bold text-white mb-1" id="stack-detail-name">—</div>
+            <div class="text-[10px] text-gray-400 mb-3" id="stack-detail-desc">—</div>
+            <div class="grid grid-cols-2 gap-2 text-[10px]">
+              <div><div class="text-gray-500 text-[9px]">월 비용</div><div class="font-bold mono text-white" id="stack-detail-cost">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">난이도</div><div class="font-bold mono text-white" id="stack-detail-diff">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">라이선스</div><div class="font-bold mono text-white" id="stack-detail-license">—</div></div>
+              <div><div class="text-gray-500 text-[9px]">상태</div><div class="font-bold mono" id="stack-detail-status">—</div></div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-white/5">
+              <div class="text-[9px] mono text-gray-500 mb-1">역할</div>
+              <div class="text-[10px] text-gray-300" id="stack-detail-role">—</div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-white/5">
+              <div class="text-[9px] mono text-gray-500 mb-1">검토했던 대안</div>
+              <div class="text-[10px] text-gray-400" id="stack-detail-alt">—</div>
+            </div>
+          </div>
+
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">6개월 누적 비용 (압축 v2)</div>
+            <div class="space-y-1.5 text-[11px]">
+              <div class="flex justify-between"><span class="text-gray-400">VPS (PG+PostGIS)</span><span class="font-bold mono text-white">$180</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">카카오/SGIS</span><span class="font-bold mono text-white">$0</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">Prophet (1차)</span><span class="font-bold mono text-white">$0</span></div>
+              <div class="flex justify-between"><span class="text-gray-400">TimeGPT (조건부 4mo)</span><span class="font-bold mono text-white">~$200</span></div>
+              <div class="flex justify-between border-t border-white/10 pt-1.5 mt-1.5">
+                <span class="text-cyan-300">6개월 합계</span>
+                <span class="font-bold mono" style="color:#5BC0EB">~$380</span>
+              </div>
+              <div class="text-[9px] text-gray-500 text-right">≈ 50만원</div>
+              <div class="text-[9px] text-right" style="color:#B5E853">▼ 80% (vs Before $1,680)</div>
+            </div>
+          </div>
+
+          <div class="glass-light rounded-lg p-3">
+            <div class="text-[10px] mono text-gray-400 mb-2">압축 결정 (3-Tier)</div>
+            <div class="space-y-1.5 text-[10px]">
+              <div class="insight-card insight-positive rounded-md p-2">
+                <div class="text-[10px] font-semibold text-white">Tier 1 (4개 핵심)</div>
+                <div class="text-[9px] text-gray-400 mt-0.5">PG / 카카오 / SGIS / d3+wkhtmltopdf</div>
+              </div>
+              <div class="insight-card insight-warning rounded-md p-2">
+                <div class="text-[10px] font-semibold text-white">Tier 2 (조건부)</div>
+                <div class="text-[9px] text-gray-400 mt-0.5">Prophet → TimeGPT / Pearson+Granger</div>
+              </div>
+              <div class="insight-card insight-alert rounded-md p-2">
+                <div class="text-[10px] font-semibold text-white">Tier 3 (Phase 4 연기)</div>
+                <div class="text-[9px] text-gray-400 mt-0.5">TimescaleDB·Quarto 폐기 / LlamaIndex·ECharts 연기</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Catalog ─── -->
+    <div id="ds-catalog" class="ds-pane hidden">
+      <div class="glass-light rounded-lg p-3 mb-3 flex items-center gap-3">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="catalog-search" type="text" placeholder="레이어 검색 (예: cafe, partner, visitor)" class="flex-1 bg-transparent outline-none text-sm text-white placeholder-gray-500">
+        <span class="text-[10px] mono text-gray-500" id="catalog-count">40 layers</span>
+      </div>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-3 glass-light rounded-lg p-3">
+          <div class="text-[11px] mono text-gray-400 mb-2">카테고리</div>
+          <div id="catalog-cats" class="space-y-1"></div>
+          <div class="mt-4 pt-3 border-t border-white/5">
+            <div class="text-[10px] mono text-gray-400 mb-2">100 레이어 로드맵</div>
+            <div class="text-[10px] text-gray-300">현재 <span class="text-cyan-300 font-bold">40</span>/100</div>
+            <div class="mt-1.5 h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full" style="width:40%; background:linear-gradient(90deg,#00A1E0,#5BC0EB)"></div>
+            </div>
+            <div class="text-[10px] text-gray-500 mt-2">남은 60: 카드매출·통신유동·기상·SNS·정책 등</div>
+          </div>
+        </div>
+        <div class="col-span-9 glass-light rounded-lg p-3" style="max-height:520px; overflow-y:auto;">
+          <table class="w-full text-[11px]">
+            <thead class="sticky top-0 bg-[#0F1929] z-10">
+              <tr class="text-gray-400 mono">
+                <th class="text-left p-2">레이어</th>
+                <th class="text-left p-2">카테고리</th>
+                <th class="text-left p-2">단위</th>
+                <th class="text-left p-2">출처</th>
+                <th class="text-left p-2">갱신</th>
+                <th class="text-right p-2">pLDDT</th>
+              </tr>
+            </thead>
+            <tbody id="catalog-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ 5. WORKFLOW (ComfyUI-style preview) ════════════ -->
+  <section id="view-workflow" class="hidden">
+    <div class="mb-5 flex items-baseline justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-white tracking-tight">🧩 Workflow Editor</h2>
+        <p class="text-sm text-gray-400">노드를 드래그·연결·편집하여 마스터가 직접 분석 워크플로를 만듭니다.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <!-- 모드 토글 -->
+        <div class="flex bg-white/5 rounded-md p-0.5 border border-white/10">
+          <button id="wf-mode-preview" class="px-3 py-1 text-[11px] mono rounded text-white" style="background:#00A1E0">👁 Preview</button>
+          <button id="wf-mode-edit" class="px-3 py-1 text-[11px] mono rounded text-gray-300">✏️ Edit</button>
+        </div>
+        <button id="wf-new" class="px-3 py-1.5 text-[11px] mono rounded-md bg-white/5 text-gray-300 hover:text-white">+ 새 워크플로</button>
+        <button id="wf-save" class="px-3 py-1.5 text-[11px] mono rounded-md text-white hidden" style="background:#5BC0EB">💾 저장</button>
+        <button id="wf-apply-analyze" class="px-3 py-1.5 text-[11px] mono rounded-md text-white" style="background:#00A1E0">📊 Analyze에 적용</button>
+        <button class="px-3 py-1.5 text-[11px] mono rounded-md bg-white/5 text-gray-300">📤 공유</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-4">
+      <!-- LEFT: NODE PALETTE -->
+      <div class="col-span-2 glass-light rounded-lg p-3" style="max-height: 660px; overflow-y: auto;">
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-[10px] mono text-gray-400">📦 Node Palette</div>
+          <span id="wf-palette-hint" class="text-[9px] mono text-gray-500 hidden">↕ 드래그</span>
+        </div>
+        <div id="wf-palette" class="space-y-2.5"></div>
+        <div class="mt-4 pt-3 border-t border-white/5">
+          <div class="text-[10px] mono text-gray-400 mb-2">활성 워크플로</div>
+          <select id="wf-select" class="w-full bg-white/5 border border-white/10 rounded text-[11px] px-2 py-1.5 text-white"></select>
+        </div>
+        <div id="wf-user-list" class="mt-3 pt-3 border-t border-white/5 hidden">
+          <div class="text-[10px] mono text-gray-400 mb-2">📁 내 워크플로 (저장됨)</div>
+          <div id="wf-user-items" class="space-y-1"></div>
+        </div>
+      </div>
+
+      <!-- CENTER: CANVAS -->
+      <div class="col-span-8 glass-light rounded-lg p-3 relative" style="height:760px; overflow:hidden;">
+        <div class="absolute top-3 left-3 right-3 z-10 flex items-center justify-between pointer-events-none">
+          <div class="pointer-events-auto">
+            <div class="flex items-center gap-2">
+              <div class="text-[10px] mono text-gray-400" id="wf-title-cat">—</div>
+              <span id="wf-edit-badge" class="hidden text-[9px] mono px-1.5 py-0.5 rounded font-bold" style="background:#FED766; color:#07101F">EDIT MODE</span>
+            </div>
+            <div class="text-base font-bold text-white" id="wf-title">—</div>
+            <div id="wf-edit-hint" class="hidden text-[9px] mono text-gray-500 mt-0.5">노드 드래그로 이동 · 클릭→인스펙터 · 우클릭→메뉴 · Delete 키→삭제</div>
+          </div>
+          <div class="flex gap-1 pointer-events-auto">
+            <button id="wf-zoom-in" class="w-7 h-7 rounded bg-white/5 text-white text-sm">+</button>
+            <button id="wf-zoom-out" class="w-7 h-7 rounded bg-white/5 text-white text-sm">−</button>
+            <button id="wf-zoom-reset" class="w-7 h-7 rounded bg-white/5 text-white text-[10px] mono">⌂</button>
+            <button id="wf-run" class="px-3 h-7 rounded text-[10px] mono text-white" style="background:#5BC0EB">▶ 실행 시뮬</button>
+          </div>
+        </div>
+        <svg id="wf-canvas" width="100%" height="100%" viewBox="0 0 1100 660"
+             style="background: radial-gradient(circle at center, rgba(91,192,235,0.04) 0%, transparent 70%);"></svg>
+
+        <!-- Context menu (우클릭 시 표시) -->
+        <div id="wf-ctxmenu" class="hidden absolute z-20 glass rounded-md shadow-xl text-[11px]" style="min-width:140px; border:1px solid rgba(91,192,235,0.3)">
+          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-gray-200" data-action="duplicate">📋 복제</button>
+          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-gray-200" data-action="rename">✏️ 이름 변경</button>
+          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-red-300" data-action="delete">🗑 삭제 (Del)</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: NODE INSPECTOR + RESULTS (col-span 3→2) -->
+      <div class="col-span-2 space-y-3">
+        <div id="wf-node-inspector" class="glass-light rounded-lg p-3" style="display:none">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] mono" id="wf-insp-cat">SOURCE</span>
+            <button id="wf-insp-close" class="text-gray-500 hover:text-white text-xs">✕</button>
+          </div>
+          <div class="text-sm font-bold text-white mb-1" id="wf-insp-name">—</div>
+          <div class="text-[10px] text-gray-400 mb-3" id="wf-insp-desc">—</div>
+          <div class="text-[9px] mono text-gray-500 mb-1">파라미터</div>
+          <div id="wf-insp-params" class="space-y-1 text-[10px]"></div>
+          <div class="mt-3 pt-2 border-t border-white/5">
+            <div class="text-[9px] mono text-gray-500 mb-1">입력 / 출력</div>
+            <div class="text-[10px] mono text-gray-300">
+              <div>↓ in: <span id="wf-insp-in" class="text-cyan-300">—</span></div>
+              <div>↑ out: <span id="wf-insp-out" class="text-cyan-300">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">📌 워크플로 메타</div>
+          <div class="space-y-1.5 text-[10px]">
+            <div class="flex justify-between"><span class="text-gray-400">노드 수</span><span class="mono text-white" id="wf-meta-nodes">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">예상 실행</span><span class="mono text-white" id="wf-meta-time">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-400">출력 종류</span><span class="mono text-white" id="wf-meta-outputs">—</span></div>
+          </div>
+        </div>
+
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">📊 예상 결과 (Result Preview)</div>
+          <div id="wf-results" class="space-y-2"></div>
+        </div>
+
+        <div class="glass-light rounded-lg p-3">
+          <div class="text-[10px] mono text-gray-400 mb-2">💡 이 워크플로의 의미</div>
+          <div id="wf-explain" class="text-[11px] text-gray-300 leading-relaxed">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center py-6 text-[10px] mono text-gray-600">
+    Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.
+  </footer>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

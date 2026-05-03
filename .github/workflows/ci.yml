@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Verify (Playwright × 6 suites)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run integrated verify (6 suites, internal static server)
+        run: npm run verify:all
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-screenshots
+          path: screenshots/
+          if-no-files-found: ignore
+
+  syntax-check:
+    name: Syntax check (.mjs / .py)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: JS syntax check
+        run: |
+          for f in verify_*.mjs capture_screens.mjs verify_all.mjs; do
+            [ -f "$f" ] && node --check "$f" && echo "✓ $f"
+          done
+
+      - name: Python syntax check
+        run: |
+          python -m py_compile causal_extract.py etl_real_data.py extract_polygons.py forecast_prophet.py simula_generate.py
+          echo "✓ Python syntax OK"
+
+  secret-scan:
+    name: Secret leak scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for hardcoded API keys
+        run: |
+          # KAKAO REST API key 패턴 (32자 hex)
+          if git grep -nE '(KAKAO_REST_API_KEY|kakao_rest_api_key)\s*=\s*[a-f0-9]{32}' -- ':!.env.example' ':!*.md' ':!*.yml' ':!.gitignore'; then
+            echo "::error::Hardcoded KAKAO API key detected"
+            exit 1
+          fi
+          # SGIS / 일반 secret 패턴
+          if git grep -nE 'SECRET\s*=\s*["'\''"]?[A-Za-z0-9]{20,}' -- ':!.env.example' ':!*.md' ':!*.yml'; then
+            echo "::error::Hardcoded secret detected"
+            exit 1
+          fi
+          echo "✓ No hardcoded secrets"

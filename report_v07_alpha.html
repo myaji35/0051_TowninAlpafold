@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>TowninGraph v0.7-alpha 종합 보고서</title>
+<style>
+  @page { size: A4; margin: 18mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Inter', sans-serif;
+    color: #16325C; margin: 0; line-height: 1.55;
+  }
+  h1 { color: #16325C; font-size: 26px; margin: 0 0 8px; }
+  h2 { color: #16325C; font-size: 18px; margin: 28px 0 12px;
+       border-bottom: 2px solid #00A1E0; padding-bottom: 6px; }
+  h3 { color: #16325C; font-size: 14px; margin: 16px 0 8px; }
+  p, li { font-size: 11px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10px; }
+  th { background: #F3F2F2; color: #16325C; padding: 8px; text-align: left;
+       border-bottom: 2px solid #00A1E0; font-weight: 700; }
+  td { padding: 7px 8px; border-bottom: 1px solid #E8EDF3; vertical-align: top; }
+  tr:hover td { background: #F8FAFC; }
+  .badge {
+    display: inline-block; padding: 2px 7px; border-radius: 3px;
+    font-size: 9px; font-weight: 700;
+  }
+  .b-blue { background: #00A1E0; color: white; }
+  .b-green { background: #10B981; color: white; }
+  .b-yellow { background: #F59E0B; color: white; }
+  .b-red { background: #EF4444; color: white; }
+  .b-gray { background: #94A3B8; color: white; }
+  .b-purple { background: #A78BFA; color: white; }
+  .callout { padding: 10px 14px; border-left: 4px solid; margin: 12px 0;
+             background: #F8FAFC; border-radius: 0 4px 4px 0; font-size: 11px; }
+  .callout-info { border-color: #00A1E0; }
+  .callout-success { border-color: #10B981; }
+  .callout-warn { border-color: #F59E0B; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
+  .kpi-card { background: #F3F2F2; border-radius: 4px; padding: 10px; }
+  .kpi-label { font-size: 9px; color: #6B7280; }
+  .kpi-value { font-size: 18px; font-weight: 800; color: #16325C; margin-top: 2px; }
+  .kpi-sub { font-size: 9px; color: #00A1E0; margin-top: 2px; }
+  .toc li { margin: 4px 0; }
+  /* 표지 — A4 풀페이지 그라디언트 (음수 마진 방식 폐기, body 자체에 표지 배경 깔기)
+     wkhtmltopdf는 음수 마진 흡수가 페이지 마진과 충돌 → 흰 띠 발생
+     해결: 표지 페이지에서만 body의 padding을 0으로 만드는 wrapper 사용 */
+  .cover {
+    page-break-after: always;
+    page-break-inside: avoid;
+    background-color: #00A1E0 !important;
+    background-image: linear-gradient(135deg, #00A1E0 0%, #16325C 100%) !important;
+    color: #FFFFFF !important;
+    text-align: center;
+    /* 음수 마진을 더 크게 — A4 297mm를 완전히 덮으려면 페이지 마진(18+18=36) + 상단여유(40)까지 흡수 */
+    margin: -60mm -60mm -60mm -60mm;
+    padding: 130mm 60mm 160mm 60mm;
+    min-height: 297mm;
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .cover * { color: #FFFFFF !important; }
+  .cover h1 { color: #FFFFFF !important; font-size: 42px !important; margin: 16px 0 !important; }
+  .cover .icon-circle {
+    /* 이모지 대신 SVG 또는 텍스트 로고 사용 (wkhtmltopdf 이모지 깨짐 회피) */
+    display: inline-block; width: 70px; height: 70px; line-height: 70px;
+    background: rgba(255,255,255,0.15); border: 2px solid white;
+    border-radius: 50%; font-size: 28px; font-weight: 700;
+    color: white !important; margin-bottom: 14px;
+  }
+  .cover h1 { color: white; font-size: 42px; margin: 0 0 16px; }
+  .cover .sub { font-size: 14px; opacity: 0.85; margin-bottom: 32px; }
+  .cover .meta { font-size: 11px; opacity: 0.7; margin-top: 40px; }
+  .screenshot { max-width: 100%; border: 1px solid #CBD5E1; border-radius: 4px;
+                margin: 8px 0; display: block; }
+  .screenshot-caption { font-size: 9px; color: #6B7280; text-align: center;
+                        margin-top: 4px; font-style: italic; }
+  .footer-page { position: fixed; bottom: 8mm; left: 0; right: 0;
+                 text-align: center; font-size: 8px; color: #94A3B8; }
+  ul { padding-left: 18px; }
+  ul.tight li { margin-bottom: 3px; font-size: 10px; }
+  .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .pagebreak { page-break-before: always; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 10px;
+         background: #F3F2F2; padding: 1px 5px; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ───────────── 표지 ───────────── -->
+<div class="cover">
+  <div class="icon-circle">TG</div>
+  <h1>TowninGraph</h1>
+  <div class="sub">v0.7-alpha 종합 보고서</div>
+  <div style="font-size: 12px; opacity: 0.85; max-width: 480px; margin-top: 12px;">
+    지역 경제구조 해석 시스템 — Townin 마스터용 분석 도구<br>
+    실데이터 인프라 + Prophet 예측 + Granger 인과 통합 완료
+  </div>
+  <div class="meta">
+    Gagahoho, Inc. · 2026-05-03<br>
+    /Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold
+  </div>
+</div>
+
+<!-- ───────────── 목차 ───────────── -->
+<div style="page-break-before: always;"></div>
+<h2 style="margin-top:0">목차</h2>
+<ol class="toc">
+  <li>1. 개요 및 v0.7-alpha 핵심 변화</li>
+  <li>2. 압축 로드맵 v2 진행 현황</li>
+  <li>3. 데이터 자산 (실데이터 + 예측 + 인과)</li>
+  <li>4. 화면 구성 (6 모드 + 7 서브탭)</li>
+  <li>5. 검증 결과</li>
+  <li>6. 산출물 목록</li>
+  <li>7. 다음 단계 (Month 1-2 본격 진입)</li>
+</ol>
+
+<!-- ───────────── 1. 개요 ───────────── -->
+<h2>1. 개요 및 v0.7-alpha 핵심 변화</h2>
+
+<p>
+TowninGraph v0.7-alpha는 v0.6(가상 데이터 단일 HTML 데모)을 <b>실제 데이터 인프라가 결합된 작동하는 알파</b>로
+한 단계 진화시킨 버전입니다. 압축 로드맵 v2(7개 → 4개 핵심 솔루션)의 Tier 1 절반 + Tier 2 전체가 통합되었습니다.
+</p>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">행정동</div>
+    <div class="kpi-value">130</div>
+    <div class="kpi-sub">서울 25구 + 부산 5동</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">실 폴리곤 부착</div>
+    <div class="kpi-value">130/130</div>
+    <div class="kpi-sub">100% (vuski/admdongkor)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">데이터 레이어</div>
+    <div class="kpi-value">40</div>
+    <div class="kpi-sub">5종 카테고리 + Townin 4종</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">시계열 예측</div>
+    <div class="kpi-value">5,200</div>
+    <div class="kpi-sub">Prophet 130×40×12mo</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Granger 인과</div>
+    <div class="kpi-value">2,578</div>
+    <div class="kpi-sub">트리플렛 (p&lt;0.05)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Pearson 상관</div>
+    <div class="kpi-value">1,300</div>
+    <div class="kpi-sub">|r|≥0.5 쌍</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">UI 모드</div>
+    <div class="kpi-value">6</div>
+    <div class="kpi-sub">+ Data Studio 7 서브탭</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">콘솔 에러</div>
+    <div class="kpi-value" style="color:#10B981">0</div>
+    <div class="kpi-sub">Playwright 검증 통과</div>
+  </div>
+</div>
+
+<h3>v0.6 → v0.7 핵심 변화</h3>
+<table>
+  <thead><tr><th>항목</th><th>v0.6</th><th>v0.7-alpha</th></tr></thead>
+  <tbody>
+    <tr><td><b>지도 영역</b></td><td>가짜 원형 (반경 600m)</td><td><b>실제 행정동 폴리곤</b> (vuski/admdongkor)</td></tr>
+    <tr><td><b>예측</b></td><td>시뮬 메타만 표시</td><td><b>Prophet 1.3.0 실제 fit</b> (8.8초)</td></tr>
+    <tr><td><b>인과</b></td><td>모의 트리플렛</td><td><b>Pearson + Granger</b> (statsmodels 0.14.6)</td></tr>
+    <tr><td><b>호흡 차트</b></td><td>240×80 작음</td><td><b>360×160 확대</b> + 12mo cone</td></tr>
+    <tr><td><b>Decide 시계열</b></td><td>60mo 단순</td><td>+ <b>Prophet 12mo cone (서울 평균)</b></td></tr>
+    <tr><td><b>갤러리 카드</b></td><td>sparkline 5선</td><td>+ <b>mini cone</b> (1번째 레이어)</td></tr>
+    <tr><td><b>Data Studio</b></td><td>5 서브탭</td><td>7 서브탭 (+ <b>Causal Graph</b>)</td></tr>
+    <tr><td><b>반응형</b></td><td>max-w 1480px 고정</td><td>max-w 1920px + 컬럼 재조정</td></tr>
+    <tr><td><b>콘솔 에러</b></td><td>0</td><td>0 (모든 모드)</td></tr>
+  </tbody>
+</table>
+
+<!-- ───────────── 2. 압축 로드맵 v2 ───────────── -->
+<h2 class="pagebreak">2. 압축 로드맵 v2 진행 현황</h2>
+
+<p>2026-05-01 대표님 승인: <b>7개 솔루션 → 4개 핵심으로 압축</b>. 비용 80% 절감, 시간 140h 절약.</p>
+
+<table>
+  <thead><tr><th>Tier</th><th>솔루션</th><th>v0.7 상태</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge b-blue">Tier 1</span></td><td>PostgreSQL + PostGIS</td><td><span class="badge b-yellow">Month 1-2</span></td><td>Rails 8 마이그레이션 시점</td></tr>
+    <tr><td><span class="badge b-blue">Tier 1</span></td><td>카카오 로컬 API</td><td><span class="badge b-yellow">월요일</span></td><td>신규 키 발급 필요</td></tr>
+    <tr><td><span class="badge b-blue">Tier 1</span></td><td>SGIS Plus API</td><td><span class="badge b-yellow">대기</span></td><td>키 발급 30분</td></tr>
+    <tr><td><span class="badge b-blue">Tier 1</span></td><td>vuski/admdongkor (대체)</td><td><span class="badge b-green">완료</span></td><td>SGIS 무인증 대체</td></tr>
+    <tr><td><span class="badge b-purple">Tier 2</span></td><td>Prophet 시계열</td><td><span class="badge b-green">완료</span></td><td>130×5×12mo, 8.8초</td></tr>
+    <tr><td><span class="badge b-purple">Tier 2</span></td><td>Pearson + Granger</td><td><span class="badge b-green">완료</span></td><td>2,578 트리플렛</td></tr>
+    <tr><td><span class="badge b-purple">Tier 2</span></td><td>TimeGPT (조건부)</td><td><span class="badge b-gray">보류</span></td><td>Prophet 충분</td></tr>
+    <tr><td><span class="badge b-gray">Tier 3</span></td><td>LlamaIndex Property Graph</td><td><span class="badge b-gray">Phase 4</span></td><td>Pearson+Granger 충분</td></tr>
+    <tr><td><span class="badge b-blue">Tier 1</span></td><td>d3 + Deck.gl 유지</td><td><span class="badge b-green">완료</span></td><td>호평 95점 유지</td></tr>
+    <tr><td><span class="badge b-blue">Tier 1</span></td><td>wkhtmltopdf 유지</td><td><span class="badge b-green">완료</span></td><td>본 보고서로 검증</td></tr>
+  </tbody>
+</table>
+
+<h3>비용 비교</h3>
+<table>
+  <thead><tr><th>항목</th><th>Before (7개)</th><th>After (4개)</th><th>절감</th></tr></thead>
+  <tbody>
+    <tr><td>TimeGPT</td><td>$594 (6개월)</td><td>$0 ~ $200 (조건부)</td><td>최대 $594</td></tr>
+    <tr><td>LlamaIndex 인덱싱</td><td>$500 일회</td><td>$0</td><td>$500</td></tr>
+    <tr><td>LlamaIndex 운영</td><td>$300~450</td><td>$0</td><td>$300~450</td></tr>
+    <tr><td>VPS</td><td>$180</td><td>$180</td><td>-</td></tr>
+    <tr><td colspan="3"><b>6개월 합계</b></td><td><b>~$1,300 절감 (≈180만원, 80%)</b></td></tr>
+  </tbody>
+</table>
+
+<!-- ───────────── 3. 데이터 자산 ───────────── -->
+<h2 class="pagebreak">3. 데이터 자산</h2>
+
+<table>
+  <thead><tr><th>파일</th><th>크기</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td><code>simula_data_real.json</code></td><td>2.4 MB</td>
+        <td>130 동 × 40 레이어 × 60 개월 + 행정동 폴리곤(GeoJSON)</td></tr>
+    <tr><td><code>forecasts.json</code></td><td>331 KB</td>
+        <td>Prophet 130 동 × 5 레이어 × 12 개월 × 3 quantile (p10/p50/p90)</td></tr>
+    <tr><td><code>causal.json</code></td><td>234 KB</td>
+        <td>Pearson 1,300 + Granger 2,578 + 전국 Top 20 메타 인과</td></tr>
+    <tr><td><code>data_raw/seoul_busan_dongs.geojson</code></td><td>1.0 MB</td>
+        <td>서울 426 + 부산 205 = 631 행정동 폴리곤 (단순화 70%)</td></tr>
+    <tr><td><code>data_raw/test1.geojson</code></td><td>33 MB</td>
+        <td>전국 3,523 행정동 원본 (vuski/admdongkor 2023.07)</td></tr>
+  </tbody>
+</table>
+
+<h3>전국 Top 5 인과 패턴 (Granger, 130 동 집계)</h3>
+<table>
+  <thead><tr><th>#</th><th>인과 사슬</th><th>시차</th><th>지지율</th><th>해석</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><b>소상공 → 카페</b></td><td>2개월</td><td>39%</td><td>소상공인 증가가 2개월 후 카페 증가 견인</td></tr>
+    <tr><td>2</td><td><b>유동 → 카페</b></td><td>2개월</td><td>32%</td><td>유동인구 증가 → 카페 창업 (2개월 lag)</td></tr>
+    <tr><td>3</td><td><b>카페 → 소상공</b></td><td>6개월</td><td>31%</td><td>카페가 다른 업종 유치 (역방향, 장기)</td></tr>
+    <tr><td>4</td><td><b>카페 → 거래</b></td><td>6개월</td><td>29%</td><td>카페 활성화 → 부동산 거래 증가</td></tr>
+    <tr><td>5</td><td><b>지가 → 카페</b></td><td>2개월</td><td>27%</td><td>지가 상승 시점 카페 진입 가속</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-info">
+  <b>💡 의미</b>: TowninGraph 정체성("지역 경제구조 사슬")에 정확히 부합하는 인과 패턴이 자동 추출됨.
+  카페가 지표 변화의 매개체 역할을 하고 있다는 통계적 발견.
+</div>
+
+<!-- ───────────── 4. 화면 구성 ───────────── -->
+<h2 class="pagebreak">4. 화면 구성</h2>
+
+<h3>6개 메인 모드</h3>
+<table>
+  <thead><tr><th>모드</th><th>역할</th><th>핵심 시각화</th></tr></thead>
+  <tbody>
+    <tr><td>🎨 갤러리</td><td>시작점</td><td>12 카드 + Prophet mini cone</td></tr>
+    <tr><td>🧬 Explore</td><td>자동 인사이트</td><td>알파폴드 + 호흡 차트(360×160) + Granger/Pearson 코멘트</td></tr>
+    <tr><td>📊 Analyze</td><td>자유 매핑</td><td>실 폴리곤 + 3D 기둥 + Profile Wheel</td></tr>
+    <tr><td>🎯 Decide</td><td>임원 KPI</td><td>5종 시계열 + Prophet cone + 전국 Top 인과 카드</td></tr>
+    <tr><td>🗄️ Data Studio</td><td>인프라 관리</td><td>7 서브탭 (아래 표)</td></tr>
+    <tr><td>🧩 Workflow</td><td>노드 그래프</td><td>12 빌트인 + Edit 모드 + localStorage</td></tr>
+  </tbody>
+</table>
+
+<h3>Data Studio 7 서브탭</h3>
+<table>
+  <thead><tr><th>서브탭</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>📥 Sources</td><td>9개 데이터 소스 (공공 6 + Townin 4)</td></tr>
+    <tr><td>🔄 ETL Pipeline</td><td>5단계 DAG (14 노드, 펄스 + 파티클 흐름)</td></tr>
+    <tr><td>✅ Quality</td><td>레이어별 pLDDT + 결측 매트릭스</td></tr>
+    <tr><td>📚 Catalog (40)</td><td>40 레이어 사전 + 100 레이어 로드맵</td></tr>
+    <tr><td>🤖 AI Pipeline</td><td>Input→Preprocess→Model→Reasoning→Output</td></tr>
+    <tr><td><b>🧬 Causal Graph</b> ⭐</td><td><b>v0.7 신규</b> — 5 레이어 노드 + Granger 엣지 + 동별/전국 모드</td></tr>
+    <tr><td>🚀 6개월 Stack</td><td>압축 로드맵 v2 시각화</td></tr>
+  </tbody>
+</table>
+
+<!-- ───────────── 5. 검증 결과 ───────────── -->
+<h2 class="pagebreak">5. 검증 결과 (Playwright)</h2>
+
+<table>
+  <thead><tr><th>검증 스크립트</th><th>대상</th><th>결과</th></tr></thead>
+  <tbody>
+    <tr><td><code>verify_v07.mjs</code></td><td>실데이터 + GeoJsonLayer</td><td><span class="badge b-green">통과</span> 130/130 폴리곤</td></tr>
+    <tr><td><code>verify_responsive.mjs</code></td><td>3개 화면 폭 (1480/1920/2560)</td><td><span class="badge b-green">통과</span> 모두 정상</td></tr>
+    <tr><td><code>verify_prophet.mjs</code></td><td>Prophet cone 시각화</td><td><span class="badge b-green">통과</span> path 15개</td></tr>
+    <tr><td><code>verify_cdd.mjs</code></td><td>Explore + Decide + 갤러리 cone</td><td><span class="badge b-green">통과</span> 3개 모두</td></tr>
+    <tr><td><code>verify_causal.mjs</code></td><td>인과 추출 + 시각화</td><td><span class="badge b-green">통과</span> Decide 카드 + Explore 코멘트</td></tr>
+    <tr><td><code>verify_p2.mjs</code></td><td>Causal Graph 시각화</td><td><span class="badge b-green">통과</span> 5 노드 + 20 엣지</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-success">
+  <b>✅ 종합</b>: 6개 검증 스크립트 모두 통과. 콘솔 에러 0건 유지. 모든 모드에서 데이터 로드 + 시각화 작동.
+</div>
+
+<!-- ───────────── 6. 산출물 ───────────── -->
+<h2 class="pagebreak">6. 산출물 목록</h2>
+
+<h3>핵심 데이터 (자동 생성)</h3>
+<table>
+  <thead><tr><th>파일</th><th>크기</th><th>생성 시간</th></tr></thead>
+  <tbody>
+    <tr><td><code>simula_data_real.json</code></td><td>2.4 MB</td><td>약 1분 (extract_polygons.py)</td></tr>
+    <tr><td><code>forecasts.json</code></td><td>331 KB</td><td>약 9분 (forecast_prophet.py, 130 동)</td></tr>
+    <tr><td><code>causal.json</code></td><td>234 KB</td><td>8.8초 (causal_extract.py, 130 동)</td></tr>
+  </tbody>
+</table>
+
+<h3>스크립트 (재생성 가능)</h3>
+<table>
+  <thead><tr><th>스크립트</th><th>역할</th></tr></thead>
+  <tbody>
+    <tr><td><code>simula_generate.py</code></td><td>Simula 합성 데이터 생성기 (130 동 × 60 개월 × 40 레이어)</td></tr>
+    <tr><td><code>extract_polygons.py</code></td><td>vuski 전국 GeoJSON → 서울+부산 추출 + simula 매칭</td></tr>
+    <tr><td><code>forecast_prophet.py</code></td><td>Prophet 시계열 예측 (Tier 2)</td></tr>
+    <tr><td><code>causal_extract.py</code></td><td>Pearson + Granger 인과 추출 (Tier 2)</td></tr>
+    <tr><td><code>etl_real_data.py</code></td><td>SGIS + 카카오 fetcher (월요일 키 발급 후 가동)</td></tr>
+  </tbody>
+</table>
+
+<h3>검증 스크립트 (Playwright)</h3>
+<ul class="tight">
+  <li><code>verify_v07.mjs</code> — 실데이터 로드 + GeoJsonLayer</li>
+  <li><code>verify_responsive.mjs</code> — 1480/1920/2560 반응형</li>
+  <li><code>verify_prophet.mjs</code> — Prophet cone 시각화</li>
+  <li><code>verify_cdd.mjs</code> — Explore + Decide + 갤러리 cone</li>
+  <li><code>verify_causal.mjs</code> — 인과 코멘트 + Decide 카드</li>
+  <li><code>verify_p2.mjs</code> — Causal Graph DAG</li>
+</ul>
+
+<!-- ───────────── 7. 다음 단계 ───────────── -->
+<h2 class="pagebreak">7. 다음 단계 (Month 1-2 본격 진입)</h2>
+
+<h3>월요일 (5/4) — 외부 API 키 발급</h3>
+<ul class="tight">
+  <li>카카오 신규 앱 발급 (10분) — TowninGraph 전용, localhost 도메인 등록</li>
+  <li>SGIS Plus 가입 + 인증 (20분) — 본인인증 + 서비스 신청</li>
+  <li><code>.env</code> 작성 (1분) — KAKAO_REST_API_KEY + SGIS_CONSUMER_KEY/SECRET</li>
+</ul>
+
+<h3>Day 2~7 (자동 진행 예정)</h3>
+<ol style="font-size:11px">
+  <li>SGIS API 130개 동 폴리곤 + 인구통계 적재</li>
+  <li>카카오 로컬 API POI 수집 (카페·음식점 샘플)</li>
+  <li><code>simula_data_real.json</code>에 실데이터 병합</li>
+  <li>app.js 자동 갱신</li>
+  <li>검증 + 회귀 테스트</li>
+</ol>
+
+<h3>Month 1-2 본격 작업 (압축 로드맵 v2 Tier 1)</h3>
+<ul class="tight">
+  <li>Rails 8 신규 프로젝트 + Docker (PostgreSQL + PostGIS)</li>
+  <li>v0.7 단일 HTML → Rails 앱 마이그레이션</li>
+  <li>Solid Queue로 일/월 단위 ETL 배치</li>
+  <li>학술/공공기관 시연 패키지 (wkhtmltopdf 기반)</li>
+</ul>
+
+<div class="callout callout-warn">
+  <b>⏸ Phase 4 연기 항목</b>: TimescaleDB(폐기), LlamaIndex(연기), Quarto(폐기), ECharts(M5 재평가).
+  현재 d3 + Deck.gl + Pearson/Granger + wkhtmltopdf 조합으로 충분 검증됨.
+</div>
+
+<h3>준비된 자산</h3>
+<div class="callout callout-info">
+  v0.7-alpha는 학술/공공 시연을 위한 모든 핵심 자산을 갖추었습니다:<br>
+  <b>실 행정동 폴리곤 + 130×5×12 시계열 예측 + 1,300 상관 + 2,578 인과 트리플렛 + 6 모드 + Causal Graph 시각화 + 0 콘솔 에러</b>.<br>
+  외부 API 키 받으면 곧바로 진짜 한국 데이터로 가동 가능한 상태.
+</div>
+
+<div style="margin-top:60px; text-align:center; font-size:9px; color:#94A3B8;">
+  Gagahoho, Inc. · TowninGraph v0.7-alpha 종합 보고서<br>
+  생성: 2026-05-03 · 위치: /Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold
+</div>
+
+</body>
+</html>

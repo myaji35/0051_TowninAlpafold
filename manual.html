@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>TowninGraph Master Console — 사용자 매뉴얼 v0.6</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif; background: #F8FAFC; color: #1E293B; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .toc-link { transition: all 0.15s; }
+  .toc-link:hover { background: #E0F2FE; color: #0369A1; padding-left: 14px; }
+  .toc-link.active { background: #00A1E0; color: white; }
+  h1, h2, h3, h4 { color: #0F172A; }
+  h2 { border-bottom: 2px solid #E2E8F0; padding-bottom: 8px; margin-top: 32px; margin-bottom: 16px; }
+  h3 { margin-top: 24px; margin-bottom: 12px; color: #1E40AF; }
+  h4 { margin-top: 16px; margin-bottom: 8px; color: #334155; }
+  code.inline { background: #F1F5F9; color: #0F172A; padding: 1px 6px; border-radius: 3px; font-family: 'JetBrains Mono'; font-size: 90%; }
+  pre { background: #0F172A; color: #E2E8F0; padding: 12px 16px; border-radius: 6px; overflow-x: auto; font-family: 'JetBrains Mono'; font-size: 12px; line-height: 1.6; margin: 12px 0; }
+  .callout { border-left: 4px solid; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout-info { border-color: #00A1E0; background: #F0F9FF; }
+  .callout-warn { border-color: #F59E0B; background: #FFFBEB; }
+  .callout-tip  { border-color: #10B981; background: #ECFDF5; }
+  .callout-danger { border-color: #DC2626; background: #FEF2F2; }
+  .step { display: flex; gap: 12px; margin: 12px 0; }
+  .step-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: #00A1E0; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .step-content { flex: 1; padding-top: 2px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th { background: #F1F5F9; padding: 10px; text-align: left; font-weight: 600; border-bottom: 2px solid #CBD5E1; }
+  td { padding: 9px 10px; border-bottom: 1px solid #E2E8F0; vertical-align: top; }
+  tr:hover td { background: #F8FAFC; }
+  .kbd { display: inline-block; padding: 2px 6px; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 3px; font-family: 'JetBrains Mono'; font-size: 11px; box-shadow: 0 1px 0 #CBD5E1; }
+  .badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; font-family: 'JetBrains Mono'; }
+  .b-blue { background: #00A1E0; color: white; }
+  .b-green { background: #10B981; color: white; }
+  .b-yellow { background: #FBBF24; color: #422006; }
+  .b-pink { background: #EC4899; color: white; }
+  .b-purple { background: #A78BFA; color: white; }
+  .b-cyan { background: #06B6D4; color: white; }
+  .b-gray { background: #94A3B8; color: white; }
+  .ascii-diagram { background: #0F172A; color: #94A3B8; padding: 16px; border-radius: 6px; font-family: 'JetBrains Mono'; font-size: 11px; line-height: 1.5; overflow-x: auto; white-space: pre; }
+  .screenshot {
+    width: 100%; max-width: 100%; border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+    margin: 12px 0; display: block;
+    background: #07101F;
+  }
+  .screenshot-caption {
+    text-align: center; font-size: 12px; color: #64748B;
+    font-family: 'JetBrains Mono'; margin-top: -4px; margin-bottom: 16px;
+  }
+  .screenshot-caption .label {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    background: #00A1E0; color: white; font-weight: 600; margin-right: 6px;
+  }
+  .feature-card { border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px; background: white; margin: 12px 0; }
+  .feature-card h4 { margin-top: 0; }
+  .toc-h2 { font-weight: 700; }
+  .toc-h3 { padding-left: 16px; font-size: 12px; opacity: 0.8; }
+  @media print {
+    aside, .no-print { display: none !important; }
+    main { margin-left: 0 !important; }
+    body { background: white; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: auto; }
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- 인쇄 시 표지 -->
+<div class="hidden print:block text-center" style="page-break-after: always; padding-top: 200px;">
+  <div class="text-6xl mb-6">🧩</div>
+  <h1 class="text-5xl font-extrabold mb-4">TowninGraph</h1>
+  <h2 class="text-2xl text-gray-600 mb-12">Master Console 사용자 매뉴얼</h2>
+  <div class="text-sm text-gray-500">버전 0.6 · 2026-05-01</div>
+  <div class="mt-32 text-sm text-gray-400">Gagahoho, Inc.</div>
+</div>
+
+<!-- 헤더 -->
+<header class="no-print sticky top-0 z-30 bg-white border-b border-gray-200 px-6 py-3">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-md flex items-center justify-center" style="background: linear-gradient(135deg, #00A1E0 0%, #5BC0EB 100%);">
+        <span class="text-white text-base">🧩</span>
+      </div>
+      <div>
+        <h1 class="text-base font-bold">TowninGraph 사용자 매뉴얼</h1>
+        <p class="text-[10px] text-gray-500 mono">v0.6 · Master Console · 2026-05-01</p>
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <a href="index.html" class="px-3 py-1.5 text-xs font-semibold text-white rounded-md" style="background:#00A1E0">▶ 앱으로 돌아가기</a>
+      <button onclick="window.print()" class="px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">🖨 PDF로 출력</button>
+    </div>
+  </div>
+</header>
+
+<div class="max-w-7xl mx-auto flex">
+
+<!-- 좌측 TOC -->
+<aside class="no-print w-64 flex-shrink-0 sticky top-[60px] self-start" style="height: calc(100vh - 60px); overflow-y: auto;">
+  <nav class="p-4 text-sm">
+    <div class="text-[10px] mono text-gray-500 mb-2 uppercase tracking-wider">목차</div>
+    <a href="#intro" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700">1. 시작하기 전에</a>
+    <a href="#first-launch" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">1.1 첫 실행</a>
+    <a href="#interface-overview" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">1.2 화면 구조</a>
+    <a href="#concepts" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">2. 핵심 개념</a>
+    <a href="#metaphor" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">2.1 알파폴드 메타포</a>
+    <a href="#data-structure" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">2.2 데이터 구조</a>
+    <a href="#plddt" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">2.3 pLDDT 색상</a>
+    <a href="#mode-gallery" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">3. 갤러리 모드</a>
+    <a href="#mode-explore" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">4. Explore 모드</a>
+    <a href="#mode-analyze" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">5. Analyze 모드</a>
+    <a href="#analyze-mapping" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">5.1 매핑 슬롯</a>
+    <a href="#analyze-map" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">5.2 3D 지도</a>
+    <a href="#analyze-wheel" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">5.3 Profile Wheel</a>
+    <a href="#mode-decide" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">6. Decide 모드</a>
+    <a href="#mode-data-studio" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">7. Data Studio</a>
+    <a href="#ds-sources" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">7.1 Sources</a>
+    <a href="#ds-etl" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">7.2 ETL Pipeline</a>
+    <a href="#ds-quality" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">7.3 Quality</a>
+    <a href="#ds-catalog" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">7.4 Catalog</a>
+    <a href="#ds-ai" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">7.5 AI Pipeline</a>
+    <a href="#mode-workflow" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">8. Workflow 모드</a>
+    <a href="#wf-preview" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">8.1 Preview 모드</a>
+    <a href="#wf-edit" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">8.2 Edit 모드</a>
+    <a href="#wf-create-new" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">8.3 새 워크플로 만들기</a>
+    <a href="#wf-nodes" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">8.4 26개 노드 라이브러리</a>
+    <a href="#wf-save" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">8.5 저장과 공유</a>
+    <a href="#scenarios" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">9. 사용 시나리오</a>
+    <a href="#scenario-1" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">9.1 파트너 모집</a>
+    <a href="#scenario-2" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">9.2 매출 위험 탐지</a>
+    <a href="#scenario-3" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">9.3 Twin Search</a>
+    <a href="#scenario-4" class="toc-link toc-h3 block py-1 px-2 rounded text-gray-600">9.4 신규 워크플로 작성</a>
+    <a href="#shortcuts" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">10. 단축키</a>
+    <a href="#troubleshoot" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">11. 트러블슈팅</a>
+    <a href="#faq" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">12. FAQ</a>
+    <a href="#glossary" class="toc-link toc-h2 block py-1.5 px-2 rounded text-gray-700 mt-2">13. 용어 사전</a>
+  </nav>
+</aside>
+
+<!-- 본문 -->
+<main class="flex-1 px-8 py-6 max-w-4xl">
+
+<!-- INTRO -->
+<section id="intro">
+<h1 class="text-3xl font-extrabold mb-2">TowninGraph Master Console</h1>
+<p class="text-lg text-gray-600 mb-6">지역 경제구조 해석 시스템 — 사용자 매뉴얼 v0.6</p>
+
+<div class="callout callout-info">
+  <strong>📘 매뉴얼이 다루는 범위:</strong> 6개 모드 (갤러리·Explore·Analyze·Decide·Data Studio·Workflow), 130개 동·40개 레이어·60개월 시계열, ComfyUI 스타일 노드 그래프 편집기, 일반 사용 시나리오 4개, 단축키, FAQ.
+</div>
+
+<h2 id="intro-what-is">TowninGraph는 무엇인가?</h2>
+
+<p>TowninGraph는 <strong>지역 경제구조</strong>(지가·매출·유동인구·소상공인·파트너 활동 등)를 단백질의 아미노산 시퀀스처럼 펼치고 시간 축으로 분석하는 도구입니다. AlphaFold가 단백질의 3D 접힘을 예측하듯, TowninGraph는 지역의 경제 구조와 미래 변화를 예측·시각화합니다.</p>
+
+<p><strong>1차 사용자:</strong> Townin 플랫폼의 마스터(운영자/관리자) 5~20명. 외부 SaaS로 확장 예정이지만 v0.6은 내부 dogfooding 단계입니다.</p>
+
+<div class="callout callout-tip">
+  <strong>💡 한 문장으로:</strong> "40개 데이터 소스를 100개 인사이트로 흘려보내는 시각적 분석 엔진"
+</div>
+
+<h3 id="first-launch">1.1 첫 실행</h3>
+
+<div class="step">
+  <span class="step-num">1</span>
+  <div class="step-content">
+    <strong>로컬 서버 실행</strong> — 데모 폴더에서 <code class="inline">python3 -m http.server 8765</code> 실행 (백그라운드 OK)
+  </div>
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <div class="step-content">
+    <strong>브라우저에서 접속</strong> — <code class="inline">http://localhost:8765/index.html</code> (Chrome / Safari / Firefox)
+  </div>
+</div>
+<div class="step">
+  <span class="step-num">3</span>
+  <div class="step-content">
+    <strong>첫 화면 = 갤러리</strong> — 12개 분석 주제 카드가 보입니다. 어디든 클릭하면 해당 분석으로 즉시 진입합니다.
+  </div>
+</div>
+
+<div class="callout callout-warn">
+  <strong>⚠️ 주의:</strong> 파일을 직접 더블클릭으로 열면 <code class="inline">simula_data.json</code> 로드가 차단됩니다. 반드시 로컬 HTTP 서버를 통해 접속하세요.
+</div>
+
+<h3 id="interface-overview">1.2 화면 구조 한눈에</h3>
+
+<img class="screenshot" src="screenshots/01_gallery.png" alt="갤러리 모드 — 첫 진입 화면">
+<div class="screenshot-caption"><span class="label">SHOT 01</span> 첫 진입 화면 = 갤러리 모드 (12개 분석 주제 카드)</div>
+
+<p>화면은 항상 다음 4개 영역으로 구성됩니다:</p>
+<table>
+  <thead><tr><th>영역</th><th>위치</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Header</strong></td><td>최상단 sticky</td><td>로고 + 6개 모드 전환 버튼 + 📖 매뉴얼 + 데이터 메타</td></tr>
+    <tr><td><strong>KPI Bar</strong></td><td>Header 바로 아래</td><td>전체 데이터 규모 (DONGS / TIME / LAYERS / pLDDT / SHOCKS) — 모든 모드 공통</td></tr>
+    <tr><td><strong>3-컬럼 본문</strong></td><td>가운데</td><td>좌(데이터·팔레트) / 중(시각화 메인) / 우(상세·결과)</td></tr>
+    <tr><td><strong>Footer</strong></td><td>최하단</td><td>버전 + 데이터 출처</td></tr>
+  </tbody>
+</table>
+
+</section>
+
+<!-- CONCEPTS -->
+<section id="concepts">
+<h2>2. 핵심 개념 (이해하면 모든 모드가 쉬워집니다)</h2>
+
+<h3 id="metaphor">2.1 알파폴드 메타포</h3>
+
+<p>TowninGraph는 도시를 <strong>단백질</strong>로, 데이터 레이어를 <strong>아미노산 시퀀스</strong>로 다룹니다.</p>
+
+<table>
+  <thead><tr><th>AlphaFold (생명과학)</th><th>TowninGraph (도시경제)</th></tr></thead>
+  <tbody>
+    <tr><td>단백질 1개</td><td>읍면동 1개 (130개)</td></tr>
+    <tr><td>아미노산 시퀀스 (~수백)</td><td>40개 레이어 (지가·매출·유동…)</td></tr>
+    <tr><td>3D 접힘 구조</td><td>시간 축으로 펼친 동적 결합</td></tr>
+    <tr><td>pLDDT 신뢰도 (0~100)</td><td>예측 신뢰도 (TimesFM)</td></tr>
+    <tr><td>단백질 alignment</td><td>Regional Twin Search</td></tr>
+    <tr><td>활성 부위 (active site)</td><td>경제 흐름의 급변 지점</td></tr>
+  </tbody>
+</table>
+
+<h3 id="data-structure">2.2 데이터 구조</h3>
+
+<pre class="ascii-diagram">130 dongs × 40 layers × 60 months = 312,000 data points
+
+[지역 (130)]                    [레이어 (40)]
+├ 서울 25개 구 × 5개 동          ├ 위치/접근성 (4)
+│  ├ 강남구 A1동                 ├ 공시지가/임대 (4)
+│  ├ 성수1가1동 ★                ├ 부동산 거래 (3)
+│  ├ ...                         ├ 이용객 (9)
+└ 부산 5개 동 (Twin 비교용)       ├ 소상공인 (7)
+                                 ├ 위치 (4)
+[시간 (60)]                      └ Townin 내부 (13)  ★ 핵심
+2020-01 ~ 2024-12                   ├ 파트너 활동 (3)
+월 단위                              ├ 매출 (3)
++ 5건 외부 충격 표시                 ├ 유저 행동 (3)
+  (코로나, 금리, 정책, 트렌드)       └ 광고/프로모션 (4)</pre>
+
+<h3 id="plddt">2.3 pLDDT 색상 체계</h3>
+
+<p>모든 화면에서 일관된 색상으로 <strong>예측 신뢰도</strong>를 표현합니다.</p>
+
+<table>
+  <thead><tr><th>색</th><th>점수</th><th>의미</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge" style="background:#00529B;color:white">90+</span></td><td>매우 높음</td><td>모델이 매우 확신함</td></tr>
+    <tr><td><span class="badge" style="background:#5BC0EB;color:#07101F">70-90</span></td><td>높음</td><td>일반적 신뢰 가능</td></tr>
+    <tr><td><span class="badge" style="background:#FED766;color:#07101F">50-70</span></td><td>중간</td><td>주의 필요</td></tr>
+    <tr><td><span class="badge" style="background:#C9485B;color:white">&lt;50</span></td><td>낮음</td><td>예측 불안정 (외부 충격 시)</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-tip">
+  <strong>💡 활용 팁:</strong> pLDDT가 50 미만으로 떨어진 시점 = 모델이 그 동의 미래를 잘 못 맞추는 시점. 데이터 부족 또는 예측 불가능한 충격이 있었다는 의미입니다.
+</div>
+</section>
+
+<!-- MODE: GALLERY -->
+<section id="mode-gallery">
+<h2>3. 🎨 갤러리 모드 — 시작점</h2>
+
+<p>모든 작업의 시작점입니다. 자주 보는 12개 분석 주제 카드 + 사용자가 저장한 워크플로 카드가 함께 표시됩니다.</p>
+
+<img class="screenshot" src="screenshots/01_gallery.png" alt="Gallery 모드 전체">
+<div class="screenshot-caption"><span class="label">SHOT 01</span> 12개 분석 주제 카드 (3열 그리드, 각 카드에 미니 sparkline)</div>
+
+<h3>3.1 화면 구성</h3>
+
+<div class="feature-card">
+  <h4>상단 검색바</h4>
+  <p>"성수", "코로나", "카페" 등 키워드로 즉시 검색. <span class="kbd">⌘K</span> 단축키로 어디서든 호출 가능.</p>
+</div>
+
+<div class="feature-card">
+  <h4>카테고리 필터 (5개 탭)</h4>
+  <ul class="list-disc ml-6 text-sm">
+    <li><strong>전체</strong> — 모든 카드</li>
+    <li><strong>🔥 트렌드 (4)</strong> — 성수 부상, 코로나 충격, 카페 폭증, 청년 유입</li>
+    <li><strong>⚠️ 이상 탐지 (3)</strong> — 폐업 급증, pLDDT 하락, 유동 이탈</li>
+    <li><strong>🤝 파트너/매출 (3)</strong> — 파트너 모집, 매출 위험, 광고 집중</li>
+    <li><strong>🌐 비교 (2)</strong> — 성수↔부산 Twin, 강남 vs 성수 vs 마포</li>
+  </ul>
+</div>
+
+<div class="feature-card">
+  <h4>주제 카드 (3열 그리드)</h4>
+  <p>각 카드에 표시되는 정보:</p>
+  <ul class="list-disc ml-6 text-sm">
+    <li>아이콘 + 카테고리 (우상단)</li>
+    <li>제목 + 한 줄 설명</li>
+    <li>5종 데이터 미니 sparkline</li>
+    <li>진입 모드 표시 (📊 Analyze / 🧬 Explore)</li>
+    <li>사용자 카드는 <span class="badge b-yellow">USER</span> 배지 + 노드/엣지 카운트</li>
+  </ul>
+</div>
+
+<h3>3.2 사용 절차</h3>
+
+<div class="step"><span class="step-num">1</span><div class="step-content">관심 있는 카드를 시각적으로 스캔</div></div>
+<div class="step"><span class="step-num">2</span><div class="step-content">카드 클릭 → 해당 모드로 자동 전환 + 매핑 자동 적용</div></div>
+<div class="step"><span class="step-num">3</span><div class="step-content">분석 완료 후 갤러리로 돌아오려면 헤더의 🎨 갤러리 클릭</div></div>
+
+<div class="callout callout-info">
+  <strong>📌 사용자 워크플로 카드:</strong> Workflow 모드에서 직접 만들어 저장한 워크플로는 자동으로 갤러리에 카드로 등록됩니다. 미니 그래프(노드 배치) 미리보기가 표시됩니다.
+</div>
+</section>
+
+<!-- MODE: EXPLORE -->
+<section id="mode-explore">
+<h2>4. 🧬 Explore — 자동 인사이트</h2>
+
+<p>알파폴드 시그니처 시각화 + 시스템이 자동으로 발견한 패턴을 보여주는 모드입니다. <strong>"오늘 무슨 일이 일어나고 있나"를 30초 안에 파악</strong>할 때 사용합니다.</p>
+
+<img class="screenshot" src="screenshots/02_explore.png" alt="Explore 모드">
+<div class="screenshot-caption"><span class="label">SHOT 02</span> 좌(자동 인사이트 Top5) · 중(3D 지도 + 시간 슬라이더) · 우(선택 동 KPI + 단백질 호흡 + 자동 코멘트)</div>
+
+<h3>4.1 화면 구성 3컬럼</h3>
+
+<h3>4.2 좌측 — 자동 인사이트 패널</h3>
+
+<table>
+  <thead><tr><th>섹션</th><th>표시 내용</th><th>클릭 동작</th></tr></thead>
+  <tbody>
+    <tr><td>⚠️ 이상 탐지 Top 5</td><td>최근 6개월 폐업률이 평균 대비 가장 빠르게 상승하는 동</td><td>지도가 해당 동으로 이동 + 선택</td></tr>
+    <tr><td>🔥 급상승 Top 5</td><td>5년간 유동인구 성장률 가장 높은 동</td><td>지도가 해당 동으로 이동 + 선택</td></tr>
+  </tbody>
+</table>
+
+<h3>4.3 중앙 — 3D 지도</h3>
+
+<table>
+  <thead><tr><th>인터랙션</th><th>동작</th></tr></thead>
+  <tbody>
+    <tr><td><strong>마우스 휠</strong></td><td>줌 인/아웃</td></tr>
+    <tr><td><strong>좌클릭 드래그</strong></td><td>지도 이동 (pan)</td></tr>
+    <tr><td><strong>우클릭 드래그</strong></td><td>3D 회전 (pitch/bearing)</td></tr>
+    <tr><td><strong>기둥 클릭</strong></td><td>해당 동 선택 + 우측 정보 갱신</td></tr>
+    <tr><td><strong>▶ 재생 버튼</strong></td><td>60개월 시간 자동 재생 (속도 조절 가능)</td></tr>
+    <tr><td><strong>슬라이더 드래그</strong></td><td>특정 시점으로 이동</td></tr>
+  </tbody>
+</table>
+
+<p>각 기둥의 의미:</p>
+<ul class="list-disc ml-6 text-sm">
+  <li><strong>높이</strong> = 유동인구 (해당 시점)</li>
+  <li><strong>색상</strong> = 카페 수 (낮음=파랑, 높음=빨강)</li>
+  <li><strong>주변 링</strong> = 선택된 동의 pLDDT (예측 신뢰도)</li>
+</ul>
+
+<h3>4.4 우측 — 선택 동 디테일</h3>
+
+<div class="feature-card">
+  <h4>KPI 6종</h4>
+  <p>유동인구 / 공시지가 / 카페 / 신규 창업 / 거래량 / pLDDT</p>
+  <p class="text-xs text-gray-500">슬라이더 움직일 때마다 실시간 갱신</p>
+</div>
+
+<div class="feature-card">
+  <h4>단백질 호흡 차트</h4>
+  <p>선택 동의 5종 시계열을 60개월 한 그래프에 겹쳐 표시. 외부 충격 5건이 점선으로 표시됩니다.</p>
+</div>
+
+<div class="feature-card">
+  <h4>자동 코멘트</h4>
+  <p>규칙 기반 자동 분석:</p>
+  <ul class="list-disc ml-6 text-sm">
+    <li>5년 유동 변화율 + 추세 판정 (🔥 급상승 / 📈 상승세 / ➡️ 안정 / 📉 하락)</li>
+    <li>카페 수 변화율</li>
+    <li>폐업 추세 (증가 시 ⚠️ 표시)</li>
+    <li>현재 pLDDT (60 미만 시 🌫️ 신뢰도 낮음 경고)</li>
+  </ul>
+</div>
+</section>
+
+<!-- MODE: ANALYZE -->
+<section id="mode-analyze">
+<h2>5. 📊 Analyze — Tableau식 자유 매핑</h2>
+
+<p>가장 강력한 분석 모드입니다. <strong>"내가 직접 보고싶은 주제를 만들고 싶다"</strong>면 여기를 사용합니다.</p>
+
+<img class="screenshot" src="screenshots/03_analyze.png" alt="Analyze 모드">
+<div class="screenshot-caption"><span class="label">SHOT 03</span> 좌(40 레이어 데이터 패널) · 중(매핑 슬롯 5개 + 3D 지도) · 우(선택 동 + Profile Wheel)</div>
+
+<h3 id="analyze-mapping">5.1 매핑 슬롯 (5개)</h3>
+
+<p>상단의 5개 슬롯을 조합해서 무한히 다양한 분석을 만들 수 있습니다.</p>
+
+<table>
+  <thead><tr><th>슬롯</th><th>의미</th><th>예시</th></tr></thead>
+  <tbody>
+    <tr><td><strong>높이 (Y)</strong></td><td>3D 기둥의 높이를 결정하는 레이어</td><td>visitors_total, land_price, biz_cafe</td></tr>
+    <tr><td><strong>색상</strong></td><td>기둥 색상의 강도 (낮음→파랑, 높음→빨강)</td><td>biz_cafe, visitors_20s, biz_new</td></tr>
+    <tr><td><strong>필터 (지역)</strong></td><td>표시할 동의 범위</td><td>전체 / 서울만 / 부산만 / 급상승 동만</td></tr>
+    <tr><td><strong>시각화 모드</strong></td><td>지도 표현 방식</td><td>3D 기둥 / 히트맵 / 육각 그리드</td></tr>
+    <tr><td><strong>시간 (X축)</strong></td><td>슬라이더로 결정되는 현재 시점</td><td>2020-01 ~ 2024-12</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-tip">
+  <strong>💡 주제 만들기 사고 흐름:</strong><br>
+  1️⃣ "무엇을 보고싶은가?" → 질문 정의<br>
+  2️⃣ "어느 데이터가 답을 줄까?" → 높이/색상 슬롯에 매핑<br>
+  3️⃣ "어느 지역만 볼까?" → 필터<br>
+  4️⃣ "언제부터?" → 시간 슬라이더<br>
+  5️⃣ "어떻게 보여줄까?" → 시각화 모드
+</div>
+
+<h3 id="analyze-map">5.2 3D 지도 (3가지 모드)</h3>
+
+<table>
+  <thead><tr><th>모드</th><th>언제 쓰나</th><th>특징</th></tr></thead>
+  <tbody>
+    <tr><td><strong>3D 기둥</strong></td><td>개별 동의 정확한 값을 비교할 때</td><td>각 동마다 기둥 1개 + 영역 폴리곤</td></tr>
+    <tr><td><strong>히트맵</strong></td><td>전체 분포 / 핫스팟을 볼 때</td><td>가중 평균이 부드럽게 퍼짐</td></tr>
+    <tr><td><strong>육각 그리드</strong></td><td>대규모 패턴 / 클러스터를 볼 때</td><td>800m 단위 hex bin 집계</td></tr>
+  </tbody>
+</table>
+
+<h3>5.3 좌측 — 데이터 패널</h3>
+
+<p>40개 레이어를 카테고리별 트리로 표시:</p>
+<ul class="list-disc ml-6 text-sm">
+  <li>▾ 위치/접근성 (4)</li>
+  <li>▾ 공시지가/임대 (2)</li>
+  <li>▾ 부동산 거래 (2)</li>
+  <li>▾ 이용객 (4)</li>
+  <li>▾ 소상공인 (4)</li>
+  <li>... (사용자가 직접 매핑 슬롯에 끌어다 놓을 수 있음 — Phase 3 예정)</li>
+</ul>
+
+<h3 id="analyze-wheel">5.4 우측 — Profile Wheel (Twin 비교)</h3>
+
+<p>두 동의 27개 레이어 프로필을 방사형 차트에 겹쳐서 비교합니다.</p>
+
+<div class="feature-card">
+  <h4>사용 절차</h4>
+  <div class="step"><span class="step-num">1</span><div class="step-content">A 셀렉트박스에 첫 번째 동 선택 (예: 성수1가1동)</div></div>
+  <div class="step"><span class="step-num">2</span><div class="step-content">B 셀렉트박스에 비교할 동 선택 (예: 부산_전포1동)</div></div>
+  <div class="step"><span class="step-num">3</span><div class="step-content">또는 <strong>🔍 자동 Twin</strong> 버튼 클릭 → A 동과 가장 비슷한 동을 자동 선정</div></div>
+  <div class="step"><span class="step-num">4</span><div class="step-content">Twin 점수(코사인 유사도 0~100) 확인</div></div>
+</div>
+
+<table>
+  <thead><tr><th>점수</th><th>해석</th></tr></thead>
+  <tbody>
+    <tr><td>90+</td><td>구조적 쌍둥이 — 매우 유사한 경제구조</td></tr>
+    <tr><td>80-90</td><td>강한 유사 — 핵심 패턴 공유</td></tr>
+    <tr><td>65-80</td><td>중간 — 부분 동조</td></tr>
+    <tr><td>&lt;65</td><td>구조적 차이</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- MODE: DECIDE -->
+<section id="mode-decide">
+<h2>6. 🎯 Decide — 임원/시연용 KPI</h2>
+
+<p>분석 결과를 한눈에 보여주는 대시보드. <strong>회의실 모니터에 띄우거나 캡처해서 보고서에 넣을 때</strong> 사용합니다.</p>
+
+<img class="screenshot" src="screenshots/04_decide.png" alt="Decide 모드">
+<div class="screenshot-caption"><span class="label">SHOT 04</span> 4개 빅 KPI + 5종 시계열 차트 + Top 5 성장 동 + 외부 충격 5건</div>
+
+<h3>6.1 화면 구성</h3>
+
+<table>
+  <thead><tr><th>영역</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td><strong>4개 빅 KPI</strong></td><td>서울 평균 유동 / 평균 공시지가 / 신규 창업 / 평균 pLDDT</td></tr>
+    <tr><td><strong>5종 시계열 차트</strong></td><td>서울 전체 60개월 평균 5종 데이터 + 외부 충격 5건 표시</td></tr>
+    <tr><td><strong>🏆 5년 누적 성장 Top 5</strong></td><td>유동+창업+카페 종합 성장률 순위</td></tr>
+    <tr><td><strong>⚠️ 외부 충격 5건</strong></td><td>코로나 시작/회복/금리/정책완화/트렌드시프트</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-info">
+  <strong>📌 활용:</strong> Decide 모드의 5종 시계열 차트는 PNG 캡처해서 보고서/슬라이드에 그대로 사용 가능합니다. 외부 충격 라벨이 자동으로 표시되어 설명력이 높습니다.
+</div>
+</section>
+
+<!-- DATA STUDIO -->
+<section id="mode-data-studio">
+<h2>7. 🗄️ Data Studio — 데이터 인프라 관리</h2>
+
+<p>마스터가 데이터 소스를 관리하고 품질을 검증하는 백오피스. <strong>5개 서브탭</strong>으로 구성됩니다.</p>
+
+<h3 id="ds-sources">7.1 📥 Sources — 9개 데이터 소스</h3>
+
+<img class="screenshot" src="screenshots/05_ds_sources.png" alt="Data Studio Sources 탭">
+<div class="screenshot-caption"><span class="label">SHOT 05</span> 좌(공공 6개) · 우(Townin 4개) · 하단(24시간 갱신 스케줄 strip)</div>
+
+<div class="feature-card">
+  <h4>공공 데이터 6개</h4>
+  <table>
+    <tr><td>V World</td><td>전국 행정구역/지번 폴리곤</td><td>분기</td></tr>
+    <tr><td>KLIS 공시지가</td><td>국토부 토지가격비준표 API</td><td>연 1회</td></tr>
+    <tr><td>국토부 실거래가</td><td>매매/전월세 거래 데이터</td><td>월</td></tr>
+    <tr><td>SGIS 통계청</td><td>인구·세대·연령</td><td>월</td></tr>
+    <tr><td>서울 열린데이터광장</td><td>지하철·버스 승하차</td><td>일</td></tr>
+    <tr><td>공공데이터 상가업소</td><td>사업자 등록·업종·주소</td><td>분기</td></tr>
+  </table>
+</div>
+
+<div class="feature-card">
+  <h4>Townin 내부 4개</h4>
+  <table>
+    <tr><td>파트너 DB</td><td>가입·이탈·활동 로그</td><td>일</td></tr>
+    <tr><td>결제 시스템</td><td>주문·매출·환불</td><td>시간</td></tr>
+    <tr><td>유저 행동 로그</td><td>DAU·검색·전환</td><td>시간</td></tr>
+    <tr><td>광고/프로모션</td><td>노출·클릭·지출·ROAS</td><td>일</td></tr>
+  </table>
+</div>
+
+<table>
+  <thead><tr><th>상태</th><th>의미</th></tr></thead>
+  <tbody>
+    <tr><td><span style="color:#5BC0EB">●</span> 연결됨</td><td>정상 갱신 중</td></tr>
+    <tr><td><span style="color:#FED766">▲</span> 경고</td><td>지연 또는 일부 실패</td></tr>
+    <tr><td><span style="color:#C9485B">✕</span> 실패</td><td>최근 갱신 실패 — 즉시 조치</td></tr>
+    <tr><td><span style="color:#9CA3AF">○</span> 대기</td><td>아직 연결 안 됨</td></tr>
+  </tbody>
+</table>
+
+<p><strong>24시간 갱신 스케줄 strip</strong>: 시간대별 막대 차트로 다음 ETL 실행 일정을 한눈에 확인.</p>
+
+<h3 id="ds-etl">7.2 🔄 ETL Pipeline — 5단계 DAG</h3>
+
+<img class="screenshot" src="screenshots/06_ds_etl.png" alt="Data Studio ETL Pipeline">
+<div class="screenshot-caption"><span class="label">SHOT 06</span> 5단계 DAG (Sources→Ingest→Enrich→Model→Sink) · 14개 노드 · 펄스 애니메이션 · 노드 클릭으로 상세</div>
+
+<pre class="ascii-diagram">Sources → Ingest → Enrich → Model → Sink
+  6      │  3     │  2    │  2    │  1
+         ↓        ↓        ↓       ↓        ↓
+       (정규화) (좌표/매핑) (결합) (TimesFM) (SQLite+Cache)
+                (시계열정렬)(보간)  (pLDDT)</pre>
+
+<div class="step"><span class="step-num">1</span><div class="step-content"><strong>노드 클릭</strong> → 우측 패널에 모델/파라미터/처리 시간/최근 5건 로그 표시</div></div>
+<div class="step"><span class="step-num">2</span><div class="step-content"><strong>▶ 전체 재실행</strong> 버튼 → 파이프라인 시뮬</div></div>
+<div class="step"><span class="step-num">3</span><div class="step-content"><strong>▶ 재실행</strong> (개별 노드) → 해당 노드만 재처리</div></div>
+
+<h3 id="ds-quality">7.3 ✅ Quality — 데이터 품질 검증</h3>
+
+<img class="screenshot" src="screenshots/07_ds_quality.png" alt="Data Studio Quality">
+<div class="screenshot-caption"><span class="label">SHOT 07</span> 좌(레이어별 pLDDT 막대) · 우(30 동 × 60 개월 결측 매트릭스) · 하단(품질 알람 6건)</div>
+
+<table>
+  <thead><tr><th>패널</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td><strong>레이어별 pLDDT 막대</strong></td><td>9개 카테고리 평균 신뢰도 (Townin 내부 > 공공 데이터)</td></tr>
+    <tr><td><strong>결측/품질 매트릭스</strong></td><td>30개 동 × 60개월 히트맵 — 빈 셀이 결측</td></tr>
+    <tr><td><strong>품질 알람</strong></td><td>6개 카드: 알림(빨강) / 경고(노랑) / 정상(파랑)</td></tr>
+  </tbody>
+</table>
+
+<h3 id="ds-catalog">7.4 📚 Catalog — 40개 레이어 사전</h3>
+
+<img class="screenshot" src="screenshots/08_ds_catalog.png" alt="Data Studio Catalog">
+<div class="screenshot-caption"><span class="label">SHOT 08</span> 좌(카테고리 사이드바 + 100 레이어 로드맵) · 우(40 레이어 테이블 + pLDDT 점수)</div>
+
+<div class="feature-card">
+  <h4>좌측 사이드바</h4>
+  <ul class="list-disc ml-6 text-sm">
+    <li>카테고리별 필터 (▸ 전체 / 위치 / 공시지가 / 거래 / 이용객 / 소상공인 / Townin 4종)</li>
+    <li>100 레이어 로드맵 진행률 (현재 40/100)</li>
+  </ul>
+</div>
+
+<div class="feature-card">
+  <h4>우측 테이블 (40 row)</h4>
+  <p>각 레이어의 정보:</p>
+  <ul class="list-disc ml-6 text-sm">
+    <li>레이어 이름 (mono font)</li>
+    <li>카테고리</li>
+    <li>단위 (원/㎡, 명, 곳, 건 등)</li>
+    <li>출처 (KLIS, 국토부, Townin Pay 등)</li>
+    <li>갱신 주기 (시간/일/월/분기/연)</li>
+    <li>pLDDT 점수 (색상 표시)</li>
+  </ul>
+</div>
+
+<p>상단 검색창에서 키워드로 즉시 필터링 가능.</p>
+
+<h3 id="ds-ai">7.5 🤖 AI Pipeline — 추론 흐름 DAG</h3>
+
+<img class="screenshot" src="screenshots/09_ds_ai.png" alt="Data Studio AI Pipeline">
+<div class="screenshot-caption"><span class="label">SHOT 09</span> 5단계 AI 추론 흐름 (Input→Preprocess→Model→Reasoning→Output) · TimesFM 2.5 + LoRA + GraphRAG</div>
+
+<pre class="ascii-diagram">Input → Preprocess → Model → Reasoning → Output
+  4         3          4         3          3</pre>
+
+<table>
+  <thead><tr><th>단계</th><th>노드</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge b-blue">Input</span></td><td>40 Layers / 130 Dongs / 60mo Series / Townin Internal</td></tr>
+    <tr><td><span class="badge b-green">Preprocess</span></td><td>Normalize / Window 12mo / Cov.Inject (XReg)</td></tr>
+    <tr><td><span class="badge b-pink">Model</span></td><td>TimesFM 2.5 / LoRA Adapter / Anomaly (IsolationFR) / GraphRAG</td></tr>
+    <tr><td><span class="badge b-yellow">Reasoning</span></td><td>Forecast / pLDDT / Causal Facts</td></tr>
+    <tr><td><span class="badge b-cyan">Output</span></td><td>Insight Cards / Anomaly Alerts / Auto Comment</td></tr>
+  </tbody>
+</table>
+
+<div class="step"><span class="step-num">1</span><div class="step-content">노드 클릭 → 모델/정확도/Hyperparameters 상세</div></div>
+<div class="step"><span class="step-num">2</span><div class="step-content">🤖 추론 시뮬 클릭 → 파이프라인 전체 애니메이션 + 빛 입자가 노드 사이를 흐름</div></div>
+</section>
+
+<!-- WORKFLOW -->
+<section id="mode-workflow">
+<h2>8. 🧩 Workflow — 노드 그래프 편집기 ⭐</h2>
+
+<p><strong>TowninGraph의 핵심 모드</strong>입니다. 마스터가 직접 분석 워크플로를 만들고 저장하고 공유할 수 있습니다.</p>
+
+<h3 id="wf-preview">8.1 Preview 모드 (기본)</h3>
+
+<p>12개 빌트인 워크플로를 읽기 전용으로 살펴보는 모드입니다.</p>
+
+<img class="screenshot" src="screenshots/10_workflow_preview.png" alt="Workflow Preview 모드">
+<div class="screenshot-caption"><span class="label">SHOT 10</span> Workflow Preview · 좌(노드 팔레트) · 중(노드 그래프 캔버스) · 우(메타 + 결과 + 의미)</div>
+
+<div class="step"><span class="step-num">1</span><div class="step-content">상단 우측 셀렉트박스에서 워크플로 선택</div></div>
+<div class="step"><span class="step-num">2</span><div class="step-content">캔버스에 노드 그래프 표시 — 베지어 곡선 엣지로 연결</div></div>
+<div class="step"><span class="step-num">3</span><div class="step-content">노드 클릭 → 우측 인스펙터에 입출력/파라미터 표시</div></div>
+<div class="step"><span class="step-num">4</span><div class="step-content">▶ 실행 시뮬 → 노드들이 순차로 발광 + 빛 입자 흐름</div></div>
+<div class="step"><span class="step-num">5</span><div class="step-content">📊 Analyze에 적용 → 워크플로의 매핑이 Analyze 모드에 자동 설정</div></div>
+
+<h3 id="wf-edit">8.2 Edit 모드 (편집)</h3>
+
+<p>우상단 토글에서 <strong>✏️ Edit</strong>으로 전환하면 캔버스가 편집 가능 상태가 됩니다.</p>
+
+<img class="screenshot" src="screenshots/11_workflow_edit.png" alt="Workflow Edit 모드">
+<div class="screenshot-caption"><span class="label">SHOT 11</span> Workflow Edit · EDIT MODE 노란 배지 + 편집 힌트 + 노드 드래그/포트 연결 가능 + 💾 저장 버튼</div>
+
+<div class="callout callout-warn">
+  <strong>⚠️ 자동 보호:</strong> 빌트인 12개 워크플로를 수정하면 <strong>자동으로 사용자 워크플로로 복제</strong>됩니다. 원본은 항상 보존됩니다.
+</div>
+
+<h4>편집 상태 표시</h4>
+<ul class="list-disc ml-6 text-sm">
+  <li>상단에 노란 <span class="badge b-yellow">EDIT MODE</span> 배지</li>
+  <li>편집 힌트: "노드 드래그로 이동 · 클릭→인스펙터 · 우클릭→메뉴 · Delete 키→삭제"</li>
+  <li>좌측 팔레트 우상단에 "↕ 드래그" 힌트</li>
+  <li>변경 발생 시 <strong>💾 저장</strong> 버튼 자동 노출</li>
+</ul>
+
+<h3 id="wf-create-new">8.3 새 워크플로 만들기 (전체 절차)</h3>
+
+<div class="callout callout-info">
+  <strong>이 섹션이 매뉴얼의 핵심입니다.</strong> 8단계로 새 분석을 만드는 전체 흐름.
+</div>
+
+<div class="step"><span class="step-num">1</span><div class="step-content">
+  <strong>Workflow 모드 진입</strong> — 헤더의 🧩 Workflow 클릭
+</div></div>
+
+<div class="step"><span class="step-num">2</span><div class="step-content">
+  <strong>Edit 모드로 전환</strong> — 우상단 ✏️ Edit 버튼 클릭
+</div></div>
+
+<div class="step"><span class="step-num">3</span><div class="step-content">
+  <strong>+ 새 워크플로</strong> 클릭 → 제목 입력 prompt → 빈 캔버스
+</div></div>
+
+<div class="step"><span class="step-num">4</span><div class="step-content">
+  <strong>좌측 팔레트에서 노드 드래그</strong> → 캔버스에 놓음<br>
+  <em>마우스 다운 → 끌기 → 캔버스에서 마우스 업</em><br>
+  ghost 노드가 커서 따라옵니다.
+</div></div>
+
+<div class="step"><span class="step-num">5</span><div class="step-content">
+  <strong>노드를 적당한 위치로 이동</strong> — 노드 본체를 드래그<br>
+  좌→우 흐름 (Source → Filter → Transform → Model → Visualize → Export 순)을 권장
+</div></div>
+
+<div class="step"><span class="step-num">6</span><div class="step-content">
+  <strong>포트 연결</strong>:<br>
+  • 첫 번째 노드의 <strong>오른쪽 포트(채운 원)</strong>에서 마우스 다운<br>
+  • 다음 노드의 <strong>왼쪽 포트(빈 원)</strong>로 드래그 → 마우스 업<br>
+  • 입력 포트가 8px로 확대되며 발광 → "여기서 놓으면 연결됨"<br>
+  • 베지어 곡선이 자동으로 그려짐
+</div></div>
+
+<div class="step"><span class="step-num">7</span><div class="step-content">
+  <strong>파라미터 편집</strong> — 노드 더블클릭 → JSON 편집 prompt<br>
+  예: <code class="inline">{"layer": "biz_cafe", "op": "&gt;", "value": 100}</code>
+</div></div>
+
+<div class="step"><span class="step-num">8</span><div class="step-content">
+  <strong>💾 저장</strong> 클릭 → localStorage에 영구 저장<br>
+  → 갤러리에 자동 카드 등록 + 좌측 사이드바 "📁 내 워크플로" 목록에 추가
+</div></div>
+
+<h4>편집 중 가능한 작업</h4>
+
+<table>
+  <thead><tr><th>작업</th><th>방법</th></tr></thead>
+  <tbody>
+    <tr><td>노드 이동</td><td>본체 드래그</td></tr>
+    <tr><td>노드 선택</td><td>한 번 클릭 (선택된 노드는 진한 테두리 + 그림자)</td></tr>
+    <tr><td>노드 인스펙터</td><td>한 번 클릭 → 우측 패널 표시</td></tr>
+    <tr><td>파라미터 편집</td><td>더블클릭 → JSON prompt</td></tr>
+    <tr><td>노드 복제</td><td>우클릭 → 📋 복제</td></tr>
+    <tr><td>노드 이름 변경</td><td>우클릭 → ✏️ 이름 변경 (lib name 대신 customLabel 사용)</td></tr>
+    <tr><td>노드 삭제 (메뉴)</td><td>우클릭 → 🗑 삭제</td></tr>
+    <tr><td>노드 삭제 (단축키)</td><td>선택 후 <span class="kbd">Delete</span> 또는 <span class="kbd">Backspace</span></td></tr>
+    <tr><td>엣지 추가</td><td>출력 포트 → 입력 포트 드래그</td></tr>
+    <tr><td>엣지 삭제</td><td>해당 엣지 양쪽 노드 중 하나 삭제 (현재 v0.6은 엣지 직접 삭제 없음)</td></tr>
+    <tr><td>줌 인/아웃</td><td>우상단 +/− 버튼 또는 ⌂ (리셋)</td></tr>
+  </tbody>
+</table>
+
+<h3 id="wf-nodes">8.4 26개 노드 라이브러리</h3>
+
+<table>
+  <thead><tr><th>카테고리</th><th>노드 수</th><th>예시</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge b-blue">📥 Source</span></td><td>4</td><td>동 선택 / 레이어 선택 / 시간 범위 / 전국 동</td></tr>
+    <tr><td><span class="badge b-green">🔍 Filter</span></td><td>3</td><td>임계치 / 기간 / 시나리오 매칭</td></tr>
+    <tr><td><span class="badge b-yellow">🔄 Transform</span></td><td>4</td><td>정규화 / 차분 / 이동평균 / 동→구 집계</td></tr>
+    <tr><td><span class="badge b-pink">🤖 Model</span></td><td>4</td><td>TimesFM 예측 / 이상 탐지 / GraphRAG / pLDDT</td></tr>
+    <tr><td><span class="badge b-purple">🆚 Compare</span></td><td>3</td><td>Twin Search / Delta / A/B 비교</td></tr>
+    <tr><td><span class="badge b-cyan">🎨 Visualize</span></td><td>5</td><td>3D 지도 / 히트맵 / Profile Wheel / 시계열 / 알람 카드</td></tr>
+    <tr><td><span class="badge b-gray">📤 Export</span></td><td>3</td><td>CSV / PDF / 공유 링크</td></tr>
+  </tbody>
+</table>
+
+<h3 id="wf-save">8.5 저장과 공유</h3>
+
+<div class="feature-card">
+  <h4>저장 (현재 v0.6)</h4>
+  <ul class="list-disc ml-6 text-sm">
+    <li>localStorage에 JSON으로 저장</li>
+    <li>키: <code class="inline">towningraph_user_workflows</code></li>
+    <li>브라우저 재시작·세션 종료 후에도 유지</li>
+    <li>같은 브라우저 / 같은 도메인에서만 접근 가능</li>
+  </ul>
+</div>
+
+<div class="feature-card">
+  <h4>삭제</h4>
+  <ul class="list-disc ml-6 text-sm">
+    <li>좌측 "📁 내 워크플로" 목록에서 hover 시 ✕ 버튼</li>
+    <li>클릭 → 확인 prompt → 삭제 (localStorage에서도 제거)</li>
+    <li>삭제 시 갤러리 카드도 자동 제거</li>
+  </ul>
+</div>
+
+<div class="feature-card">
+  <h4>공유 (Phase 3 예정)</h4>
+  <ul class="list-disc ml-6 text-sm">
+    <li>워크플로를 .json 파일로 export → 다른 마스터에게 전달</li>
+    <li>클라우드 저장 → URL 공유</li>
+    <li>팀 워크스페이스 → 권한 관리</li>
+  </ul>
+</div>
+</section>
+
+<!-- SCENARIOS -->
+<section id="scenarios">
+<h2>9. 사용 시나리오 (실전)</h2>
+
+<h3 id="scenario-1">9.1 시나리오: 파트너 모집 후보지 찾기</h3>
+
+<p><strong>상황:</strong> Townin 마스터가 신규 파트너(카페)를 모집할 후보 지역을 찾고 싶음.</p>
+
+<p><strong>핵심 가설:</strong> "20대 유동인구는 많은데 카페가 부족한 동" = 골든 스팟</p>
+
+<div class="step"><span class="step-num">1</span><div class="step-content">갤러리 → "🤝 파트너 모집 후보지" 카드 클릭</div></div>
+<div class="step"><span class="step-num">2</span><div class="step-content">자동으로 Analyze 모드 진입 + 매핑 적용 (높이=visitors_20s, 색상=biz_cafe)</div></div>
+<div class="step"><span class="step-num">3</span><div class="step-content">지도에서 <strong>높은 기둥 + 파란 색</strong> 동을 시각적으로 식별 (수요↑ + 경쟁↓)</div></div>
+<div class="step"><span class="step-num">4</span><div class="step-content">기둥 클릭 → 우측에서 정확한 수치 확인</div></div>
+<div class="step"><span class="step-num">5</span><div class="step-content">상위 3~5개 동을 적어두고 → Workflow 모드에서 Profile Wheel로 비교</div></div>
+
+<h3 id="scenario-2">9.2 시나리오: 매출 위험 파트너 조기 탐지</h3>
+
+<p><strong>상황:</strong> 어떤 파트너가 매출이 떨어지기 전에 미리 발견하고 지원하고 싶음.</p>
+
+<div class="step"><span class="step-num">1</span><div class="step-content">⌘K → "매출 위험" 검색 → "💰 소상공인 매출 위험" 카드</div></div>
+<div class="step"><span class="step-num">2</span><div class="step-content">또는 Explore 모드에서 좌측 "⚠️ 이상 탐지 Top 5" 확인</div></div>
+<div class="step"><span class="step-num">3</span><div class="step-content">위험 동 클릭 → 5종 시계열 그래프로 어떤 데이터가 떨어지는지 분석</div></div>
+<div class="step"><span class="step-num">4</span><div class="step-content">자동 코멘트 확인 → "최근 폐업 증가 + pLDDT 하락" 경고 메시지</div></div>
+<div class="step"><span class="step-num">5</span><div class="step-content">필요 시 Data Studio → AI Pipeline → 🤖 추론 시뮬로 모델 재추론</div></div>
+
+<h3 id="scenario-3">9.3 시나리오: Twin Search로 사업 확장 후보 찾기</h3>
+
+<p><strong>상황:</strong> 성수동에서 성공한 운영 방식을 다른 지역에 적용하고 싶음.</p>
+
+<div class="step"><span class="step-num">1</span><div class="step-content">Analyze 모드 진입</div></div>
+<div class="step"><span class="step-num">2</span><div class="step-content">우측 Profile Wheel: A 셀렉트박스에서 "성수1가1동" 선택</div></div>
+<div class="step"><span class="step-num">3</span><div class="step-content"><strong>🔍 자동 Twin</strong> 버튼 클릭 → 가장 비슷한 동이 B에 자동 설정</div></div>
+<div class="step"><span class="step-num">4</span><div class="step-content">Twin Score 확인 (90+ = 거의 쌍둥이)</div></div>
+<div class="step"><span class="step-num">5</span><div class="step-content">두 동의 wheel이 겹치는 부분 = 공통점 / 어긋난 부분 = 격차</div></div>
+
+<h3 id="scenario-4">9.4 시나리오: 새 분석 워크플로 작성</h3>
+
+<p><strong>상황:</strong> 갤러리에 없는 새로운 분석을 만들고 싶음. 예: "야간 유동 분석"</p>
+
+<div class="step"><span class="step-num">1</span><div class="step-content">Workflow 모드 → ✏️ Edit → + 새 워크플로 → 제목 "야간 유동 분석"</div></div>
+<div class="step"><span class="step-num">2</span><div class="step-content">팔레트 📥 Source → 전국 동 노드 드래그 → 캔버스 좌측</div></div>
+<div class="step"><span class="step-num">3</span><div class="step-content">📥 Source → 레이어 선택 노드 드래그 → 더블클릭 → 파라미터 <code class="inline">{"layer":"visitors_total"}</code></div></div>
+<div class="step"><span class="step-num">4</span><div class="step-content">🔍 Filter → 기간 필터 노드 → 파라미터 <code class="inline">{"hour":"22:00-04:00"}</code></div></div>
+<div class="step"><span class="step-num">5</span><div class="step-content">🤖 Model → 이상 탐지 노드 → 기본값</div></div>
+<div class="step"><span class="step-num">6</span><div class="step-content">🎨 Visualize → 히트맵 노드 → 기본값</div></div>
+<div class="step"><span class="step-num">7</span><div class="step-content">출력 포트 → 입력 포트 순서대로 드래그하여 5개 엣지 연결</div></div>
+<div class="step"><span class="step-num">8</span><div class="step-content">▶ 실행 시뮬 → 빛 입자 흐름 확인</div></div>
+<div class="step"><span class="step-num">9</span><div class="step-content">💾 저장 → 갤러리에 카드 자동 등록</div></div>
+</section>
+
+<!-- SHORTCUTS -->
+<section id="shortcuts">
+<h2>10. 단축키</h2>
+
+<img class="screenshot" src="screenshots/12_cmd_palette.png" alt="Command Palette ⌘K">
+<div class="screenshot-caption"><span class="label">SHOT 12</span> Command Palette (⌘K) · 통합 검색 · 모드 + 12개 분석 주제 + 130개 동 즉시 점프</div>
+
+<table>
+  <thead><tr><th>단축키</th><th>동작</th><th>모드</th></tr></thead>
+  <tbody>
+    <tr><td><span class="kbd">⌘K</span> / <span class="kbd">Ctrl+K</span></td><td>Command Palette 열기</td><td>전역</td></tr>
+    <tr><td><span class="kbd">↑</span> <span class="kbd">↓</span></td><td>Command Palette 항목 이동</td><td>Palette 열림 시</td></tr>
+    <tr><td><span class="kbd">↵</span> Enter</td><td>Command Palette 실행</td><td>Palette 열림 시</td></tr>
+    <tr><td><span class="kbd">Esc</span></td><td>Command Palette 닫기</td><td>Palette 열림 시</td></tr>
+    <tr><td><span class="kbd">Delete</span> / <span class="kbd">Backspace</span></td><td>선택된 노드 삭제</td><td>Workflow Edit 모드</td></tr>
+    <tr><td><strong>마우스 휠</strong></td><td>지도 줌</td><td>Explore / Analyze</td></tr>
+    <tr><td><strong>좌클릭 드래그</strong></td><td>지도 이동 (pan)</td><td>Explore / Analyze</td></tr>
+    <tr><td><strong>우클릭 드래그</strong></td><td>지도 회전 (3D)</td><td>Explore / Analyze</td></tr>
+    <tr><td><strong>우클릭 (노드)</strong></td><td>컨텍스트 메뉴</td><td>Workflow Edit 모드</td></tr>
+    <tr><td><strong>더블클릭 (노드)</strong></td><td>파라미터 편집</td><td>Workflow Edit 모드</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- TROUBLESHOOT -->
+<section id="troubleshoot">
+<h2>11. 트러블슈팅</h2>
+
+<div class="feature-card">
+  <h4>❌ 데이터 로드 실패 빨간 배너가 보입니다</h4>
+  <p><strong>원인:</strong> simula_data.json을 fetch할 수 없음 (파일 직접 열기 또는 서버 미실행)</p>
+  <p><strong>해결:</strong></p>
+  <pre>cd towningraph_mvp_demo
+python3 -m http.server 8765
+# 그 후 http://localhost:8765/index.html 접속</pre>
+</div>
+
+<div class="feature-card">
+  <h4>❌ 지도가 검은 화면만 보입니다 (베이스맵 없음)</h4>
+  <p><strong>원인:</strong> CARTO 다크 타일 CDN 차단 또는 네트워크 오류</p>
+  <p><strong>해결:</strong></p>
+  <ul class="list-disc ml-6 text-sm">
+    <li>네트워크 확인: <code class="inline">curl -I https://a.basemaps.cartocdn.com/dark_all/10/873/396@2x.png</code></li>
+    <li>방화벽/VPN 확인</li>
+    <li>다른 브라우저 (Chrome 추천)</li>
+  </ul>
+</div>
+
+<div class="feature-card">
+  <h4>❌ Workflow 노드가 드래그 안 됩니다</h4>
+  <p><strong>원인:</strong> Preview 모드 (읽기 전용)</p>
+  <p><strong>해결:</strong> 우상단 ✏️ Edit 토글로 전환</p>
+</div>
+
+<div class="feature-card">
+  <h4>❌ 저장한 워크플로가 사라졌습니다</h4>
+  <p><strong>원인:</strong> 브라우저 localStorage 초기화 (사이트 데이터 삭제, 시크릿 모드, 다른 브라우저)</p>
+  <p><strong>해결 (현재 v0.6):</strong></p>
+  <ul class="list-disc ml-6 text-sm">
+    <li>중요 워크플로는 정기적으로 백업 필요 (Phase 3에서 클라우드 저장 도입 예정)</li>
+    <li>같은 브라우저 + 같은 도메인 사용</li>
+  </ul>
+</div>
+
+<div class="feature-card">
+  <h4>❌ 포트 연결이 안 됩니다</h4>
+  <p><strong>체크리스트:</strong></p>
+  <ul class="list-disc ml-6 text-sm">
+    <li>✅ Edit 모드인가?</li>
+    <li>✅ <strong>출력 포트</strong>(우측 채운 원)에서 시작했는가? (입력 포트는 시작점이 아님)</li>
+    <li>✅ <strong>입력 포트</strong>(좌측 빈 원)에서 마우스 업 했는가?</li>
+    <li>✅ 같은 노드끼리 연결 시도하지 않았는가?</li>
+    <li>✅ 입력 포트가 hover 시 8px로 확대되었는가? (확대 안 되면 연결 가능 영역 밖)</li>
+  </ul>
+</div>
+
+<div class="feature-card">
+  <h4>❌ 빌트인 워크플로를 수정했는데 사라졌습니다</h4>
+  <p><strong>원인:</strong> 빌트인 수정 시 자동으로 새 워크플로로 복제됨 (원본 보존)</p>
+  <p><strong>확인:</strong> "📁 내 워크플로 (저장됨)" 목록에서 복제본을 찾으세요. 이름은 <code class="inline">"제목 (복사본)"</code></p>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+<h2>12. 자주 묻는 질문 (FAQ)</h2>
+
+<div class="feature-card">
+  <h4>Q. 데이터는 실제 데이터인가요?</h4>
+  <p>A. v0.6은 <strong>Simula 합성 데이터</strong>입니다. 130개 동 × 60개월 × 40 레이어를 수학적 시뮬레이션으로 생성했고, 외부 충격 5건(코로나/금리/정책 등)은 실제 시점에 맞춰 반영했습니다. 실제 데이터 연동은 Phase 3 (Rails 8 + 실제 ETL) 단계입니다.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Q. TimesFM이 진짜 작동하나요?</h4>
+  <p>A. 현재 v0.6은 <strong>UI 시뮬레이션만</strong>입니다. AI Pipeline DAG와 모델 메타데이터는 실제 TimesFM 2.5 사양을 반영했으나, 백엔드 추론은 Phase 3에서 Vertex AI 연동 시 활성화됩니다.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Q. 100 레이어는 언제 채워지나요?</h4>
+  <p>A. 현재 40/100. 남은 60개는 카드매출(BC카드/신한), 통신유동(SKT), 기상(기상청), SNS 트렌드(네이버 데이터랩), 정책 발표 일자 등이 추가될 예정입니다. Phase 3 ~ 4 단계.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Q. 모바일에서도 사용 가능한가요?</h4>
+  <p>A. v0.6은 데스크톱 우선 설계입니다. 마스터의 사무실/회의실 사용을 가정. 모바일 반응형은 향후 외부 SaaS 출시 시 도입 예정.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Q. 여러 마스터가 동시에 사용 가능한가요?</h4>
+  <p>A. v0.6은 <strong>단일 사용자 + localStorage</strong> 기반입니다. 다중 사용자/협업은 Phase 3 (Rails 8 + Devise + 멀티테넌트) 도입 시 가능합니다.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Q. 워크플로를 다른 사람과 공유하려면?</h4>
+  <p>A. 현재는 localStorage 안에만 저장되어 직접 공유 불가. Phase 3에서 .json export/import 기능과 클라우드 공유 링크를 도입할 예정입니다. 임시 방법: <code class="inline">localStorage.getItem('towningraph_user_workflows')</code> 콘솔에서 복사 → 다른 브라우저에서 setItem.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Q. ⌘K 검색이 동을 못 찾습니다</h4>
+  <p>A. 정확한 동 이름을 입력하세요. 예: "성수1가1동", "강남구 A1동", "부산_전포1동". 줄임말은 지원하지 않습니다.</p>
+</div>
+
+<div class="feature-card">
+  <h4>Q. ▶ 실행 시뮬은 진짜 데이터를 처리하나요?</h4>
+  <p>A. 아닙니다. v0.6은 <strong>시각적 시뮬레이션</strong>(노드 발광 + 빛 입자)입니다. 실제 노드별 데이터 처리 함수는 Phase 3에서 구현 예정. 시뮬은 "어떤 흐름인지"를 보여주는 데모 목적입니다.</p>
+</div>
+</section>
+
+<!-- GLOSSARY -->
+<section id="glossary">
+<h2>13. 용어 사전</h2>
+
+<table>
+  <thead><tr><th>용어</th><th>설명</th></tr></thead>
+  <tbody>
+    <tr><td><strong>pLDDT</strong></td><td>predicted Local Distance Difference Test. AlphaFold에서 차용한 0~100 신뢰도 점수. TowninGraph에서는 TimesFM 예측 신뢰도를 의미.</td></tr>
+    <tr><td><strong>읍면동</strong></td><td>한국 행정구역 최소 단위 (전국 약 3,500개). 시→구→동 계층의 끝.</td></tr>
+    <tr><td><strong>레이어</strong></td><td>한 종류의 데이터 시계열. 예: land_price = 60개월 공시지가 시계열.</td></tr>
+    <tr><td><strong>매핑 슬롯</strong></td><td>Tableau 스타일 드롭다운으로 레이어를 시각 속성(높이/색상 등)에 할당.</td></tr>
+    <tr><td><strong>노드</strong></td><td>Workflow 그래프의 처리 단위. Source/Filter/Transform/Model/Compare/Visualize/Export 7종.</td></tr>
+    <tr><td><strong>엣지</strong></td><td>노드 사이의 연결선. 데이터가 흐르는 경로.</td></tr>
+    <tr><td><strong>포트</strong></td><td>노드 좌측(input) / 우측(output)의 작은 원. 엣지의 시작/끝점.</td></tr>
+    <tr><td><strong>위상 정렬</strong></td><td>DAG에서 의존성 순서대로 노드를 정렬. ▶ 실행 시뮬 시 사용.</td></tr>
+    <tr><td><strong>워크플로</strong></td><td>노드 + 엣지 + 파라미터의 집합. 하나의 분석 주제를 표현.</td></tr>
+    <tr><td><strong>빌트인 워크플로</strong></td><td>시스템 제공 12개 분석 주제. 수정 시 자동 복제됨.</td></tr>
+    <tr><td><strong>사용자 워크플로</strong></td><td>마스터가 직접 만들어 저장한 워크플로. 갤러리에 USER 배지로 표시.</td></tr>
+    <tr><td><strong>Twin</strong></td><td>27 레이어 코사인 유사도가 높은 동 쌍. "구조적 쌍둥이".</td></tr>
+    <tr><td><strong>TimesFM</strong></td><td>Google의 시계열 예측 Foundation Model 2.5. 200M 파라미터, 60mo horizon.</td></tr>
+    <tr><td><strong>GraphRAG</strong></td><td>Microsoft의 지식 그래프 기반 RAG. 경제 사슬의 인과 관계 추출.</td></tr>
+    <tr><td><strong>LoRA</strong></td><td>Low-Rank Adaptation. 큰 모델을 적은 자원으로 파인튜닝하는 기법.</td></tr>
+    <tr><td><strong>Simula</strong></td><td>Google Simula. 합성 데이터 생성 솔루션. v0.6의 가상 데이터는 자체 simula_generate.py로 생성.</td></tr>
+    <tr><td><strong>Townin 마스터</strong></td><td>Townin 플랫폼 운영자. TowninGraph의 1차 사용자.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- 푸터 -->
+<footer class="mt-16 pt-8 border-t border-gray-200 text-center text-gray-400 text-sm pb-12">
+  <p>TowninGraph Master Console v0.6 · 2026-05-01</p>
+  <p class="mt-1">Gagahoho, Inc. · 매뉴얼 작성: Claude (Anthropic) · 모든 데이터는 Simula 합성</p>
+</footer>
+
+</main>
+</div>
+
+<script>
+// 부드러운 스크롤 + 활성 TOC 하이라이트
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+      a.classList.add('active');
+    }
+  });
+});
+
+// 스크롤 시 활성 섹션 자동 하이라이트
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    const top = s.getBoundingClientRect().top;
+    if (top <= 100) current = s.id;
+  });
+  tocLinks.forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+
+</body>
+</html>

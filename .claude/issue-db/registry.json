@@ -1,0 +1,153 @@
+{
+  "version": "3.0.0",
+  "created_at": "2026-05-03T13:22:16.640055",
+  "issues": [
+    {
+      "id": "BRAND_DEFINE-001",
+      "type": "BRAND_DEFINE",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "brand-dna.json 미초기화 — TowninAlpafold 브랜드 정의 필요",
+      "detail": "brand-dna.json 빈 템플릿 상태 (project='', design_tokens 모두 비어있음). 'TowninAlpafold' 프로젝트는 Townin + AlphaFold 결합 — 지역 상권/인구 데이터를 단백질 구조 예측처럼 시각화. brand-guardian 자동 분석 필요.",
+      "assign_to": "brand-guardian",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        ".claude/brand-dna.json"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "DOC_README-001",
+      "type": "DOCUMENTATION",
+      "priority": "P2",
+      "status": "COMPLETED",
+      "title": "README.md 부재 — 프로젝트 진입점 문서 필요",
+      "detail": "프로젝트 루트에 README.md 없음. app.js (3724 lines), index.html, 6개 Python 분석 스크립트, 6개 verify_*.mjs 검증 스크립트 구조 설명 필요. 캐릭터(마스터/탐색자/분석가/결정자) 4가지 모드 (Gallery/Explore/Analyze/Decide)도 문서화 필요.",
+      "assign_to": "docs-writer",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        "README.md (생성)"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "VERIFY_INTEGRATE-001",
+      "type": "REFACTOR",
+      "priority": "P2",
+      "status": "COMPLETED",
+      "title": "검증 스크립트 6개 통합 — verify-all.mjs 또는 npm script 추가",
+      "detail": "verify_v07.mjs, verify_causal.mjs, verify_cdd.mjs, verify_p2.mjs, verify_prophet.mjs, verify_responsive.mjs 6개가 독립 실행. Karpathy #4 Goal-Driven 위해 통합 검증 진입점 필요. 절대 경로 '/opt/homebrew/lib/node_modules/playwright/index.mjs' 의존도 문제 (포터빌리티 ↓)",
+      "assign_to": "test-runner",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        "verify_*.mjs"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "PORTABILITY-001",
+      "type": "FIX_BUG",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "verify_*.mjs 절대경로 import — 다른 머신에서 실행 불가",
+      "detail": "모든 verify_*.mjs와 capture_screens.mjs가 'import { chromium } from \"/opt/homebrew/lib/node_modules/playwright/index.mjs\"' 형태로 macOS Homebrew 절대경로 직접 참조. package.json + npm install playwright 또는 from 'playwright'로 변경 필요.",
+      "assign_to": "code-quality",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        "verify_v07.mjs",
+        "verify_causal.mjs",
+        "verify_cdd.mjs",
+        "verify_p2.mjs",
+        "verify_prophet.mjs",
+        "verify_responsive.mjs",
+        "capture_screens.mjs"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "PKG_MISSING-001",
+      "type": "FIX_BUG",
+      "priority": "P0",
+      "status": "COMPLETED",
+      "title": "package.json 부재 — JS 의존성 관리 불가",
+      "detail": "프로젝트에 package.json이 없음. verify_*.mjs는 playwright를 require하지만 npm install 정의 없음. 새 머신에서 setup 불가 (Karpathy #4: 검증 가능한 성공기준 없음).",
+      "assign_to": "code-quality",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        "package.json (생성)"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    }
+  ],
+  "hooks": {
+    "on_create": [],
+    "on_start": [],
+    "on_complete": [],
+    "on_fail": [],
+    "on_learn": []
+  },
+  "knowledge": {
+    "success_patterns": [],
+    "failure_patterns": [],
+    "meta_observations": [
+      {
+        "cycle": 1,
+        "timestamp": "2026-05-03T13:30:38.013652",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/5)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 5,
+          "done": 0,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 2,
+        "timestamp": "2026-05-03T13:33:43.137805",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/5)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 5,
+          "done": 0,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      }
+    ]
+  },
+  "stats": {
+    "total_issues": 5,
+    "completed": 5,
+    "failed": 0,
+    "evolved": 2
+  }
+}

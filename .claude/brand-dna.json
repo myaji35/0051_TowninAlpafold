@@ -1,0 +1,68 @@
+{
+  "_comment": "TowninAlpafold — Townin × AlphaFold. 도시/상권/인구 데이터를 단백질 구조 예측처럼 신뢰도(pLDDT)와 cone(불확실성)으로 시각화하는 분석 콘솔.",
+  "project": "TowninAlpafold",
+  "agenda": "도시 데이터의 신뢰 구조를 보여준다. 평면 통계가 아니라 신뢰도(pLDDT)와 미래 cone(p10~p90)으로 의사결정의 근거 폭을 드러낸다.",
+  "brand_voice": "분석가의 절제 — 과장 없이 데이터 신뢰 구간을 그대로 노출. 결정자가 0.5초 안에 다음 행동을 골라내도록.",
+  "emotional_tone": ["과학적", "신뢰", "탐구", "절제", "투명"],
+  "design_metaphors": ["AlphaFold pLDDT 4단계", "신뢰 cone (p10~p90)", "Gallery → Explore → Analyze → Decide 4모드 콘솔"],
+
+  "design_tokens": {
+    "colors": {
+      "hero": "#00529B",
+      "surface": "#0F1419",
+      "surface_alt": "#1A2330",
+      "text_primary": "#E8EEF6",
+      "text_secondary": "#A4B0C0",
+      "accent": "#5BC0EB",
+      "border": "#2A3445",
+      "plddt_high": "#00529B",
+      "plddt_mid":  "#5BC0EB",
+      "plddt_low":  "#FED766",
+      "plddt_poor": "#C9485B"
+    },
+    "typography": {
+      "font_heading": "ui-sans-serif, -apple-system, 'SF Pro Display', 'Pretendard', sans-serif",
+      "font_body": "ui-sans-serif, -apple-system, 'SF Pro Text', 'Pretendard', sans-serif",
+      "font_mono": "ui-monospace, 'SF Mono', 'JetBrains Mono', monospace",
+      "scale": "tight"
+    },
+    "shape": {
+      "radius": "tight",
+      "card_shadow": "sm",
+      "border_width": "1px"
+    },
+    "motion": {
+      "style": "subtle",
+      "page_transition": "fade",
+      "scroll_animation": "fade-up",
+      "hover_effect": "lift",
+      "loading_animation": "skeleton",
+      "micro_interaction": "button-press",
+      "entrance_style": "fade-in"
+    },
+    "layout": {
+      "density": "dense",
+      "max_width": "1480px",
+      "grid": "split-map-rail"
+    },
+    "personality": {
+      "mood": "lab-console",
+      "icon_style": "feather-outline",
+      "illustration_style": "none"
+    }
+  },
+
+  "hero_color": "#00529B",
+  "anti_patterns": [
+    "단일 점추정만 표시 (cone/신뢰구간 누락)",
+    "AlphaFold pLDDT 색상 체계 임의 변경",
+    "그라디언트/네온/AI슬롭 일러스트",
+    "데이터 출처/확신도 없는 단정 카피",
+    "한 화면에 CTA가 2개 이상이거나 0개"
+  ],
+  "primary_action_per_screen": "MUST_EXIST",
+  "user_decision_clarity": "0.5초 룰 — Gallery에서 카드 한 장 hover 시 다음 모드(Explore/Analyze/Decide) 진입점이 명확해야 한다.",
+  "_status": "initialized",
+  "_initialized_at": "2026-05-03",
+  "_initialized_by": "harness-issue-BRAND_DEFINE-001"
+}
