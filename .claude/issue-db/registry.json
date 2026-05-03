@@ -459,7 +459,7 @@
       "id": "REAL_DATA_INGEST-001",
       "type": "USER_STORY",
       "priority": "P2",
-      "status": "READY",
+      "status": "AWAITING_USER",
       "title": "실데이터 도입 — SGIS/카드사/통신사로 simula 대체 (페어별 r 분포 자연 분리)",
       "detail": "현재 simula_data*.json은 단일 트렌드 가정으로 r≈1로 몰려 매트릭스/트리 변별력 부족. .env에 SGIS_CONSUMER_KEY/SECRET 슬롯 이미 존재. data_raw/ → etl_real_data.py 파이프라인 연결.",
       "assign_to": "product-manager",
@@ -473,13 +473,21 @@
         "stdev(|r|) >= 0.15 across all 1,300 pairs",
         "r 분포가 4단계 색상에 모두 등장 (모두 짙은 파랑이 아님)",
         "verify_all 7/7 PASS 유지"
+      ],
+      "awaiting_since": "2026-05-03T14:52:51.668562",
+      "user_confirm": [
+        {
+          "category": "EXTERNAL",
+          "question": "REAL_DATA_INGEST-001 (실데이터 도입) 시작 직전 컨펌\n\n[T2 트리거 — EXTERNAL + DIRECTION]\n- EXTERNAL: SGIS_CONSUMER_KEY/SECRET 신규 발급 + API 호출 (.env 시크릿 변경)\n- DIRECTION: simula 합성 데이터 → 실데이터 라인으로 데이터 파이프라인 패러다임 전환\n\n[배경]\n- CORR_VARIANCE-001 분석 결과: 1,300페어 100% r≥0.9 (시뮬레이션 한계)\n- DECISION_TREE-001 진행 시 다중공선성 함정 회피를 위해 권고된 후속\n\n[작업 규모 추정]\n- SGIS 키 발급 + 동의 (수 시간, 사용자 작업)\n- etl_real_data.py 보강 — 데이터 매핑 (8h)\n- simula_data*.json → 새 스키마 검증 (4h)\n- verify_all 7/7 PASS 유지 + 매트릭스 r 분포 stdev≥0.15 검증 (4h)\n\n[합의 필요 사항]\n- SGIS 외 데이터 소스 (카드사/통신사) 사용 여부\n- 라이선스 / 비용 (SGIS 무료, 카드사·통신사는 유료/제휴 필요)\n- 본 이슈를 GRAPHRAG-001 / DECISION_TREE-001 보다 먼저 진행할지\n\n[선택지]\n1. PROCEED — SGIS만으로 진행 (무료, 빠름)\n2. EXPAND — SGIS + 카드사/통신사 제휴까지 (T2 BUDGET 추가 발생)\n3. SIMULA_FIRST — SIMULA_NOISE-001 (P3, 합성 데이터 노이즈 강화)을 먼저 (실데이터 도입 미뤄도 매트릭스/트리 변별력 회복)\n4. DEFER — 본 이슈 보류, GRAPHRAG-001 컨펌 답변에 집중",
+          "asked_at": "2026-05-03T14:52:51.668562"
+        }
       ]
     },
     {
       "id": "SIMULA_NOISE-001",
       "type": "REFACTOR",
       "priority": "P3",
-      "status": "READY",
+      "status": "AWAITING_USER",
       "title": "simula_generate.py — 지표별 독립 노이즈 채널 추가 (실데이터 도입 전 임시 보강)",
       "detail": "5개 지표(소상공/카페/유동/거래/지가)에 동기 곱셈 변형이 아닌 독립 노이즈 채널 도입. 시뮬레이션 모드에서도 r 분포 stdev >= 0.15 달성.",
       "assign_to": "agent-harness",
@@ -491,7 +499,55 @@
         "동별 r stdev >= 0.15 (1,300페어)",
         "기존 vibe_label 시나리오 유지",
         "verify_all 7/7 PASS 유지"
-      ]
+      ],
+      "awaiting_reason": "REAL_DATA_INGEST-001과 상호 배타적 — 대표님 답변 후 둘 중 하나만 진행"
+    },
+    {
+      "id": "ISS-017",
+      "title": "[Meta] ISS-009 이슈 체인 근본 원인 분석",
+      "type": "PATTERN_ANALYSIS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "meta-agent",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": null,
+      "depends_on": [],
+      "created_at": "2026-05-03T14:50:50.725953",
+      "payload": {
+        "parent_id": "ISS-009",
+        "chain_length": 3,
+        "files_changed": []
+      },
+      "result": {
+        "passed": true,
+        "verdict": "FALSE_POSITIVE",
+        "derivatives": 3
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:51:14.658011Z",
+      "owner": "meta-agent",
+      "completed_at": "2026-05-03T14:52:16.050703"
+    },
+    {
+      "id": "META_RULE_REFINE-001",
+      "type": "OBSERVATION",
+      "priority": "P3",
+      "status": "DEFERRED",
+      "title": "[글로벌] GH_Harness/components/hooks/meta-review.sh 핑퐁 룰 정밀화",
+      "detail": "본 프로젝트 ISS-017에서 GENERATE_CODE → 3종 정상 파생을 핑퐁으로 오탐. Counter 기반 동일 type 중복 검사로 변경 권고. 작업 위치는 본 프로젝트가 아닌 GH_Harness 레포.",
+      "assign_to": "out-of-project",
+      "created_at": "2026-05-03T05:52:15.945607Z",
+      "scope": "GLOBAL_REPO",
+      "files": [
+        "[external] GH_Harness/components/hooks/meta-review.sh"
+      ],
+      "acceptance": [
+        "type 분포 Counter로 동일 type ≥2 파생 시에만 PINGPONG 발화",
+        "다종 단일 파생은 high_fanout(별도 신호) 또는 silent",
+        "기존 진짜 핑퐁 케이스(lint→fix→lint 반복)는 여전히 감지"
+      ],
+      "defer_reason": "OUT_OF_PROJECT_SCOPE — 작업 위치는 GH_Harness 글로벌 레포. 본 프로젝트에서 변경 불가."
     }
   ],
   "hooks": {
@@ -527,6 +583,12 @@
         "issue_type": "SCORE",
         "plan_created": 0,
         "timestamp": "2026-05-03T14:43:36.384551"
+      },
+      {
+        "issue_id": "ISS-017",
+        "issue_type": "PATTERN_ANALYSIS",
+        "plan_created": 0,
+        "timestamp": "2026-05-03T14:52:16.050703"
       }
     ],
     "on_fail": [],
@@ -539,6 +601,13 @@
         "context": "ISS-010 lint/type clean",
         "frequency": 1,
         "discovered_at": "2026-05-03T14:40:54.242895"
+      },
+      {
+        "pattern": "generate_code_3_fork_normal",
+        "context": "GENERATE_CODE → LINT + TESTS + DOMAIN_ANALYZE (의도된 다종 파생)",
+        "frequency": 1,
+        "discovered_at": "2026-05-03T05:52:15.945607Z",
+        "note": "meta-review가 핑퐁으로 오탐했지만 정상 파이프라인 동작"
       }
     ],
     "failure_patterns": [],
@@ -654,25 +723,43 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 8,
+        "timestamp": "2026-05-03T14:50:50.726071",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [
+          "ISS-017"
+        ],
+        "stats_snapshot": {
+          "total": 17,
+          "done": 5,
+          "in_progress": 0,
+          "ready": 2,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
-    "total_issues": 16,
-    "completed": 13,
+    "total_issues": 18,
+    "completed": 15,
     "failed": 0,
-    "evolved": 7
+    "evolved": 8
   },
   "opus_budget_state": {
     "daily": {
       "date": "2026-05-03",
-      "cost_usd": 2.34,
-      "calls": 3
+      "cost_usd": 3.02,
+      "calls": 4
     },
     "monthly": {
       "month": "2026-05",
-      "cost_usd": 2.34,
-      "calls": 3
+      "cost_usd": 3.02,
+      "calls": 4
     },
     "demotion_active": false
   },
