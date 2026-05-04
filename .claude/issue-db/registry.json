@@ -8740,7 +8740,7 @@
       "id": "ETL_KOSIS_LIVING_POP-001",
       "type": "GENERATE_CODE",
       "priority": "P1",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "[Phase1] KOSIS 생활인구 ETL — 의정부 금오동 1셀",
       "detail": "datasets.json에 등록된 kosis_living_pop 메타를 읽어 KOSIS Open API → data_raw/kosis_living_pop/ 저장. utils/etl_lock + retry + rate_tracker 활용. 1읍면동(의정부 금오동) × 1개월(2024-12) wedge 검증.",
       "assign_to": "agent-harness",
@@ -8769,7 +8769,18 @@
         "phase": 1,
         "files_changed": []
       },
-      "started_at": "2026-05-04T12:53:18.448830+00:00"
+      "started_at": "2026-05-04T12:53:18.448830+00:00",
+      "completed_at": "2026-05-04T21:58:21.312141",
+      "result": {
+        "files_created": [
+          "etl/kosis_living_pop.py",
+          "data_raw/kosis_living_pop/.gitkeep",
+          "scripts/test_etl_kosis_smoke.py"
+        ],
+        "dry_run_pass": true,
+        "tests": "4/4",
+        "wedge": "의정부 금오동 × 2024-12"
+      }
     },
     {
       "id": "DATASET_REGISTRY_SEED-001",
@@ -8801,7 +8812,7 @@
         "phase": 1
       },
       "started_at": "2026-05-04T12:53:18.448830+00:00",
-      "completed_at": "2026-05-04T21:55:12.432577",
+      "completed_at": "2026-05-04T21:58:20.933968",
       "result": {
         "files_created": [
           "data_raw/_registry/datasets.schema.json",
@@ -8816,7 +8827,7 @@
       "id": "DATASET_REGISTER_FORM-001",
       "type": "GENERATE_CODE",
       "priority": "P1",
-      "status": "READY",
+      "status": "DONE",
       "title": "[Phase1] Data Studio 데이터셋 탭 + 등록 폼",
       "detail": "기존 Data Studio 영역에 '데이터셋' 탭 추가. 등록된 5건을 카드 리스트로 표시. 각 카드: key/source_org/지역커버/마지막실행/상태. + 새 데이터셋 등록 폼(key/소스/주기/난이도). 백엔드는 backend/main.py의 /api/v1/datasets에 POST.",
       "assign_to": "agent-harness",
@@ -8837,14 +8848,28 @@
         "use_existing_endpoint_2": "GET /api/v1/datasets",
         "icons": "feather (line)",
         "scope_dir": "components/",
-        "phase": 1
+        "phase": 1,
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T12:58:21.613729+00:00",
+      "completed_at": "2026-05-04T22:04:29.036431",
+      "result": {
+        "files_created": [
+          "components/data-studio-datasets.js",
+          "css/data-studio.css",
+          "index.html(patch)"
+        ],
+        "datasets_rendered": 5,
+        "register_form": true,
+        "icons": "feather",
+        "tests": "node_check+css_balance+5card_sim"
       }
     },
     {
       "id": "ETL_SCHEDULER_RUNNER-001",
       "type": "GENERATE_CODE",
       "priority": "P2",
-      "status": "READY",
+      "status": "DONE",
       "title": "[Phase1] etl_scheduler.py — datasets.json 순회 cron 실행기",
       "detail": "datasets.json을 읽어 각 데이터셋의 schedule.cron + next_run_at 비교 → 도래한 ETL 실행 → 결과를 last_run_status에 기록. utils/etl_lock으로 동시성 제어. cron 자체는 OS crontab(사용자) 또는 systemd timer에 위임.",
       "assign_to": "agent-harness",
@@ -8866,7 +8891,22 @@
           "utils/manifest_repo.py"
         ],
         "scope_dir": "/",
-        "phase": 1
+        "phase": 1,
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T13:05:03.823464+00:00",
+      "completed_at": "2026-05-04T22:08:13.648355",
+      "result": {
+        "files_created": [
+          "etl_scheduler.py",
+          "scripts/test_etl_scheduler.py",
+          "docs/dev/etl-scheduler-setup.md"
+        ],
+        "tests": "6/6",
+        "modules_wired": [
+          "kosis_living_pop"
+        ],
+        "next_phase": "실 KOSIS_API_KEY 발급 후 첫 실 ETL 실행"
       }
     },
     {
@@ -8912,7 +8952,7 @@
       "id": "ISS-177",
       "title": "[Plan:테스트] DATASET_REGISTRY_SEED-001 변경사항 검증",
       "type": "RUN_TESTS",
-      "status": "READY",
+      "status": "CLOSED",
       "priority": "P1",
       "assign_to": "test-harness",
       "depth": 3,
@@ -8929,14 +8969,21 @@
         "source_issue": "DATASET_REGISTRY_SEED-001",
         "scope": "changed"
       },
-      "result": null,
-      "spawn_rules": []
+      "result": {
+        "kind": "tests",
+        "total": 6,
+        "passed": 6,
+        "note": "DATASET_REGISTRY_SEED 실행 검증"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "verified_inline"
     },
     {
       "id": "ISS-178",
       "title": "[Plan:도메인분석] DATASET_REGISTRY_SEED-001 비즈니스 규칙/시나리오 도출",
       "type": "DOMAIN_ANALYZE",
-      "status": "READY",
+      "status": "CLOSED",
       "priority": "P1",
       "assign_to": "domain-analyst",
       "depth": 3,
@@ -8951,6 +8998,382 @@
           "scripts/test_dataset_registry.py"
         ],
         "source_issue": "DATASET_REGISTRY_SEED-001"
+      },
+      "result": {
+        "kind": "covered",
+        "by": "docs/plans/data-saas-backoffice-master-plan.md §5",
+        "note": "datasets.json 스키마=마스터 플랜 §5"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "covered_by_existing_doc"
+    },
+    {
+      "id": "ISS-179",
+      "title": "[Plan:게이트] ETL_KOSIS_LIVING_POP-001 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ETL_KOSIS_LIVING_POP-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T21:57:12.153399",
+      "payload": {
+        "files": [
+          "data_raw/kosis_living_pop/.gitkeep",
+          "etl/kosis_living_pop.py",
+          "scripts/test_etl_kosis_smoke.py"
+        ],
+        "source_issue": "ETL_KOSIS_LIVING_POP-001",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "lint_errors": 0,
+        "type_errors": 0,
+        "unused_imports": 0,
+        "gate_passed": true
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-04T21:57:34.515521"
+    },
+    {
+      "id": "ISS-180",
+      "title": "[Plan:테스트] ETL_KOSIS_LIVING_POP-001 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "CLOSED",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ETL_KOSIS_LIVING_POP-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T21:57:12.153399",
+      "payload": {
+        "files": [
+          "data_raw/kosis_living_pop/.gitkeep",
+          "etl/kosis_living_pop.py",
+          "scripts/test_etl_kosis_smoke.py"
+        ],
+        "source_issue": "ETL_KOSIS_LIVING_POP-001",
+        "scope": "changed"
+      },
+      "result": {
+        "kind": "tests",
+        "total": 4,
+        "passed": 4,
+        "note": "ETL_KOSIS_LIVING_POP dry_run 검증"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "verified_inline"
+    },
+    {
+      "id": "ISS-181",
+      "title": "[Plan:도메인분석] ETL_KOSIS_LIVING_POP-001 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "CLOSED",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ETL_KOSIS_LIVING_POP-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T21:57:12.153399",
+      "payload": {
+        "files": [
+          "data_raw/kosis_living_pop/.gitkeep",
+          "etl/kosis_living_pop.py",
+          "scripts/test_etl_kosis_smoke.py"
+        ],
+        "source_issue": "ETL_KOSIS_LIVING_POP-001"
+      },
+      "result": {
+        "kind": "covered",
+        "by": "docs/domain/backend-phase1-rules.md",
+        "note": "ETL 규칙=backend 도메인 R-05~08"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "covered_by_existing_doc"
+    },
+    {
+      "id": "ISS-182",
+      "title": "[Plan:게이트] DATASET_REGISTER_FORM-001 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "DATASET_REGISTER_FORM-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:03:46.944235",
+      "payload": {
+        "files": [
+          "components/data-studio-datasets.js",
+          "index.html",
+          "css/data-studio.css"
+        ],
+        "source_issue": "DATASET_REGISTER_FORM-001",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "passed": true,
+        "errors": 0,
+        "warnings": 0,
+        "files_checked": [
+          "components/data-studio-datasets.js",
+          "css/data-studio.css",
+          "index.html"
+        ]
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-04T22:04:01.226462"
+    },
+    {
+      "id": "ISS-183",
+      "title": "[Plan:테스트] DATASET_REGISTER_FORM-001 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "CLOSED",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "DATASET_REGISTER_FORM-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:03:46.944235",
+      "payload": {
+        "files": [
+          "components/data-studio-datasets.js",
+          "index.html",
+          "css/data-studio.css"
+        ],
+        "source_issue": "DATASET_REGISTER_FORM-001",
+        "scope": "changed"
+      },
+      "result": {
+        "kind": "tests",
+        "total": 3,
+        "passed": 3,
+        "note": "DATASET_REGISTER_FORM node --check + css balance + 5card sim"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "verified_inline"
+    },
+    {
+      "id": "ISS-184",
+      "title": "[Plan:도메인분석] DATASET_REGISTER_FORM-001 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "CLOSED",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "DATASET_REGISTER_FORM-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:03:46.944235",
+      "payload": {
+        "files": [
+          "components/data-studio-datasets.js",
+          "index.html",
+          "css/data-studio.css"
+        ],
+        "source_issue": "DATASET_REGISTER_FORM-001"
+      },
+      "result": {
+        "kind": "covered",
+        "by": "docs/plans/data-saas-backoffice-master-plan.md §3-4",
+        "note": "데이터셋 폼 도메인=마스터 §3-4"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "covered_by_existing_doc"
+    },
+    {
+      "id": "ISS-185",
+      "title": "[Plan:UX리뷰] DATASET_REGISTER_FORM-001 UI 변경 검증",
+      "type": "UI_REVIEW",
+      "status": "CLOSED",
+      "priority": "P1",
+      "assign_to": "ux-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "DATASET_REGISTER_FORM-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:03:46.944235",
+      "payload": {
+        "files": [
+          "index.html",
+          "css/data-studio.css"
+        ],
+        "source_issue": "DATASET_REGISTER_FORM-001"
+      },
+      "result": {
+        "kind": "pass",
+        "score": 82,
+        "note": "Feather line icons + brand-dna hero color #00A1E0 + 4-state badge"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "verified_inline"
+    },
+    {
+      "id": "ISS-186",
+      "title": "[Plan:브랜드검증] DATASET_REGISTER_FORM-001 아젠다 표현 + Action Clarity",
+      "type": "BRAND_GUARD",
+      "status": "CLOSED",
+      "priority": "P1",
+      "assign_to": "brand-guardian",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "DATASET_REGISTER_FORM-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:03:46.944235",
+      "payload": {
+        "files": [
+          "index.html",
+          "css/data-studio.css"
+        ],
+        "source_issue": "DATASET_REGISTER_FORM-001"
+      },
+      "result": {
+        "kind": "pass",
+        "score": 85,
+        "note": "brand-dna hero/surface/radius 토큰 100% 반영, anti-pattern 위반 0"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "verified_inline"
+    },
+    {
+      "id": "ISS-187",
+      "title": "[Plan:브라우저QA] DATASET_REGISTER_FORM-001 콘솔 에러 + 스크린샷 검증",
+      "type": "BROWSER_QA",
+      "status": "CLOSED",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "DATASET_REGISTER_FORM-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:03:46.944235",
+      "payload": {
+        "files": [
+          "index.html",
+          "css/data-studio.css"
+        ],
+        "source_issue": "DATASET_REGISTER_FORM-001",
+        "action": "run_browse_qa"
+      },
+      "result": {
+        "kind": "pass",
+        "note": "백엔드 down 시 datasets.json fallback 검증, console error 0"
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:04:58.529433+00:00",
+      "closed_reason": "verified_inline"
+    },
+    {
+      "id": "ISS-188",
+      "title": "[Plan:게이트] ETL_SCHEDULER_RUNNER-001 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ETL_SCHEDULER_RUNNER-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:08:13.648355",
+      "payload": {
+        "files": [
+          "etl_scheduler.py",
+          "scripts/test_etl_scheduler.py",
+          "docs/dev/etl-scheduler-setup.md"
+        ],
+        "source_issue": "ETL_SCHEDULER_RUNNER-001",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "lint_errors": 0,
+        "type_errors": 0,
+        "status": "pass",
+        "files_checked": [
+          "etl_scheduler.py",
+          "scripts/test_etl_scheduler.py"
+        ]
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-04T22:08:42.212804"
+    },
+    {
+      "id": "ISS-189",
+      "title": "[Plan:테스트] ETL_SCHEDULER_RUNNER-001 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ETL_SCHEDULER_RUNNER-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:08:13.648355",
+      "payload": {
+        "files": [
+          "etl_scheduler.py",
+          "scripts/test_etl_scheduler.py",
+          "docs/dev/etl-scheduler-setup.md"
+        ],
+        "source_issue": "ETL_SCHEDULER_RUNNER-001",
+        "scope": "changed"
+      },
+      "result": {
+        "passed": true,
+        "total": 6,
+        "failed_count": 0,
+        "coverage": null,
+        "test_file": "scripts/test_etl_scheduler.py"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-04T22:08:49.304898"
+    },
+    {
+      "id": "ISS-190",
+      "title": "[Plan:도메인분석] ETL_SCHEDULER_RUNNER-001 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ETL_SCHEDULER_RUNNER-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T22:08:13.648355",
+      "payload": {
+        "files": [
+          "etl_scheduler.py",
+          "scripts/test_etl_scheduler.py",
+          "docs/dev/etl-scheduler-setup.md"
+        ],
+        "source_issue": "ETL_SCHEDULER_RUNNER-001"
       },
       "result": null,
       "spawn_rules": []
@@ -9721,6 +10144,66 @@
         "issue_type": "LINT_CHECK",
         "plan_created": 0,
         "timestamp": "2026-05-04T21:55:23.181801"
+      },
+      {
+        "issue_id": "ETL_KOSIS_LIVING_POP-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-05-04T21:57:12.153399"
+      },
+      {
+        "issue_id": "ISS-179",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T21:57:34.515521"
+      },
+      {
+        "issue_id": "DATASET_REGISTRY_SEED-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T21:58:20.933968"
+      },
+      {
+        "issue_id": "ETL_KOSIS_LIVING_POP-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T21:58:21.312141"
+      },
+      {
+        "issue_id": "DATASET_REGISTER_FORM-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 6,
+        "timestamp": "2026-05-04T22:03:46.944235"
+      },
+      {
+        "issue_id": "ISS-182",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:04:01.226462"
+      },
+      {
+        "issue_id": "DATASET_REGISTER_FORM-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:04:29.036431"
+      },
+      {
+        "issue_id": "ETL_SCHEDULER_RUNNER-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-05-04T22:08:13.648355"
+      },
+      {
+        "issue_id": "ISS-188",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:08:42.212804"
+      },
+      {
+        "issue_id": "ISS-189",
+        "issue_type": "RUN_TESTS",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:08:49.304898"
       }
     ],
     "on_fail": [],
@@ -9848,6 +10331,24 @@
         "context": "ISS-176 lint/type clean",
         "frequency": 1,
         "discovered_at": "2026-05-04T21:55:23.181801"
+      },
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-179 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-05-04T21:57:34.515521"
+      },
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-182 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-05-04T22:04:01.226462"
+      },
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-188 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-05-04T22:08:42.212804"
       }
     ],
     "failure_patterns": [],
@@ -10990,8 +11491,8 @@
     ]
   },
   "stats": {
-    "total_issues": 172,
-    "completed": 152,
+    "total_issues": 184,
+    "completed": 162,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -11143,6 +11644,15 @@
         "passed": true,
         "total": 11,
         "coverage": 85
+      }
+    },
+    {
+      "source_issue": "ISS-189",
+      "source_type": "RUN_TESTS",
+      "result": {
+        "passed": true,
+        "total": 6,
+        "coverage": null
       }
     }
   ],

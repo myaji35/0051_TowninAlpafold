@@ -15,9 +15,10 @@
       "schedule": {
         "frequency": "monthly",
         "cron": "0 9 5 * *",
-        "next_run_at": null,
-        "last_run_status": "pending",
-        "consecutive_failures": 0
+        "next_run_at": "2026-06-03T13:08:46.150094+00:00",
+        "last_run_status": "success",
+        "consecutive_failures": 0,
+        "last_run_at": "2026-05-04T13:08:46.150094+00:00"
       },
       "scope": {
         "geo_unit": "읍면동",
@@ -55,8 +56,9 @@
         "frequency": "weekly",
         "cron": "0 9 * * 1",
         "next_run_at": null,
-        "last_run_status": "pending",
-        "consecutive_failures": 0
+        "last_run_status": "blocked",
+        "consecutive_failures": 0,
+        "last_run_at": "2026-05-04T13:08:46.285293+00:00"
       },
       "scope": {
         "geo_unit": "읍면동",
