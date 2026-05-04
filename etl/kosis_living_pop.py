@@ -19,7 +19,6 @@ import json
 import sys
 import urllib.request
 import urllib.parse
-from datetime import datetime, timezone
 from pathlib import Path
 
 # 프로젝트 루트를 sys.path에 추가
@@ -28,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils.etl_lock import acquire_lock, LockBusyError
 from utils.etl_retry import with_retry, RetryExhausted
 from utils.rate_tracker import RateTracker
-from utils.manifest_repo import JSONManifestRepo
+from utils.etl_base import transform_cell, save_cell, update_manifest
 
 # ---------------------------------------------------------------------------
 # 상수
@@ -90,23 +89,11 @@ def fetch_kosis(api_key: str, adm_cd: str, period: str) -> list:
 # ---------------------------------------------------------------------------
 
 def transform(raw: list, adm_cd: str, period: str, dry_run: bool = False) -> dict:
-    """KOSIS 응답 → 표준 레코드 형태."""
-    return {
-        "dataset_key": DATASET_KEY,
-        "adm_cd": adm_cd,
-        "adm_nm": "의정부시 금오동",
-        "period": period,
-        "fetched_at": datetime.now(timezone.utc).isoformat(),
-        "records": raw,
-        "marker": "synthetic" if dry_run else "real",
-    }
+    return transform_cell(DATASET_KEY, adm_cd, "의정부시 금오동", period, raw, dry_run)
 
 
 def save(rec: dict, adm_cd: str, period: str) -> Path:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    fp = OUTPUT_DIR / f"{adm_cd}_{period}.json"
-    fp.write_text(json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")
-    return fp
+    return save_cell(rec, OUTPUT_DIR, adm_cd, period)
 
 
 # ---------------------------------------------------------------------------
@@ -144,18 +131,9 @@ def run(dry_run: bool = False) -> dict:
                 "marker": rec["marker"],
             }
             # manifest 캐스케이드 — 성공 시만. 실패해도 ETL 결과에 영향 없음.
-            try:
-                repo = JSONManifestRepo()
-                repo.set_dataset_coverage(
-                    adm_cd=WEDGE_ADM_CD,
-                    dataset_key=DATASET_KEY,
-                    months_covered=1,
-                    months_total=5,  # target_datasets 5개 = 5 months_total 로 완료율 환산
-                    marker=rec["marker"],
-                    last_updated=rec["fetched_at"],
-                )
-            except Exception as manifest_err:
-                result["manifest_warning"] = str(manifest_err)
+            warn = update_manifest(WEDGE_ADM_CD, DATASET_KEY, 1, 5, rec["marker"], rec["fetched_at"])
+            if warn:
+                result["manifest_warning"] = warn
             return result
 
     except LockBusyError:

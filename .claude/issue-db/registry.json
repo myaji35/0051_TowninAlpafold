@@ -414,8 +414,8 @@
           "median_abs_r": 0.997,
           "stdev_abs_r": 0.0035,
           "min_abs_r": 0.963,
-          "max_abs_r": 1.0,
-          "pct_ge_0.9": 100.0
+          "max_abs_r": 1,
+          "pct_ge_0.9": 100
         },
         "implications": [
           "매트릭스 변별력 사실상 0 (모든 셀 동일 색)",
@@ -3168,7 +3168,7 @@
           "rent_ratio": -0.12,
           "visitors_total": 0.07
         },
-        "weights_sum_check": 1.0,
+        "weights_sum_check": 1,
         "data_sources": {
           "primary": "simula_data_real.json",
           "external_dummy_until_etl": "ETL_PHARMACY_DATA-001"
@@ -3433,7 +3433,7 @@
         "submenu_key": "pharmacy.close",
         "spec_doc": "docs/stories/pharmacy-close.md",
         "scope_dir": "viz/plugins/",
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "deterministic": true,
         "data_mode": "dummy_until_etl",
         "wave": 3,
@@ -3454,7 +3454,7 @@
           "components/pharmacy-close.js"
         ],
         "node_check": "ok",
-        "weight_sum": 1.0,
+        "weight_sum": 1,
         "demo_stores_evaluated": {
           "store-001": {
             "hazard": 62,
@@ -5453,7 +5453,7 @@
         "source_issue": "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001",
         "test_type": "unit_in_browser",
         "results": {
-          "weight_abs_sum": 1.0,
+          "weight_abs_sum": 1,
           "weight_check": "PASS",
           "6_demo_dongs_evaluated": true,
           "deterministic": true,
@@ -6599,7 +6599,7 @@
         "source_issue": "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001",
         "test_type": "unit_in_browser",
         "results": {
-          "weight_abs_sum": 1.0,
+          "weight_abs_sum": 1,
           "store-001": {
             "hazard": 62,
             "grade": "medium",
@@ -9416,7 +9416,7 @@
         "files_changed": []
       },
       "started_at": "2026-05-04T13:41:25.040872+00:00",
-      "completed_at": "2026-05-04T22:44:57.995487",
+      "completed_at": "2026-05-04T22:46:57.637894",
       "result": {
         "files": [
           "data_raw/_master/admin_hierarchy.json",
@@ -9460,13 +9460,13 @@
         "phase": 1.5
       },
       "started_at": "2026-05-04T13:41:25.040872+00:00",
-      "completed_at": "2026-05-04T22:43:54.968726",
+      "completed_at": "2026-05-04T22:46:57.820818",
       "result": {
         "files": [
           "etl/localdata_biz.py",
           "data_raw/localdata_biz/.gitkeep",
           "scripts/test_etl_localdata_smoke.py",
-          "etl_scheduler.py"
+          "etl_scheduler.py(patch)"
         ],
         "tests": "4/4",
         "scheduler_wired": true,
@@ -9477,7 +9477,7 @@
       "id": "DATASET_CARD_LAST_RUN_DISPLAY-001",
       "type": "GENERATE_CODE",
       "priority": "P2",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "[Phase1.5] 데이터셋 카드에 last_run_at + 다음 실행 표시",
       "detail": "renderCard에 schedule.last_run_at + next_run_at + consecutive_failures 표시 추가.",
       "assign_to": "agent-harness",
@@ -9495,13 +9495,21 @@
         "scope_dir": "components/",
         "phase": 1.5,
         "files_changed": []
+      },
+      "completed_at": "2026-05-04T22:46:28.936928",
+      "result": {
+        "files": [
+          "components/data-studio-datasets.js",
+          "css/data-studio.css"
+        ],
+        "changes": "renderCard last_run_at+next_run_at+consecutive_failures, ds-warn-badge CSS, _fmtDate helper, clock/chevrons-right icons"
       }
     },
     {
       "id": "BACKEND_DATASETS_SYNC-001",
       "type": "GENERATE_CODE",
       "priority": "P2",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "[Phase1.5] 백엔드 datasets API → datasets.json 동기화",
       "detail": "GET/POST /api/v1/datasets가 SQLite + datasets.json 모두 반영. 파일 우선.",
       "assign_to": "agent-harness",
@@ -9519,7 +9527,185 @@
         "scope_dir": "backend/",
         "phase": 1.5
       },
-      "started_at": "2026-05-04T13:41:25.040872+00:00"
+      "started_at": "2026-05-04T13:41:25.040872+00:00",
+      "completed_at": "2026-05-04T22:46:58.025566",
+      "result": {
+        "files": [
+          "backend/main.py",
+          "backend/db.py",
+          "scripts/test_backend_datasets_sync.py"
+        ],
+        "tests": "8/8",
+        "policy": "file_first"
+      }
+    },
+    {
+      "id": "ETL_NTS_BIZREG-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[Phase1.5] NTS 사업자등록 ETL — 3번째 ETL (추상화 압력 측정)",
+      "detail": "국세청 사업자등록 Open API → data_raw/nts_bizreg/. 3번째 ETL이므로 KOSIS+LocalData 패턴 비교 후 base ETL 추상화 결정.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:51:29.876560+00:00",
+      "files": [
+        "etl/nts_bizreg.py",
+        "data_raw/nts_bizreg/.gitkeep",
+        "scripts/test_etl_nts_smoke.py",
+        "etl_scheduler.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [],
+      "payload": {
+        "dataset_key": "nts_bizreg",
+        "wedge_dong": "의정부시 금오동",
+        "use_existing": [
+          "utils/etl_lock.py",
+          "utils/etl_retry.py",
+          "utils/rate_tracker.py",
+          "utils/manifest_repo.py"
+        ],
+        "credentials_env": "NTS_API_KEY",
+        "scope_dir": "etl/",
+        "phase": 1.5,
+        "abstraction_decision": "측정 후 보고",
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T13:51:35.276802+00:00",
+      "completed_at": "2026-05-04T22:58:01.084411",
+      "result": {
+        "files": [
+          "etl/nts_bizreg.py",
+          "data_raw/nts_bizreg/.gitkeep",
+          "scripts/test_etl_nts_smoke.py",
+          "etl_scheduler.py(patch)"
+        ],
+        "tests": "4/4",
+        "abstraction_pressure": "76% common — GO recommended"
+      }
+    },
+    {
+      "id": "ETL_BASE_ABSTRACTION_DECISION-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "DONE",
+      "title": "[Phase1.5] ETL 3종 추상화 결정 — base 추출 or 패턴 유지",
+      "detail": "KOSIS+LocalData+NTS 3개 ETL 비교 → 공통 코드 비율 측정 → 추상화 GO/NO 결정. GO면 etl/_base.py 추출, NO면 결정 근거 문서화.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:51:29.876560+00:00",
+      "files": [
+        "docs/dev/etl-abstraction-decision.md"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [
+        "ETL_NTS_BIZREG-001"
+      ],
+      "payload": {
+        "compare": [
+          "etl/kosis_living_pop.py",
+          "etl/localdata_biz.py",
+          "etl/nts_bizreg.py"
+        ],
+        "scope_dir": "etl/",
+        "phase": 1.5,
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T14:01:06.034Z",
+      "completed_at": "2026-05-04T23:03:52.918069",
+      "result": {
+        "files": [
+          "utils/etl_base.py",
+          "etl/kosis_living_pop.py",
+          "etl/localdata_biz.py",
+          "etl/nts_bizreg.py"
+        ],
+        "decision": "base_extracted",
+        "dry_run_all_pass": true,
+        "bug_fixed": "localdata_biz manifest positional args"
+      }
+    },
+    {
+      "id": "MANIFEST_GALLERY_CARDS_AVAILABILITY-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[Phase1.5] 갤러리 12카드 가용성 레이어 — manifest → 카드 활성/회색",
+      "detail": "manifest.gallery_cards_availability 자동 산출. 카드별 required_datasets 매핑. all required 동에 충족되면 active, 아니면 dim. 12카드 카탈로그 정의.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:51:29.876560+00:00",
+      "files": [
+        "data_raw/_master/gallery_cards_catalog.json",
+        "utils/gallery_availability.py",
+        "scripts/test_gallery_availability.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [],
+      "payload": {
+        "cards": 12,
+        "use_existing": [
+          "utils/manifest_repo.py",
+          "data_raw/_progress/manifest.json"
+        ],
+        "scope_dir": "utils/",
+        "phase": 1.5,
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T13:51:35.276802+00:00",
+      "completed_at": "2026-05-04T22:58:01.304571",
+      "result": {
+        "files": [
+          "data_raw/_master/gallery_cards_catalog.json",
+          "utils/gallery_availability.py",
+          "scripts/test_gallery_availability.py"
+        ],
+        "tests": "6/6",
+        "cards_catalog": 12,
+        "current_active": 0,
+        "current_dim": 11,
+        "current_demo_only": 1
+      }
+    },
+    {
+      "id": "GALLERY_CARD_DIM_UI-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[Phase1.5] 갤러리 카드 회색/활성 UI — gallery_availability 연동",
+      "detail": "app.js의 갤러리 12카드 렌더에 availability 데이터 연동. dim 카드는 opacity + lock 아이콘 + tooltip(부족 데이터 안내). active 카드는 기존 그대로.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:51:29.876560+00:00",
+      "files": [
+        "app.js",
+        "css/pharmacy.css"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [
+        "MANIFEST_GALLERY_CARDS_AVAILABILITY-001"
+      ],
+      "payload": {
+        "scope_dir": "/",
+        "phase": 1.5,
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T13:58:01.496471+00:00",
+      "completed_at": "2026-05-04T23:00:59.354011",
+      "result": {
+        "files": [
+          "app.js",
+          "css/pharmacy.css"
+        ],
+        "node_check": true,
+        "capture": "screenshots/phase15_gallery_dim.png",
+        "cards_visualized": {
+          "active": 0,
+          "dim": 11,
+          "demo": 1
+        }
+      }
     }
   ],
   "hooks": {
@@ -10365,6 +10551,72 @@
         "issue_type": "GENERATE_CODE",
         "plan_created": 0,
         "timestamp": "2026-05-04T22:44:57.995487"
+      },
+      {
+        "issue_id": "BACKEND_DATASETS_SYNC-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:45:59.158127"
+      },
+      {
+        "issue_id": "DATASET_CARD_LAST_RUN_DISPLAY-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:46:28.936928"
+      },
+      {
+        "issue_id": "MANIFEST_CASCADE_AFTER_ETL-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:46:57.637894"
+      },
+      {
+        "issue_id": "ETL_LOCALDATA_BIZ-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:46:57.820818"
+      },
+      {
+        "issue_id": "BACKEND_DATASETS_SYNC-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:46:58.025566"
+      },
+      {
+        "issue_id": "ETL_NTS_BIZREG-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:54:47.172001"
+      },
+      {
+        "issue_id": "MANIFEST_GALLERY_CARDS_AVAILABILITY-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:57:40.587383"
+      },
+      {
+        "issue_id": "ETL_NTS_BIZREG-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:58:01.084411"
+      },
+      {
+        "issue_id": "MANIFEST_GALLERY_CARDS_AVAILABILITY-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:58:01.304571"
+      },
+      {
+        "issue_id": "GALLERY_CARD_DIM_UI-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T23:00:59.354011"
+      },
+      {
+        "issue_id": "ETL_BASE_ABSTRACTION_DECISION-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T23:03:52.918069"
       }
     ],
     "on_fail": [],
@@ -11653,7 +11905,7 @@
   },
   "stats": {
     "total_issues": 184,
-    "completed": 165,
+    "completed": 176,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"

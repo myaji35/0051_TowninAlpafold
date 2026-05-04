@@ -24,44 +24,79 @@ const VIBE_LABEL = {
 };
 
 // ─────────────────────────────────────────────
+// GALLERY AVAILABILITY (Phase 1.5)
+// ─────────────────────────────────────────────
+window.GALLERY_AVAILABILITY = {};
+
+function loadGalleryAvailability() {
+  return fetch('data_raw/_progress/manifest.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(m => {
+      if (m && Array.isArray(m.gallery_cards_availability) && m.gallery_cards_availability.length > 0) {
+        m.gallery_cards_availability.forEach(c => {
+          window.GALLERY_AVAILABILITY[c.id] = { status: c.status, missing: c.missing_datasets || [] };
+        });
+      } else {
+        // 클라이언트 사이드 폴백: catalog 기준으로 dim 판정
+        return fetch('data_raw/_master/gallery_cards_catalog.json')
+          .then(r => r.ok ? r.json() : null)
+          .then(cat => {
+            if (!cat) return;
+            const available = new Set();  // 현재 보유 데이터셋 — 없으면 전부 dim
+            cat.cards.forEach(c => {
+              const missing = c.required_datasets.filter(ds => !available.has(ds));
+              const hasDemoData = !!c.demo_dong;
+              const status = missing.length === 0 ? 'active' : (hasDemoData ? 'demo_only' : 'dim');
+              window.GALLERY_AVAILABILITY[c.id] = { status, missing };
+            });
+          });
+      }
+    })
+    .catch(() => { /* 가용성 로드 실패 시 조용히 무시 (기존 동작 유지) */ });
+}
+
+// 페이지 로드 시 가용성 데이터 선제 로드 → renderGallery 시 반영
+loadGalleryAvailability();
+
+// ─────────────────────────────────────────────
 // 12개 주제 갤러리 프리셋
 // ─────────────────────────────────────────────
 const GALLERY = [
-  { id:'sungsu_rise',   icon:'🔥', cat:'트렌드', title:'성수동 부상 스토리',
+  { id:'sungsu_rise',   icon:'trending-up', cat:'트렌드', title:'성수동 부상 스토리',
     desc:'2024년 트렌드 시프트 시점에 어떻게 솟아올랐나',
     mode:'analyze', mapping:{height:'biz_new', color:'biz_cafe', mode:'columns'}, dongFocus:'성수1가1동' },
-  { id:'covid_shock',   icon:'📉', cat:'트렌드', title:'코로나 충격 분석',
+  { id:'covid_shock',   icon:'trending-down', cat:'트렌드', title:'코로나 충격 분석',
     desc:'2020-04 시점에 모든 단백질이 동시에 짧아지는 모습',
     mode:'analyze', mapping:{height:'tx_volume', color:'biz_closed', mode:'columns'}, jumpMonth:3 },
-  { id:'cafe_boom',     icon:'☕', cat:'트렌드', title:'카페 폭증 핫스팟',
+  { id:'cafe_boom',     icon:'coffee', cat:'트렌드', title:'카페 폭증 핫스팟',
     desc:'어디에서 카페가 가장 빠르게 늘어났나',
     mode:'analyze', mapping:{height:'biz_cafe', color:'visitors_20s', mode:'heat'} },
-  { id:'youth_inflow',  icon:'👥', cat:'트렌드', title:'20대 청년 유입',
+  { id:'youth_inflow',  icon:'users', cat:'트렌드', title:'20대 청년 유입',
     desc:'20대 유동인구가 집중되는 동',
     mode:'analyze', mapping:{height:'visitors_20s', color:'biz_cafe', mode:'columns'} },
-  { id:'closure_alert', icon:'⚠️', cat:'이상탐지', title:'폐업 급증 동',
+  { id:'closure_alert', icon:'alert-triangle', cat:'이상탐지', title:'폐업 급증 동',
     desc:'폐업률이 급격히 오르는 동 자동 탐지',
     mode:'explore', anomalyFilter:'biz_closed' },
-  { id:'plddt_drop',    icon:'🌫️', cat:'이상탐지', title:'pLDDT 하락 경고',
+  { id:'plddt_drop',    icon:'cloud-drizzle', cat:'이상탐지', title:'pLDDT 하락 경고',
     desc:'예측 신뢰도가 떨어지는 불안정 지역',
     mode:'explore', anomalyFilter:'plddt' },
-  { id:'visit_drop',    icon:'📊', cat:'이상탐지', title:'유동 이탈 동',
+  { id:'visit_drop',    icon:'bar-chart-2', cat:'이상탐지', title:'유동 이탈 동',
     desc:'유동인구 6개월 연속 하락한 동',
     mode:'explore', anomalyFilter:'visitor_decline' },
-  { id:'partner_recruit',icon:'🤝', cat:'파트너', title:'파트너 모집 후보지',
+  { id:'partner_recruit',icon:'user-check', cat:'파트너', title:'파트너 모집 후보지',
     desc:'카페 부족 vs 20대 유동 풍부한 동',
     mode:'analyze', mapping:{height:'visitors_20s', color:'biz_cafe', mode:'columns'} },
-  { id:'sales_alert',   icon:'💰', cat:'파트너', title:'소상공인 매출 위험',
+  { id:'sales_alert',   icon:'dollar-sign', cat:'파트너', title:'소상공인 매출 위험',
     desc:'거래량/유동 대비 폐업 늘어나는 동',
     mode:'analyze', mapping:{height:'biz_closed', color:'tx_volume', mode:'columns'} },
-  { id:'ad_target',     icon:'🎯', cat:'파트너', title:'광고 집중 후보',
+  { id:'ad_target',     icon:'target', cat:'파트너', title:'광고 집중 후보',
     desc:'잠재 수요 높고 경쟁 적은 동',
     mode:'analyze', mapping:{height:'visitors_total', color:'biz_count', mode:'hex'} },
-  { id:'twin_seoul',    icon:'🌐', cat:'비교', title:'성수 ↔ 부산 전포 Twin',
+  { id:'twin_seoul',    icon:'globe', cat:'비교', title:'성수 ↔ 부산 전포 Twin',
     desc:'서울 성수와 부산 전포의 구조적 유사도',
     mode:'analyze', mapping:{height:'visitors_total', color:'biz_cafe', mode:'columns'},
     twinA:'성수1가1동', twinB:'부산_전포1동' },
-  { id:'gangnam_compare',icon:'🏙️', cat:'비교', title:'강남 vs 성수 vs 마포',
+  { id:'gangnam_compare',icon:'layers', cat:'비교', title:'강남 vs 성수 vs 마포',
     desc:'세 지역의 27 레이어 프로필 비교',
     mode:'analyze', mapping:{height:'land_price', color:'biz_cafe', mode:'columns'} },
 ];
@@ -177,8 +212,13 @@ function init() {
   bindAnalyzeControls();
   bindExploreControls();
   bindCommandPalette();
-  // initial render
-  switchMode('gallery');
+  // initial render — deep-link 우선, 없으면 gallery
+  const _urlCtx = (window.UrlContext && window.UrlContext.parse) ? window.UrlContext.parse() : null;
+  if (_urlCtx && _urlCtx._hasContext && _urlCtx.mode) {
+    window.UrlContext.apply(_urlCtx);
+  } else {
+    switchMode('gallery');
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -229,12 +269,12 @@ function buildCmdItems() {
   const items = [];
   // 모드 전환
   [
-    { mode:'gallery', icon:'🎨', label:'주제 갤러리' },
-    { mode:'explore', icon:'🧬', label:'Explore — 자동 인사이트' },
-    { mode:'analyze', icon:'📊', label:'Analyze — 자유 매핑' },
-    { mode:'decide',  icon:'🎯', label:'Decide — KPI 대시보드' },
-    { mode:'datastudio', icon:'🗄️', label:'Data Studio — 데이터 구축' },
-    { mode:'workflow', icon:'🧩', label:'Workflow — 노드 그래프' },
+    { mode:'gallery',    icon:'grid',       label:'주제 갤러리' },
+    { mode:'explore',    icon:'compass',    label:'Explore — 자동 인사이트' },
+    { mode:'analyze',    icon:'bar-chart-2',label:'Analyze — 자유 매핑' },
+    { mode:'decide',     icon:'target',     label:'Decide — KPI 대시보드' },
+    { mode:'datastudio', icon:'database',   label:'Data Studio — 데이터 구축' },
+    { mode:'workflow',   icon:'git-merge',  label:'Workflow — 노드 그래프' },
   ].forEach(m => items.push({
     type:'mode', icon:m.icon, label:m.label, kbd:'MODE',
     action: () => switchMode(m.mode),
@@ -246,7 +286,7 @@ function buildCmdItems() {
   }));
   // 동 (130개 중 검색)
   DATA.dongs.forEach(d => items.push({
-    type:'dong', icon:'📍', label:d.name, hint:VIBE_LABEL[d.scenario]||d.scenario, kbd:'DONG',
+    type:'dong', icon:'map-pin', label:d.name, hint:VIBE_LABEL[d.scenario]||d.scenario, kbd:'DONG',
     action: () => {
       selectedDong = d;
       switchMode('explore');
@@ -287,7 +327,7 @@ function updateCmdResults() {
     }
     c.insertAdjacentHTML('beforeend', `
       <div class="cmd-item flex items-center gap-3 px-4 py-2.5 cursor-pointer ${i === cmdSelectedIdx ? 'cmd-active' : ''}" data-idx="${i}">
-        <span class="text-base">${it.icon}</span>
+        <span class="text-base">${typeof window.getIcon === 'function' ? window.getIcon(it.icon, {size:16}) : it.icon}</span>
         <div class="flex-1 min-w-0">
           <div class="text-[12px] text-white truncate">${it.label}</div>
           ${it.hint ? `<div class="text-[10px] text-gray-400">${it.hint}</div>` : ''}
@@ -327,7 +367,7 @@ function switchMode(mode) {
   document.querySelectorAll('[data-mode]').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === mode);
   });
-  ['gallery','explore','analyze','decide','datastudio','workflow'].forEach(m => {
+  ['gallery','explore','analyze','decide','datastudio','workflow','meongbun','pharmacy-develop','pharmacy-close'].forEach(m => {
     const el = document.getElementById(`view-${m}`);
     if (el) {
       el.classList.toggle('hidden', m !== mode);
@@ -335,7 +375,16 @@ function switchMode(mode) {
     }
   });
 
-  if (mode === 'analyze') {
+  // URL 동기화 (back 버튼 지원 — replaceState로 history 누적 방지)
+  if (window.UrlContext && window.UrlContext.build && typeof history !== 'undefined') {
+    try {
+      history.replaceState({ mode }, '', window.UrlContext.build({ mode }));
+    } catch (e) { /* 무시 */ }
+  }
+
+  if (mode === 'meongbun') {
+    renderMeongbunLayout(selectedDong ? selectedDong.name : null);
+  } else if (mode === 'analyze') {
     if (!analyzeMap) initAnalyzeMap();
     setTimeout(() => { if (analyzeMap) analyzeMap.resize(); updateAnalyze(); renderWheel(); }, 100);
   } else if (mode === 'explore') {
@@ -347,6 +396,16 @@ function switchMode(mode) {
     renderDataStudio();
   } else if (mode === 'workflow') {
     renderWorkflow();
+  } else if (mode === 'pharmacy-develop') {
+    const view = document.getElementById('view-pharmacy-develop');
+    if (view && typeof window.renderPharmacyDevelop === 'function') {
+      window.renderPharmacyDevelop(view);
+    }
+  } else if (mode === 'pharmacy-close') {
+    const view = document.getElementById('view-pharmacy-close');
+    if (view && typeof window.renderPharmacyClose === 'function') {
+      window.renderPharmacyClose(view);
+    }
   }
 }
 
@@ -362,7 +421,7 @@ function renderGallery() {
   const userWorkflows = loadUserWorkflows();
   Object.entries(userWorkflows).forEach(([id, wf]) => {
     allCards.push({
-      id, icon:'📁', cat:'📁 내 워크플로',
+      id, icon:'folder', cat:'내 워크플로',
       title: wf.title,
       desc: wf.explain || '마스터가 직접 만든 워크플로',
       mode: 'workflow',
@@ -374,11 +433,18 @@ function renderGallery() {
 
   allCards.forEach(g => {
     const isUser = g.isUser === true;
-    const previewType = isUser ? 'graph' : 'sparkline';
+    const avail = (!isUser && window.GALLERY_AVAILABILITY[g.id]) || { status: 'active', missing: [] };
+    const isDim  = avail.status === 'dim';
+    const isDemo = avail.status === 'demo_only';
+    const dimClass  = isDim  ? ' is-dim'  : (isDemo ? ' is-demo' : '');
+    const lockIcon  = isDim  ? `<span class="lock-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>` : '';
+    const demoBadge = isDemo ? `<span class="demo-badge">DEMO</span>` : '';
+    const missingTip = isDim && avail.missing.length > 0 ? `필요 데이터셋: ${avail.missing.join(', ')}` : (isDemo ? '실 데이터 미축적' : '');
     grid.insertAdjacentHTML('beforeend', `
-      <div class="theme-card rounded-lg p-4 relative" data-id="${g.id}">
+      <div class="theme-card rounded-lg p-4 relative gallery-card${dimClass}" data-id="${g.id}"${missingTip ? ` title="${missingTip}"` : ''}>
+        ${lockIcon}${demoBadge}
         <div class="flex items-start justify-between mb-3">
-          <div class="text-3xl">${g.icon}</div>
+          <div class="text-3xl">${typeof window.getIcon === 'function' ? window.getIcon(g.icon, {size:24}) : g.icon}</div>
           <div class="flex flex-col items-end gap-1">
             <span class="text-[9px] mono text-gray-400">${g.cat}</span>
             ${isUser ? `<span class="text-[8px] mono px-1.5 py-0.5 rounded" style="background:#FED76622;color:#FED766">USER</span>` : ''}
@@ -389,7 +455,7 @@ function renderGallery() {
         <svg class="mini-preview" width="100%" height="36" viewBox="0 0 200 36"></svg>
         <div class="mt-2 flex items-center justify-between text-[9px] mono">
           <span class="text-gray-500">
-            ${isUser ? `🧩 ${g.nodeCount} 노드 · ${g.edgeCount} 엣지` : (g.mode === 'explore' ? '🧬 Explore' : '📊 Analyze')}
+            ${isUser ? `${g.nodeCount} 노드 · ${g.edgeCount} 엣지` : (g.mode === 'explore' ? 'Explore' : 'Analyze')}
           </span>
           <span class="text-cyan-300">→ 열기</span>
         </div>
@@ -413,6 +479,11 @@ function renderGallery() {
           document.getElementById('wf-select').value = g.id;
           drawWorkflowGraph();
         }, 100);
+        return;
+      }
+      const av = window.GALLERY_AVAILABILITY[g.id] || { status: 'active', missing: [] };
+      if (av.status === 'dim' || av.status === 'demo_only') {
+        showGalleryBlockModal(g, av);
       } else {
         applyGallery(g);
       }
@@ -517,6 +588,40 @@ function drawMiniPreview(svg, g) {
         .attr('fill', 'none').attr('stroke', colors[i])
         .attr('stroke-width', 0.8).attr('stroke-dasharray', '2,2').attr('opacity', 0.85);
     }
+  });
+}
+
+function showGalleryBlockModal(g, av) {
+  const existing = document.getElementById('gallery-block-modal');
+  if (existing) existing.remove();
+  const isDemo = av.status === 'demo_only';
+  const body = isDemo
+    ? `이 카드는 데모 데이터로만 제공됩니다.<br>실 데이터가 축적되면 자동으로 활성화됩니다.`
+    : `이 카드를 활성화하려면 다음 데이터셋이 필요합니다:<br><b>${av.missing.join(', ')}</b>`;
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="gallery-block-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center">
+      <div style="background:#111827;border:1px solid #374151;border-radius:12px;padding:28px 32px;max-width:360px;width:90%;text-align:center">
+        <div style="font-size:24px;margin-bottom:12px">🔒</div>
+        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:10px">${g.title}</div>
+        <div style="font-size:12px;color:#9CA3AF;line-height:1.6;margin-bottom:20px">${body}</div>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button onclick="switchMode('datastudio');document.getElementById('gallery-block-modal').remove();"
+            style="background:#00529B;color:#fff;border:none;border-radius:6px;padding:8px 18px;font-size:12px;font-weight:600;cursor:pointer">
+            데이터셋 탭으로 이동
+          </button>
+          <button onclick="document.getElementById('gallery-block-modal').remove();"
+            style="background:#374151;color:#9CA3AF;border:none;border-radius:6px;padding:8px 14px;font-size:12px;cursor:pointer">
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  `);
+  // ESC 또는 배경 클릭으로 닫기
+  const modal = document.getElementById('gallery-block-modal');
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.addEventListener('keydown', function esc(e) {
+    if (e.key === 'Escape') { modal.remove(); document.removeEventListener('keydown', esc); }
   });
 }
 
@@ -1020,6 +1125,15 @@ function drawExploreTrace() {
         .attr('text-anchor', 'middle')
         .attr('fill', 'rgba(91,192,235,0.65)').attr('font-size', 7).attr('font-family', 'JetBrains Mono')
         .text('+12mo');
+      // 외부 라벨 표시 (SVG 본체 수정 없이)
+      const futureLabel = document.getElementById('explore-trace-future-label');
+      if (futureLabel && FORECASTS && FORECASTS.meta) {
+        const firstDs = Object.values(FORECASTS.forecasts || {})[0];
+        const startMonth = (firstDs && firstDs[Object.keys(firstDs)[0]] && firstDs[Object.keys(firstDs)[0]].horizon_ds)
+          ? firstDs[Object.keys(firstDs)[0]].horizon_ds[0] : '2026-01';
+        futureLabel.textContent = `▶ 예측 cone (p10~p90) — ${startMonth} 이후`;
+        futureLabel.style.display = 'block';
+      }
     }
   }
 }
@@ -1036,9 +1150,9 @@ function writeAutoComment() {
   const closureTrend = clN - cl0;
   const pl = d.plddt[currentMonth];
 
-  const verdict = growthV > 30 ? '🔥 급상승' : growthV > 10 ? '📈 상승세' : growthV < -10 ? '📉 하락' : '➡️ 안정';
-  const closureNote = closureTrend > 5 ? '· ⚠️ 폐업 증가 추세' : '';
-  const plNote = pl < 60 ? '· 🌫️ 신뢰도 낮음 (구조 불안정)' : '';
+  const verdict = growthV > 30 ? '급상승' : growthV > 10 ? '상승세' : growthV < -10 ? '하락' : '안정';
+  const closureNote = closureTrend > 5 ? '· 폐업 증가 추세' : '';
+  const plNote = pl < 60 ? '· 신뢰도 낮음 (구조 불안정)' : '';
 
   // [C-5] 인과 사슬 정보 추가 (CAUSAL 있을 때)
   let causalHtml = '';
@@ -1054,7 +1168,7 @@ function writeAutoComment() {
     if (grangers.length > 0) {
       causalHtml = `
         <div class="mt-2 pt-2 border-t border-white/10">
-          <div class="text-[9px] mono mb-1" style="color:#A78BFA">🧬 인과 사슬 (Granger)</div>
+          <div class="text-[9px] mono mb-1" style="color:#A78BFA">인과 사슬 (Granger)</div>
           ${grangers.map(g => `
             <div class="text-[10px] text-gray-300 leading-tight">
               <span style="color:#FED766">${labels[g.cause]||g.cause}</span>
@@ -1475,20 +1589,54 @@ function renderDecisionTree() {
       // 클래스명 길이로 폰트 사이즈 자동 조정 (rising_star 11자도 LEAF_W 56px에 들어가도록)
       const labelLen = String(n.class || '').length;
       const fz = labelLen >= 11 ? 7 : labelLen >= 8 ? 8 : 9;
-      s += `<rect x="${n.px - LEAF_W/2}" y="${n.py-10}" width="${LEAF_W}" height="20" rx="4" fill="${color}" stroke="${isOn?'#fff':'#2A3445'}" stroke-width="${isOn?2:0.5}"/>`;
-      s += `<text x="${n.px}" y="${n.py+3}" text-anchor="middle" fill="#0F1419" font-size="${fz}" font-family="ui-sans-serif" font-weight="700">${n.class}</text>`;
-      s += `<text x="${n.px}" y="${n.py+18}" text-anchor="middle" fill="#A4B0C0" font-size="8" font-family="ui-monospace">n=${n.samples}</text>`;
+      // [VIBE_DETAIL v2] 클릭 적중 보강 — 투명 hit-rect (히트박스 16px 확장) + pointer-events:all 명시
+      // [한글화] VIBE_LABEL[n.class] 사용 — 영어 키 → 한글 라벨
+      const labelKo = (typeof VIBE_LABEL !== 'undefined' && VIBE_LABEL[n.class]) || n.class;
+      s += `<g class="vibe-leaf-clickable" data-vibe="${n.class}" data-samples="${n.samples}" data-node-id="${n.id}" style="cursor:pointer;pointer-events:all;">`;
+      s += `<rect class="vibe-hit-area" x="${n.px - LEAF_W/2 - 6}" y="${n.py-16}" width="${LEAF_W + 12}" height="36" fill="transparent" pointer-events="all"/>`;
+      s += `<rect x="${n.px - LEAF_W/2}" y="${n.py-10}" width="${LEAF_W}" height="20" rx="4" fill="${color}" stroke="${isOn?'#fff':'#2A3445'}" stroke-width="${isOn?2:0.5}" pointer-events="all"></rect>`;
+      s += `<text x="${n.px}" y="${n.py+3}" text-anchor="middle" fill="#0F1419" font-size="${fz}" font-family="ui-sans-serif" font-weight="700" pointer-events="none">${labelKo}</text>`;
+      s += `<text x="${n.px}" y="${n.py+18}" text-anchor="middle" fill="#A4B0C0" font-size="8" font-family="ui-monospace" pointer-events="none">n=${n.samples}</text>`;
+      s += `</g>`;
     } else {
       const fill = isOn ? '#5BC0EB' : '#1A2330';
       const txtColor = isOn ? '#0F1419' : '#E8EEF6';
-      s += `<circle cx="${n.px}" cy="${n.py}" r="4.5" fill="${fill}" stroke="#2A3445" stroke-width="1"/>`;
-      // 분기 라벨 — 깊이가 짝수면 위, 홀수면 아래로 (인접 노드 라벨 충돌 방지)
       const fmtThr = (Math.abs(n.threshold) >= 100) ? n.threshold.toFixed(0) : n.threshold.toFixed(2);
       const labelDy = (n.depth % 2 === 0) ? -8 : 14;
-      s += `<text x="${n.px}" y="${n.py + labelDy}" text-anchor="middle" fill="${txtColor}" font-size="8" font-family="ui-monospace">${n.feature_name} ≤ ${fmtThr}</text>`;
+      // [VIBE_DETAIL v2] 분기 노드 — 투명 hit-circle (반경 16px) + 가시 circle 6px
+      // [한글화] feature_name은 이미 한글(지가_평균 등). FEATURE_HUMAN.ko로 underscore→space 정리
+      const fnameKo = (typeof FEATURE_HUMAN !== 'undefined' && FEATURE_HUMAN[n.feature_name] && FEATURE_HUMAN[n.feature_name].ko) || n.feature_name;
+      s += `<g class="vibe-branch-clickable" data-feature="${n.feature_name}" data-threshold="${fmtThr}" data-samples="${n.samples}" data-node-id="${n.id}" style="cursor:pointer;pointer-events:all;">`;
+      s += `<circle class="vibe-hit-area" cx="${n.px}" cy="${n.py}" r="14" fill="transparent" pointer-events="all"/>`;
+      s += `<circle cx="${n.px}" cy="${n.py}" r="6" fill="${fill}" stroke="#2A3445" stroke-width="1" pointer-events="all"></circle>`;
+      s += `<text x="${n.px}" y="${n.py + labelDy}" text-anchor="middle" fill="${txtColor}" font-size="8" font-family="ui-sans-serif" pointer-events="none">${fnameKo} ≤ ${fmtThr}</text>`;
+      s += `</g>`;
     }
   });
   svg.innerHTML = s;
+
+  // [VIBE_DETAIL] 노드 클릭 → 모달 expand
+  svg.querySelectorAll('.vibe-leaf-clickable').forEach(function(g) {
+    g.addEventListener('click', function() {
+      openVibeDetailModal({
+        kind: 'leaf',
+        vibe: g.dataset.vibe,
+        samples: parseInt(g.dataset.samples, 10),
+        node_id: g.dataset.nodeId
+      });
+    });
+  });
+  svg.querySelectorAll('.vibe-branch-clickable').forEach(function(g) {
+    g.addEventListener('click', function() {
+      openVibeDetailModal({
+        kind: 'branch',
+        feature: g.dataset.feature,
+        threshold: g.dataset.threshold,
+        samples: parseInt(g.dataset.samples, 10),
+        node_id: g.dataset.nodeId
+      });
+    });
+  });
 
   if (meta) {
     const acc = TREE_MODEL.meta.train_accuracy;
@@ -1697,7 +1845,7 @@ const STACK_NODES = [
     alt:'-' },
 
   // 산출물
-  { id:'st_alpha',  x:910, y:80,  label:'🎯 작동 알파',         month:'M6',   type:'output',  color:'#00A1E0',
+  { id:'st_alpha',  x:910, y:80,  label:'작동 알파',             month:'M6',   type:'output',  color:'#00A1E0',
     tier:1,
     desc:'학술/공공 시연 가능한 SaaS Alpha',
     cost:'-', diff:'-', license:'-', status:'목표',
@@ -1837,10 +1985,10 @@ function drawStackDag() {
 
   // 결정 변경/압축 마커
   const changes = [
-    { x: 120, y: 80,  text: '⚠️ Supabase에서 변경', color: '#FED766' },
-    { x: 560, y: 200, text: '⚠️ LlamaIndex 대체', color: '#5BC0EB' },
-    { x: 760, y: 200, text: '✅ 95점 유지', color: '#B5E853' },
-    { x: 910, y: 200, text: '✅ 매뉴얼 검증', color: '#B5E853' },
+    { x: 120, y: 80,  text: 'Supabase에서 변경', color: '#FED766' },
+    { x: 560, y: 200, text: 'LlamaIndex 대체', color: '#5BC0EB' },
+    { x: 760, y: 200, text: '95점 유지', color: '#B5E853' },
+    { x: 910, y: 200, text: '매뉴얼 검증', color: '#B5E853' },
   ];
   changes.forEach(c => {
     svg.append('text').attr('x', c.x).attr('y', c.y - 38)
@@ -1975,9 +2123,9 @@ function renderDsAi() {
     { id:'a_r2', x:610, y:240, label:'pLDDT (0~100)',       type:'reasoning',  color:'#FED766' },
     { id:'a_r3', x:610, y:360, label:'Causal Facts',        type:'reasoning',  color:'#FED766' },
     // Output
-    { id:'a_o1', x:790, y:140, label:'🔥 Insight Cards',    type:'output',     color:'#5BC0EB' },
-    { id:'a_o2', x:790, y:240, label:'⚠️ Anomaly Alerts',   type:'output',     color:'#5BC0EB' },
-    { id:'a_o3', x:790, y:340, label:'🧠 Auto Comment',     type:'output',     color:'#5BC0EB' },
+    { id:'a_o1', x:790, y:140, label:'Insight Cards',    type:'output',     color:'#5BC0EB' },
+    { id:'a_o2', x:790, y:240, label:'Anomaly Alerts',   type:'output',     color:'#5BC0EB' },
+    { id:'a_o3', x:790, y:340, label:'Auto Comment',     type:'output',     color:'#5BC0EB' },
   ];
   const edges = [
     ['a_in1','a_pre1'],['a_in2','a_pre1'],['a_in3','a_pre2'],['a_in4','a_pre3'],
@@ -2382,7 +2530,7 @@ function renderDsQuality() {
       <div class="insight-card ${cls} rounded-md p-3">
         <div class="text-[11px] font-semibold text-white mb-1">${a.title}</div>
         <div class="text-[10px] text-gray-400 leading-relaxed">${a.msg}</div>
-        <div class="text-[9px] mono text-cyan-300 mt-1.5">📚 ${a.layer}</div>
+        <div class="text-[9px] mono text-cyan-300 mt-1.5">${a.layer}</div>
       </div>
     `);
   });
@@ -2496,13 +2644,13 @@ function renderDsCatalog() {
 
 // 7개 노드 카테고리 (ComfyUI식)
 const NODE_CATS = {
-  source:   { label:'📥 Source',    color:'#00A1E0', desc:'데이터 소스' },
-  filter:   { label:'🔍 Filter',    color:'#B5E853', desc:'조건 필터' },
-  transform:{ label:'🔄 Transform', color:'#FED766', desc:'정규화·집계' },
-  model:    { label:'🤖 Model',     color:'#FF8FB1', desc:'TimesFM·GraphRAG' },
-  compare:  { label:'🆚 Compare',   color:'#A78BFA', desc:'Twin·Delta' },
-  visualize:{ label:'🎨 Visualize', color:'#5BC0EB', desc:'지도·차트·휠' },
-  export:   { label:'📤 Export',    color:'#9CA3AF', desc:'CSV·PDF·공유' },
+  source:   { label:'Source',    color:'#00A1E0', desc:'데이터 소스' },
+  filter:   { label:'Filter',    color:'#B5E853', desc:'조건 필터' },
+  transform:{ label:'Transform', color:'#FED766', desc:'정규화·집계' },
+  model:    { label:'Model',     color:'#FF8FB1', desc:'TimesFM·GraphRAG' },
+  compare:  { label:'Compare',   color:'#A78BFA', desc:'Twin·Delta' },
+  visualize:{ label:'Visualize', color:'#5BC0EB', desc:'지도·차트·휠' },
+  export:   { label:'Export',    color:'#9CA3AF', desc:'CSV·PDF·공유' },
 };
 
 // 노드 라이브러리 (palette)
@@ -2549,7 +2697,7 @@ const NODE_BY_ID = Object.fromEntries(NODE_LIBRARY.map(n => [n.id, n]));
 const WORKFLOWS = {
   sungsu_rise: {
     title:'성수동 부상 스토리',
-    cat:'🔥 트렌드',
+    cat:'트렌드',
     explain:'2020 코로나 바닥에서 2024 트렌드 시프트까지, 성수1가1동의 신규 창업 + 카페 수가 어떻게 솟아올랐는지를 시간 재생으로 추적합니다. 외부 충격(코로나/금리) 시점에 pLDDT가 어떻게 하락하는지도 함께 보입니다.',
     runtime:'0.42s', outputs:'3D 지도 · 호흡 차트',
     nodes: [
@@ -2571,7 +2719,7 @@ const WORKFLOWS = {
   },
   covid_shock: {
     title:'코로나 충격 분석',
-    cat:'🔥 트렌드',
+    cat:'트렌드',
     explain:'2020-04 코로나 시점에 모든 130개 단백질이 동시에 unfold되는 모습을 시각화. 회복기(2021-07)와 비교하여 어느 동이 빠르게 회복했고 어느 동이 영구 손상을 입었는지 파악합니다.',
     runtime:'0.38s', outputs:'A/B 지도 · Delta 표',
     nodes: [
@@ -2593,7 +2741,7 @@ const WORKFLOWS = {
   },
   cafe_boom: {
     title:'카페 폭증 핫스팟',
-    cat:'🔥 트렌드',
+    cat:'트렌드',
     explain:'어느 동에서 카페가 가장 빠르게 늘어났나. 히트맵으로 전국 트렌드를 한눈에 + 20대 유동인구와의 상관관계까지.',
     runtime:'0.31s', outputs:'히트맵 · 산점도',
     nodes: [
@@ -2613,7 +2761,7 @@ const WORKFLOWS = {
   },
   youth_inflow: {
     title:'20대 청년 유입',
-    cat:'🔥 트렌드',
+    cat:'트렌드',
     explain:'20대 유동인구가 집중되는 동 + 그 주변에 카페·서비스업이 어떻게 따라 자라는지의 사슬 분석.',
     runtime:'0.35s', outputs:'3D 지도 · 인과 트레이스',
     nodes: [
@@ -2632,7 +2780,7 @@ const WORKFLOWS = {
   },
   closure_alert: {
     title:'폐업 급증 동 (이상탐지)',
-    cat:'⚠️ 이상탐지',
+    cat:'이상탐지',
     explain:'TimesFM이 예측한 폐업률 신뢰구간을 실측이 벗어난 동을 자동으로 알람. 마스터가 즉시 대응할 위험 신호.',
     runtime:'0.52s', outputs:'알람 카드 리스트',
     nodes: [
@@ -2652,7 +2800,7 @@ const WORKFLOWS = {
   },
   plddt_drop: {
     title:'pLDDT 하락 경고',
-    cat:'⚠️ 이상탐지',
+    cat:'이상탐지',
     explain:'예측 신뢰도가 떨어지는 동 = 모델이 그 동의 미래를 잘 못 맞춤. 데이터 수집 강화 또는 모델 재학습이 필요한 영역.',
     runtime:'0.28s', outputs:'pLDDT 히트맵 + 알람',
     nodes: [
@@ -2671,7 +2819,7 @@ const WORKFLOWS = {
   },
   visit_drop: {
     title:'유동 이탈 동',
-    cat:'⚠️ 이상탐지',
+    cat:'이상탐지',
     explain:'유동인구가 6개월 연속 하락한 동을 자동으로 식별 + 같은 시기에 폐업률이 함께 오르는지 cross-check.',
     runtime:'0.33s', outputs:'알람 + 시계열',
     nodes: [
@@ -2690,7 +2838,7 @@ const WORKFLOWS = {
   },
   partner_recruit: {
     title:'파트너 모집 후보지',
-    cat:'🤝 파트너',
+    cat:'파트너',
     explain:'카페가 부족한데 20대 유동이 풍부한 동 = 파트너 모집 골든 스팟. Townin 마스터의 일상 의사결정 화면.',
     runtime:'0.29s', outputs:'순위표 · 지도',
     nodes: [
@@ -2710,7 +2858,7 @@ const WORKFLOWS = {
   },
   sales_alert: {
     title:'소상공인 매출 위험',
-    cat:'🤝 파트너',
+    cat:'파트너',
     explain:'거래량/유동 대비 폐업이 늘어나는 동을 식별. Townin 결제 데이터(tw_sales_monthly)와 결합해 매출 하락 파트너를 미리 발견.',
     runtime:'0.36s', outputs:'위험 리스트',
     nodes: [
@@ -2729,7 +2877,7 @@ const WORKFLOWS = {
   },
   ad_target: {
     title:'광고 집중 후보',
-    cat:'🤝 파트너',
+    cat:'파트너',
     explain:'잠재 수요(유동) 높고 경쟁(소상공인) 적은 동 = 광고 ROAS 높을 가능성. tw_ad_roas 시계열로 검증.',
     runtime:'0.30s', outputs:'육각 지도',
     nodes: [
@@ -2748,7 +2896,7 @@ const WORKFLOWS = {
   },
   twin_seoul: {
     title:'성수 ↔ 부산 전포 Twin',
-    cat:'🌐 비교',
+    cat:'비교',
     explain:'서울 성수1가1동과 부산 전포1동의 27개 레이어 구조를 겹쳐서 코사인 유사도 산출. 인접 영역 확장 전략의 근거.',
     runtime:'0.24s', outputs:'Profile Wheel · Twin Score',
     nodes: [
@@ -2768,7 +2916,7 @@ const WORKFLOWS = {
   },
   gangnam_compare: {
     title:'강남 vs 성수 vs 마포',
-    cat:'🌐 비교',
+    cat:'비교',
     explain:'세 핫플레이스의 27 레이어 프로필을 동시에 겹쳐서 "프리미엄(강남) / 트렌드(성수) / 청년(마포)"의 구조 차이 시각화.',
     runtime:'0.27s', outputs:'3-way Wheel · 산점도',
     nodes: [
@@ -2854,11 +3002,11 @@ function refreshWfSelect() {
   sel.innerHTML = '';
   // built-in
   const builtinGroup = document.createElement('optgroup');
-  builtinGroup.label = '🎨 빌트인 (12)';
+  builtinGroup.label = '빌트인 (12)';
   GALLERY.forEach(g => {
     if (WORKFLOWS[g.id]) {
       const opt = document.createElement('option');
-      opt.value = g.id; opt.textContent = `${g.icon} ${g.title}`;
+      opt.value = g.id; opt.textContent = g.title;
       builtinGroup.appendChild(opt);
     }
   });
@@ -2868,10 +3016,10 @@ function refreshWfSelect() {
   const userIds = Object.keys(user);
   if (userIds.length > 0) {
     const userGroup = document.createElement('optgroup');
-    userGroup.label = '📁 내 워크플로';
+    userGroup.label = '내 워크플로';
     userIds.forEach(id => {
       const opt = document.createElement('option');
-      opt.value = id; opt.textContent = `📁 ${user[id].title}`;
+      opt.value = id; opt.textContent = user[id].title;
       userGroup.appendChild(opt);
     });
     sel.appendChild(userGroup);
@@ -2902,8 +3050,8 @@ function refreshUserWorkflowList() {
     const div = document.createElement('div');
     div.className = 'flex items-center justify-between text-[10px] mono group';
     div.innerHTML = `
-      <span class="cursor-pointer hover:text-cyan-300 truncate flex-1" data-id="${id}">📁 ${wf.title}</span>
-      <button class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 px-1" data-del="${id}">✕</button>
+      <span class="cursor-pointer hover:text-cyan-300 truncate flex-1" data-id="${id}">${wf.title}</span>
+      <button class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 px-1" data-del="${id}">×</button>
     `;
     div.querySelector('[data-id]').onclick = () => {
       activeWorkflowId = id;
@@ -2961,7 +3109,7 @@ function createNewWorkflow() {
   const title = prompt('새 워크플로 제목:', '새 워크플로');
   if (!title) return;
   WORKFLOWS[id] = {
-    title, cat:'📁 내 워크플로',
+    title, cat:'내 워크플로',
     explain:'마스터가 직접 만든 워크플로',
     runtime:'-', outputs:'-',
     nodes: [],
@@ -2997,7 +3145,7 @@ function saveCurrentWorkflow() {
   refreshUserWorkflowList();
   renderGallery();  // 갤러리 카드 자동 갱신
   // 잠깐 토스트
-  showWfToast('💾 저장됨');
+  showWfToast('저장됨');
 }
 
 function showWfToast(msg) {
@@ -3141,7 +3289,7 @@ function deleteNode(nodeId) {
   wfDirty = true;
   updateSaveBtnVisibility();
   drawWorkflowGraph();
-  showWfToast('🗑 삭제됨');
+  showWfToast('삭제됨');
 }
 
 function bindWfContextMenu() {
@@ -3174,7 +3322,7 @@ function duplicateNode(nodeId) {
     id: newId, x: orig.x + 30, y: orig.y + 30,
   });
   wfDirty = true; updateSaveBtnVisibility(); drawWorkflowGraph();
-  showWfToast('📋 복제됨');
+  showWfToast('복제됨');
 }
 
 function renameNode(nodeId) {
@@ -3502,7 +3650,7 @@ function addEdge(fromId, toId) {
   }
   WORKFLOWS[activeWorkflowId].edges.push([fromId, toId]);
   wfDirty = true; updateSaveBtnVisibility(); drawWorkflowGraph();
-  showWfToast('🔗 연결됨');
+  showWfToast('연결됨');
 }
 
 function showWfContextMenu(event, nodeId) {
@@ -3529,7 +3677,7 @@ function editNodeParameters(node, lib) {
     }
     node.params = parsed;
     wfDirty = true; updateSaveBtnVisibility(); drawWorkflowGraph();
-    showWfToast('⚙ 파라미터 갱신');
+    showWfToast('파라미터 갱신');
   } catch (e) {
     alert('JSON 파싱 실패: ' + e.message);
   }
@@ -3752,11 +3900,11 @@ function drawCausalGraph() {
   // 레이어별 노드 위치 (ETL DAG 스타일 5단계 컬럼)
   // visitors → land/biz → cafe → tx (가로 흐름)
   const NODE_LAYOUT = {
-    visitors_total: { x: 160, y: 240, color: '#5BC0EB', icon: '👥' },
-    land_price:     { x: 360, y: 130, color: '#00A1E0', icon: '💰' },
-    biz_count:      { x: 360, y: 350, color: '#B5E853', icon: '🏪' },
-    biz_cafe:       { x: 580, y: 240, color: '#FF8FB1', icon: '☕' },
-    tx_volume:      { x: 780, y: 240, color: '#FED766', icon: '📈' },
+    visitors_total: { x: 160, y: 240, color: '#5BC0EB', icon: 'users' },
+    land_price:     { x: 360, y: 130, color: '#00A1E0', icon: 'dollar-sign' },
+    biz_count:      { x: 360, y: 350, color: '#B5E853', icon: 'layers' },
+    biz_cafe:       { x: 580, y: 240, color: '#FF8FB1', icon: 'coffee' },
+    tx_volume:      { x: 780, y: 240, color: '#FED766', icon: 'trending-up' },
   };
 
   const svg = d3.select('#causal-canvas');
@@ -3852,9 +4000,19 @@ function drawCausalGraph() {
     const g = svg.append('g').attr('transform', `translate(${n.x},${n.y})`).attr('data-causal-node', lyr);
     // 둥근 외곽
     g.append('circle').attr('r', 50).attr('fill', `${n.color}1a`).attr('stroke', n.color).attr('stroke-width', 2);
-    // 아이콘
-    g.append('text').attr('text-anchor', 'middle').attr('alignment-baseline', 'middle')
-      .attr('y', -10).attr('font-size', 22).text(n.icon);
+    // 아이콘 (Feather SVG path)
+    if (typeof window.getIcon === 'function') {
+      const iconGroup = g.append('g').attr('transform', 'translate(-10,-22)');
+      const iconHtml = window.getIcon(n.icon, {size:20, stroke:1.5});
+      const iconTemp = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      iconTemp.innerHTML = iconHtml;
+      const svgEl = iconTemp.querySelector('svg');
+      if (svgEl) {
+        const pathEls = svgEl.querySelectorAll('*');
+        pathEls.forEach(p => iconGroup.node().appendChild(p));
+        iconGroup.selectAll('*').attr('stroke', n.color);
+      }
+    }
     // 레이블
     g.append('text').attr('text-anchor', 'middle').attr('alignment-baseline', 'middle')
       .attr('y', 10).attr('fill', '#E8EDF3').attr('font-size', 11)
@@ -4084,3 +4242,1193 @@ function animateCausalFlow() {
     }, i * 120);
   });
 }
+
+// ─────────────────────────────────────────────
+// MEONGBUN CHAIN (명분 사슬) — 골격 + 네비
+// ─────────────────────────────────────────────
+
+const MEONGBUN_SECTIONS = [
+  { n: 1, title: '권고 (Recommendation)',          issue: 'UI_DECISION_ONEPAGER-001' },
+  { n: 2, title: '사실 (Fact Triple)',              issue: 'UI_FACT_TRIPLE-001' },
+  { n: 3, title: '해석 (Interpretation)',           issue: 'UI_INTERPRETATION_SECTION-001' },
+  { n: 4, title: '비교 (Benchmark)',                issue: 'UI_BENCHMARK_KM_CURVE-001' },
+  { n: 5, title: '시나리오 (Scenarios)',            issue: 'UI_SCENARIOS_3OPTION-001' },
+  { n: 6, title: '권고 추적 (Recommendation Trace)', issue: 'UI_RECOMMENDATION_TRACE-001' },
+  { n: 7, title: '한계 (Limitation)',               issue: 'UI_LIMITATION_FALSIFY-001' },
+];
+
+function renderMeongbunLayout(dongName) {
+  const label = document.getElementById('meongbun-dong-label');
+  if (label) label.textContent = dongName || '동 선택 대기 중';
+
+  // 각 섹션의 placeholder 텍스트를 동 이름으로 업데이트
+  MEONGBUN_SECTIONS.forEach(sec => {
+    const el = document.getElementById(`meongbun-sec-${sec.n}`);
+    if (!el) return;
+    const ph = el.querySelector('.meongbun-placeholder');
+    if (ph) {
+      ph.textContent = `준비 중 — 자식 이슈 ${sec.issue}에서 채워집니다`;
+    }
+  });
+
+  // 위젯 어댑터 — 섹션 슬롯에 마운트 (자식 이슈가 실제 차트로 교체)
+  if (dongName) {
+    renderDecisionOnePager(dongName);
+    renderFactSection(dongName);
+    renderInterpretation(dongName);
+    mountWidgetCafeTimeseries('#meongbun-sec-2 .meongbun-widget-slot', dongName);
+    mountWidgetTopCausal('#meongbun-sec-4 .meongbun-widget-slot', dongName);
+    mountWidgetVibeTree('#meongbun-sec-6 .meongbun-widget-slot-tree', dongName);
+    mountWidgetFeatureImportance('#meongbun-sec-6 .meongbun-widget-slot-shap', dongName);
+  }
+
+  // 점프 네비 active 상태 초기화
+  updateMeongbunJumpNav();
+}
+
+function updateMeongbunJumpNav() {
+  // IntersectionObserver로 현재 보이는 섹션 추적
+  if (window._meongbunObserver) window._meongbunObserver.disconnect();
+
+  const navLinks = document.querySelectorAll('.meongbun-jumpnav a');
+  const sections = document.querySelectorAll('section[data-section]');
+
+  if (!sections.length || !navLinks.length) return;
+
+  window._meongbunObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const n = entry.target.dataset.section;
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#meongbun-sec-${n}`));
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => window._meongbunObserver.observe(s));
+}
+
+function handleMeongbunPdfExport() {
+  // placeholder — 자식 이슈 완성 후 구현
+  console.log('[meongbun] PDF 출력 핸들러 — 자식 이슈 완성 후 구현 예정');
+}
+
+// ─────────────────────────────────────────────
+// MEONGBUN WIDGET ADAPTERS — thin wrappers only
+// 기존 위젯 함수 본체 수정 없이 섹션 슬롯에 마운트
+// 자식 이슈(UI_FACT_TRIPLE-001 등)가 widget-body를 실제 차트로 교체
+// ─────────────────────────────────────────────
+
+function mountWidgetCafeTimeseries(targetSel, dongName) {
+  // ❷ 사실 섹션 — 시계열 5색 차트 (카페수 추이로 라벨링)
+  const slot = document.querySelector(targetSel);
+  if (!slot) return;
+  slot.innerHTML = '<div class="widget-card"><div class="widget-title">카페수 추이 — 5종 평균 시계열</div><div id="widget-cafe-ts-chart" class="widget-body"></div></div>';
+  const body = document.getElementById('widget-cafe-ts-chart');
+  if (body && typeof DATA !== 'undefined' && DATA && dongName) {
+    body.textContent = `(${dongName}) 시계열 마운트 — 자식 이슈 UI_FACT_TRIPLE-001에서 차트 연결 예정`;
+  }
+}
+
+function mountWidgetTopCausal(targetSel, dongName) {
+  // ❹ 비교 섹션 — Top 인과 5개를 "유사동 매칭 근거"로 재라벨
+  const slot = document.querySelector(targetSel);
+  if (!slot) return;
+  slot.innerHTML = '<div class="widget-card"><div class="widget-title">유사동 매칭 근거 (Top Causal Drivers)</div><div id="widget-top-causal" class="widget-body"></div></div>';
+  const body = document.getElementById('widget-top-causal');
+  if (body && typeof DATA !== 'undefined' && DATA && dongName) {
+    body.textContent = `(${dongName}) Top 인과 마운트 — 자식 이슈 UI_BENCHMARK_KM_CURVE-001에서 채움`;
+  }
+}
+
+function mountWidgetVibeTree(targetSel, dongName) {
+  // ❻ 권고 추적 섹션 — Vibe 분류 트리 (왜 이 분류 → 이 권고)
+  const slot = document.querySelector(targetSel);
+  if (!slot) return;
+  slot.innerHTML = '<div class="widget-card"><div class="widget-title">Vibe 분류 트리 — 왜 이 분류 → 이 권고</div><div id="widget-vibe-tree" class="widget-body"></div></div>';
+  const body = document.getElementById('widget-vibe-tree');
+  if (body && typeof DATA !== 'undefined' && DATA && dongName) {
+    body.textContent = `(${dongName}) Vibe 트리 — 자식 이슈 UI_RECOMMENDATION_TRACE-001에서 채움`;
+  }
+}
+
+function mountWidgetFeatureImportance(targetSel, dongName) {
+  // ❻ 권고 추적 섹션 — Feature Importance SHAP 확장
+  const slot = document.querySelector(targetSel);
+  if (!slot) return;
+  slot.innerHTML = '<div class="widget-card"><div class="widget-title">Feature Importance — SHAP 확장</div><div id="widget-feat-importance" class="widget-body"></div></div>';
+  const body = document.getElementById('widget-feat-importance');
+  if (body && typeof DATA !== 'undefined' && DATA && dongName) {
+    body.textContent = `(${dongName}) Feature Importance — 자식 이슈 UI_RECOMMENDATION_TRACE-001에서 채움`;
+  }
+}
+
+// ─────────────────────────────────────────────
+// SECTION ❶: Decision One-Pager (UI_DECISION_ONEPAGER-001)
+// ─────────────────────────────────────────────
+
+function getDecisionOnePagerData(dongName) {
+  const fallback = {
+    recommendation: '데이터 부족 — 동을 선택해 주세요',
+    confidence: 0,
+    reasons: [],
+    caveat: ''
+  };
+  if (!dongName) return fallback;
+  const samples = {
+    '의정부시 금오동': {
+      recommendation: '신중한 진입 — 6개월 관찰 후 재평가 권장',
+      confidence: 3,
+      reasons: [
+        { text: '인근 카페 폐업률 12개월 +18% 상승', source: '소상공인시장진흥공단', date: '2026-03' },
+        { text: '20대 유동인구 YoY -7% 감소 추세', source: 'KOSIS 생활인구', date: '2026-04' },
+        { text: '동일 분류 동(낙양동·민락동) 평균 생존율 64% (12M)', source: 'KM 추정 — 본 시스템', date: '2026-05' }
+      ],
+      caveat: '권고는 통계 패턴이며 개별 점포의 입지/임대 조건은 별도 평가 필요'
+    },
+    '성수1가1동': {
+      recommendation: '적극 진입 — 카페 신규 창업 적합',
+      confidence: 5,
+      reasons: [
+        { text: '카페 신규 진입 12개월 +24% (전국 상위 5%)', source: '국세청 사업자 등록 통계', date: '2026-04' },
+        { text: '20대 유동인구 YoY +15% (활성 상권)', source: 'KOSIS 생활인구', date: '2026-04' },
+        { text: '인근 5개 동 평균 생존율 81% (12M)', source: 'KM 추정 — 본 시스템', date: '2026-05' }
+      ],
+      caveat: '높은 임대료 상승률(+22% YoY) — 마진 압박 가능성'
+    }
+  };
+  return samples[dongName] || {
+    recommendation: `${dongName} — 상세 권고 데이터 준비 중`,
+    confidence: 2,
+    reasons: [
+      { text: '시연 데이터 미정의 — 데모 동 선택을 권장합니다', source: '시스템 안내', date: '2026-05' }
+    ],
+    caveat: '데모 동(의정부시 금오동 / 성수1가1동) 외에는 1차 시연 데이터 미적용'
+  };
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+// ─────────────────────────────────────────────
+// SECTION ❷: Fact Triple (UI_FACT_TRIPLE-001)
+// ─────────────────────────────────────────────
+
+function getFactTripleData(dongName) {
+  const samples = {
+    '의정부시 금오동': {
+      cafe: {
+        title: '카페 수 추이',
+        latest_value: 18,
+        unit: '개',
+        delta_yoy: -3,
+        marker: 'real',
+        source: '국세청 사업자 등록 통계',
+        url: 'https://kosis.kr',
+        fetched_at: '2026-03-15',
+        confidence: 0.92,
+        future_label: '2026-06 이후 = 추정 (Prophet)'
+      },
+      population: {
+        title: '인구 구조 (20대 비중)',
+        latest_value: 11.4,
+        unit: '%',
+        delta_yoy: -0.8,
+        marker: 'real',
+        source: 'KOSIS 생활인구',
+        url: 'https://kosis.kr',
+        fetched_at: '2026-04-30',
+        confidence: 0.95,
+        future_label: '실데이터 (분기 갱신)'
+      },
+      land_price: {
+        title: '지가 추이 (원/㎡)',
+        latest_value: 4280000,
+        unit: '원/㎡',
+        delta_yoy: 6.2,
+        marker: 'estimate',
+        source: '국토부 공시지가 + 본 시스템 보정',
+        url: 'https://www.realtyprice.kr',
+        fetched_at: '2026-05-01',
+        confidence: 0.78,
+        future_label: '월 단위 추정'
+      }
+    },
+    '성수1가1동': {
+      cafe: {
+        title: '카페 수 추이',
+        latest_value: 124,
+        unit: '개',
+        delta_yoy: 24,
+        marker: 'real',
+        source: '국세청 사업자 등록 통계',
+        url: 'https://kosis.kr',
+        fetched_at: '2026-04-15',
+        confidence: 0.94,
+        future_label: '2026-06 이후 = 추정 (Prophet)'
+      },
+      population: {
+        title: '인구 구조 (20대 비중)',
+        latest_value: 18.7,
+        unit: '%',
+        delta_yoy: 1.5,
+        marker: 'real',
+        source: 'KOSIS 생활인구',
+        url: 'https://kosis.kr',
+        fetched_at: '2026-04-30',
+        confidence: 0.95,
+        future_label: '실데이터 (분기 갱신)'
+      },
+      land_price: {
+        title: '지가 추이 (원/㎡)',
+        latest_value: 18400000,
+        unit: '원/㎡',
+        delta_yoy: 22.0,
+        marker: 'real',
+        source: '국토부 공시지가',
+        url: 'https://www.realtyprice.kr',
+        fetched_at: '2026-05-01',
+        confidence: 0.91,
+        future_label: '실데이터 (월 갱신)'
+      }
+    }
+  };
+  return samples[dongName] || null;
+}
+
+const FACT_MARKER = {
+  real:     { glyph: '●', label: '실데이터', cls: 'fact-marker-real' },
+  synth:    { glyph: '○', label: '합성',    cls: 'fact-marker-synth' },
+  estimate: { glyph: '◐', label: '추정',    cls: 'fact-marker-estimate' }
+};
+
+function renderFactSection(dongName) {
+  const sec = document.getElementById('meongbun-sec-2');
+  if (!sec) return;
+  const ph = sec.querySelector('.meongbun-placeholder');
+  if (ph) ph.style.display = 'none';
+
+  // 기존 fact-triple 카드 제거 (idempotent)
+  const old = sec.querySelector('.fact-triple-grid');
+  if (old) old.remove();
+
+  const data = getFactTripleData(dongName);
+  if (!data) {
+    const empty = document.createElement('div');
+    empty.className = 'fact-triple-grid fact-triple-empty';
+    empty.textContent = `${dongName || '동'} — 시연 데이터 미정의. 데모 동(의정부시 금오동 / 성수1가1동)을 선택하세요.`;
+    sec.appendChild(empty);
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'fact-triple-grid';
+  ['cafe', 'population', 'land_price'].forEach(key => {
+    const f = data[key];
+    const m = FACT_MARKER[f.marker] || FACT_MARKER.estimate;
+    const deltaSign = f.delta_yoy >= 0 ? '+' : '';
+    const deltaCls = f.delta_yoy >= 0 ? 'fact-delta-up' : 'fact-delta-down';
+    const valueStr = (typeof f.latest_value === 'number' && f.latest_value >= 10000)
+      ? f.latest_value.toLocaleString()
+      : f.latest_value;
+    const tooltip = `출처: ${f.source}\n${f.url}\n수집: ${f.fetched_at}\n신뢰도: ${(f.confidence * 100).toFixed(0)}%`;
+
+    const card = document.createElement('div');
+    card.className = 'fact-card';
+    card.setAttribute('title', tooltip);
+    card.innerHTML = `
+      <div class="fact-header">
+        <span class="fact-marker ${m.cls}" title="${m.label}">${m.glyph}</span>
+        <span class="fact-title">${escapeHtml(f.title)}</span>
+      </div>
+      <div class="fact-value">${escapeHtml(String(valueStr))} <span class="fact-unit">${escapeHtml(f.unit)}</span></div>
+      <div class="fact-delta ${deltaCls}">${deltaSign}${f.delta_yoy}${typeof f.delta_yoy === 'number' ? (f.unit === '%' ? 'pp' : '%') : ''} YoY</div>
+      <div class="fact-future-label">${escapeHtml(f.future_label)}</div>
+      <div class="fact-source">— ${escapeHtml(f.source)} · ${escapeHtml(f.fetched_at)}</div>
+    `;
+    grid.appendChild(card);
+  });
+  sec.appendChild(grid);
+}
+
+function renderDecisionOnePager(dongName) {
+  const sec = document.getElementById('meongbun-sec-1');
+  if (!sec) return;
+  const ph = sec.querySelector('.meongbun-placeholder');
+  if (ph) ph.style.display = 'none';
+
+  const old = sec.querySelector('.decision-onepager-card');
+  if (old) old.remove();
+
+  const data = getDecisionOnePagerData(dongName);
+  const stars = '★'.repeat(data.confidence) + '☆'.repeat(Math.max(0, 5 - data.confidence));
+
+  const card = document.createElement('div');
+  card.className = 'decision-onepager-card';
+  card.innerHTML = `
+    <div class="onepager-recommendation">${escapeHtml(data.recommendation)}</div>
+    <div class="onepager-confidence" title="신뢰도 ${data.confidence}/5">
+      <span class="onepager-stars">${stars}</span>
+      <span class="onepager-stars-label">신뢰도 ${data.confidence}/5</span>
+    </div>
+    <ol class="onepager-reasons">
+      ${data.reasons.slice(0, 3).map(r => `
+        <li>
+          <span class="onepager-reason-text">${escapeHtml(r.text)}</span>
+          <span class="onepager-reason-source">— ${escapeHtml(r.source)} · ${escapeHtml(r.date)}</span>
+        </li>
+      `).join('')}
+    </ol>
+    ${data.caveat ? `<div class="onepager-caveat callout-warn"><strong>단서:</strong> ${escapeHtml(data.caveat)}</div>` : ''}
+  `;
+  sec.appendChild(card);
+}
+
+// ─────────────────────────────────────────────
+// SECTION ❸: Interpretation (UI_INTERPRETATION_SECTION-001)
+// ─────────────────────────────────────────────
+
+function getInterpretationData(dongName) {
+  const samples = {
+    '의정부시 금오동': {
+      claims: [
+        {
+          text: '인근 5개 동 코호트 대비 12개월 카페 생존율이 통계적으로 낮음',
+          n: 47,
+          p_value: 0.012,
+          ci: '64% (95% CI: 51-77%)',
+          method: 'km-survival'
+        },
+        {
+          text: '20대 유동인구 변화량이 카페 신규 진입의 선행 지표로 식별됨',
+          n: 130,
+          p_value: 0.003,
+          ci: 'r = -0.41 (95% CI: -0.55, -0.25), Bonferroni 보정 후',
+          method: 'causal-extraction'
+        },
+        {
+          text: '지가 상승률이 신규 카페 진입과 음의 상관 (한계 마진 가설과 부합)',
+          n: 130,
+          p_value: 0.018,
+          ci: 'r = -0.27 (95% CI: -0.43, -0.10), Bonferroni 보정 후',
+          method: 'causal-extraction'
+        }
+      ]
+    },
+    '성수1가1동': {
+      claims: [
+        {
+          text: '인근 5개 동 코호트 대비 12개월 카페 생존율이 통계적으로 높음',
+          n: 124,
+          p_value: 0.004,
+          ci: '81% (95% CI: 73-88%)',
+          method: 'km-survival'
+        },
+        {
+          text: '20대 유동인구 증가가 카페 신규 진입과 강한 양의 동행',
+          n: 130,
+          p_value: 0.001,
+          ci: 'r = +0.52 (95% CI: 0.38, 0.64), Bonferroni 보정 후',
+          method: 'causal-extraction'
+        },
+        {
+          text: '지가 상승에도 불구하고 카페 진입 지속 — 마진 압박 신호 동행',
+          n: 130,
+          p_value: 0.041,
+          ci: 'r = +0.21 (95% CI: 0.04, 0.37)',
+          method: 'causal-extraction'
+        }
+      ]
+    }
+  };
+  return samples[dongName] || null;
+}
+
+const METHOD_TITLE = {
+  'km-survival':       'Kaplan-Meier 생존 분석',
+  'causal-extraction': '인과 추출 (Bonferroni 보정)'
+};
+
+async function loadMethodMarkdown(methodKey) {
+  const url = `docs/methods/${methodKey}.md`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return `(method 파일 로드 실패: HTTP ${res.status})`;
+    return await res.text();
+  } catch (e) {
+    return `(method 파일 로드 실패: ${e.message})`;
+  }
+}
+
+// 단순 markdown → HTML 변환 (h1/h2/h3, fence, list, paragraph만)
+function renderSimpleMarkdown(md) {
+  if (!md) return '';
+  const lines = md.split('\n');
+  let html = '';
+  let inFence = false;
+  let inList = false;
+  for (const line of lines) {
+    if (line.startsWith('```')) {
+      if (inFence) { html += '</code></pre>'; inFence = false; }
+      else { html += '<pre><code>'; inFence = true; }
+      continue;
+    }
+    if (inFence) { html += escapeHtml(line) + '\n'; continue; }
+    if (line.startsWith('# ')) { if (inList){html+='</ul>';inList=false;} html += `<h3>${escapeHtml(line.slice(2))}</h3>`; }
+    else if (line.startsWith('## ')) { if (inList){html+='</ul>';inList=false;} html += `<h4>${escapeHtml(line.slice(3))}</h4>`; }
+    else if (line.startsWith('### ')) { if (inList){html+='</ul>';inList=false;} html += `<h5>${escapeHtml(line.slice(4))}</h5>`; }
+    else if (line.startsWith('- ')) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += `<li>${escapeHtml(line.slice(2))}</li>`;
+    } else if (line.match(/^\d+\.\s/)) {
+      if (!inList) { html += '<ul>'; inList = true; }
+      html += `<li>${escapeHtml(line.replace(/^\d+\.\s/, ''))}</li>`;
+    } else if (line.trim() === '') {
+      if (inList){html+='</ul>';inList=false;}
+    } else {
+      if (inList){html+='</ul>';inList=false;}
+      html += `<p>${escapeHtml(line)}</p>`;
+    }
+  }
+  if (inList) html += '</ul>';
+  if (inFence) html += '</code></pre>';
+  return html;
+}
+
+function renderInterpretation(dongName) {
+  const sec = document.getElementById('meongbun-sec-3');
+  if (!sec) return;
+  const ph = sec.querySelector('.meongbun-placeholder');
+  if (ph) ph.style.display = 'none';
+
+  const old = sec.querySelector('.interpretation-card');
+  if (old) old.remove();
+
+  const data = getInterpretationData(dongName);
+  if (!data) {
+    const empty = document.createElement('div');
+    empty.className = 'interpretation-card interpretation-empty';
+    empty.textContent = `${dongName || '동'} — 시연 해석 데이터 미정의. 데모 동을 선택하세요.`;
+    sec.appendChild(empty);
+    return;
+  }
+
+  const card = document.createElement('div');
+  card.className = 'interpretation-card';
+  card.innerHTML = `
+    <ol class="interp-claims">
+      ${data.claims.map((c, idx) => `
+        <li class="interp-claim" data-method="${escapeHtml(c.method)}" data-idx="${idx}">
+          <div class="interp-claim-text">${escapeHtml(c.text)}</div>
+          <div class="interp-claim-stats">
+            <span class="interp-stat">n = ${c.n}</span>
+            <span class="interp-stat">p = ${c.p_value}</span>
+            <span class="interp-stat">${escapeHtml(c.ci)}</span>
+            <button class="interp-method-toggle" type="button" aria-expanded="false">
+              <span class="interp-method-label">방법: ${escapeHtml(METHOD_TITLE[c.method] || c.method)}</span>
+              <span class="interp-method-arrow">▼</span>
+            </button>
+          </div>
+          <div class="interp-method-card" hidden>
+            <div class="interp-method-body">로딩 중...</div>
+          </div>
+        </li>
+      `).join('')}
+    </ol>
+  `;
+  sec.appendChild(card);
+
+  // 토글 핸들러 — 한 번만 fetch, 캐싱
+  const cache = {};
+  card.querySelectorAll('.interp-claim').forEach(li => {
+    const btn = li.querySelector('.interp-method-toggle');
+    const methodCard = li.querySelector('.interp-method-card');
+    const body = li.querySelector('.interp-method-body');
+    const arrow = li.querySelector('.interp-method-arrow');
+    btn.addEventListener('click', async () => {
+      const method = li.dataset.method;
+      const isOpen = !methodCard.hidden;
+      if (isOpen) {
+        methodCard.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+        arrow.textContent = '▼';
+        return;
+      }
+      methodCard.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      arrow.textContent = '▲';
+      if (!cache[method]) {
+        const md = await loadMethodMarkdown(method);
+        cache[method] = renderSimpleMarkdown(md);
+      }
+      body.innerHTML = cache[method];
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// VIBE_DETAIL — Decision Tree 노드 클릭 → 큰 화면 + 한글 해설
+// 사용자 요청 (2026-05-04): "블럭을 클릭하면 큰화면으로 전개되면서 한글로 해설"
+// ─────────────────────────────────────────────────────────────
+
+const VIBE_HUMAN = {
+  premium: {
+    title: 'Premium — 프리미엄 입지 동',
+    summary: '지가가 매우 높고 소상공인 매출도 안정적인 도심 핵심 상권. 강남·성수 같은 고급 상업지구.',
+    market_traits: ['높은 지가 평균', '안정적 임대 수익', '대형 프랜차이즈 밀집', '20대 유동 활발'],
+    pharmacy_implication: '약국 점포개발 관점: 임대료 부담이 매우 크나 처방 단가도 높음. 대형 체인이 우위, 개인 약국은 진입 어려움.',
+    decision_hint: '진입 전 임대료 vs 처방 단가 분기점 분석 필수. wedge=pharmacy.develop 모델은 마진 압박을 패널티로 반영.',
+  },
+  developing: {
+    title: 'Developing — 개발 진행 동',
+    summary: '소상공인 추세가 상승 중이며 새로운 상권이 형성되는 단계. 지가 상승 여력 있음.',
+    market_traits: ['소상공인 신규 진입 활발', '지가 추세 상승', '인구 유입 패턴 관찰', '중간 수준 임대료'],
+    pharmacy_implication: '신규 점포 후보로 매력적. 의원 인프라 동반 성장 시 처방 수요도 확대.',
+    decision_hint: '주변 의원 신규 개원 여부 + 인구 유입 추세를 함께 모니터링.',
+  },
+  rising: {
+    title: 'Rising — 부상 동',
+    summary: '아직 평균은 낮지만 빠르게 성장하는 동. 카페 추세 등 트렌디 상권 신호 활발.',
+    market_traits: ['카페 신규 진입 가속', '20대 유동 증가', '아직 낮은 임대료', '저변동성 위험'],
+    pharmacy_implication: '조기 진입 시 선점 효과. 단 처방 수요(의원 인프라) 확보까지 시간 필요.',
+    decision_hint: '선점 vs 검증 트레이드오프 — 12~18개월 관찰 후 진입도 옵션.',
+  },
+  rising_star: {
+    title: 'Rising Star — 떠오르는 스타 동',
+    summary: 'Rising 중에서도 가장 빠르게 성장하는 동. 성수동 초기 패턴.',
+    market_traits: ['전국 상위 5% 성장률', '고연령 vs 저연령 동시 증가', '미디어 노출 빈번', '임대료 급등 위험'],
+    pharmacy_implication: '진입 타이밍이 핵심. 6개월 늦으면 임대료가 2배. 동시에 경쟁약국도 따라 진입.',
+    decision_hint: '즉시 평가 + 빠른 의사결정 필요. 임대 5년 고정 계약 협상 권장.',
+  },
+  stable: {
+    title: 'Stable — 안정 동',
+    summary: '큰 변동 없는 성숙한 주거·상업 혼합 동. 예측 가능성 높음.',
+    market_traits: ['낮은 변동성', '인구 안정', '임대료 완만한 상승', '경쟁 포화 임박'],
+    pharmacy_implication: '신규 진입은 경쟁 부담 큼. 기존 점포 인수가 더 안전.',
+    decision_hint: '경쟁약국 수 + 의원 폐업률 추세를 함께 검토.',
+  },
+  residential: {
+    title: 'Residential — 주거 중심 동',
+    summary: '주거 비중이 높고 상업 활동은 동네 단위로 제한. 60대+ 비중 높을 가능성.',
+    market_traits: ['주거지구 우세', '동네 약국 수요', '높은 60대 비중', '낮은 유동인구'],
+    pharmacy_implication: '처방 위주 동네 약국 모델에 적합. 대형 OTC는 어려움.',
+    decision_hint: '의원 분포(특히 가정의학과/내과)와 60대 인구 비중 가중치 ↑.',
+  },
+  industrial: {
+    title: 'Industrial — 산업단지 동',
+    summary: '공장·물류 중심으로 주간 상주 인구는 많으나 야간 거주 인구 적음.',
+    market_traits: ['주야간 인구 격차 큼', '직장인 처방 수요', '낮은 임대료', '주말 매출 부진'],
+    pharmacy_implication: '주중 점심 시간대 매출 집중. 토·일 휴무 패턴 가능.',
+    decision_hint: '인근 산업단지 보건관리 협력 모델 검토.',
+  },
+  traditional: {
+    title: 'Traditional — 전통 상권 동',
+    summary: '오래된 재래시장·구도심. 인구 고령화가 심하지만 충성 고객층 존재.',
+    market_traits: ['고령 인구 비중 매우 높음', '낮은 임대료', '구매력 제한', '재개발 위험'],
+    pharmacy_implication: '한약·만성질환 처방 비중 높음. 단 재개발 발표 시 점포 이전 위험.',
+    decision_hint: '재개발 계획 + 임대 계약 기간을 신중 검토.',
+  },
+  youth: {
+    title: 'Youth — 청년 밀집 동',
+    summary: '대학가·트렌디 상권으로 20~30대 비중이 매우 높음.',
+    market_traits: ['젊은 유동인구 우세', '카페·OTC 수요', '낮은 처방 단가', '높은 회전율'],
+    pharmacy_implication: '약국보다 헬스앤뷰티 모델에 가까움. OTC + 화장품 + 건강기능식품 비중 ↑.',
+    decision_hint: '처방 위주 약국이라면 다른 동 우선 검토.',
+  }
+};
+
+const FEATURE_HUMAN = {
+  '지가_평균': { ko: '지가 평균', desc: '동의 평균 공시지가. 임대료 마진 압박과 직결.' },
+  '소상공_평균': { ko: '소상공인 매출 평균', desc: '동내 소상공인 평균 월 매출. 상권 활성도 지표.' },
+  '소상공_추세': { ko: '소상공인 매출 추세', desc: '12개월 매출 추세 (양수=성장, 음수=쇠퇴).' },
+  '카페_평균': { ko: '카페 수 평균', desc: '동 카페 수. 트렌디 상권 신호.' },
+  '카페_추세': { ko: '카페 신규 진입 추세', desc: '12개월 카페 신규 진입 카운트.' },
+  '거래_평균': { ko: '부동산 거래량 평균', desc: '월 거래 건수. 시장 활성도.' },
+  '유동_평균': { ko: '유동인구 평균', desc: '월 평균 유동인구.' },
+  '지가_추세': { ko: '지가 추세', desc: '12개월 지가 변화율. 상승 = 임대료 상승 압력.' },
+};
+
+function openVibeDetailModal(opts) {
+  // 기존 모달 제거 (idempotent)
+  const old = document.getElementById('vibe-detail-modal');
+  if (old) old.remove();
+
+  let bodyHtml = '';
+  if (opts.kind === 'leaf') {
+    const v = VIBE_HUMAN[opts.vibe];
+    const color = (window.VIBE_COLOR && window.VIBE_COLOR[opts.vibe]) || '#9CA3AF';
+    if (!v) {
+      bodyHtml = `<div class="vd-empty">「${escapeHtml(opts.vibe)}」 분류에 대한 한글 해설 미정의 (n=${opts.samples})</div>`;
+    } else {
+      bodyHtml = ''
+        + `<div class="vd-leaf-header" style="border-left:6px solid ${color};">`
+        +   `<div class="vd-leaf-tag" style="background:${color};color:#0F1419;">${escapeHtml(opts.vibe)}</div>`
+        +   `<h2 class="vd-leaf-title">${escapeHtml(v.title)}</h2>`
+        +   `<div class="vd-leaf-meta">학습 데이터 ${opts.samples}개 동이 이 분류에 속함</div>`
+        + `</div>`
+        + `<p class="vd-summary">${escapeHtml(v.summary)}</p>`
+        + `<div class="vd-section">`
+        +   `<div class="vd-section-title">시장 특징</div>`
+        +   `<ul class="vd-trait-list">`
+        +     v.market_traits.map(t => `<li>${escapeHtml(t)}</li>`).join('')
+        +   `</ul>`
+        + `</div>`
+        + `<div class="vd-section">`
+        +   `<div class="vd-section-title">약국 점포개발 관점</div>`
+        +   `<p class="vd-implication">${escapeHtml(v.pharmacy_implication)}</p>`
+        + `</div>`
+        + `<div class="vd-section vd-decision">`
+        +   `<div class="vd-section-title">결정 힌트</div>`
+        +   `<p>${escapeHtml(v.decision_hint)}</p>`
+        + `</div>`;
+    }
+  } else if (opts.kind === 'branch') {
+    const fh = FEATURE_HUMAN[opts.feature] || { ko: opts.feature, desc: '' };
+    bodyHtml = ''
+      + `<div class="vd-branch-header">`
+      +   `<div class="vd-branch-tag">분기 조건</div>`
+      +   `<h2 class="vd-branch-title">${escapeHtml(fh.ko)} ≤ ${escapeHtml(opts.threshold)}</h2>`
+      +   `<div class="vd-leaf-meta">이 노드에서 학습 데이터 ${opts.samples}개 동이 분기됨</div>`
+      + `</div>`
+      + `<p class="vd-summary">${escapeHtml(fh.desc)}</p>`
+      + `<div class="vd-section">`
+      +   `<div class="vd-section-title">분기 의미</div>`
+      +   `<p>임계값 ${escapeHtml(opts.threshold)} <strong>이하</strong>면 좌측 가지로, <strong>초과</strong>면 우측 가지로 분류됩니다. 좌/우 가지의 잎 노드를 클릭하면 최종 분류(vibe)의 한글 해설을 볼 수 있습니다.</p>`
+      + `</div>`
+      + `<div class="vd-section vd-decision">`
+      +   `<div class="vd-section-title">분석가 노트</div>`
+      +   `<p>분기 조건은 학습 데이터 기준 임계값입니다. 합성 데이터 위 학습이라 실데이터 도입(ISS-018) 시 임계값이 변동될 수 있습니다.</p>`
+      + `</div>`;
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'vibe-detail-modal';
+  modal.className = 'vibe-detail-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.innerHTML = ''
+    + `<div class="vd-backdrop" data-action="close"></div>`
+    + `<div class="vd-panel" role="document">`
+    +   `<button class="vd-close" type="button" aria-label="닫기" data-action="close">×</button>`
+    +   `<div class="vd-content">${bodyHtml}</div>`
+    + `</div>`;
+  document.body.appendChild(modal);
+
+  // 닫기 핸들러
+  modal.querySelectorAll('[data-action="close"]').forEach(el => {
+    el.addEventListener('click', () => modal.remove());
+  });
+  // ESC 닫기
+  const escHandler = (e) => {
+    if (e.key === 'Escape') {
+      modal.remove();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+}
+
+// ─────────────────────────────────────────────────────────────
+// VIBE_TREE_FULLSCREEN — 트리 컨테이너 클릭 → 큰 화면 + 초보자 해설
+// 사용자 요청 (2026-05-04): "vibe 분류트리 전체를 클릭시 더 크게 보면서
+// 디시젼트리에 익숙하지 않은 사용자를 위해서 해설을 해달라"
+// ─────────────────────────────────────────────────────────────
+
+const TREE_GUIDE_HTML = `
+  <div class="vt-guide-section">
+    <h3 class="vt-guide-h3">Decision Tree가 뭔가요?</h3>
+    <p>아주 작은 "예/아니오 질문"을 반복해서 동(洞)을 분류하는 방법입니다.
+    예를 들어 "지가가 일정 값 이하인가?" 라고 묻고, 답에 따라 왼쪽 또는 오른쪽 가지로 내려갑니다.
+    질문을 여러 번 반복하면 결국 끝(잎)에 도달하고, 그 잎의 색이 동의 분류(vibe)입니다.</p>
+  </div>
+
+  <div class="vt-guide-section">
+    <h3 class="vt-guide-h3">화면 읽는 법</h3>
+    <ul class="vt-guide-ul">
+      <li><strong>원형 노드 (○)</strong> — 분기 조건. 위에 적힌 라벨 (예: <code>지가_평균 ≤ 4.69</code>)이 그 질문입니다. 조건을 만족하면 <em>왼쪽</em>, 못 만족하면 <em>오른쪽</em>으로 내려갑니다.</li>
+      <li><strong>색깔 박스 (잎 노드)</strong> — 최종 분류. 각 색은 동의 vibe(성격)를 나타냅니다.</li>
+      <li><strong>n=숫자</strong> — 학습 데이터에서 그 잎에 도달한 동의 개수.</li>
+      <li><strong>하늘색 굵은 선</strong> — 현재 선택된 동이 따라 내려간 분기 경로.</li>
+    </ul>
+  </div>
+
+  <div class="vt-guide-section">
+    <h3 class="vt-guide-h3">분류(vibe) 색상 가이드</h3>
+    <div class="vt-vibe-legend">
+      <div class="vt-vibe-item" data-vibe="premium" style="background:#A78BFA;"><strong>premium</strong> 프리미엄 입지</div>
+      <div class="vt-vibe-item" data-vibe="developing" style="background:#F47174;"><strong>developing</strong> 개발 진행</div>
+      <div class="vt-vibe-item" data-vibe="rising" style="background:#5BC0EB;"><strong>rising</strong> 부상 중</div>
+      <div class="vt-vibe-item" data-vibe="rising_star" style="background:#FF8FA3;"><strong>rising_star</strong> 떠오르는 스타</div>
+      <div class="vt-vibe-item" data-vibe="stable" style="background:#9CA3AF;color:#1A2330;"><strong>stable</strong> 안정</div>
+      <div class="vt-vibe-item" data-vibe="residential" style="background:#7DD3FC;color:#1A2330;"><strong>residential</strong> 주거 중심</div>
+      <div class="vt-vibe-item" data-vibe="industrial" style="background:#9CA3AF;color:#1A2330;"><strong>industrial</strong> 산업단지</div>
+      <div class="vt-vibe-item" data-vibe="traditional" style="background:#F4C04E;color:#1A2330;"><strong>traditional</strong> 전통 상권</div>
+      <div class="vt-vibe-item" data-vibe="youth" style="background:#A8E063;color:#1A2330;"><strong>youth</strong> 청년 밀집</div>
+    </div>
+    <p class="vt-guide-tip">큰 트리에서 박스나 원을 다시 클릭하면 그 분류/분기 변수의 자세한 한글 해설이 추가로 열립니다.</p>
+  </div>
+
+  <div class="vt-guide-section">
+    <h3 class="vt-guide-h3">약국 점포개발 관점에서 트리는?</h3>
+    <p>이 트리는 동의 "성격"을 미리 알려주는 지도입니다. 예를 들어 어느 동이 <code>premium</code>로 분류되면
+    "임대료가 비싸지만 처방 단가도 높을 가능성"이라는 도메인 가설을 떠올릴 수 있습니다.
+    개별 매물 평가는 약국 점포개발 화면에서, 동의 vibe 라벨은 이 트리에서 확인하시면 됩니다.</p>
+  </div>
+
+  <div class="vt-guide-section vt-guide-warn">
+    <h3 class="vt-guide-h3">주의 — 합성 데이터 위 학습</h3>
+    <p>현재 트리는 시연용 합성 데이터로 학습되었습니다. 실데이터 도입(ISS-018) 시 임계값과 정확도가 변동될 수 있습니다.</p>
+  </div>
+`;
+
+// fullscreen 전용 큰 트리 SVG 빌더 — renderDecisionTree 패턴 + 크기 ~3배
+function buildBigTreeSvg() {
+  if (typeof TREE_MODEL === 'undefined' || !TREE_MODEL) return '';
+  const layout = _treeLayout(TREE_MODEL);
+  const allNodes = Object.values(layout);
+  const maxDepth = Math.max(...allNodes.map(function(n){return n.depth;}));
+  const leafNodes = allNodes.filter(function(n){return n.leaf;});
+  const nLeaves = leafNodes.length;
+  // 큰 사이즈 — 1920 viewport 기준 가이드 패널 후 트리 영역 ~1350px에 맞춤
+  // LEAF_W 90 + GAP 8 + padX 32 → 14개 = 1404px, 1349 wrap에 거의 맞음 (40px만 스크롤)
+  const LEAF_W = 90, LEAF_GAP = 8;
+  const padX = 32, padY = 56;
+  const W = Math.max(1100, padX*2 + nLeaves * (LEAF_W + LEAF_GAP));
+  const H = 660;
+  const innerW = W - padX*2, innerH = H - padY*2;
+  allNodes.forEach(function(n) {
+    n.px = padX + (n.x / Math.max(1, nLeaves - 1)) * innerW;
+    n.py = padY + (n.depth / Math.max(1, maxDepth)) * innerH;
+  });
+  const dong = (typeof selectedDong !== 'undefined' && selectedDong) ? selectedDong : null;
+  const path = dong ? _classifyDong(TREE_MODEL, layout, dong) : [];
+  const onPath = new Set(path);
+
+  // svg width/height를 viewBox 1:1로 픽셀 명시 — viewBox 좌표 = 픽셀 좌표.
+  // 컨테이너 overflow:auto가 가로 스크롤 처리 (트리가 화면보다 넓을 때).
+  let s = '<svg id="vt-fs-canvas" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">';
+  // 엣지
+  allNodes.forEach(function(n) {
+    if (n.leaf) return;
+    const left = layout[n.left], right = layout[n.right];
+    const onL = onPath.has(n.id) && onPath.has(n.left);
+    const onR = onPath.has(n.id) && onPath.has(n.right);
+    const stroke = (onL || onR) ? '#5BC0EB' : '#2A3445';
+    const swL = onL ? 4 : 2;
+    const swR = onR ? 4 : 2;
+    s += '<path d="M' + n.px + ',' + n.py + 'L' + left.px + ',' + left.py + '" stroke="' + (onL?'#5BC0EB':stroke) + '" stroke-width="' + swL + '" fill="none" />';
+    s += '<path d="M' + n.px + ',' + n.py + 'L' + right.px + ',' + right.py + '" stroke="' + (onR?'#5BC0EB':stroke) + '" stroke-width="' + swR + '" fill="none" />';
+  });
+  // 노드 (큰 폰트)
+  allNodes.forEach(function(n) {
+    const isOn = onPath.has(n.id);
+    if (n.leaf) {
+      const color = (window.VIBE_COLOR && window.VIBE_COLOR[n.class]) || '#9CA3AF';
+      // [한글화] 영어 키 → 한글 라벨 (VIBE_LABEL 매핑)
+      const labelKo = (typeof VIBE_LABEL !== 'undefined' && VIBE_LABEL[n.class]) || n.class;
+      const labelLen = labelKo.length;
+      // 한글은 영어보다 폭 넓음 — 한글 6자(예 '성수형 급상승') 14px / 4자 16px / 2자 18px
+      const fz = labelLen >= 7 ? 13 : labelLen >= 5 ? 15 : 17;
+      s += '<g class="vibe-leaf-clickable" data-vibe="' + n.class + '" data-samples="' + n.samples + '" data-node-id="' + n.id + '" style="cursor:pointer;pointer-events:all;">';
+      s += '<rect class="vibe-hit-area" x="' + (n.px - LEAF_W/2 - 6) + '" y="' + (n.py-22) + '" width="' + (LEAF_W + 12) + '" height="56" fill="transparent" pointer-events="all"/>';
+      s += '<rect x="' + (n.px - LEAF_W/2) + '" y="' + (n.py-18) + '" width="' + LEAF_W + '" height="36" rx="6" fill="' + color + '" stroke="' + (isOn?'#fff':'#2A3445') + '" stroke-width="' + (isOn?3:1) + '" pointer-events="all"></rect>';
+      s += '<text x="' + n.px + '" y="' + (n.py+5) + '" text-anchor="middle" fill="#0F1419" font-size="' + fz + '" font-family="ui-sans-serif" font-weight="700" pointer-events="none">' + labelKo + '</text>';
+      s += '<text x="' + n.px + '" y="' + (n.py+30) + '" text-anchor="middle" fill="#A4B0C0" font-size="12" font-family="ui-monospace" pointer-events="none">n=' + n.samples + '</text>';
+      s += '</g>';
+    } else {
+      const fill = isOn ? '#5BC0EB' : '#1A2330';
+      const txtColor = isOn ? '#0F1419' : '#E8EEF6';
+      const fmtThr = (Math.abs(n.threshold) >= 100) ? n.threshold.toFixed(0) : n.threshold.toFixed(2);
+      const labelDy = (n.depth % 2 === 0) ? -18 : 28;
+      // [한글화] FEATURE_HUMAN.ko 매핑
+      const fnameKo = (typeof FEATURE_HUMAN !== 'undefined' && FEATURE_HUMAN[n.feature_name] && FEATURE_HUMAN[n.feature_name].ko) || n.feature_name;
+      s += '<g class="vibe-branch-clickable" data-feature="' + n.feature_name + '" data-threshold="' + fmtThr + '" data-samples="' + n.samples + '" data-node-id="' + n.id + '" style="cursor:pointer;pointer-events:all;">';
+      s += '<circle class="vibe-hit-area" cx="' + n.px + '" cy="' + n.py + '" r="22" fill="transparent" pointer-events="all"/>';
+      s += '<circle cx="' + n.px + '" cy="' + n.py + '" r="10" fill="' + fill + '" stroke="#2A3445" stroke-width="2" pointer-events="all"></circle>';
+      s += '<text x="' + n.px + '" y="' + (n.py + labelDy) + '" text-anchor="middle" fill="' + txtColor + '" font-size="14" font-family="ui-sans-serif" font-weight="600" pointer-events="none">' + fnameKo + ' ≤ ' + fmtThr + '</text>';
+      s += '</g>';
+    }
+  });
+  s += '</svg>';
+  return s;
+}
+
+function openTreeFullscreen() {
+  const old = document.getElementById('vibe-tree-fullscreen');
+  if (old) old.remove();
+
+  // [v2] 원본 SVG 복제 대신 fullscreen 전용 큰 트리 직접 그리기
+  // — LEAF_W 100 (52→100), 폰트 16~18 (7~9→16~18), height 600 (320→600)
+  const treeMeta = document.getElementById('d-tree-meta');
+  const metaText = treeMeta ? treeMeta.textContent : '—';
+  const bigTreeSvg = (typeof TREE_MODEL !== 'undefined' && TREE_MODEL)
+    ? buildBigTreeSvg() : '<text x="50%" y="50%" text-anchor="middle" fill="#9CA3AF">tree_model.json 미로드</text>';
+
+  const modal = document.createElement('div');
+  modal.id = 'vibe-tree-fullscreen';
+  modal.className = 'vibe-tree-fs';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.innerHTML = ''
+    + '<div class="vt-fs-backdrop" data-action="close"></div>'
+    + '<div class="vt-fs-panel" role="document">'
+    +   '<div class="vt-fs-header">'
+    +     '<div>'
+    +       '<div class="vt-fs-title">Vibe 분류 트리 (Decision Tree)</div>'
+    +       '<div class="vt-fs-meta">' + escapeHtml(metaText) + '</div>'
+    +     '</div>'
+    +     '<button class="vt-fs-close" type="button" data-action="close" aria-label="닫기">×</button>'
+    +   '</div>'
+    +   '<div class="vt-fs-body">'
+    +     '<div class="vt-fs-tree-wrap">' + bigTreeSvg + '</div>'
+    +     '<aside class="vt-fs-guide">' + TREE_GUIDE_HTML + '</aside>'
+    +   '</div>'
+    +   '<div class="vt-fs-footer">'
+    +     '<span class="vt-fs-hint">큰 트리의 색깔 박스 또는 원형 노드를 클릭하면 그 분류/분기의 한글 해설이 추가로 열립니다.</span>'
+    +     '<button class="vt-fs-close-btn" type="button" data-action="close">닫기</button>'
+    +   '</div>'
+    + '</div>';
+  document.body.appendChild(modal);
+
+  // 큰 트리 안의 노드도 개별 클릭 + 풍선 도움말 부착
+  const fsCanvas = modal.querySelector('#vt-fs-canvas');
+  if (fsCanvas) {
+    if (typeof window.attachVibeTooltips === 'function') window.attachVibeTooltips(fsCanvas);
+    fsCanvas.querySelectorAll('.vibe-leaf-clickable').forEach(function(g) {
+      g.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (typeof window.openVibeDetailModal === 'function') {
+          window.openVibeDetailModal({
+            kind: 'leaf',
+            vibe: g.dataset.vibe,
+            samples: parseInt(g.dataset.samples, 10),
+            node_id: g.dataset.nodeId
+          });
+        }
+      });
+    });
+    fsCanvas.querySelectorAll('.vibe-branch-clickable').forEach(function(g) {
+      g.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (typeof window.openVibeDetailModal === 'function') {
+          window.openVibeDetailModal({
+            kind: 'branch',
+            feature: g.dataset.feature,
+            threshold: g.dataset.threshold,
+            samples: parseInt(g.dataset.samples, 10),
+            node_id: g.dataset.nodeId
+          });
+        }
+      });
+    });
+  }
+
+  // 닫기 핸들러
+  modal.querySelectorAll('[data-action="close"]').forEach(function(el) {
+    el.addEventListener('click', function() { modal.remove(); });
+  });
+  // ESC 닫기
+  const escHandler = function(e) {
+    if (e.key === 'Escape') {
+      modal.remove();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+}
+
+window.openTreeFullscreen = openTreeFullscreen;
+
+// ── 컨테이너 클릭 → fullscreen 트리 모달 (한 번만 바인딩) ──
+(function bindTreeContainerClick() {
+  function setup() {
+    const card = document.getElementById('vibe-tree-card');
+    if (!card || card.dataset.fullscreenBound === '1') return;
+    card.dataset.fullscreenBound = '1';
+    card.addEventListener('click', function(e) {
+      // 노드 자체(개별) 클릭은 기존 핸들러가 e.stopPropagation 안 하므로
+      // 여기서 노드 영역이면 fullscreen 안 열고 노드 모달로 보내도록 분기
+      const onNode = e.target.closest('.vibe-leaf-clickable, .vibe-branch-clickable');
+      if (onNode) return;
+      // 빈 영역(또는 헤더/안내 라벨) 클릭 시 fullscreen 트리
+      openTreeFullscreen();
+    });
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openTreeFullscreen();
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup);
+  } else {
+    setup();
+  }
+  // Decide 모드 진입 시점에 카드가 새로 그려질 가능성 대비 (현재는 정적)
+  window.setTimeout(setup, 1500);
+})();
+
+// ─────────────────────────────────────────────────────────────
+// VIBE_TOOLTIP — 마우스 호버 시 풍선 도움말 (한글 추가 해설)
+// 사용자 요청 (2026-05-04): "풍선 도움말로 추가 해설을 해줘."
+// ─────────────────────────────────────────────────────────────
+
+let _vibeTooltipEl = null;
+let _vibeTooltipHideTimer = null;
+
+function _ensureVibeTooltip() {
+  if (_vibeTooltipEl && document.body.contains(_vibeTooltipEl)) return _vibeTooltipEl;
+  _vibeTooltipEl = document.createElement('div');
+  _vibeTooltipEl.id = 'vibe-tooltip';
+  _vibeTooltipEl.className = 'vibe-tooltip';
+  _vibeTooltipEl.setAttribute('role', 'tooltip');
+  _vibeTooltipEl.style.display = 'none';
+  document.body.appendChild(_vibeTooltipEl);
+  return _vibeTooltipEl;
+}
+
+function showVibeTooltip(opts, anchorEl) {
+  if (_vibeTooltipHideTimer) { clearTimeout(_vibeTooltipHideTimer); _vibeTooltipHideTimer = null; }
+  const el = _ensureVibeTooltip();
+  let html = '';
+  if (opts.kind === 'leaf') {
+    const v = (typeof VIBE_HUMAN !== 'undefined' && VIBE_HUMAN[opts.vibe]) || null;
+    const color = (window.VIBE_COLOR && window.VIBE_COLOR[opts.vibe]) || '#9CA3AF';
+    if (v) {
+      const traits = (v.market_traits || []).slice(0, 3).map(t =>
+        '<li>' + escapeHtml(t) + '</li>'
+      ).join('');
+      html = ''
+        + '<div class="vt-tip-header" style="border-left:4px solid ' + color + ';">'
+        +   '<div class="vt-tip-tag" style="background:' + color + ';color:#0F1419;">' + escapeHtml(opts.vibe) + '</div>'
+        +   '<div class="vt-tip-title">' + escapeHtml(v.title) + '</div>'
+        + '</div>'
+        + '<div class="vt-tip-summary">' + escapeHtml(v.summary) + '</div>'
+        + '<div class="vt-tip-section-title">시장 특징</div>'
+        + '<ul class="vt-tip-traits">' + traits + '</ul>'
+        + '<div class="vt-tip-section-title">약국 점포개발 관점</div>'
+        + '<div class="vt-tip-implication">' + escapeHtml(v.pharmacy_implication) + '</div>'
+        + '<div class="vt-tip-cta">클릭하면 결정 힌트 + 전체 해설</div>';
+    } else {
+      html = '<div class="vt-tip-summary">' + escapeHtml(opts.vibe || '?') + ' 분류 (n=' + opts.samples + ')</div>'
+        + '<div class="vt-tip-cta">클릭하여 자세히 보기</div>';
+    }
+  } else if (opts.kind === 'branch') {
+    const fh = (typeof FEATURE_HUMAN !== 'undefined' && FEATURE_HUMAN[opts.feature]) || { ko: opts.feature, desc: '' };
+    html = ''
+      + '<div class="vt-tip-header vt-tip-header-branch">'
+      +   '<div class="vt-tip-tag vt-tip-tag-branch">분기 조건</div>'
+      +   '<div class="vt-tip-title">' + escapeHtml(fh.ko) + ' ≤ ' + escapeHtml(opts.threshold) + '</div>'
+      + '</div>'
+      + (fh.desc ? '<div class="vt-tip-summary">' + escapeHtml(fh.desc) + '</div>' : '')
+      + '<div class="vt-tip-implication">조건을 <strong>만족</strong>하면 좌측 가지로, <strong>못 만족</strong>하면 우측 가지로 분류됩니다. 학습 데이터 ' + opts.samples + '개 동이 이 노드에서 분기됨.</div>'
+      + '<div class="vt-tip-cta">클릭하여 자세히 보기</div>';
+  }
+  el.innerHTML = html;
+  el.style.display = 'block';
+
+  // 위치 — anchor의 화면 좌표 기준 우측 또는 아래
+  const anchorRect = anchorEl.getBoundingClientRect();
+  const tipRect = el.getBoundingClientRect();
+  const margin = 12;
+  let left = anchorRect.right + margin;
+  let top = anchorRect.top - 8;
+  // 우측 화면 밖이면 좌측에 배치
+  if (left + tipRect.width > window.innerWidth - 8) {
+    left = anchorRect.left - tipRect.width - margin;
+  }
+  // 좌측도 밖이면 anchor 아래
+  if (left < 8) {
+    left = Math.max(8, Math.min(window.innerWidth - tipRect.width - 8, anchorRect.left));
+    top = anchorRect.bottom + margin;
+  }
+  // 하단 화면 밖이면 위로
+  if (top + tipRect.height > window.innerHeight - 8) {
+    top = Math.max(8, window.innerHeight - tipRect.height - 8);
+  }
+  el.style.left = Math.round(left) + 'px';
+  el.style.top = Math.round(top) + 'px';
+}
+
+function hideVibeTooltip(immediate) {
+  if (_vibeTooltipHideTimer) { clearTimeout(_vibeTooltipHideTimer); _vibeTooltipHideTimer = null; }
+  if (!_vibeTooltipEl) return;
+  if (immediate) {
+    _vibeTooltipEl.style.display = 'none';
+  } else {
+    _vibeTooltipHideTimer = setTimeout(() => {
+      if (_vibeTooltipEl) _vibeTooltipEl.style.display = 'none';
+    }, 120);
+  }
+}
+
+// 트리 노드들에 호버 핸들러 부착 (idempotent — 다중 호출 안전)
+function attachVibeTooltips(scopeEl) {
+  if (!scopeEl) return;
+  scopeEl.querySelectorAll('.vibe-leaf-clickable').forEach(g => {
+    if (g.dataset.tipBound === '1') return;
+    g.dataset.tipBound = '1';
+    g.addEventListener('mouseenter', () => showVibeTooltip({
+      kind: 'leaf',
+      vibe: g.dataset.vibe,
+      samples: parseInt(g.dataset.samples, 10),
+    }, g));
+    g.addEventListener('mouseleave', () => hideVibeTooltip(false));
+  });
+  scopeEl.querySelectorAll('.vibe-branch-clickable').forEach(g => {
+    if (g.dataset.tipBound === '1') return;
+    g.dataset.tipBound = '1';
+    g.addEventListener('mouseenter', () => showVibeTooltip({
+      kind: 'branch',
+      feature: g.dataset.feature,
+      threshold: g.dataset.threshold,
+      samples: parseInt(g.dataset.samples, 10),
+    }, g));
+    g.addEventListener('mouseleave', () => hideVibeTooltip(false));
+  });
+}
+
+window.attachVibeTooltips = attachVibeTooltips;
+
+// 작은 트리(원본) — renderDecisionTree 호출 후 부착
+(function autoAttachToOriginalTree() {
+  function tryAttach() {
+    const orig = document.getElementById('d-tree-canvas');
+    if (orig) attachVibeTooltips(orig);
+  }
+  // 초기 + 주기적 (모드 전환마다 트리 다시 렌더되므로)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(tryAttach, 800));
+  } else {
+    setTimeout(tryAttach, 800);
+  }
+  // MutationObserver — d-tree-canvas innerHTML 변경 감지 시 재부착
+  const target = document.getElementById('d-tree-canvas');
+  if (target && typeof MutationObserver !== 'undefined') {
+    new MutationObserver(() => tryAttach()).observe(target, {childList: true, subtree: true});
+  } else {
+    // fallback — 주기적
+    setInterval(tryAttach, 1500);
+  }
+})();
+
+// ─────────────────────────────────────────────────────────────
+// SCREEN_CONTEXT — 각 모드의 "이 화면이 평가하는 것" 동적 갱신
+// 사용자 요청 (2026-05-04): "어디서 무슨 주제로 평가한 화면" 표현
+// ─────────────────────────────────────────────────────────────
+
+// 변수명 → 한글 라벨 (Analyze 매핑 슬롯용)
+const VAR_LABEL_KO = {
+  visitors_total: '유동인구',
+  visitors_20s: '20대 유동',
+  visitors_30s: '30대 유동',
+  visitors_inflow: '유입 인구',
+  biz_count: '사업체 수',
+  biz_cafe: '카페 수',
+  biz_new: '신규 진입',
+  biz_closed: '폐업',
+  land_price: '공시지가',
+  rent_price: '임대료',
+  tx_volume: '부동산 거래량',
+  tx_apt_count: '아파트 거래수',
+  transit_score: '교통 접근성',
+  walkability: '보행 친화도',
+  subway_distance_m: '지하철 거리',
+  bus_stop_density: '버스정류장 밀도',
+  plddt: '신뢰도(pLDDT)',
+};
+
+function _kV(v) { return (VAR_LABEL_KO[v] || v); }
+
+// 한국어 조사 자동 — 종성 유무로 을/를, 와/과 선택
+function _josa(word, withFinal, withoutFinal) {
+  if (!word) return withoutFinal;
+  const last = word[word.length - 1];
+  const code = last.charCodeAt(0);
+  if (code < 0xAC00 || code > 0xD7A3) return withoutFinal;
+  const final = (code - 0xAC00) % 28;
+  return final ? withFinal : withoutFinal;
+}
+function _eul(word) { return _josa(word, '을', '를'); }
+function _gwa(word) { return _josa(word, '과', '와'); }
+
+// Analyze 컨텍스트 자동 갱신 — 매핑 슬롯 select 변경 시 호출
+function updateAnalyzeContext() {
+  const banner = document.getElementById('analyze-context-banner');
+  if (!banner) return;
+  const yEl = document.querySelector('[data-slot="height"]');
+  const cEl = document.querySelector('[data-slot="color"]');
+  const fEl = document.querySelector('[data-slot="filter"]');
+  const tEl = document.querySelector('[data-slot="time"]');
+  const yVal = yEl ? (yEl.value || yEl.textContent || 'visitors_total') : 'visitors_total';
+  const cVal = cEl ? (cEl.value || cEl.textContent || 'biz_cafe') : 'biz_cafe';
+  const fVal = fEl ? (fEl.value || fEl.textContent || '전체') : '전체';
+  const tVal = tEl ? (tEl.value || tEl.textContent || '2024-12') : '2024-12';
+
+  const where = (fVal && fVal !== '전체') ? fVal : '전국 130개 동';
+  const yKo = _kV(yVal.trim());
+  const cKo = _kV(cVal.trim());
+  const what = `${yKo} × ${cKo}`;
+  const when = (tVal || '').trim();
+  // 한국어 조사 자동: 유동인구를 / 카페수와 → 종성 유무로 결정
+  const headline = `${where}의 ${yKo}${_eul(yKo)} ${cKo}${_gwa(cKo)} 함께 본 ${when} 분석`;
+
+  const whereEl = banner.querySelector('.ctx-where');
+  const whatEl = banner.querySelector('.ctx-what');
+  const whenEl = banner.querySelector('.ctx-when');
+  const headlineEl = banner.querySelector('#analyze-context-headline');
+  if (whereEl) whereEl.textContent = where;
+  if (whatEl) whatEl.textContent = what;
+  if (whenEl) whenEl.textContent = when;
+  if (headlineEl) headlineEl.textContent = headline;
+}
+
+// Decide 컨텍스트 — selectedDong 변경 시 호출
+function updateDecideContext() {
+  const whereEl = document.getElementById('decide-ctx-where');
+  const headlineEl = document.getElementById('decide-ctx-headline');
+  if (!whereEl) return;
+  const dong = (typeof selectedDong !== 'undefined' && selectedDong) ? selectedDong : null;
+  const where = dong ? dong.name : '동을 먼저 선택하세요';
+  if (whereEl) whereEl.textContent = where;
+  if (headlineEl) {
+    headlineEl.textContent = dong
+      ? `${dong.name}의 의사결정 KPI · 명분 트리 · 권고 cone을 한 화면에 펼침`
+      : '동을 선택하면 그 동의 의사결정 KPI 보드가 펼쳐집니다';
+  }
+}
+
+// Explore 컨텍스트 — month 변경 시
+function updateExploreContext() {
+  const whenEl = document.getElementById('explore-ctx-when');
+  const monthEl = document.getElementById('explore-month');
+  if (whenEl && monthEl) whenEl.textContent = monthEl.textContent || '2024-12';
+}
+
+window.updateAnalyzeContext = updateAnalyzeContext;
+window.updateDecideContext = updateDecideContext;
+window.updateExploreContext = updateExploreContext;
+
+// 자동 갱신 — 모드 전환 / 슬롯 변경 / 동 선택 시
+(function autoUpdateScreenContext() {
+  function tick() {
+    try {
+      updateAnalyzeContext();
+      updateDecideContext();
+      updateExploreContext();
+    } catch(e) {}
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(tick, 600));
+  } else {
+    setTimeout(tick, 600);
+  }
+  // Analyze 매핑 슬롯 변경 감지
+  document.addEventListener('change', e => {
+    if (e.target && e.target.matches && e.target.matches('[data-slot]')) tick();
+  }, true);
+  // 1초마다 가벼운 폴링 (selectedDong 등 다른 경로 변경 흡수)
+  setInterval(tick, 1500);
+})();

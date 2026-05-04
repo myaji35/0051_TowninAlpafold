@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils.etl_lock import acquire_lock, LockBusyError
 from utils.etl_retry import with_retry, RetryExhausted
 from utils.rate_tracker import RateTracker
+from utils.etl_base import transform_cell, save_cell, update_manifest
 
 # ---------------------------------------------------------------------------
 # 상수
@@ -92,23 +93,11 @@ def fetch_localdata(api_key: str, dong_name: str, opnsvcid: str) -> list:
 # ---------------------------------------------------------------------------
 
 def transform(raw: list, adm_cd: str, period: str, dry_run: bool = False) -> dict:
-    """LocalData 응답 → 표준 레코드 형태."""
-    return {
-        "dataset_key": DATASET_KEY,
-        "adm_cd": adm_cd,
-        "adm_nm": WEDGE_DONG_NAME,
-        "period": period,
-        "fetched_at": datetime.now(timezone.utc).isoformat(),
-        "records": raw,
-        "marker": "synthetic" if dry_run else "real",
-    }
+    return transform_cell(DATASET_KEY, adm_cd, WEDGE_DONG_NAME, period, raw, dry_run)
 
 
 def save(rec: dict, adm_cd: str, period: str) -> Path:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    fp = OUTPUT_DIR / f"{adm_cd}_{period}.json"
-    fp.write_text(json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")
-    return fp
+    return save_cell(rec, OUTPUT_DIR, adm_cd, period)
 
 
 # ---------------------------------------------------------------------------
@@ -152,12 +141,7 @@ def run(dry_run: bool = False) -> dict:
             out = save(rec, WEDGE_ADM_CD, WEDGE_PERIOD)
 
             # manifest_repo 커버리지 갱신 (안전하게 — 실패해도 ETL 성공 유지)
-            try:
-                from utils.manifest_repo import get_manifest_repo
-                repo = get_manifest_repo()
-                repo.set_dataset_coverage(WEDGE_ADM_CD, DATASET_KEY)
-            except Exception:
-                pass
+            update_manifest(WEDGE_ADM_CD, DATASET_KEY, 1, 5, rec["marker"], rec["fetched_at"])
 
             return {
                 "status": "success",
