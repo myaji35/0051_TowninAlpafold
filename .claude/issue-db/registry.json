@@ -1855,6 +1855,2479 @@
       "payload": {
         "files_changed": []
       }
+    },
+    {
+      "id": "UI_REDESIGN_MEONGBUN_LAYOUT-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[UI 재구성] 명분 사슬 7섹션 단일 페이지 레이아웃",
+      "detail": "대표님 진단(2026-05-03 스크린샷): 현재 화면이 \"멋있는 분석 차트 4종\"으로 흩어져 명분 흐름 안 보임. 재구성 설계: 한 동 선택 시 ❶권고요약 → ❷사실 → ❸해석 → ❹비교 → ❺시나리오 → ❻권고추적 → ❼한계 7섹션 단일 세로 흐름. 각 섹션 우상단에 [N/7] 번호 + brand-dna accent 좌측 보더 4px. 기존 위젯 4종(시계열/Top인과/Vibe트리/FeatureImportance) 재배치 (UI_REDESIGN_WIDGET_RELOCATE-001과 협업).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [],
+      "files": [
+        "index.html (전면 재구성)",
+        "app.js (renderMeongbunLayout 신규)",
+        "css/meongbun.css (신규)"
+      ],
+      "acceptance": [
+        "7섹션 단일 페이지 렌더 (스크롤 1회로 명분 흐름 파악)",
+        "각 섹션 [N/7] 번호 + accent 좌측 보더",
+        "브레드크럼 / 점프 네비게이션",
+        "Playwright 캐릭터 저니: 동 선택 → 7섹션 모두 보임 PASS",
+        "1440/1920/2560 3개 해상도 반응형 확인"
+      ],
+      "estimate_h": 12,
+      "payload": {
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T03:57:28.655153Z",
+      "completed_at": "2026-05-04T13:04:13.569589",
+      "result": {
+        "passed": true,
+        "files_created": [
+          "css/meongbun.css"
+        ],
+        "files_modified": [
+          "index.html",
+          "app.js"
+        ],
+        "sections_rendered": 7,
+        "node_check": "ok",
+        "e2e": "ok - server on 8765, all 7 sections present in DOM"
+      }
+    },
+    {
+      "id": "UI_REDESIGN_WIDGET_RELOCATE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[UI 재구성] 기존 4개 위젯 명분 사슬 매핑 + 차트 잘림 수정",
+      "detail": "현 좌측 상단 시계열 차트가 본체 잘리고 범례만 표시되는 버그 수정 + 4개 위젯 재배치:\n· 시계열 5색 → ❷ 사실 ① 카페수 추이\n· Top 인과 5개 → ❹ 비교 (유사동 매칭 근거)\n· Vibe 분류 트리 → ❻ 권고 추적 (왜 이 분류 → 이 권고)\n· Feature Importance → ❻ 권고 추적 SHAP 확장",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js",
+        "index.html"
+      ],
+      "acceptance": [
+        "시계열 차트 본체 정상 렌더 (잘림 0)",
+        "시간축 미래 영역 라벨 명시 (예측 cone vs 실데이터 구분)",
+        "4개 위젯 모두 새 섹션 위치로 이동",
+        "Top 인과 패턴이 \"유사동 매칭 근거\" 컨텍스트로 재라벨"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      },
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "started_at": "2026-05-04T04:45:16.034301Z",
+      "completed_at": "2026-05-04T13:50:00.405301",
+      "result": {
+        "passed": true,
+        "files_modified": [
+          "app.js",
+          "index.html",
+          "css/meongbun.css"
+        ],
+        "adapters_added": 4,
+        "chart_clip_fix": "explore-trace SVG display:block + min-height:160px 추가 — flex 컨텍스트에서 height:0 계산 방지",
+        "node_check": "ok",
+        "e2e": "widget-card 4개 확인, explore-trace height=160 확인"
+      }
+    },
+    {
+      "id": "UI_DECISION_ONEPAGER-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[섹션❶] Decision One-Pager — 권고 + 명분 3줄 + 단서",
+      "detail": "한 페이지 결론 카드:\n· 권고 (큰 글씨 + plddt_high 색)\n· 신뢰 별점 (1~5)\n· 명분 3줄 (각각 출처 +날짜)\n· 단서 조항 (warning 배경)",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderDecisionOnePager)",
+        "index.html"
+      ],
+      "acceptance": [
+        "권고 1개 + 명분 정확히 3줄 + 단서 1개 표시",
+        "권고에 신뢰 별점 ⭐ × N",
+        "단서 조항이 callout-warn 스타일",
+        "한 카드가 첫 화면(above the fold)에 완전히 보임"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      },
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "started_at": "2026-05-04T04:50:57.546280Z",
+      "completed_at": "2026-05-04T13:58:56.715887",
+      "result": {
+        "passed": true,
+        "files_modified": [
+          "app.js",
+          "css/meongbun.css"
+        ],
+        "functions_added": 3,
+        "node_check": "ok",
+        "e2e": {
+          "card_count": 1,
+          "recommendation_len": 24,
+          "reasons_li_count": 3,
+          "caveat_present": true,
+          "stars_chars": 5,
+          "stars_text": "★★★☆☆"
+        },
+        "screenshots": [
+          "/tmp/section1-onepager.png"
+        ]
+      }
+    },
+    {
+      "id": "UI_FACT_TRIPLE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[섹션❷] Facts 3분할 — 카페수/인구/지가 + 출처 마커",
+      "detail": "사실 섹션:\n· 3분할 가로 카드 (카페 수 추이 / 인구 구조 / 지가 추이)\n· 각 셀에 ● 실 / ○ 합성 / ◐ 추정 마커\n· source/fetched_at hover 툴팁",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderFactSection)",
+        "index.html"
+      ],
+      "acceptance": [
+        "3개 차트 균등 가로 배치",
+        "각 데이터 포인트에 데이터 출처 마커",
+        "hover 시 source/url/fetched_at 툴팁",
+        "시간축 미래 영역 명시 (실 vs 예측 구분)"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      },
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "started_at": "2026-05-04T04:55:39.325638Z",
+      "completed_at": "2026-05-04T13:59:50.770368",
+      "result": {
+        "status": "done",
+        "fact_cards": 3,
+        "tooltip": true,
+        "future_label": true,
+        "escapeHtml_guard": "not_needed_already_defined",
+        "node_check": "pass",
+        "screenshot": "/tmp/section2-fact-triple.png",
+        "sec1_collision": "none"
+      }
+    },
+    {
+      "id": "UI_INTERPRETATION_SECTION-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[섹션❸] Interpretation — 통계적 의미 + Method Card",
+      "detail": "해석 섹션:\n· 통계 명제 3~5줄 (n, p-value, CI 명시)\n· Method Card 펼치기 ▼ 인터랙션\n· Bonferroni 보정 등 학술 용어 정확히",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderInterpretation)",
+        "docs/methods/*.md (참조)"
+      ],
+      "acceptance": [
+        "통계 명제 각 줄에 n/p/CI 표기",
+        "Method Card 펼치기 → docs/methods/{X}.md 표시",
+        "\"분석가의 절제\" voice 준수 (과장 0)"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      },
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "started_at": "2026-05-04T05:00:12.304415Z",
+      "completed_at": "2026-05-04T14:04:43.417993",
+      "result": {
+        "passed": true,
+        "files_modified": [
+          "app.js",
+          "css/meongbun.css"
+        ],
+        "files_created": [
+          "docs/methods/km-survival.md",
+          "docs/methods/causal-extraction.md"
+        ],
+        "functions_added": 4,
+        "node_check": "ok",
+        "e2e": {
+          "claims": 3,
+          "toggle_open": true,
+          "method_text_loaded": true
+        },
+        "screenshots": [
+          "/tmp/section3-interpretation.png"
+        ]
+      }
+    },
+    {
+      "id": "UI_BENCHMARK_KM_CURVE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❹] Benchmark — Kaplan-Meier 생존곡선 + 유사동 매칭",
+      "detail": "비교 섹션:\n· K-M 생존곡선 2개 (대상 동 vs 평균) + 95% CI 띠\n· log-rank test 결과 표시 (χ², p)\n· 매칭 동 N개 + 코사인 유사도\n· 부록 B 링크",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_SURVIVAL-001",
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderBenchmark)",
+        "analysis/survival.py (모듈1 의존)"
+      ],
+      "acceptance": [
+        "K-M 곡선 2개 동시 렌더 + CI 띠",
+        "log-rank χ² + p 명시",
+        "매칭 동 리스트 + 유사도",
+        "한 화면에 곡선+표 동시 보임"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_SCENARIOS_3OPTION-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❺] Scenarios — A/B/C 3옵션 cone 비교",
+      "detail": "시나리오 섹션:\n· 3개 카드 가로 배치\n· 각 카드: 12mo 매출 cone (p10~p90) + ROI + 매칭 동 수\n· 권고 옵션에 ╲ 마커 + plddt_high 보더\n· Counterfactual PSM 결과 표시",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_COUNTERFACTUAL-001",
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderScenarios)",
+        "analysis/counterfactual.py (모듈2 의존)"
+      ],
+      "acceptance": [
+        "3개 옵션 카드 균등 배치",
+        "각 옵션 cone (p10~p90) + ROI + 매칭 N",
+        "권고 옵션 시각적 강조",
+        "PSM balance score 노출"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_RECOMMENDATION_TRACE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❻] Recommendation Trace — SHAP + Decision Tree 통합",
+      "detail": "권고 추적 섹션:\n· SHAP 변수별 기여도 horizontal bar (top 5 + 기타)\n· Decision Tree 분기 경로 (펼치기) — 권고까지 N회 분기\n· 기존 Vibe 트리 + Feature Importance 위젯 통합",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_SHAP-001",
+        "MODULE_DECISION_TREE_REASONS-001",
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderRecommendationTrace)",
+        "analysis/shap_explain.py (모듈4 의존)"
+      ],
+      "acceptance": [
+        "SHAP top 5 변수 + 기여도 % horizontal bar",
+        "Decision Tree 분기 경로 펼치기",
+        "기존 Vibe 트리 + Feature Importance 자연스럽게 흡수"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_LIMITATION_FALSIFY-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❼] Limitations + Falsifiability + 부록",
+      "detail": "한계 + 반증 + 부록:\n· 한계 7항목 (펼치기 기본)\n· 반증 기준 3~4개 (timeline 시각화)\n· 부록 링크: Method Cards / Provenance / 재현 코드",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "SIL_INTEGRATION-001",
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderLimitationFalsify)",
+        "sil/*.py (SIL 의존)"
+      ],
+      "acceptance": [
+        "한계 7항목 명시",
+        "반증 기준 timeline 시각화 (6mo / 12mo)",
+        "부록 3종 링크 모두 동작"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "FEATURE_DOMAIN_MENU-001",
+      "type": "FEATURE_PLAN",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[도메인 메뉴화] 약국 점포(개발/폐업) + NPL(매수/매도) 4개 평가모델 카테고리 추가",
+      "detail": "현재 콘솔은 Gallery/Explore/Analyze/Decide 4모드 + DataStudio/Workflow 보조 메뉴로 구성되어 있고, 도메인은 '도시 상권/인구 일반'에 묶여 있다. 대표님 요청: 두 개의 도메인 카테고리를 1급 메뉴로 노출:\n  (A) 약국 점포 안내 — ① 점포개발(신규 입지) ② 폐업평가(생존성)\n  (B) NPL 평가 — ① 매수 평가 ② 매도 평가\n\n메뉴 IA: 좌측/상단 네비에 카테고리(약국, NPL) → 서브(개발/폐업, 매수/매도) 2-depth. 각 평가모델은 입력 폼(주소·매물조건) → 점수/등급/근거(SHAP-style) → 4모드 콘솔로 deep-link 하는 구조 권장. 이번 FEATURE_PLAN 이슈는 product-manager가 (1) IA 확정, (2) 입력 스키마 4종, (3) 평가 산출물 스키마, (4) 기존 4모드와의 deep-link 매핑, (5) 권한/페르소나(점포개발자/폐업담당자/NPL매수자/NPL매도자), (6) 데이터 소스(상권 + 인구 + 부동산 + 채권 메타) 분리/공유 정책을 정의한다. 산출 후 USER_STORY 4개로 분해 → ux-design → generate-code 체인.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "app.js",
+        "index.html",
+        "components/ (신규)",
+        "docs/domain-menu-ia.md (신규)"
+      ],
+      "payload": {
+        "categories": [
+          {
+            "key": "pharmacy",
+            "label": "약국 점포 안내",
+            "submenus": [
+              {
+                "key": "pharmacy.develop",
+                "label": "점포개발",
+                "persona": "개발담당자"
+              },
+              {
+                "key": "pharmacy.close",
+                "label": "폐업평가",
+                "persona": "운영/회계 담당자"
+              }
+            ]
+          },
+          {
+            "key": "npl",
+            "label": "NPL 평가",
+            "submenus": [
+              {
+                "key": "npl.buy",
+                "label": "매수 평가",
+                "persona": "NPL 매수 심사역"
+              },
+              {
+                "key": "npl.sell",
+                "label": "매도 평가",
+                "persona": "NPL 매도 담당자"
+              }
+            ]
+          }
+        ],
+        "ui_constraints": [
+          "기존 4모드(Gallery/Explore/Analyze/Decide) 비파괴 — 카테고리 진입 후 동일 모드 토글 가능",
+          "brand-dna.json pLDDT 색상 체계 그대로 적용 (≥90 #00529B / 70-89 #5BC0EB / 50-69 #FED766 / <50 #C9485B)",
+          "primary_action_per_screen: MUST_EXIST — 각 평가모델 화면에 '평가 실행' 단일 CTA",
+          "anti_patterns 위반 금지 (brand-dna.json 참조)"
+        ],
+        "deep_link_targets": [
+          "explore",
+          "analyze",
+          "decide"
+        ],
+        "requires_user_confirm": false,
+        "files_changed": []
+      },
+      "depth": 0,
+      "started_at": "2026-05-04T04:04:44.485820Z",
+      "completed_at": "2026-05-04T13:12:22.054508",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/domain-menu-ia.md"
+        ],
+        "unblocked_user_stories": 4,
+        "new_etl_issues": 2,
+        "new_ux_design_issues": 4,
+        "deep_link_map": {
+          "pharmacy.develop": "decide",
+          "pharmacy.close": "analyze",
+          "npl.buy": "decide",
+          "npl.sell": "decide"
+        }
+      }
+    },
+    {
+      "id": "USER_STORY_PHARMACY_DEVELOP-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[약국·점포개발] 신규 입지 점수화 평가모델 — 후보 주소 → 적합도 등급 + 근거",
+      "detail": "페르소나: 약국 본사 개발담당자. 신규 점포 후보 주소를 입력하면, (1) 인구·유동·경쟁약국·의료기관·소득·연령대 가중치로 0~100 적합도 점수, (2) pLDDT 색상 등급(≥90/70-89/50-69/<50)으로 신뢰도 표시, (3) Top 3 강점/약점 근거(SHAP-style), (4) Decide 모드로 cone(p10/p50/p90) deep-link.\n\n입력 스키마: address(필수), 평형(선택), 임대가(선택), 처방의원수반경 자동계산.\n출력 스키마: {score, grade(plddt), top_drivers[], cone_link, comparable_dongs[]}.\n데이터 소스: 기존 simula_data_real.json + 약국/의료기관 외부 데이터셋(향후 ETL 이슈로 분리).\nBLOCKED 사유: FEATURE_DOMAIN_MENU-001의 IA·스키마 확정 후 진행.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "components/pharmacy-develop.js (신규)",
+        "data_raw/pharmacy/ (신규)",
+        "etl_pharmacy.py (신규)"
+      ],
+      "depends_on": [
+        "FEATURE_DOMAIN_MENU-001"
+      ],
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "deep_link_to": "decide",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b1-pharmacydevelop--입력",
+        "output_schema_ref": "docs/domain-menu-ia.md#c2-모델별-추가-필드",
+        "files_changed": []
+      },
+      "depth": 1,
+      "unblocked_at": "2026-05-04T04:12:06.796745Z",
+      "unblocked_by": "FEATURE_DOMAIN_MENU-001 (product-manager)",
+      "started_at": "2026-05-04T04:13:04.208577Z",
+      "completed_at": "2026-05-04T13:20:38.636294",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/stories/pharmacy-develop.md"
+        ],
+        "new_child_issues": [
+          "GENERATE_CODE_PHARMACY_DEVELOP_UI-001",
+          "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001",
+          "RUN_TESTS_PHARMACY_DEVELOP-001",
+          "BIZ_VALIDATE_PHARMACY_DEVELOP-001"
+        ],
+        "unblocked": [
+          "UX_DESIGN_PHARMACY_DEVELOP-001"
+        ],
+        "scope_v1": "단일 주소 평가 + 결과 카드 + Decide deep-link",
+        "spec_lines": 204
+      }
+    },
+    {
+      "id": "USER_STORY_PHARMACY_CLOSE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[약국·폐업평가] 운영 점포 생존성 평가 — 매출/처방건수/주변 변동 → 폐업 위험도",
+      "detail": "페르소나: 약국 본사 운영/회계 담당자. 기존 운영 점포의 폐업 리스크를 평가:\n(1) 최근 12개월 매출/처방건수 추세, (2) 주변 의원 폐업/이전, (3) 인구 감소율, (4) 경쟁약국 신규 진입 → Hazard 점수(0~100, 높을수록 위험), (5) Kaplan-Meier 유사군 생존곡선 (이미 Benchmark 섹션에 KM 코드 자산 있음 — UI_BENCHMARK_KM_CURVE-001 참조).\n\n입력 스키마: store_id 또는 address + 운영기간 + 최근 매출 시계열.\n출력 스키마: {hazard_score, grade, km_curve, peer_dongs[], action_recommendation(유지/관찰/철수)}.\nBLOCKED 사유: FEATURE_DOMAIN_MENU-001의 IA·스키마 확정 후 진행.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "components/pharmacy-close.js (신규)",
+        "data_raw/pharmacy_ops/ (신규)"
+      ],
+      "depends_on": [
+        "FEATURE_DOMAIN_MENU-001"
+      ],
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "deep_link_to": "analyze",
+        "reuses": [
+          "UI_BENCHMARK_KM_CURVE-001"
+        ],
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b2-pharmacyclose--입력",
+        "output_schema_ref": "docs/domain-menu-ia.md#c2-모델별-추가-필드",
+        "files_changed": []
+      },
+      "depth": 1,
+      "unblocked_at": "2026-05-04T04:12:06.796745Z",
+      "unblocked_by": "FEATURE_DOMAIN_MENU-001 (product-manager)",
+      "started_at": "2026-05-04T04:21:15.094815Z",
+      "completed_at": "2026-05-04T13:26:36.481880",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/stories/pharmacy-close.md"
+        ],
+        "new_child_issues": [
+          "GENERATE_CODE_PHARMACY_CLOSE_UI-001",
+          "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001",
+          "INTEGRATE_KM_CURVE_PHARMACY_CLOSE-001",
+          "RUN_TESTS_PHARMACY_CLOSE-001",
+          "BIZ_VALIDATE_PHARMACY_CLOSE-001"
+        ],
+        "unblocked": [
+          "UX_DESIGN_PHARMACY_CLOSE-001"
+        ],
+        "reuses": [
+          "UI_BENCHMARK_KM_CURVE-001"
+        ],
+        "scope_v1": "단일 점포 평가 + KM 곡선 + Analyze deep-link",
+        "spec_lines": 258,
+        "color_conflict_guard": true
+      }
+    },
+    {
+      "id": "USER_STORY_NPL_BUY-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[NPL·매수평가] 채권 매수 적정가 산정 — 담보 부동산 회수 시나리오 cone",
+      "detail": "페르소나: NPL 매수 심사역. 부실채권 매수 검토 시:\n(1) 담보 부동산 위치(지가/거래량/공실률) 기반 회수 예측 cone(p10/p50/p90), (2) 권리분석 메타(선순위·세금·임차) 입력 → 실회수금 추정, (3) 매수가 시나리오 A/B/C 3옵션 비교(이미 UI_SCENARIOS_3OPTION-001 자산 있음 → 재활용), (4) Decide 모드 deep-link.\n\n입력 스키마: address + 권리관계JSON + 청구액 + 후보 매수가.\n출력 스키마: {expected_recovery_cone, irr_estimate, scenarios[A,B,C], top_risks[]}.\nBLOCKED 사유: FEATURE_DOMAIN_MENU-001의 IA·스키마 확정 후 진행.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "components/npl-buy.js (신규)",
+        "data_raw/npl/ (신규)",
+        "etl_npl.py (신규)"
+      ],
+      "depends_on": [
+        "FEATURE_DOMAIN_MENU-001"
+      ],
+      "payload": {
+        "submenu_key": "npl.buy",
+        "deep_link_to": "decide",
+        "reuses": [
+          "UI_SCENARIOS_3OPTION-001"
+        ],
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b3-nplbuy--입력",
+        "output_schema_ref": "docs/domain-menu-ia.md#c2-모델별-추가-필드",
+        "files_changed": []
+      },
+      "depth": 1,
+      "unblocked_at": "2026-05-04T04:12:06.796745Z",
+      "unblocked_by": "FEATURE_DOMAIN_MENU-001 (product-manager)",
+      "started_at": "2026-05-04T04:27:06.349560Z",
+      "completed_at": "2026-05-04T13:33:35.555902",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/stories/npl-buy.md"
+        ],
+        "new_child_issues": [
+          "GENERATE_CODE_NPL_BUY_UI-001",
+          "GENERATE_CODE_NPL_BUY_RECOVERY-001",
+          "INTEGRATE_SCENARIOS_NPL_BUY-001",
+          "RUN_TESTS_NPL_BUY-001",
+          "BIZ_VALIDATE_NPL_BUY-001"
+        ],
+        "unblocked": [
+          "UX_DESIGN_NPL_BUY-001"
+        ],
+        "reuses": [
+          "UI_SCENARIOS_3OPTION-001"
+        ],
+        "scope_v1": "단일 채권 평가 + 회수 cone + 3시나리오 + Decide deep-link"
+      }
+    },
+    {
+      "id": "USER_STORY_NPL_SELL-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[NPL·매도평가] 채권 매도 적정가/타이밍 — 회수율 vs 즉시매각 비교",
+      "detail": "페르소나: NPL 매도 담당자(기존 보유자). 보유 부실채권의 매각 vs 보유 의사결정:\n(1) 현재 시점 매각 시 호가 분포(시장 비교 매물 기반), (2) 6/12/24개월 보유 시 회수 cone, (3) 보유 비용(대손충당·관리비) 차감 NPV, (4) Recommendation Trace 패턴(SHAP+Tree, 이미 UI_RECOMMENDATION_TRACE-001 자산) 재활용.\n\n입력 스키마: portfolio_id 또는 단건 채권 + 보유개월수 + 충당금률.\n출력 스키마: {sell_now_npv, hold_npv_cone[6,12,24], recommendation, drivers[]}.\nBLOCKED 사유: FEATURE_DOMAIN_MENU-001의 IA·스키마 확정 후 진행.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "components/npl-sell.js (신규)"
+      ],
+      "depends_on": [
+        "FEATURE_DOMAIN_MENU-001"
+      ],
+      "payload": {
+        "submenu_key": "npl.sell",
+        "deep_link_to": "decide",
+        "reuses": [
+          "UI_RECOMMENDATION_TRACE-001"
+        ],
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b4-nplsell--입력",
+        "output_schema_ref": "docs/domain-menu-ia.md#c2-모델별-추가-필드",
+        "files_changed": []
+      },
+      "depth": 1,
+      "unblocked_at": "2026-05-04T04:12:06.796745Z",
+      "unblocked_by": "FEATURE_DOMAIN_MENU-001 (product-manager)",
+      "started_at": "2026-05-04T04:34:00.449379Z",
+      "completed_at": "2026-05-04T13:41:55.720942",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/stories/npl-sell.md"
+        ],
+        "new_child_issues": [
+          "GENERATE_CODE_NPL_SELL_UI-001",
+          "GENERATE_CODE_NPL_SELL_NPV-001",
+          "INTEGRATE_RECOMMENDATION_TRACE_NPL_SELL-001",
+          "RUN_TESTS_NPL_SELL-001",
+          "BIZ_VALIDATE_NPL_SELL-001"
+        ],
+        "unblocked": [
+          "UX_DESIGN_NPL_SELL-001"
+        ],
+        "reuses": [
+          "UI_RECOMMENDATION_TRACE-001"
+        ],
+        "scope_v1": "단건 채권 즉시매각 vs 6/12/24M 보유 NPV 비교 + Decide deep-link",
+        "completes_user_story_round": "4/4"
+      }
+    },
+    {
+      "id": "ISS-022",
+      "type": "REFACTOR",
+      "priority": "P2",
+      "status": "READY",
+      "title": "simula_data_real.json 갱신 후 tree_model.json 미재학습",
+      "detail": "simula_data_real.json이 tree_model.json보다 최신. 입력 데이터가 바뀌었으니 npm run train:tree 재실행 권고.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T03:57:11.958381Z",
+      "files": [
+        "simula_data_real.json",
+        "tree_model.json",
+        "decision_tree_train.py"
+      ],
+      "detect_signature": "04908a670cab",
+      "auto_detected": true
+    },
+    {
+      "id": "ISS-063",
+      "title": "[Plan:구현] UI_REDESIGN_MEONGBUN_LAYOUT-001",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_REDESIGN_MEONGBUN_LAYOUT-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:04:13.569589",
+      "payload": {
+        "source_issue": "UI_REDESIGN_MEONGBUN_LAYOUT-001",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "passed": true,
+        "closed_reason": "duplicate_plan",
+        "unblocked_children": 12,
+        "explanation": "부모 USER_STORY가 DONE이고 7섹션 자식이 실제 구현 책임. on_complete 자동 plan 중복 → CLOSE."
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-04T04:44:07.044907Z",
+      "completed_at": "2026-05-04T13:44:15.659637"
+    },
+    {
+      "id": "ETL_PHARMACY_DATA-001",
+      "type": "ETL",
+      "priority": "P0",
+      "status": "READY",
+      "title": "[약국 ETL] HIRA 의원·약국 분포 / 처방통계 표준화 — data_raw/pharmacy/",
+      "detail": "약국 점포개발/폐업평가 모델 전용 외부 데이터 ETL. HIRA(건강보험심사평가원) 의원 분포, 약국 분포, 처방통계 OD를 동(real_adm_cd) 단위 시계열로 표준화하여 data_raw/pharmacy/ 하위에 적재. 본 이슈는 '스키마만' 정의 (외부 데이터 출처 결정/실제 다운로드는 후속 이슈로 분리). 산출물: (1) data_raw/pharmacy/schema.json (필드 정의), (2) data_raw/pharmacy/sample.json (5동 mock), (3) etl_pharmacy.py 스켈레톤. 본 ETL 미완성 시 평가모델은 simula_data_real.json fallback으로 동작 (docs/domain-menu-ia.md F절 참조).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "data_raw/pharmacy/schema.json (신규)",
+        "data_raw/pharmacy/sample.json (신규)",
+        "etl_pharmacy.py (신규)"
+      ],
+      "depth": 1,
+      "payload": {
+        "scope_dir": "data_raw/pharmacy/",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "schema_only": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ETL_NPL_DATA-001",
+      "type": "ETL",
+      "priority": "P3",
+      "status": "READY",
+      "title": "[NPL ETL] 권리분석 메타 / NPL 시장 매물·호가 표준화 — data_raw/npl/",
+      "detail": "NPL 매수/매도 평가모델 전용 외부 데이터 ETL. 권리분석 메타(선순위·세금·임차), NPL 시장 매물·호가 분포(p10/p50/p90)를 표준화하여 data_raw/npl/ 하위에 적재. 본 이슈는 '스키마만' 정의 (외부 데이터 출처 결정/실제 수집은 후속 이슈로 분리). 산출물: (1) data_raw/npl/schema.json, (2) data_raw/npl/sample.json (10건 mock), (3) etl_npl.py 스켈레톤. 본 ETL 미완성 시 평가모델은 동 단위 land_price/tx_volume fallback으로 동작 (docs/domain-menu-ia.md F절 참조).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "data_raw/npl/schema.json (신규)",
+        "data_raw/npl/sample.json (신규)",
+        "etl_npl.py (신규)"
+      ],
+      "depth": 1,
+      "payload": {
+        "scope_dir": "data_raw/npl/",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "schema_only": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "requires_data_license_decision": true
+      },
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "UX_DESIGN_PHARMACY_DEVELOP-001",
+      "type": "UX_DESIGN",
+      "priority": "P1",
+      "status": "DONE",
+      "unblocked_at": "2026-05-04T13:15:00Z",
+      "unblocked_by": "USER_STORY_PHARMACY_DEVELOP-001 (product-manager) — docs/stories/pharmacy-develop.md 명세 확정",
+      "title": "[UX·약국·점포개발] 입력 폼 + 적합도 결과 카드 + Decide deep-link UX 설계",
+      "detail": "약국 본사 개발담당자용 UI/UX 설계. (1) 입력 폼: 주소(필수)/평형/임대료/기대 처방건수, (2) 결과 카드: score 0~100 + pLDDT 등급 배지 + Top 3 SHAP 드라이버 + cone p10/p50/p90 보조 라인, (3) primary CTA 단일: '평가 실행' 또는 'Decide 모드에서 cone 보기'. brand-dna.json hero_color #00529B 적용. anti_patterns 5종 위반 금지. docs/domain-menu-ia.md G절 와이어프레임 참조.",
+      "assign_to": "ux-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "components/pharmacy-develop.js (신규 스펙)",
+        "docs/domain-menu-ia.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_DEVELOP-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "deep_link_to": "decide",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b-4개-평가모델-입력-스키마",
+        "output_schema_ref": "docs/domain-menu-ia.md#c-4개-평가모델-출력-스키마",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ],
+        "files_changed": [],
+        "ux_spec_doc": "docs/ux/pharmacy-develop-ux.md"
+      },
+      "started_at": "2026-05-04T05:05:17.550691Z",
+      "completed_at": "2026-05-04T14:09:20.232763",
+      "owner": "ux-harness",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/ux/pharmacy-develop-ux.md"
+        ],
+        "sections": 9,
+        "primary_cta_count": 1,
+        "anti_patterns_violations": 0,
+        "state_matrix_rows": 6,
+        "ux_spec_attached_to": [
+          "GENERATE_CODE_PHARMACY_DEVELOP_UI-001"
+        ]
+      }
+    },
+    {
+      "id": "UX_DESIGN_PHARMACY_CLOSE-001",
+      "type": "UX_DESIGN",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[UX·약국·폐업평가] Hazard 점수 + KM 곡선 + Analyze deep-link UX 설계",
+      "detail": "약국 본사 운영/회계 담당자용 UI/UX 설계. (1) 입력 폼: store_id 또는 address + operating_months + 12개월 매출 시계열, (2) 결과 카드: hazard_score(0~100) + 등급 + 유사 동 KM 곡선 mini, action_recommendation(유지/관찰/철수) 배지, (3) primary CTA: 'Analyze 모드에서 KM curve 전체 보기' (UI_BENCHMARK_KM_CURVE-001 자산 재활용).",
+      "assign_to": "ux-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "components/pharmacy-close.js (신규 스펙)",
+        "docs/domain-menu-ia.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "deep_link_to": "analyze",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b-4개-평가모델-입력-스키마",
+        "output_schema_ref": "docs/domain-menu-ia.md#c-4개-평가모델-출력-스키마",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ],
+        "files_changed": []
+      },
+      "unblocked_at": "2026-05-04T04:26:28.734736Z",
+      "unblocked_by": "USER_STORY_PHARMACY_CLOSE-001 (product-manager)",
+      "started_at": "2026-05-04T05:10:14.025907Z",
+      "completed_at": "2026-05-04T14:14:50.002531",
+      "result": {
+        "passed": true,
+        "doc": "docs/ux/pharmacy-close-ux.md",
+        "lines": 367,
+        "primary_cta": 1,
+        "anti_patterns_violations": 0,
+        "color_guard_label": true,
+        "state_matrix_rows": 6,
+        "km_ci_notation": true,
+        "child_spec_attached": "GENERATE_CODE_PHARMACY_CLOSE_UI-001"
+      }
+    },
+    {
+      "id": "UX_DESIGN_NPL_BUY-001",
+      "type": "UX_DESIGN",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[UX·NPL·매수평가] 권리분석 입력 + 회수 cone + 3시나리오 비교 UX 설계",
+      "detail": "NPL 매수 심사역용 UI/UX 설계. (1) 입력 폼: address + asset_type + claim_amount + candidate_bid + rights(senior/tax/tenant) JSON, (2) 결과 카드: expected_recovery_cone + irr_estimate + scenarios A/B/C 3옵션 비교 카드 (UI_SCENARIOS_3OPTION-001 재활용) + top_risks[], (3) primary CTA: 'Decide 모드에서 시나리오 비교'.",
+      "assign_to": "ux-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "components/npl-buy.js (신규 스펙)",
+        "docs/domain-menu-ia.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "npl.buy",
+        "deep_link_to": "decide",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b-4개-평가모델-입력-스키마",
+        "output_schema_ref": "docs/domain-menu-ia.md#c-4개-평가모델-출력-스키마",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ]
+      },
+      "started_at": "2026-05-04T05:10:14.025907Z",
+      "completed_at": "2026-05-04T14:14:40.427423",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/ux/npl-buy-ux.md"
+        ],
+        "sections": 10,
+        "primary_cta": 1,
+        "anti_patterns_violations": 0,
+        "global_color_consistency_label": true,
+        "state_matrix_rows": 6,
+        "grade_levels": 4,
+        "child_code_issue_spec": "GENERATE_CODE_NPL_BUY_UI-001"
+      }
+    },
+    {
+      "id": "UX_DESIGN_NPL_SELL-001",
+      "type": "UX_DESIGN",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[UX·NPL·매도평가] 보유 vs 매각 NPV 비교 + 추천 트레이스 UX 설계",
+      "detail": "NPL 매도 담당자용 UI/UX 설계. (1) 입력 폼: portfolio_id 또는 단건 채권 + holding_months + provision_rate + carry_cost_monthly, (2) 결과 카드: sell_now_npv vs hold_npv_cone[6,12,24] 비교 차트 + recommendation.label(즉시매각/6/12/24개월 보유) + drivers[] (Recommendation Trace UI_RECOMMENDATION_TRACE-001 재활용), (3) primary CTA: 'Decide 모드에서 추천 트레이스 보기'.",
+      "assign_to": "ux-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "components/npl-sell.js (신규 스펙)",
+        "docs/domain-menu-ia.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_SELL-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "npl.sell",
+        "deep_link_to": "decide",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b-4개-평가모델-입력-스키마",
+        "output_schema_ref": "docs/domain-menu-ia.md#c-4개-평가모델-출력-스키마",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ],
+        "files_changed": []
+      },
+      "unblocked_at": "2026-05-04T04:41:47Z",
+      "unblocked_by": "USER_STORY_NPL_SELL-001 (product-manager)",
+      "started_at": "2026-05-04T05:10:14.025907Z",
+      "completed_at": "2026-05-04T14:16:05.618198",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/ux/npl-sell-ux.md"
+        ],
+        "doc_lines": 210,
+        "primary_cta": 1,
+        "anti_patterns_violations": 0,
+        "color_guard_label": true,
+        "recommendation_states": 4,
+        "shap_sign_convention": true,
+        "cone_horizons": [
+          6,
+          12,
+          24
+        ],
+        "state_matrix_rows": 7,
+        "completes_ux_design_round": "4/4"
+      }
+    },
+    {
+      "id": "ISS-070",
+      "title": "[Plan:CEO검토] FEATURE_DOMAIN_MENU-001 전략 검토",
+      "type": "PLAN_CEO_REVIEW",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "plan-ceo-reviewer",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "FEATURE_DOMAIN_MENU-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:12:22.054508",
+      "payload": {
+        "source_issue": "FEATURE_DOMAIN_MENU-001",
+        "source_plan": {
+          "passed": true,
+          "docs_created": [
+            "docs/domain-menu-ia.md"
+          ],
+          "unblocked_user_stories": 4,
+          "new_etl_issues": 2,
+          "new_ux_design_issues": 4,
+          "deep_link_map": {
+            "pharmacy.develop": "decide",
+            "pharmacy.close": "analyze",
+            "npl.buy": "decide",
+            "npl.sell": "decide"
+          }
+        },
+        "feature": "FEATURE_DOMAIN_MENU-001",
+        "files_changed": []
+      },
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/reviews/ceo-review-feature-domain-menu-001.md"
+        ],
+        "mode": "SELECTIVE_EXPANSION",
+        "decision": "REVISE",
+        "blockers": [
+          {
+            "id": "ISS-090",
+            "summary": "wedge 결정 누락"
+          },
+          {
+            "id": "ISS-091",
+            "summary": "NPL 데이터 라이선스 미확정"
+          },
+          {
+            "id": "ISS-092",
+            "summary": "횡단 비교 보드 IN/OUT 결정 누락"
+          }
+        ],
+        "key_recommendations": 5,
+        "narrow_wedge_pick": "pharmacy.develop"
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-04T05:16:36.510013Z",
+      "updated_at": "2026-05-04T05:20:58.782831+00:00",
+      "completed_at": "2026-05-04T14:21:04.935836"
+    },
+    {
+      "id": "ISS-071",
+      "title": "[Plan:Eng검토] FEATURE_DOMAIN_MENU-001 실행가능성 검토",
+      "type": "PLAN_ENG_REVIEW",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "plan-eng-reviewer",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "FEATURE_DOMAIN_MENU-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:12:22.054508",
+      "payload": {
+        "source_issue": "FEATURE_DOMAIN_MENU-001",
+        "source_plan": {
+          "passed": true,
+          "docs_created": [
+            "docs/domain-menu-ia.md"
+          ],
+          "unblocked_user_stories": 4,
+          "new_etl_issues": 2,
+          "new_ux_design_issues": 4,
+          "deep_link_map": {
+            "pharmacy.develop": "decide",
+            "pharmacy.close": "analyze",
+            "npl.buy": "decide",
+            "npl.sell": "decide"
+          }
+        },
+        "feature": "FEATURE_DOMAIN_MENU-001",
+        "files_changed": []
+      },
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/reviews/eng-review-feature-domain-menu-001.md"
+        ],
+        "decision": "REVISE",
+        "blockers": [
+          {
+            "id": "ISS-093",
+            "summary": "DATA_UIJEONGBU_PHASE2-001 P0 격상"
+          },
+          {
+            "id": "ISS-094",
+            "summary": "parseUrlContext deep-link 진입점"
+          },
+          {
+            "id": "ISS-095",
+            "summary": "공통 유틸 4종 추출"
+          }
+        ],
+        "critical_path_models": [
+          "pharmacy.close",
+          "npl.buy",
+          "npl.sell"
+        ],
+        "wave1_immediate": [
+          "pharmacy.develop"
+        ],
+        "key_recommendations": 5
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-04T05:16:36.510013Z",
+      "updated_at": "2026-05-04T00:00:00Z",
+      "completed_at": "2026-05-04T14:23:21.565779"
+    },
+    {
+      "id": "GENERATE_CODE_PHARMACY_DEVELOP_UI-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[코드·약국·점포개발 UI] 입력 폼 + 결과 카드 + Decide deep-link 트리거",
+      "detail": "약국 점포개발 평가 화면 UI 컴포넌트 구현. 입력 폼(주소 필수 + 4개 선택 필드) + pLDDT 결과 카드 + 'Decide에서 보기' deep-link 보조 버튼. 점수 계산은 자리만 잡고 viz/plugins/pharmacy-scorer.js 함수 import (실제 계산 로직은 GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001에서 구현). brand-dna.json plddt 4색 + hero_color #00529B 적용. anti_patterns 5종 위반 금지 (single-CTA, no-gradient, no-illustration). 와이어프레임: docs/stories/pharmacy-develop.md F절. AC: docs/stories/pharmacy-develop.md B절 AC-1/2/3/4/6/7.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:15:00Z",
+      "files": [
+        "components/pharmacy-develop.js (신규)",
+        "index.html (surgical: [약국 ▾] 드롭다운에 '점포개발' 항목 추가만)",
+        "css/pharmacy.css (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_DEVELOP-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "deep_link_to": "decide",
+        "story_doc": "docs/stories/pharmacy-develop.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "components/",
+        "interface_contract": "compute_pharmacy_develop_score(input) → output schema (docs/domain-menu-ia.md#c1-공통-출력-컨벤션 + #c2-모델별-추가-필드)",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ],
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "ux_spec_doc": "docs/ux/pharmacy-develop-ux.md"
+      },
+      "result": null,
+      "spawn_rules": [],
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)"
+    },
+    {
+      "id": "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[코드·약국·점포개발 Scorer] 가중치 점수 + Top Drivers + Comparable Dongs 계산",
+      "detail": "docs/stories/pharmacy-develop.md D절 가중치 룰 구현. 7개 요인(인구밀도 0.18 / 60대 비중 0.15 / 반경500m 의원수 0.20 / 반경500m 경쟁약국수 -0.18 / 평균소득분위 0.10 / 임대료 -0.12 / 유동인구 0.07, 합 1.00) → min-max 0~100 정수. top_drivers[3] = |contribution| 상위 3개 (positive/negative direction 명시). comparable_dongs[≤5] = 점수 ±10 이내 동. 결정성 보장: 동일 input → 동일 score (AC-7). 데이터: simula_data_real.json + 외부 의원/약국 더미 (ETL_PHARMACY_DATA-001 미완성 시 fallback).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:15:00Z",
+      "files": [
+        "viz/plugins/pharmacy-scorer.js (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_DEVELOP-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "story_doc": "docs/stories/pharmacy-develop.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "viz/plugins/",
+        "weights": {
+          "population_density": 0.18,
+          "elderly_ratio": 0.15,
+          "clinics_within_500m": 0.2,
+          "competitor_pharmacies_within_500m": -0.18,
+          "income_quantile": 0.1,
+          "rent_ratio": -0.12,
+          "visitors_total": 0.07
+        },
+        "weights_sum_check": 1.0,
+        "data_sources": {
+          "primary": "simula_data_real.json",
+          "external_dummy_until_etl": "ETL_PHARMACY_DATA-001"
+        },
+        "parallel_with": "ETL_PHARMACY_DATA-001",
+        "deterministic": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": [],
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)"
+    },
+    {
+      "id": "RUN_TESTS_PHARMACY_DEVELOP-001",
+      "type": "RUN_TESTS",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[테스트·약국·점포개발] 단위 + Playwright 캐릭터 저니 (개발담당자)",
+      "detail": "(1) 단위 테스트: 가중치 합 = 1.0 검증, score 경계값(0/49/50/69/70/89/90/100) → grade 매핑 4분기 모두 발생, top_drivers 정렬 정확성, AC-7 결정성. (2) Playwright 캐릭터 저니 (5스텝): 페이지 로드 → [약국 ▾] → 점포개발 클릭 → 주소 '의정부시 금오동' 입력 → 평가 실행 → 결과 카드 렌더 → Decide에서 보기 클릭 → ?mode=decide&ctx=pharmacy.develop&address=... 도달. 각 스텝 스크린샷: /tmp/journey-pharmacy-develop-1~5.png. AC 검증: docs/stories/pharmacy-develop.md B절 AC-1/2/3/4/5/6/7.",
+      "assign_to": "test-harness",
+      "created_at": "2026-05-04T13:15:00Z",
+      "files": [
+        "verify_pharmacy_develop.mjs (신규)"
+      ],
+      "depends_on": [
+        "GENERATE_CODE_PHARMACY_DEVELOP_UI-001",
+        "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001"
+      ],
+      "depth": 3,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "story_doc": "docs/stories/pharmacy-develop.md",
+        "persona": "약국 본사 개발담당자",
+        "test_address": "의정부시 금오동",
+        "screenshot_paths": [
+          "/tmp/journey-pharmacy-develop-1.png",
+          "/tmp/journey-pharmacy-develop-2.png",
+          "/tmp/journey-pharmacy-develop-3.png",
+          "/tmp/journey-pharmacy-develop-4.png",
+          "/tmp/journey-pharmacy-develop-5.png"
+        ],
+        "acceptance_criteria_refs": [
+          "AC-1",
+          "AC-2",
+          "AC-3",
+          "AC-4",
+          "AC-5",
+          "AC-6",
+          "AC-7"
+        ],
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "BIZ_VALIDATE_PHARMACY_DEVELOP-001",
+      "type": "BIZ_VALIDATE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[비즈검증·약국·점포개발] 4단계 grade 시나리오 + 4개 엣지케이스",
+      "detail": "시나리오 갭 정적 검증. (1) 4단계 grade 발생 시나리오: high/mid/low/poor 각 1개 주소 샘플로 score 분포 발생 가능성 확인. (2) 엣지 케이스 4개: 반경 500m 의원수 0(처방원 부재 약점 명시 - AC-5) / 경쟁 약국수 0 (가산점 적용) / 임대료 미입력 (중립 0점) / 동 매핑 실패 (AC-4 inline 에러). CRITICAL 갭 발견 시 BIZ_FIX P0 자동 spawn.",
+      "assign_to": "biz-validator",
+      "created_at": "2026-05-04T13:15:00Z",
+      "files": [],
+      "depends_on": [
+        "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001"
+      ],
+      "depth": 3,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "story_doc": "docs/stories/pharmacy-develop.md",
+        "scenarios": [
+          {
+            "id": "S1",
+            "label": "high",
+            "expected_score_range": [
+              90,
+              100
+            ]
+          },
+          {
+            "id": "S2",
+            "label": "mid",
+            "expected_score_range": [
+              70,
+              89
+            ]
+          },
+          {
+            "id": "S3",
+            "label": "low",
+            "expected_score_range": [
+              50,
+              69
+            ]
+          },
+          {
+            "id": "S4",
+            "label": "poor",
+            "expected_score_range": [
+              0,
+              49
+            ]
+          }
+        ],
+        "edge_cases": [
+          "clinics_within_500m == 0 → top_drivers에 negative 포함 (AC-5)",
+          "competitor_pharmacies_within_500m == 0 → score 가산",
+          "rent_monthly_krw 미입력 → 중립 0점",
+          "주소 매핑 실패 → AC-4 inline 에러"
+        ],
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-072",
+      "title": "[Plan:구현] USER_STORY_PHARMACY_DEVELOP-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "USER_STORY_PHARMACY_DEVELOP-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:20:38.636294",
+      "payload": {
+        "source_issue": "USER_STORY_PHARMACY_DEVELOP-001",
+        "acceptance_criteria": [],
+        "wave": 1
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "GENERATE_CODE_PHARMACY_CLOSE_UI-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "READY",
+      "title": "[약국·폐업평가·UI] 입력 폼 + 결과 카드 + KM 마운트 슬롯 + Analyze deep-link",
+      "detail": "docs/stories/pharmacy-close.md G.1 참조. components/pharmacy-close.js 신규, index.html 약국 드롭다운에 '폐업평가' 항목 추가(surgical), css/pharmacy.css 점포개발과 공유. hazard 계산은 G.2의 compute_pharmacy_hazard_score() import. KM 영역은 빈 컨테이너만(G.3에서 연결). 화면 상단 색 충돌 가드 라벨 필수.",
+      "assign_to": "agent-harness",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "components/pharmacy-close.js (신규)",
+        "index.html (surgical: 약국 드롭다운 항목 추가)",
+        "css/pharmacy.css (공유)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "deep_link_to": "analyze",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "scope_dir": "components/",
+        "primary_action_per_screen": "MUST_EXIST",
+        "color_conflict_guard": true,
+        "ux_spec_doc": "docs/ux/pharmacy-close-ux.md",
+        "wave": 3
+      },
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "READY",
+      "title": "[약국·폐업평가·Hazard] 위험점수 계산 + peer_dongs + top_drivers (D절 가중치)",
+      "detail": "docs/stories/pharmacy-close.md D절 가중치 룰 (합=1.00) + simula_data_real.json 조회 + Mock 매출/처방 시계열(ETL 완료 전). 결정성 보장: 동일 입력→동일 hazard. parallel_with: ETL_PHARMACY_DATA-001 (더미 모드).",
+      "assign_to": "agent-harness",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "viz/plugins/pharmacy-hazard.js (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001"
+      ],
+      "parallel_with": [
+        "ETL_PHARMACY_DATA-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "scope_dir": "viz/plugins/",
+        "weights_sum": 1.0,
+        "deterministic": true,
+        "data_mode": "dummy_until_etl",
+        "wave": 3
+      },
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "INTEGRATE_KM_CURVE_PHARMACY_CLOSE-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[약국·폐업평가·KM] UI_BENCHMARK_KM_CURVE-001 컴포넌트 재활용 + 데이터 어댑터",
+      "detail": "viz/plugins/km-curve.js (UI_BENCHMARK_KM_CURVE-001 산출물) 재활용. 폐업 점포 시계열 → KM prop 스키마 어댑터 매핑. components/pharmacy-close.js 마운트 슬롯에 연결(surgical). neonate edge: operating_months<6 시 보류 박스.",
+      "assign_to": "agent-harness",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "viz/plugins/km-curve.js (재활용)",
+        "components/pharmacy-close.js (surgical: KM 슬롯 연결)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001",
+        "UI_BENCHMARK_KM_CURVE-001",
+        "GENERATE_CODE_PHARMACY_CLOSE_UI-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "reuses": [
+          "UI_BENCHMARK_KM_CURVE-001"
+        ],
+        "adapter_target_schema": "{series:[{label,points:[{t,survival,ci_low,ci_high}]}]}",
+        "edge_case_neonate_months": 6,
+        "wave": 3
+      },
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "RUN_TESTS_PHARMACY_CLOSE-001",
+      "type": "RUN_TESTS",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[약국·폐업평가·Test] 가중치 단위 테스트 + Playwright 캐릭터 저니 5스텝",
+      "detail": "단위: D절 가중치 합=1.0, 경계값(hazard 0/29/30/49/50/69/70/100), 4단계 grade 모두 발생, top_drivers 정렬, 역매핑 정상성. Playwright 캐릭터 저니(운영담당자): [약국▾]→[폐업평가]→store-001 또는 '성수1가1동' 입력→평가 실행→hazard+KM 표시→Analyze deep-link. 스크린샷 5장 /tmp/journey-pharmacy-close-{1..5}.png. 색 충돌 가드 라벨 assert.",
+      "assign_to": "test-harness",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "tests/pharmacy-close.test.js (신규)",
+        "tests/journey-pharmacy-close.spec.js (신규 Playwright)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001",
+        "GENERATE_CODE_PHARMACY_CLOSE_UI-001",
+        "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001",
+        "INTEGRATE_KM_CURVE_PHARMACY_CLOSE-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "screenshots_dir": "/tmp/",
+        "screenshot_count": 5,
+        "persona": "약국 본사 운영/회계 담당자",
+        "wave": 3
+      },
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "BIZ_VALIDATE_PHARMACY_CLOSE-001",
+      "type": "BIZ_VALIDATE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[약국·폐업평가·Biz] 4단계 grade + 엣지 케이스 5종 시나리오 갭 검증",
+      "detail": "4단계 grade 시나리오 (very_low/low/medium/high). 엣지: (1)매출/처방 0=폐업 직전, (2)신규 점포 operating_months<6=KM 보류, (3)인구 급증 동=역설적 안전, (4)CSV 미업로드=추정 모드 confidence=low, (5)store_id/address 둘 다 미입력=validation 에러. CRITICAL 갭 시 BIZ_FIX P0 자동 spawn.",
+      "assign_to": "biz-validator",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "docs/stories/pharmacy-close.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001",
+        "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "scenarios_count": 4,
+        "edge_cases_count": 5,
+        "wave": 3
+      },
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-073",
+      "title": "[Plan:구현] USER_STORY_PHARMACY_CLOSE-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "USER_STORY_PHARMACY_CLOSE-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:26:36.481880",
+      "payload": {
+        "source_issue": "USER_STORY_PHARMACY_CLOSE-001",
+        "acceptance_criteria": [],
+        "wave": 3
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "GENERATE_CODE_NPL_BUY_UI-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매수평가 UI] 입력 폼 + 결과 카드 + 시나리오 마운트 슬롯 + Decide deep-link",
+      "detail": "NPL 매수평가 화면 UI 컴포넌트 구현. 입력 폼(address+asset_type+claim/bid 필수 + rights 4필드 선택) + IRR 결과 카드(grade 4단계 plddt) + 시나리오 A/B/C 마운트 슬롯(컴포넌트 자체는 INTEGRATE_SCENARIOS_NPL_BUY-001에서 연결) + 'Decide에서 보기' deep-link 보조 버튼. 회수 cone/IRR 계산은 자리만 잡고 viz/plugins/npl-recovery.js 함수 import. 상단에 H절 색 일관성 가드 라벨 '수익성 — 높을수록 좋음 (IRR ↑ = 파랑, IRR ↓ = 빨강)' 고정 노출. brand-dna plddt 4색 + hero_color #00529B 적용. 와이어프레임: docs/stories/npl-buy.md F절. AC: docs/stories/npl-buy.md B절 AC-1/2/3/6/7/8.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "components/npl-buy.js (신규)",
+        "index.html (surgical: [NPL ▾] 드롭다운에 '매수평가' 항목 추가만)",
+        "css/npl.css (신규 — 매수/매도 공유 예정)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "deep_link_to": "decide",
+        "story_doc": "docs/stories/npl-buy.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "components/",
+        "interface_contract": "compute_npl_buy_recovery(input) → output schema (docs/domain-menu-ia.md#c1-공통-출력-컨벤션 + #c2-모델별-추가-필드 npl.buy)",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ],
+        "color_consistency_guard_label": "수익성 — 높을수록 좋음 (IRR ↑ = 파랑, IRR ↓ = 빨강)",
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "ux_spec_doc": "docs/ux/npl-buy-ux.md",
+        "wave": 2
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=USER_STORY_NPL_BUY-001) 3건 중복 감지",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "GENERATE_CODE_NPL_BUY_RECOVERY-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매수평가 회수예측] 회수 cone(p10/p50/p90) + 권리관계 차감 + IRR 계산",
+      "detail": "NPL 매수평가 핵심 계산 로직. (1) asset_type별 회수율 분포에서 분위수(p10/p50/p90) 추출 → 담보 추정가 곱 → expected_recovery_cone, (2) 실회수금 = max(0, recovery - senior_lien - tax_arrears - tenant_priority_amt), (3) IRR estimate = (net_recovery(p50) - bid - costs) / bid × (12/holding_months) 연환산, (4) top_risks ≤3 산출(우선순위: 선순위 잠식 → 회수 중앙값<매수가 → 인근 낙찰가율 하락 → asset_type 분산 큼). 1차는 분위수 추정만(Monte Carlo OUT). 결정성 보장. ETL_NPL_DATA-001 완료 전까지 asset_type별 더미 분포(apt μ=65% σ=15%, commercial μ=50% σ=20% 등) + 외부 경매 낙찰가율 더미 사용. 계산식: docs/stories/npl-buy.md D절.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "viz/plugins/npl-recovery.js (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "story_doc": "docs/stories/npl-buy.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "viz/plugins/",
+        "interface_contract": "compute_npl_buy_recovery(input: NplBuyInput) → { expected_recovery_cone:{p10,p50,p90}, irr_estimate, scenarios[A,B,C], top_risks[≤3], grade, recommendation, trace }",
+        "parallel_with": [
+          "ETL_NPL_DATA-001"
+        ],
+        "data_fallback": "asset_type별 더미 회수율 분포 (ETL_NPL_DATA-001 완료 시 실데이터 교체 follow-up 이슈 생성)",
+        "deterministic": true,
+        "monte_carlo_out_of_scope_v1": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "wave": 2
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=USER_STORY_NPL_BUY-001) 3건 중복 감지",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "INTEGRATE_SCENARIOS_NPL_BUY-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매수평가 시나리오 통합] UI_SCENARIOS_3OPTION-001 컴포넌트 마운트 + 매수가 ±15% 데이터 어댑터",
+      "detail": "UI_SCENARIOS_3OPTION-001 산출 컴포넌트(viz/plugins/scenarios-3option.js)를 NPL 매수평가 결과 카드 하단에 마운트. 어댑터: candidate_bid_krw → scenarios = [A 보수(0.85x, p10), B 기본(1.00x, p50), C 공격(1.15x, p90)] 매핑. 각 시나리오마다 {label, bid, recovery, irr, grade} 산출 → 컴포넌트 prop schema에 흘려보냄. components/npl-buy.js (G.1 산출물)에 슬롯 연결만 surgical 수정. 시나리오 컴포넌트 자체는 재구현 금지(재활용). 어댑터 명세: docs/stories/npl-buy.md G.3.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "viz/plugins/scenarios-3option.js (재활용 — UI_SCENARIOS_3OPTION-001 산출물)",
+        "components/npl-buy.js (surgical: 시나리오 마운트 슬롯 연결만)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001",
+        "GENERATE_CODE_NPL_BUY_UI-001",
+        "UI_SCENARIOS_3OPTION-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "story_doc": "docs/stories/npl-buy.md",
+        "reuses": [
+          "UI_SCENARIOS_3OPTION-001"
+        ],
+        "scope_dir": "components/",
+        "adapter_contract": "candidate_bid_krw → [{label,bid,recovery,irr,grade} × 3]",
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "wave": 2
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "RUN_TESTS_NPL_BUY-001",
+      "type": "RUN_TESTS",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[테스트·NPL·매수평가] 단위 테스트 + 캐릭터 저니 (NPL 매수 심사역)",
+      "detail": "(1) 단위 테스트: 회수 cone 단조성(p10≤p50≤p90), 권리관계 차감(선순위 합 ≥ 회수액 → net_recovery=0), IRR 부호(p50<bid → 음수), 4단계 grade 매핑 모두 발생, top_risks 우선순위 정렬. (2) Playwright 캐릭터 저니: NPL 매수 심사역 페르소나로 [NPL ▾] → [매수평가] → 주소 '성수1가1동' + 청구액 5억 + 매수가 3억 + 권리관계(선순위 1억) → 평가 실행 → IRR + 시나리오 표시 → 'Decide에서 보기' → switchMode('decide') 도달. 스텝 2에서 상단 색 일관성 가드 라벨 표시 명시적 assert. 스크린샷 5장(/tmp/journey-npl-buy-N.png).",
+      "assign_to": "test-harness",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "tests/unit/npl-recovery.test.js (신규)",
+        "tests/journeys/npl-buy.spec.js (신규 Playwright)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001",
+        "GENERATE_CODE_NPL_BUY_UI-001",
+        "GENERATE_CODE_NPL_BUY_RECOVERY-001",
+        "INTEGRATE_SCENARIOS_NPL_BUY-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "story_doc": "docs/stories/npl-buy.md",
+        "persona": "NPL 매수 심사역",
+        "screenshot_prefix": "/tmp/journey-npl-buy",
+        "screenshot_count": 5,
+        "color_guard_label_assert": "수익성 — 높을수록 좋음 (IRR ↑ = 파랑, IRR ↓ = 빨강)",
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "wave": 2
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "BIZ_VALIDATE_NPL_BUY-001",
+      "type": "BIZ_VALIDATE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[비즈검증·NPL·매수평가] 4단계 grade 시나리오 + 5개 엣지 케이스",
+      "detail": "비즈니스 로직 정적 검증. (a) 4단계 grade 발생 시나리오 4개 채권 샘플(very_high/high/medium/low). (b) 엣지 케이스: ❶ 선순위 합 ≥ 청구액 → AC-4 grade=low + top_risks 첫 항목 '선순위 잠식 위험', ❷ 권리관계 4필드 모두 미입력 → 0 가정 적용 + 결과 정상 산출, ❸ 청구액=0 → AC-7 폼 validation 에러, ❹ 부동산 외 채권(asset_type 적용 불가) → friendly fallback '1차 스코프는 부동산 담보 NPL만' 안내 박스 + CTA 비활성, ❺ expected_recovery.p50 < candidate_bid_krw → AC-8 IRR 음수 + grade=low + top_risks 포함. CRITICAL 갭 발견 시 BIZ_FIX P0 자동 spawn.",
+      "assign_to": "biz-validator",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "docs/stories/npl-buy.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001",
+        "GENERATE_CODE_NPL_BUY_RECOVERY-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "story_doc": "docs/stories/npl-buy.md",
+        "scenarios_grade_count": 4,
+        "edge_cases_count": 5,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "wave": 2
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-074",
+      "title": "[Plan:구현] USER_STORY_NPL_BUY-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:33:35.555902",
+      "payload": {
+        "source_issue": "USER_STORY_NPL_BUY-001",
+        "acceptance_criteria": [],
+        "wave": 2
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-075",
+      "title": "[Meta] USER_STORY_NPL_BUY-001 이슈 체인 근본 원인 분석",
+      "type": "PATTERN_ANALYSIS",
+      "status": "READY",
+      "priority": "P2",
+      "assign_to": "meta-agent",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": null,
+      "depends_on": [],
+      "created_at": "2026-05-04T13:33:53.642774",
+      "payload": {
+        "parent_id": "USER_STORY_NPL_BUY-001",
+        "chain_length": 6,
+        "wave": 2
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "GENERATE_CODE_NPL_SELL_UI-001",
+      "type": "GENERATE_CODE",
+      "priority": "P3",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매도평가 UI] 입력 폼 + 결과 카드(sell vs hold 헤드라인) + Drivers SHAP 막대 + Decide deep-link",
+      "detail": "NPL 매도 담당자용 매도평가 화면. (1) 입력 폼: portfolio_id autocomplete + 단건 채권 선택 + holding_months_current + provision_rate(0~1.0) + carry_cost_monthly_krw(선택). (2) 결과 카드: sell_now_npv vs hold_npv_cone[12].p50 헤드라인 큰숫자 비교 + recommendation 배지(즉시매각/관망/유지) + Top 5 drivers SHAP-style 막대(양수=매각=파랑, 음수=유지=빨강) + 좌측 보더 색상(grade 기반 4단계 plddt 색상). (3) Recommendation Trace 마운트 슬롯(빈 컨테이너만 — INTEGRATE_RECOMMENDATION_TRACE_NPL_SELL-001에서 데이터 어댑터 + prop 매핑). (4) primary CTA: \"평가 실행\" + 보조 CTA: \"Decide에서 보기\" → switchMode(\"decide\", {ctx:\"npl.sell\", portfolio, trace:\"on\"}). (5) index.html [NPL ▾] 드롭다운에 \"매도평가\" 항목 surgical 추가(매수평가 옆). (6) css/npl.css 매도 전용 클래스 추가(매수와 공유 — npl-buy가 먼저 생성). (7) 상단 매각 적합도 가드 라벨 강제 노출: \"매각 적합도 — 색상은 매각 추천 강도 (파랑=매각 강추, 빨강=유지 추천)\". 빈 상태: \"보유 채권 정보를 입력하면 매각/유지 타이밍 분석이 시작됩니다\". 명세: docs/stories/npl-sell.md F절. NPV/cone/drivers 계산은 자리만 잡고 compute_npl_sell_npv() import (G.2에서 구현).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:41:47Z",
+      "files": [
+        "components/npl-sell.js (신규)",
+        "index.html (surgical: [NPL ▾] 드롭다운에 \"매도평가\" 항목 추가만)",
+        "css/npl.css (매수와 공유 — 매도 전용 클래스만 추가)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_SELL-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_SELL-001",
+      "payload": {
+        "submenu_key": "npl.sell",
+        "story_doc": "docs/stories/npl-sell.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "components/",
+        "reuses": [
+          "UI_RECOMMENDATION_TRACE-001"
+        ],
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "guard_label_required": "매각 적합도 — 색상은 매각 추천 강도 (파랑=매각 강추, 빨강=유지 추천)",
+        "ux_spec_doc": "docs/ux/npl-sell-ux.md",
+        "shap_sign_convention": "positive=sell_direction=blue, negative=hold_direction=red",
+        "recommendation_states": [
+          "즉시 매각 (확신)",
+          "매각 검토",
+          "관망 — 3개월 후 재평가",
+          "유지 — 매각 보류"
+        ],
+        "wave": 4
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=USER_STORY_NPL_SELL-001) 3건 중복 감지",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "GENERATE_CODE_NPL_SELL_NPV-001",
+      "type": "GENERATE_CODE",
+      "priority": "P3",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매도평가 NPV] 즉시매각 NPV + 6/12/24M 보유 cone + Recommendation 룰 + Drivers Top 5",
+      "detail": "NPL 매도평가 핵심 계산 로직. (1) sell_now_npv = market_quote_krw × (1 - 0.05) - sell_fee(1.5%). (2) hold_npv_cone[N].percentile = (collateral × recovery_rate(percentile) × time_weight(N) - hold_cost(N)) / (1.08)^(N/12). N ∈ {6,12,24}, percentile ∈ {p10,p50,p90}. time_weight: 6M=0.4, 12M=0.7, 24M=1.0. hold_cost(N) = provision_rate × claim × (N/12) + carry_cost_monthly × N. (3) recommendation 룰: sell_now_npv ≥ max(hold[*].p50) → \"즉시 매각\" / hold[24].p10 ≥ sell × 1.2 → \"유지\" / 그 외 → \"관망\". (4) drivers Top 5 부호 컨벤션(양수=매각 추천 방향): 보유 비용 잠식, 시장 호가 우위, 장기 회수율 분산, 할인율 잠식, 회수 중앙값 우위(음수). 각 driver는 {label, impact_krw, sign, severity, evidence_ref} schema. 1차는 분위수 추정만 (Monte Carlo OUT). 결정성 보장(동일 입력 → 동일 NPV/cone/drivers). ETL_NPL_DATA-001 완료 전까지 asset_type별 더미 회수율 분포(apt μ=65% σ=15%, commercial μ=50% σ=20%) + 시장 호가 더미(claim_amount × 0.45) 사용. 계산식: docs/stories/npl-sell.md D절.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:41:47Z",
+      "files": [
+        "viz/plugins/npl-npv.js (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_SELL-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_SELL-001",
+      "payload": {
+        "submenu_key": "npl.sell",
+        "story_doc": "docs/stories/npl-sell.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "viz/plugins/",
+        "interface_contract": "compute_npl_sell_npv(input: NplSellInput) → { sell_now_npv, hold_npv_cone:{6:{p10,p50,p90},12:{...},24:{...}}, drivers[≤5], grade, recommendation:{label}, trace }",
+        "parallel_with": [
+          "ETL_NPL_DATA-001"
+        ],
+        "data_fallback": "asset_type별 더미 회수율 분포 + 시장 호가 더미(claim × 0.45) — ETL_NPL_DATA-001 완료 시 실데이터 교체 follow-up",
+        "deterministic": true,
+        "monte_carlo_out_of_scope_v1": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "ux_spec_doc": "docs/ux/npl-sell-ux.md",
+        "wave": 4
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "unblocked_at": "2026-05-04T04:44:07.044907Z",
+      "unblocked_by": "ISS-063_cleanup (deps all resolved)",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=USER_STORY_NPL_SELL-001) 3건 중복 감지",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "INTEGRATE_RECOMMENDATION_TRACE_NPL_SELL-001",
+      "type": "GENERATE_CODE",
+      "priority": "P3",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매도평가 추천트레이스] UI_RECOMMENDATION_TRACE-001 컴포넌트 마운트 + Drivers/Tree 어댑터",
+      "detail": "UI_RECOMMENDATION_TRACE-001 산출 컴포넌트(viz/plugins/recommendation-trace.js)를 NPL 매도평가 결과 카드 하단에 마운트. 어댑터: (1) drivers Top 5 → SHAP 막대 schema {label, impact_krw, sign, evidence_ref}. (2) recommendation.label + NPV gap → Decision Tree 분기 노드 schema {node_id, condition, taken_branch}. 컴포넌트 prop schema: { shap_drivers: [...], decision_tree: {nodes, edges}, click_handler }. components/npl-sell.js (G.1 산출물)에 슬롯 연결만 surgical 수정. SHAP 막대 클릭 시 driver별 산출 근거(보유 비용 누적 곡선, 회수율 분위수, 시장 호가 분포) 인라인 펼침 + Decision Tree 분기점 강조. Recommendation Trace 컴포넌트 자체는 재구현 금지(재활용). 어댑터 명세: docs/stories/npl-sell.md G.3.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:41:47Z",
+      "files": [
+        "viz/plugins/recommendation-trace.js (재활용 — UI_RECOMMENDATION_TRACE-001 산출물)",
+        "components/npl-sell.js (surgical: 추천 트레이스 마운트 슬롯 연결만)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_SELL-001",
+        "GENERATE_CODE_NPL_SELL_UI-001",
+        "GENERATE_CODE_NPL_SELL_NPV-001",
+        "UI_RECOMMENDATION_TRACE-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_SELL-001",
+      "payload": {
+        "submenu_key": "npl.sell",
+        "story_doc": "docs/stories/npl-sell.md",
+        "reuses": [
+          "UI_RECOMMENDATION_TRACE-001"
+        ],
+        "scope_dir": "components/",
+        "adapter_contract": "{drivers[≤5], recommendation.label, npv_gap} → {shap_drivers:[{label,impact_krw,sign,evidence_ref}], decision_tree:{nodes,edges}, click_handler}",
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "ux_spec_doc": "docs/ux/npl-sell-ux.md",
+        "shap_sign_convention": "양수=매각방향=파랑, 음수=유지방향=빨강",
+        "wave": 4
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "RUN_TESTS_NPL_SELL-001",
+      "type": "RUN_TESTS",
+      "priority": "P3",
+      "status": "BLOCKED",
+      "title": "[테스트·NPL·매도평가] 단위 테스트 + 캐릭터 저니 (NPL 매도 담당자)",
+      "detail": "(1) 단위 테스트: 즉시매각 NPV 계산 검증, 6/12/24M cone 단조성(p10≤p50≤p90), 보유 비용 누적(보유개월 ↑ → hold_cost ↑), recommendation 룰 3분기(즉시 매각/관망/유지) 모두 발생, drivers Top 5 부호 컨벤션(양수=매각 방향). (2) Playwright 캐릭터 저니: NPL 매도 담당자 페르소나로 [NPL ▾] → [매도평가] → portfolio_id \"port-001\" 검색 → 채권 선택 + 보유개월수 6 + 충당금률 30% → 평가 실행 → sell vs hold 헤드라인 + recommendation 배지 + drivers Top 5 SHAP 막대 + Recommendation Trace 렌더 → \"Decide에서 보기\" → switchMode(\"decide\") + ?mode=decide&ctx=npl.sell&portfolio=port-001&trace=on 도달. 스텝 2에서 상단 매각 적합도 가드 라벨 표시 명시적 assert. 스크린샷 5장(/tmp/journey-npl-sell-N.png).",
+      "assign_to": "test-harness",
+      "created_at": "2026-05-04T04:41:47Z",
+      "files": [
+        "tests/unit/npl-npv.test.js (신규)",
+        "tests/journeys/npl-sell.spec.js (신규 Playwright)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_SELL-001",
+        "GENERATE_CODE_NPL_SELL_UI-001",
+        "GENERATE_CODE_NPL_SELL_NPV-001",
+        "INTEGRATE_RECOMMENDATION_TRACE_NPL_SELL-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_SELL-001",
+      "payload": {
+        "submenu_key": "npl.sell",
+        "story_doc": "docs/stories/npl-sell.md",
+        "persona": "NPL 매도 담당자",
+        "screenshots_path": "/tmp/journey-npl-sell-{N}.png",
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "wave": 4
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "BIZ_VALIDATE_NPL_SELL-001",
+      "type": "BIZ_VALIDATE",
+      "priority": "P3",
+      "status": "BLOCKED",
+      "title": "[비즈검증·NPL·매도평가] 3가지 추천(매각/관망/유지) 시나리오 + 엣지 케이스 갭 검증",
+      "detail": "시나리오 갭 검증. (1) 3가지 추천 발생 시나리오: 즉시 매각 / 관망 / 유지 각 1건 샘플(총 3 채권). (2) 엣지 케이스: ① 시장 호가 부재(ETL 더미도 산출 불가) → sell_now_npv \"N/A\" + recommendation = \"관망(시장 호가 부재 — 외부 평가 필요)\" + CTA \"수동 호가 입력\" 후속 안내. ② 충당금률 100%(provision_rate=1.0 — 잔존가 0) → 보유 비용 = 청구액 전액 → drivers \"보유 비용 잠식\" 압도 → recommendation = \"즉시 매각\" 강제. ③ 보유 0개월(holding_months_current=0 — 신규 인수) → 보유 비용 누적 0 → recommendation은 cone 분포에 따라(보통 \"관망\" 또는 \"유지\"). ④ portfolio_id 미스 → AC-7 폼 validation 에러(\"해당 portfolio_id를 찾을 수 없습니다\"). ⑤ 단일 채권에 다수 담보(1차는 단일 담보 가정) → friendly fallback \"1차 스코프는 단일 담보 채권만 지원합니다\" + CTA 비활성. 결과: BIZ_FIX P0 자동 spawn (CRITICAL 갭 발견 시).",
+      "assign_to": "biz-validator",
+      "created_at": "2026-05-04T04:41:47Z",
+      "files": [
+        "viz/plugins/npl-npv.js (검증 대상)",
+        "components/npl-sell.js (검증 대상)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_SELL-001",
+        "GENERATE_CODE_NPL_SELL_NPV-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_SELL-001",
+      "payload": {
+        "submenu_key": "npl.sell",
+        "story_doc": "docs/stories/npl-sell.md",
+        "scenarios_required": [
+          "immediate_sell",
+          "hold_off",
+          "keep"
+        ],
+        "edge_cases": [
+          "market_quote_unavailable",
+          "provision_rate_100pct",
+          "holding_months_zero",
+          "portfolio_id_miss",
+          "multi_collateral_single_claim"
+        ],
+        "parent_feature": "FEATURE_DOMAIN_MENU-001",
+        "wave": 4
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-076",
+      "title": "[Plan:구현] USER_STORY_NPL_SELL-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P3",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "USER_STORY_NPL_SELL-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:41:55.720942",
+      "payload": {
+        "source_issue": "USER_STORY_NPL_SELL-001",
+        "acceptance_criteria": [],
+        "wave": 4
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-077",
+      "title": "[Meta] USER_STORY_NPL_SELL-001 이슈 체인 근본 원인 분석",
+      "type": "PATTERN_ANALYSIS",
+      "status": "READY",
+      "priority": "P3",
+      "assign_to": "meta-agent",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": null,
+      "depends_on": [],
+      "created_at": "2026-05-04T13:42:15.950686",
+      "payload": {
+        "parent_id": "USER_STORY_NPL_SELL-001",
+        "chain_length": 6,
+        "wave": 4
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-078",
+      "title": "[Plan:게이트] ISS-063 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-063",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:44:15.659637",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-063",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "passed": true,
+        "files_checked": [
+          "app.js"
+        ],
+        "node_check": "ok",
+        "lint_errors": 0,
+        "type_errors": 0,
+        "context": "ISS-063 was CLOSED as duplicate plan with no code changes; gate auto-passes."
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-04T04:44:25.051762Z",
+      "completed_at": "2026-05-04T13:44:31.271198"
+    },
+    {
+      "id": "ISS-079",
+      "title": "[Plan:테스트] ISS-063 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-063",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:44:15.659637",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-063",
+        "scope": "changed"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-080",
+      "title": "[Plan:도메인분석] ISS-063 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-063",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:44:15.659637",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-063"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-081",
+      "title": "[Meta] ISS-063 이슈 체인 근본 원인 분석",
+      "type": "PATTERN_ANALYSIS",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "meta-agent",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": null,
+      "depends_on": [],
+      "created_at": "2026-05-04T13:45:06.175058",
+      "payload": {
+        "parent_id": "ISS-063",
+        "chain_length": 3
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-082",
+      "title": "[Plan:구현] UI_REDESIGN_WIDGET_RELOCATE-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_REDESIGN_WIDGET_RELOCATE-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:50:00.405301",
+      "payload": {
+        "source_issue": "UI_REDESIGN_WIDGET_RELOCATE-001",
+        "acceptance_criteria": []
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-083",
+      "title": "[Plan:구현] UI_DECISION_ONEPAGER-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_DECISION_ONEPAGER-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:58:56.715887",
+      "payload": {
+        "source_issue": "UI_DECISION_ONEPAGER-001",
+        "acceptance_criteria": []
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-084",
+      "title": "[Plan:구현] UI_FACT_TRIPLE-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_FACT_TRIPLE-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:59:50.770368",
+      "payload": {
+        "source_issue": "UI_FACT_TRIPLE-001",
+        "acceptance_criteria": []
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-085",
+      "title": "[Plan:구현] UI_INTERPRETATION_SECTION-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_INTERPRETATION_SECTION-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T14:04:43.417993",
+      "payload": {
+        "source_issue": "UI_INTERPRETATION_SECTION-001",
+        "acceptance_criteria": []
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-086",
+      "title": "[Plan:구현] UX_DESIGN_PHARMACY_DEVELOP-001 UX 설계 기반 구현",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "UX_DESIGN_PHARMACY_DEVELOP-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T14:09:20.232763",
+      "payload": {
+        "source_issue": "UX_DESIGN_PHARMACY_DEVELOP-001",
+        "ux_design": [],
+        "layout": "",
+        "action": "implement_from_ux_design",
+        "wave": 1
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-087",
+      "title": "[Plan:구현] UX_DESIGN_NPL_BUY-001 UX 설계 기반 구현",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "assign_to": "agent-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "UX_DESIGN_NPL_BUY-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T14:14:40.427423",
+      "payload": {
+        "source_issue": "UX_DESIGN_NPL_BUY-001",
+        "ux_design": [],
+        "layout": "",
+        "action": "implement_from_ux_design",
+        "wave": 2
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-088",
+      "title": "[Plan:구현] UX_DESIGN_PHARMACY_CLOSE-001 UX 설계 기반 구현",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "assign_to": "agent-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "UX_DESIGN_PHARMACY_CLOSE-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T14:14:50.002531",
+      "payload": {
+        "source_issue": "UX_DESIGN_PHARMACY_CLOSE-001",
+        "ux_design": [],
+        "layout": "",
+        "action": "implement_from_ux_design",
+        "wave": 3
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-089",
+      "title": "[Plan:구현] UX_DESIGN_NPL_SELL-001 UX 설계 기반 구현",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P3",
+      "assign_to": "agent-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "UX_DESIGN_NPL_SELL-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T14:16:05.618198",
+      "payload": {
+        "source_issue": "UX_DESIGN_NPL_SELL-001",
+        "ux_design": [],
+        "layout": "",
+        "action": "implement_from_ux_design",
+        "wave": 4
+      },
+      "result": null,
+      "spawn_rules": [],
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-090",
+      "type": "SCOPE_REVIEW",
+      "priority": "P0",
+      "status": "DONE",
+      "title": "[CEO Blocker] wedge 결정 — 4모델 동시 vs pharmacy.develop 단독 1차 출시",
+      "assigned_to": "product-manager",
+      "depends_on": [],
+      "blocks": [],
+      "parent": "FEATURE_DOMAIN_MENU-001",
+      "source": "PLAN_CEO_REVIEW (ISS-070)",
+      "payload": {
+        "blocker_of": "FEATURE_DOMAIN_MENU-001 다음 사이클 진입",
+        "ceo_recommendation": "pharmacy.develop 단독 1차 출시 (검증 cycle 7~10일) → 검증 후 npl.buy/pharmacy.close/npl.sell 순차 클로닝",
+        "rationale_doc": "docs/reviews/ceo-review-feature-domain-menu-001.md#d-wedge-권고",
+        "decision_required": "wedge 1개 선택 + IA 문서 머리말에 wedge 결정 1줄 박기",
+        "impact_if_unresolved": "BLOCKED 25개 자식 이슈의 처리 순서 + ETL 우선순위 미정 → 잘못된 순서로 코드 진입 시 phase 2 큰 리팩토링",
+        "requires_user_confirm": false,
+        "files_changed": []
+      },
+      "created_at": "2026-05-04T05:20:58.782831+00:00",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00",
+      "started_at": "2026-05-04T05:23:57.550545Z",
+      "completed_at": "2026-05-04T14:26:23.496104",
+      "result": {
+        "passed": true,
+        "decision": "WAVE1_PHARMACY_DEVELOP_SOLO",
+        "ia_doc_updated": "docs/domain-menu-ia.md",
+        "priority_changes": {
+          "P2_to_P0": [
+            "ETL_PHARMACY_DATA-001"
+          ],
+          "P2_to_P1": [
+            "BIZ_VALIDATE_PHARMACY_DEVELOP-001",
+            "ISS-095"
+          ],
+          "P1_to_P2": [
+            "pharmacy_close_7_issues",
+            "npl_buy_8_issues"
+          ],
+          "P1_to_P3": [
+            "npl_sell_8_issues",
+            "ISS-092"
+          ],
+          "P0_to_P2": [
+            "ISS-091"
+          ]
+        },
+        "new_issues": [
+          "WAVE1_RETROSPECTIVE-001"
+        ],
+        "wave_meta_added": 22
+      }
+    },
+    {
+      "id": "ISS-091",
+      "type": "SCOPE_REVIEW",
+      "priority": "P2",
+      "status": "READY",
+      "title": "[CEO Blocker] NPL 시장 호가 데이터 라이선스 — 출처 결정 또는 수동 호가 모드 합의",
+      "assigned_to": "product-manager",
+      "depends_on": [],
+      "blocks": [],
+      "parent": "ETL_NPL_DATA-001",
+      "source": "PLAN_CEO_REVIEW (ISS-070)",
+      "payload": {
+        "blocker_of": "npl.buy / npl.sell 1차 출시 신뢰도",
+        "problem": "한국 NPL 시장은 비상장 거래 중심 → 공개 호가 부재. 크롤링은 라이선스 위반 가능 (T2 SECURITY 분류만 되어 있고 의사결정 안 됨)",
+        "options": [
+          "A) 6주 내 데이터 파트너 1곳 식별 (채권평가사/로펌/금감원 통계 등) + 비용 견적",
+          "B) 1차는 npl.* 모델 모두 '수동 호가 입력 모드'로만 운영 + UI에 외부 데이터 미적용 워닝 강제",
+          "C) wedge=pharmacy.develop으로 결정되면 npl.* 모델은 phase 2까지 본 블로커 deferred"
+        ],
+        "ceo_recommendation": "ISS-{n+1} wedge 결정에 따라 자동 분기 — wedge=pharmacy.develop이면 옵션 C로 자동 정리",
+        "rationale_doc": "docs/reviews/ceo-review-feature-domain-menu-001.md#e-데이터-현실성-평가",
+        "requires_user_confirm": false
+      },
+      "created_at": "2026-05-04T05:20:58.782831+00:00",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-092",
+      "type": "PLAN_REVISE",
+      "priority": "P3",
+      "status": "READY",
+      "title": "[CEO Blocker] 횡단 비교 화면(자산-비교 보드) 1차 IN/OUT 결정",
+      "assigned_to": "product-manager",
+      "depends_on": [],
+      "blocks": [],
+      "parent": "FEATURE_DOMAIN_MENU-001",
+      "source": "PLAN_CEO_REVIEW (ISS-070)",
+      "payload": {
+        "blocker_of": "FEATURE_DOMAIN_MENU-001 셀링 포인트 일관성",
+        "problem": "현재 모든 dual_compare/cross-asset 비교 화면이 P3로 OUT. 그러나 본 컨솔의 차별화 코어(동일 메타포 횡단 비교)가 1차에 없으면 4모델 동시 출시할 명분이 사라짐",
+        "options": [
+          "A) wedge=pharmacy.develop 단독 → 횡단 비교 보드는 phase 2 IN으로 명시 (CEO 권고 일관성)",
+          "B) 4모델 동시 강행 → 횡단 비교 보드 1차 IN으로 격상 (자식 이슈 추가 필요)"
+        ],
+        "ceo_recommendation": "옵션 A — wedge 1개 줄이고 phase 2에서 자산 비교 보드 명시",
+        "rationale_doc": "docs/reviews/ceo-review-feature-domain-menu-001.md#c-10-star-격차-분석",
+        "side_effects": "ctx 쿼리 다중화 컨벤션(?ctx=a+b)을 IA 문서에 1줄 박기 — phase 2 URL 호환 확보",
+        "requires_user_confirm": false
+      },
+      "created_at": "2026-05-04T05:20:58.782831+00:00",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
+    },
+    {
+      "id": "ISS-093",
+      "type": "PRIORITY_RANK",
+      "priority": "P0",
+      "status": "READY",
+      "title": "[Plan:긴급격상] DATA_UIJEONGBU_PHASE2-001을 P0로 격상 — 4모델 중 3개 차단점",
+      "detail": "plan-eng-reviewer (ISS-071) 검토 결과: pharmacy.close / npl.buy / npl.sell 3개 평가모델의 INTEGRATE 이슈가 모두 UI_BENCHMARK_KM_CURVE / UI_SCENARIOS_3OPTION / UI_RECOMMENDATION_TRACE에 의존하고, 이 3개 UI 자산은 모두 MODULE_SURVIVAL/COUNTERFACTUAL/SHAP/DECISION_TREE_REASONS에 의존하며, 4개 모듈은 모두 단일 데이터 작업 DATA_UIJEONGBU_PHASE2-001에 final 의존. 이 1개 데이터 이슈가 풀려야 6단계 의존 체인 + 22개 자식 이슈 중 12개가 작동 가능. P0 즉시 격상 필요. 액션: hook-router가 DATA_UIJEONGBU_PHASE2-001의 priority 필드를 P0으로 변경 + dispatch-ready 큐 최상위로 재정렬.",
+      "depends_on": [],
+      "assign_to": "hook-router",
+      "created_at": "2026-05-04T00:00:00Z",
+      "updated_at": "2026-05-04T00:00:00Z",
+      "parent": "ISS-071",
+      "payload": {
+        "target_issue": "DATA_UIJEONGBU_PHASE2-001",
+        "new_priority": "P0",
+        "reason": "4모델 중 3개 critical-path single root"
+      }
+    },
+    {
+      "id": "ISS-094",
+      "type": "ARCH_DECISION",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[Arch:URL파싱] parseUrlContext() deep-link 진입점 작성 책임 명시",
+      "detail": "plan-eng-reviewer (ISS-071) 검토 결과: docs/domain-menu-ia.md D절은 ?mode=decide&ctx=pharmacy.develop&address=... 패턴을 정의했지만 app.js:181에서 switchMode(\"gallery\") 하드코딩 + URL querystring 파싱 진입점 없음. deep-link 도착 시 (1) ctx 배지 표시, (2) 복귀 링크, (3) 결과 오버레이 트리거가 모두 작동 불가. 액션: GENERATE_CODE_PHARMACY_DEVELOP_UI-001 또는 별도 신규 이슈 GENERATE_CODE_DEEP_LINK_PARSER-001로 분리하여 utils/url-context.js (parseUrlContext + applyDeepLinkContext) 작성. 4개 평가 컴포넌트가 시작되기 전 land 필요.",
+      "depends_on": [],
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T00:00:00Z",
+      "updated_at": "2026-05-04T00:00:00Z",
+      "parent": "ISS-071",
+      "payload": {
+        "recommended_files": [
+          "utils/url-context.js"
+        ],
+        "integration_points": [
+          "app.js init()",
+          "app.js switchMode()"
+        ],
+        "url_params": [
+          "mode",
+          "ctx",
+          "address",
+          "store_id",
+          "portfolio_id",
+          "scenarios"
+        ]
+      }
+    },
+    {
+      "id": "ISS-095",
+      "type": "REFACTOR",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[Refactor:공통유틸] domain-data + fallback-policy + memoize + verify-harness 4종 추출",
+      "detail": "plan-eng-reviewer (ISS-071) 검토 결과: 4개 GENERATE_CODE 이슈가 시작되기 전 공통 유틸 4종을 먼저 land해야 코드 중복 + 메시지 불일치 + wasted CPU 방지. (1) utils/domain-data.js — loadDomainData(domain) promise 캐시, (2) utils/fallback-policy.js — wrapWithDataAvailability(rawResult, dataStatus), (3) utils/memoize.js — Map<inputHash, result> 50엔트리 LRU (KM curve / NPV cone / Monte Carlo 캐싱), (4) utils/verify-harness.mjs — bootstrapPage / step / assertNoConsoleErrors / screenshotJourney 4함수. 4개 신규 verify_*.mjs 작성 시 240줄 중복 방지.",
+      "depends_on": [],
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T00:00:00Z",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00",
+      "parent": "ISS-071",
+      "payload": {
+        "new_files": [
+          "utils/domain-data.js",
+          "utils/fallback-policy.js",
+          "utils/memoize.js",
+          "utils/verify-harness.mjs"
+        ],
+        "scope_dir": "utils/",
+        "rationale": "4개 GENERATE_CODE 이슈가 시작되기 전 land 필요"
+      }
+    },
+    {
+      "id": "WAVE1_RETROSPECTIVE-001",
+      "type": "SCOPE_REVIEW",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[Wave 1 회고] pharmacy.develop 출시 검증 → Wave 2 진입 결정",
+      "assigned_to": "product-manager",
+      "depends_on": [
+        "RUN_TESTS_PHARMACY_DEVELOP-001",
+        "BIZ_VALIDATE_PHARMACY_DEVELOP-001"
+      ],
+      "blocks": [],
+      "parent": "ISS-090",
+      "payload": {
+        "wave": 1,
+        "detail": "Wave 1 검증 7~10일 후 핵심 지표(데이터 신뢰도, 사용자 클릭 패턴, 평가 정확도) 회고. Wave 2(npl.buy) 진입 GO/NO-GO 결정 + 데이터 라이선스 진행 상태 체크. 회고 후 wave 2 자식 이슈 P2 → P1 격상 또는 wave 2 자체 취소 결정.",
+        "success_criteria": [
+          "pharmacy.develop 배포 완료",
+          "사용자 평가 수 >= 3회",
+          "데이터 신뢰도 검증"
+        ],
+        "go_decision_triggers_wave2": true
+      },
+      "created_at": "2026-05-04T05:26:15.384308+00:00",
+      "updated_at": "2026-05-04T05:26:15.384308+00:00"
     }
   ],
   "hooks": {
@@ -1896,6 +4369,120 @@
         "issue_type": "PATTERN_ANALYSIS",
         "plan_created": 0,
         "timestamp": "2026-05-03T14:52:16.050703"
+      },
+      {
+        "issue_id": "UI_REDESIGN_MEONGBUN_LAYOUT-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:04:13.569589"
+      },
+      {
+        "issue_id": "FEATURE_DOMAIN_MENU-001",
+        "issue_type": "FEATURE_PLAN",
+        "plan_created": 2,
+        "timestamp": "2026-05-04T13:12:22.054508"
+      },
+      {
+        "issue_id": "USER_STORY_PHARMACY_DEVELOP-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:20:38.636294"
+      },
+      {
+        "issue_id": "USER_STORY_PHARMACY_CLOSE-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:26:36.481880"
+      },
+      {
+        "issue_id": "USER_STORY_NPL_BUY-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:33:35.555902"
+      },
+      {
+        "issue_id": "USER_STORY_NPL_SELL-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:41:55.720942"
+      },
+      {
+        "issue_id": "ISS-063",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-05-04T13:44:15.659637"
+      },
+      {
+        "issue_id": "ISS-078",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T13:44:31.271198"
+      },
+      {
+        "issue_id": "UI_REDESIGN_WIDGET_RELOCATE-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:50:00.405301"
+      },
+      {
+        "issue_id": "UI_DECISION_ONEPAGER-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:58:56.715887"
+      },
+      {
+        "issue_id": "UI_FACT_TRIPLE-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:59:50.770368"
+      },
+      {
+        "issue_id": "UI_INTERPRETATION_SECTION-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T14:04:43.417993"
+      },
+      {
+        "issue_id": "UX_DESIGN_PHARMACY_DEVELOP-001",
+        "issue_type": "UX_DESIGN",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T14:09:20.232763"
+      },
+      {
+        "issue_id": "UX_DESIGN_NPL_BUY-001",
+        "issue_type": "UX_DESIGN",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T14:14:40.427423"
+      },
+      {
+        "issue_id": "UX_DESIGN_PHARMACY_CLOSE-001",
+        "issue_type": "UX_DESIGN",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T14:14:50.002531"
+      },
+      {
+        "issue_id": "UX_DESIGN_NPL_SELL-001",
+        "issue_type": "UX_DESIGN",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T14:16:05.618198"
+      },
+      {
+        "issue_id": "ISS-070",
+        "issue_type": "PLAN_CEO_REVIEW",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T14:21:04.935836"
+      },
+      {
+        "issue_id": "ISS-071",
+        "issue_type": "PLAN_ENG_REVIEW",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T14:23:21.565779"
+      },
+      {
+        "issue_id": "ISS-090",
+        "issue_type": "SCOPE_REVIEW",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T14:26:23.496104"
       }
     ],
     "on_fail": [],
@@ -1915,6 +4502,12 @@
         "frequency": 1,
         "discovered_at": "2026-05-03T05:52:15.945607Z",
         "note": "meta-review가 핑퐁으로 오탐했지만 정상 파이프라인 동작"
+      },
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-078 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-05-04T13:44:31.271198"
       }
     ],
     "failure_patterns": [],
@@ -2304,25 +4897,495 @@
           "failed": 0,
           "escalated": 0
         }
+      },
+      {
+        "cycle": 25,
+        "timestamp": "2026-05-03T19:22:34.156754",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 8,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 26,
+        "timestamp": "2026-05-03T19:25:38.959282",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 8,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 27,
+        "timestamp": "2026-05-04T12:57:11.927914",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 61,
+          "done": 8,
+          "in_progress": 0,
+          "ready": 2,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 28,
+        "timestamp": "2026-05-04T12:57:21.787941",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, code-quality, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 62,
+          "done": 8,
+          "in_progress": 0,
+          "ready": 3,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 29,
+        "timestamp": "2026-05-04T13:04:28.514058",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 63,
+          "done": 9,
+          "in_progress": 0,
+          "ready": 3,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 30,
+        "timestamp": "2026-05-04T13:12:41.415851",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 71,
+          "done": 10,
+          "in_progress": 0,
+          "ready": 10,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 31,
+        "timestamp": "2026-05-04T13:12:54.528915",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, code-quality, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 71,
+          "done": 10,
+          "in_progress": 0,
+          "ready": 10,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 32,
+        "timestamp": "2026-05-04T13:20:59.501327",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, domain-analyst, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 76,
+          "done": 11,
+          "in_progress": 0,
+          "ready": 11,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 33,
+        "timestamp": "2026-05-04T13:26:51.117647",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, code-quality, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 82,
+          "done": 12,
+          "in_progress": 0,
+          "ready": 12,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 34,
+        "timestamp": "2026-05-04T13:33:53.642863",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, domain-analyst, code-quality)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, test-harness, agent-harness)"
+        ],
+        "issues_created": [
+          "ISS-075"
+        ],
+        "stats_snapshot": {
+          "total": 89,
+          "done": 13,
+          "in_progress": 0,
+          "ready": 13,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 35,
+        "timestamp": "2026-05-04T13:42:15.950778",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, test-harness, agent-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (biz-validator, test-harness, agent-harness)"
+        ],
+        "issues_created": [
+          "ISS-077"
+        ],
+        "stats_snapshot": {
+          "total": 96,
+          "done": 14,
+          "in_progress": 0,
+          "ready": 15,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 36,
+        "timestamp": "2026-05-04T13:43:17.591643",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, agent-harness, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (biz-validator, agent-harness, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 96,
+          "done": 14,
+          "in_progress": 0,
+          "ready": 16,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 37,
+        "timestamp": "2026-05-04T13:45:06.175233",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, domain-analyst, code-quality)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (agent-harness, test-harness, biz-validator)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (agent-harness, test-harness, biz-validator)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (test-harness, domain-analyst, code-quality)"
+        ],
+        "issues_created": [
+          "ISS-081"
+        ],
+        "stats_snapshot": {
+          "total": 100,
+          "done": 16,
+          "in_progress": 0,
+          "ready": 25,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 38,
+        "timestamp": "2026-05-04T13:50:12.650837",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (agent-harness, test-harness, biz-validator)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (agent-harness, test-harness, biz-validator)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 101,
+          "done": 17,
+          "in_progress": 0,
+          "ready": 26,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 39,
+        "timestamp": "2026-05-04T13:50:48.050309",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, domain-analyst, code-quality)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (test-harness, agent-harness, biz-validator)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (test-harness, agent-harness, biz-validator)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (test-harness, domain-analyst, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 101,
+          "done": 17,
+          "in_progress": 0,
+          "ready": 26,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 40,
+        "timestamp": "2026-05-04T13:55:28.494140",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, test-harness, agent-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (biz-validator, test-harness, agent-harness)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 101,
+          "done": 17,
+          "in_progress": 1,
+          "ready": 25,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 41,
+        "timestamp": "2026-05-04T13:59:05.408415",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (test-harness, agent-harness, biz-validator)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (test-harness, agent-harness, biz-validator)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 102,
+          "done": 18,
+          "in_progress": 1,
+          "ready": 25,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 42,
+        "timestamp": "2026-05-04T14:00:03.224392",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, agent-harness, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (biz-validator, agent-harness, test-harness)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 103,
+          "done": 19,
+          "in_progress": 0,
+          "ready": 26,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 43,
+        "timestamp": "2026-05-04T14:04:53.768283",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, code-quality, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (agent-harness, test-harness, biz-validator)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (agent-harness, test-harness, biz-validator)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (domain-analyst, code-quality, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 104,
+          "done": 20,
+          "in_progress": 0,
+          "ready": 26,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 44,
+        "timestamp": "2026-05-04T14:09:32.603897",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, code-quality, domain-analyst)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (test-harness, biz-validator, agent-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (test-harness, biz-validator, agent-harness)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (test-harness, code-quality, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 105,
+          "done": 21,
+          "in_progress": 0,
+          "ready": 26,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 45,
+        "timestamp": "2026-05-04T14:09:51.310146",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, test-harness, agent-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (biz-validator, test-harness, agent-harness)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 105,
+          "done": 21,
+          "in_progress": 0,
+          "ready": 26,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 46,
+        "timestamp": "2026-05-04T14:14:52.915780",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (test-harness, agent-harness, biz-validator)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (test-harness, agent-harness, biz-validator)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 107,
+          "done": 23,
+          "in_progress": 1,
+          "ready": 25,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 47,
+        "timestamp": "2026-05-04T14:15:06.668579",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, code-quality, domain-analyst)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (agent-harness, test-harness, biz-validator)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (agent-harness, test-harness, biz-validator)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (test-harness, code-quality, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 107,
+          "done": 23,
+          "in_progress": 1,
+          "ready": 25,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 48,
+        "timestamp": "2026-05-04T14:16:21.949792",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, code-quality, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, agent-harness, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (biz-validator, agent-harness, test-harness)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (domain-analyst, code-quality, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 108,
+          "done": 24,
+          "in_progress": 0,
+          "ready": 26,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 49,
+        "timestamp": "2026-05-04T14:21:17.674069",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (agent-harness, biz-validator, test-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (agent-harness, biz-validator, test-harness)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 111,
+          "done": 25,
+          "in_progress": 1,
+          "ready": 27,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 50,
+        "timestamp": "2026-05-04T14:23:44.111189",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, domain-analyst, code-quality)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, test-harness, agent-harness)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_SELL-001 → 6회 파생 (biz-validator, test-harness, agent-harness)",
+          "🟠 핑퐁 감지: ISS-063 → 3회 파생 (test-harness, domain-analyst, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 114,
+          "done": 26,
+          "in_progress": 0,
+          "ready": 30,
+          "failed": 0,
+          "escalated": 0
+        }
       }
     ]
   },
   "stats": {
-    "total_issues": 47,
-    "completed": 31,
+    "total_issues": 89,
+    "completed": 50,
     "failed": 0,
-    "evolved": 24
+    "evolved": 50,
+    "last_updated_at": "2026-05-04T04:41:47Z"
   },
   "opus_budget_state": {
     "daily": {
-      "date": "2026-05-03",
-      "cost_usd": 3.7,
-      "calls": 5
+      "date": "2026-05-04",
+      "cost_usd": 10.18,
+      "calls": 17
     },
     "monthly": {
       "month": "2026-05",
-      "cost_usd": 3.7,
-      "calls": 5
+      "cost_usd": 13.88,
+      "calls": 22
     },
     "demotion_active": false
   },
@@ -2352,7 +5415,11 @@
     }
   ],
   "auto_detect_state": {
-    "date": "2026-05-03",
+    "date": "2026-05-04",
     "count": 1
+  },
+  "issue_budget": {
+    "date": "2026-05-04",
+    "created_today": 0
   }
 }
