@@ -1,0 +1,199 @@
+{
+  "datasets": [
+    {
+      "key": "kosis_living_pop",
+      "ko": "생활인구",
+      "source_org": "KOSIS",
+      "credentials": {
+        "type": "api_key",
+        "env_var": "KOSIS_API_KEY",
+        "obtain_url": "https://kosis.kr/openapi/",
+        "registered_at": null,
+        "expires_at": null,
+        "rate_limit": "1000/day"
+      },
+      "schedule": {
+        "frequency": "monthly",
+        "cron": "0 9 5 * *",
+        "next_run_at": null,
+        "last_run_status": "pending",
+        "consecutive_failures": 0
+      },
+      "scope": {
+        "geo_unit": "읍면동",
+        "current_dongs_covered": 0,
+        "target_dongs": 3500,
+        "current_months_covered": 0
+      },
+      "quality": {
+        "schema_path": "data_raw/kosis_living_pop/schema.json",
+        "data_marker_default": "real"
+      },
+      "ops": {
+        "alert_on_failure": true,
+        "max_retries": 3
+      },
+      "difficulty": {
+        "level": "easy",
+        "hours_estimated": 4,
+        "blockers": []
+      }
+    },
+    {
+      "key": "localdata_biz",
+      "ko": "사업체정보",
+      "source_org": "LocalData",
+      "credentials": {
+        "type": "api_key",
+        "env_var": "LOCALDATA_API_KEY",
+        "obtain_url": "https://www.localdata.go.kr/devcenter/",
+        "registered_at": null,
+        "expires_at": null,
+        "rate_limit": "1000/day"
+      },
+      "schedule": {
+        "frequency": "weekly",
+        "cron": "0 9 * * 1",
+        "next_run_at": null,
+        "last_run_status": "pending",
+        "consecutive_failures": 0
+      },
+      "scope": {
+        "geo_unit": "읍면동",
+        "current_dongs_covered": 0,
+        "target_dongs": 3500,
+        "current_months_covered": 0
+      },
+      "quality": {
+        "schema_path": "data_raw/localdata_biz/schema.json",
+        "data_marker_default": "real"
+      },
+      "ops": {
+        "alert_on_failure": true,
+        "max_retries": 3
+      },
+      "difficulty": {
+        "level": "easy",
+        "hours_estimated": 3,
+        "blockers": []
+      }
+    },
+    {
+      "key": "nts_bizreg",
+      "ko": "사업자등록",
+      "source_org": "국세청",
+      "credentials": {
+        "type": "api_key",
+        "env_var": "NTS_API_KEY",
+        "obtain_url": "https://api.odcloud.kr/",
+        "registered_at": null,
+        "expires_at": null,
+        "rate_limit": "500/day"
+      },
+      "schedule": {
+        "frequency": "quarterly",
+        "cron": "0 9 5 1,4,7,10 *",
+        "next_run_at": null,
+        "last_run_status": "pending",
+        "consecutive_failures": 0
+      },
+      "scope": {
+        "geo_unit": "읍면동",
+        "current_dongs_covered": 0,
+        "target_dongs": 3500,
+        "current_months_covered": 0
+      },
+      "quality": {
+        "schema_path": "data_raw/nts_bizreg/schema.json",
+        "data_marker_default": "real"
+      },
+      "ops": {
+        "alert_on_failure": true,
+        "max_retries": 3
+      },
+      "difficulty": {
+        "level": "medium",
+        "hours_estimated": 8,
+        "blockers": []
+      }
+    },
+    {
+      "key": "molit_landprice",
+      "ko": "공시지가",
+      "source_org": "국토교통부",
+      "credentials": {
+        "type": "api_key",
+        "env_var": "MOLIT_API_KEY",
+        "obtain_url": "https://www.vworld.kr/",
+        "registered_at": null,
+        "expires_at": null,
+        "rate_limit": "1000/day"
+      },
+      "schedule": {
+        "frequency": "quarterly",
+        "cron": "0 9 10 1,4,7,10 *",
+        "next_run_at": null,
+        "last_run_status": "pending",
+        "consecutive_failures": 0
+      },
+      "scope": {
+        "geo_unit": "읍면동",
+        "current_dongs_covered": 0,
+        "target_dongs": 3500,
+        "current_months_covered": 0
+      },
+      "quality": {
+        "schema_path": "data_raw/molit_landprice/schema.json",
+        "data_marker_default": "real"
+      },
+      "ops": {
+        "alert_on_failure": true,
+        "max_retries": 3
+      },
+      "difficulty": {
+        "level": "medium",
+        "hours_estimated": 6,
+        "blockers": []
+      }
+    },
+    {
+      "key": "vworld_geojson",
+      "ko": "행정경계 GeoJSON",
+      "source_org": "VWorld",
+      "credentials": {
+        "type": "api_key",
+        "env_var": "VWORLD_API_KEY",
+        "obtain_url": "https://www.vworld.kr/dev/v4api.do",
+        "registered_at": null,
+        "expires_at": null,
+        "rate_limit": "1000/day"
+      },
+      "schedule": {
+        "frequency": "once",
+        "cron": "",
+        "next_run_at": null,
+        "last_run_status": "pending",
+        "consecutive_failures": 0
+      },
+      "scope": {
+        "geo_unit": "읍면동",
+        "current_dongs_covered": 0,
+        "target_dongs": 3500,
+        "current_months_covered": 0
+      },
+      "quality": {
+        "schema_path": "data_raw/vworld_geojson/schema.json",
+        "data_marker_default": "real"
+      },
+      "ops": {
+        "alert_on_failure": true,
+        "max_retries": 3
+      },
+      "difficulty": {
+        "level": "easy",
+        "hours_estimated": 2,
+        "blockers": []
+      }
+    }
+  ]
+}

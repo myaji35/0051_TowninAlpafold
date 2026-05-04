@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Datasets Registry",
+  "description": "Townin Alpafold 데이터셋 단일 진실 원본 (Single Source of Truth)",
+  "type": "object",
+  "required": ["datasets"],
+  "properties": {
+    "datasets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "ko", "source_org", "credentials", "schedule", "scope", "quality", "ops", "difficulty"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]+$",
+            "description": "데이터셋 고유 식별자 (소문자 + 숫자 + 언더스코어)"
+          },
+          "ko": {
+            "type": "string",
+            "description": "한국어 데이터셋 명칭"
+          },
+          "source_org": {
+            "type": "string",
+            "description": "데이터 제공 기관명"
+          },
+          "credentials": {
+            "type": "object",
+            "required": ["type", "env_var", "obtain_url", "registered_at", "expires_at", "rate_limit"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["api_key", "oauth2", "none"],
+                "description": "인증 방식"
+              },
+              "env_var": {
+                "type": "string",
+                "description": "API 키를 담는 환경변수명"
+              },
+              "obtain_url": {
+                "type": "string",
+                "format": "uri",
+                "description": "API 키 발급 URL"
+              },
+              "registered_at": {
+                "type": ["string", "null"],
+                "description": "키 등록 일시 (ISO 8601). null = 미등록"
+              },
+              "expires_at": {
+                "type": ["string", "null"],
+                "description": "키 만료 일시 (ISO 8601). null = 영구 또는 미확인"
+              },
+              "rate_limit": {
+                "type": "string",
+                "description": "API 호출 한도 (예: 1000/day, 10/min)"
+              }
+            },
+            "additionalProperties": false
+          },
+          "schedule": {
+            "type": "object",
+            "required": ["frequency", "cron", "next_run_at", "last_run_status", "consecutive_failures"],
+            "properties": {
+              "frequency": {
+                "type": "string",
+                "enum": ["once", "daily", "weekly", "monthly", "quarterly"],
+                "description": "수집 주기"
+              },
+              "cron": {
+                "type": "string",
+                "description": "cron 표현식. once인 경우 빈 문자열"
+              },
+              "next_run_at": {
+                "type": ["string", "null"],
+                "description": "다음 실행 예정 일시 (ISO 8601). null = 미정"
+              },
+              "last_run_status": {
+                "type": "string",
+                "enum": ["success", "failure", "pending", "blocked"],
+                "description": "마지막 실행 상태"
+              },
+              "consecutive_failures": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "연속 실패 횟수"
+              }
+            },
+            "additionalProperties": false
+          },
+          "scope": {
+            "type": "object",
+            "required": ["geo_unit", "current_dongs_covered", "target_dongs", "current_months_covered"],
+            "properties": {
+              "geo_unit": {
+                "type": "string",
+                "description": "지리 단위 (예: 읍면동, 시군구)"
+              },
+              "current_dongs_covered": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "현재 수집 완료된 읍면동 수"
+              },
+              "target_dongs": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "목표 읍면동 수"
+              },
+              "current_months_covered": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "현재 수집 완료된 개월 수"
+              }
+            },
+            "additionalProperties": false
+          },
+          "quality": {
+            "type": "object",
+            "required": ["schema_path", "data_marker_default"],
+            "properties": {
+              "schema_path": {
+                "type": "string",
+                "description": "데이터 스키마 파일 경로"
+              },
+              "data_marker_default": {
+                "type": "string",
+                "enum": ["real", "synthetic", "estimated"],
+                "description": "데이터 출처 마커 기본값"
+              }
+            },
+            "additionalProperties": false
+          },
+          "ops": {
+            "type": "object",
+            "required": ["alert_on_failure", "max_retries"],
+            "properties": {
+              "alert_on_failure": {
+                "type": "boolean",
+                "description": "실패 시 알림 발송 여부"
+              },
+              "max_retries": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "최대 재시도 횟수"
+              }
+            },
+            "additionalProperties": false
+          },
+          "difficulty": {
+            "type": "object",
+            "required": ["level", "hours_estimated", "blockers"],
+            "properties": {
+              "level": {
+                "type": "string",
+                "enum": ["easy", "medium", "hard"],
+                "description": "구현 난이도"
+              },
+              "hours_estimated": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "예상 소요 시간 (시간)"
+              },
+              "blockers": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "현재 차단 요인 목록"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
