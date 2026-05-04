@@ -1,0 +1,154 @@
+name: Data SaaS CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/test_*.py'
+      - 'scripts/validate_catalogs.py'
+      - 'utils/**'
+      - 'backend/**'
+      - 'tests/**'
+      - '.github/workflows/data_saas_ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test_*.py'
+      - 'utils/**'
+      - 'backend/**'
+      - 'tests/**'
+  workflow_dispatch:
+
+jobs:
+  # ─────────────────────────────────────────────
+  # JOB 1: stdlib 4종 직접 실행 (의존성 0)
+  # ─────────────────────────────────────────────
+  stdlib-tests:
+    name: Stdlib Tests (ETL / Manifest / ReviewQueue / Batch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: ETL infra (6건)
+        run: python scripts/test_etl_infra.py
+
+      - name: Manifest repo (7건)
+        run: python scripts/test_manifest_repo.py
+
+      - name: Model review queue (9건)
+        run: python scripts/test_model_review_queue.py
+
+      - name: Batch queue (11건)
+        run: |
+          pip install fastapi uvicorn httpx --quiet
+          python scripts/test_batch_queue.py
+
+  # ─────────────────────────────────────────────
+  # JOB 2: pytest 통합 진입점 (4개 subprocess 실행)
+  # ─────────────────────────────────────────────
+  pytest-suite:
+    name: Pytest Suite (통합 진입점)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs: stdlib-tests
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install runtime deps (batch_queue 의존성 포함)
+        run: pip install fastapi uvicorn httpx pytest --quiet
+
+      - name: Run pytest suite
+        run: |
+          python -m pytest tests/test_data_saas_suite.py -v \
+            --tb=short \
+            --no-header \
+            -q
+
+  # ─────────────────────────────────────────────
+  # JOB 3: Catalog FK 검증
+  # ─────────────────────────────────────────────
+  catalog-validate:
+    name: Catalog FK Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate catalog JSON schemas
+        run: |
+          if [ -f scripts/validate_catalogs.py ]; then
+            python scripts/validate_catalogs.py
+          else
+            echo "validate_catalogs.py 없음 — skip"
+          fi
+
+  # ─────────────────────────────────────────────
+  # JOB 4: PDF 렌더 테스트 (skip 상태 — ISS-PDF_ENGINE 대기)
+  # ─────────────────────────────────────────────
+  pdf-render:
+    name: PDF Render Tests (skipped — ISS-PDF_ENGINE 대기)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pytest
+        run: pip install pytest --quiet
+
+      - name: Run PDF tests (skip expected)
+        run: |
+          python -m pytest tests/test_pdf_render.py -v \
+            --tb=short \
+            -q
+          echo "PDF 테스트 모두 skip — ISS-PDF_ENGINE 결정 후 활성화"
+
+  # ─────────────────────────────────────────────
+  # JOB 5: Playwright E2E (skip 상태 — ISS-CATALOG_UI 대기)
+  # ─────────────────────────────────────────────
+  e2e-catalog:
+    name: E2E Catalog Form (skipped — ISS-CATALOG_UI 대기)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check Playwright spec syntax
+        run: node --check tests/e2e/test_catalog_form.spec.js && echo "✓ E2E spec 문법 OK (skip 상태)"
+
+      - name: Note — E2E 활성화 조건
+        run: |
+          echo "ISS-CATALOG_UI 완료 후:"
+          echo "  npm install -D @playwright/test"
+          echo "  npx playwright install --with-deps chromium"
+          echo "  npx playwright test tests/e2e/test_catalog_form.spec.js"
