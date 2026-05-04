@@ -22,6 +22,7 @@ REGISTRY_PATH = Path(__file__).resolve().parent / "data_raw/_registry/datasets.j
 # 구현된 ETL 모듈 매핑. 없는 key는 "blocked"로 기록.
 ETL_MODULE_MAP = {
     "kosis_living_pop": "etl.kosis_living_pop",
+    "localdata_biz": "etl.localdata_biz",
 }
 
 FREQUENCY_DAYS = {
@@ -94,7 +95,12 @@ def run_one(ds: dict, dry_run: bool = False) -> dict:
 
 
 def update_after_run(ds: dict, result: dict, now: datetime) -> None:
-    """실행 결과를 ds 딕셔너리에 인플레이스 반영 (save_registry가 이후에 저장)."""
+    """실행 결과를 ds 딕셔너리에 인플레이스 반영 (save_registry가 이후에 저장).
+
+    ETL 모듈이 이미 manifest를 갱신한 경우(result에 manifest_warning 없음) 중복 호출 없음.
+    스케줄러 경유 실행이어도 set_dataset_coverage는 idempotent이므로 이중 호출 무해.
+    단, ETL 모듈이 manifest를 갱신하지 못한 경우(manifest_warning 존재) 여기서 재시도.
+    """
     sched = ds.setdefault("schedule", {})
     status = result.get("status", "failure")
     sched["last_run_status"] = status
@@ -104,10 +110,37 @@ def update_after_run(ds: dict, result: dict, now: datetime) -> None:
         sched["consecutive_failures"] = 0
         freq = sched.get("frequency", "monthly")
         sched["next_run_at"] = compute_next_run_at(freq, now)
+
+        # ETL 모듈이 manifest 갱신에 실패했으면(warning) 스케줄러가 폴백 시도
+        if "manifest_warning" in result:
+            _cascade_manifest(ds["key"], result)
+
     elif status in ("failure", "error"):
         sched["consecutive_failures"] = sched.get("consecutive_failures", 0) + 1
         if sched["consecutive_failures"] >= 3:
             sched["frequency"] = "blocked"  # 안전장치: 3회 연속 실패 → 자동 중단
+
+
+def _cascade_manifest(dataset_key: str, result: dict) -> None:
+    """ETL 성공 후 manifest 캐스케이드 폴백 (ETL 모듈 갱신 실패 시에만 호출)."""
+    try:
+        from utils.manifest_repo import JSONManifestRepo
+        # 현재 wedge 단일 동 — ETL 모듈의 WEDGE_ADM_CD와 동일
+        mod = importlib.import_module(f"etl.{dataset_key}")
+        adm_cd = getattr(mod, "WEDGE_ADM_CD", None)
+        if not adm_cd:
+            return
+        repo = JSONManifestRepo()
+        repo.set_dataset_coverage(
+            adm_cd=adm_cd,
+            dataset_key=dataset_key,
+            months_covered=1,
+            months_total=5,
+            marker=result.get("marker", "real"),
+            last_updated=result.get("fetched_at", ""),
+        )
+    except Exception:
+        pass  # 스케줄러 폴백도 실패하면 조용히 넘김 (다음 실행에서 재시도)
 
 
 # ---------------------------------------------------------------------------

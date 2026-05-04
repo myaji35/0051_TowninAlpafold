@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-04T00:00:00+00:00",
+  "regions": [
+    {
+      "name": "경기도",
+      "code": "41",
+      "sigungu": [
+        {
+          "name": "의정부시",
+          "code": "4115",
+          "dongs": [
+            {
+              "name": "금오동",
+              "adm_cd": "4115011000",
+              "target_datasets": 5
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "시도": 1,
+    "시군구": 1,
+    "읍면동": 1,
+    "target_datasets_per_dong": 5
+  },
+  "_note": "Phase 0 wedge — 의정부 금오동 1건. 전국 3500동 확장은 Phase 1."
+}

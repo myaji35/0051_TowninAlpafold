@@ -8895,7 +8895,7 @@
         "files_changed": []
       },
       "started_at": "2026-05-04T13:05:03.823464+00:00",
-      "completed_at": "2026-05-04T22:08:13.648355",
+      "completed_at": "2026-05-04T22:09:42.768170",
       "result": {
         "files_created": [
           "etl_scheduler.py",
@@ -9359,7 +9359,7 @@
       "id": "ISS-190",
       "title": "[Plan:도메인분석] ETL_SCHEDULER_RUNNER-001 비즈니스 규칙/시나리오 도출",
       "type": "DOMAIN_ANALYZE",
-      "status": "READY",
+      "status": "CLOSED",
       "priority": "P1",
       "assign_to": "domain-analyst",
       "depth": 3,
@@ -9375,8 +9375,151 @@
         ],
         "source_issue": "ETL_SCHEDULER_RUNNER-001"
       },
-      "result": null,
-      "spawn_rules": []
+      "result": {
+        "covered_by": [
+          "docs/plans/data-saas-backoffice-master-plan.md §9",
+          "docs/dev/etl-scheduler-setup.md"
+        ],
+        "note": "Scheduler 도메인 규칙은 마스터 플랜 §9 안전장치 + scheduler-setup.md 운영 가이드에 통합됨."
+      },
+      "spawn_rules": [],
+      "closed_at": "2026-05-04T13:09:53.550394+00:00",
+      "closed_reason": "covered_by_existing_doc"
+    },
+    {
+      "id": "MANIFEST_CASCADE_AFTER_ETL-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[Phase1.5] ETL 후 manifest 자동 캐스케이드",
+      "detail": "ETL 성공 시 utils/manifest_repo.set_dataset_coverage 호출 → 동/시군구/광역시 % 자동 갱신.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:41:18.228914+00:00",
+      "files": [
+        "data_raw/_master/admin_hierarchy.json",
+        "data_raw/_progress/manifest.json",
+        "etl/kosis_living_pop.py",
+        "etl_scheduler.py",
+        "scripts/test_manifest_cascade.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [],
+      "payload": {
+        "use_existing": [
+          "utils/manifest_repo.py"
+        ],
+        "wedge_dong": "의정부시 금오동",
+        "wedge_adm_cd": "4115011000",
+        "scope_dir": "etl/",
+        "phase": 1.5,
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T13:41:25.040872+00:00",
+      "completed_at": "2026-05-04T22:44:57.995487",
+      "result": {
+        "files": [
+          "data_raw/_master/admin_hierarchy.json",
+          "data_raw/_progress/manifest.json",
+          "etl/kosis_living_pop.py",
+          "etl_scheduler.py",
+          "scripts/test_manifest_cascade.py"
+        ],
+        "tests": "6/6",
+        "cascade_proven": "dry_run → 20% completion"
+      }
+    },
+    {
+      "id": "ETL_LOCALDATA_BIZ-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[Phase1.5] LocalData 사업체정보 ETL",
+      "detail": "LocalData Open API → data_raw/localdata_biz/. KOSIS와 다른 응답 형식 검증.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:41:18.228914+00:00",
+      "files": [
+        "etl/localdata_biz.py",
+        "data_raw/localdata_biz/.gitkeep",
+        "scripts/test_etl_localdata_smoke.py",
+        "etl_scheduler.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [],
+      "payload": {
+        "dataset_key": "localdata_biz",
+        "wedge_dong": "의정부시 금오동",
+        "use_existing": [
+          "utils/etl_lock.py",
+          "utils/etl_retry.py",
+          "utils/rate_tracker.py"
+        ],
+        "credentials_env": "LOCALDATA_API_KEY",
+        "scope_dir": "etl/",
+        "phase": 1.5
+      },
+      "started_at": "2026-05-04T13:41:25.040872+00:00",
+      "completed_at": "2026-05-04T22:43:54.968726",
+      "result": {
+        "files": [
+          "etl/localdata_biz.py",
+          "data_raw/localdata_biz/.gitkeep",
+          "scripts/test_etl_localdata_smoke.py",
+          "etl_scheduler.py"
+        ],
+        "tests": "4/4",
+        "scheduler_wired": true,
+        "wedge": "의정부 금오동"
+      }
+    },
+    {
+      "id": "DATASET_CARD_LAST_RUN_DISPLAY-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "IN_PROGRESS",
+      "title": "[Phase1.5] 데이터셋 카드에 last_run_at + 다음 실행 표시",
+      "detail": "renderCard에 schedule.last_run_at + next_run_at + consecutive_failures 표시 추가.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:41:18.228914+00:00",
+      "files": [
+        "components/data-studio-datasets.js",
+        "css/data-studio.css"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [
+        "MANIFEST_CASCADE_AFTER_ETL-001"
+      ],
+      "payload": {
+        "scope_dir": "components/",
+        "phase": 1.5,
+        "files_changed": []
+      }
+    },
+    {
+      "id": "BACKEND_DATASETS_SYNC-001",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "IN_PROGRESS",
+      "title": "[Phase1.5] 백엔드 datasets API → datasets.json 동기화",
+      "detail": "GET/POST /api/v1/datasets가 SQLite + datasets.json 모두 반영. 파일 우선.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:41:18.228914+00:00",
+      "files": [
+        "backend/main.py",
+        "backend/db.py",
+        "scripts/test_backend_datasets_sync.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [],
+      "payload": {
+        "policy": "file_first",
+        "scope_dir": "backend/",
+        "phase": 1.5
+      },
+      "started_at": "2026-05-04T13:41:25.040872+00:00"
     }
   ],
   "hooks": {
@@ -10204,6 +10347,24 @@
         "issue_type": "RUN_TESTS",
         "plan_created": 0,
         "timestamp": "2026-05-04T22:08:49.304898"
+      },
+      {
+        "issue_id": "ETL_SCHEDULER_RUNNER-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:09:42.768170"
+      },
+      {
+        "issue_id": "ETL_LOCALDATA_BIZ-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:43:54.968726"
+      },
+      {
+        "issue_id": "MANIFEST_CASCADE_AFTER_ETL-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T22:44:57.995487"
       }
     ],
     "on_fail": [],
@@ -11492,7 +11653,7 @@
   },
   "stats": {
     "total_issues": 184,
-    "completed": 162,
+    "completed": 165,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"

@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils.etl_lock import acquire_lock, LockBusyError
 from utils.etl_retry import with_retry, RetryExhausted
 from utils.rate_tracker import RateTracker
+from utils.manifest_repo import JSONManifestRepo
 
 # ---------------------------------------------------------------------------
 # 상수
@@ -137,11 +138,25 @@ def run(dry_run: bool = False) -> dict:
 
             rec = transform(raw, WEDGE_ADM_CD, WEDGE_PERIOD, dry_run=dry_run)
             out = save(rec, WEDGE_ADM_CD, WEDGE_PERIOD)
-            return {
+            result = {
                 "status": "success",
                 "output": str(out),
                 "marker": rec["marker"],
             }
+            # manifest 캐스케이드 — 성공 시만. 실패해도 ETL 결과에 영향 없음.
+            try:
+                repo = JSONManifestRepo()
+                repo.set_dataset_coverage(
+                    adm_cd=WEDGE_ADM_CD,
+                    dataset_key=DATASET_KEY,
+                    months_covered=1,
+                    months_total=5,  # target_datasets 5개 = 5 months_total 로 완료율 환산
+                    marker=rec["marker"],
+                    last_updated=rec["fetched_at"],
+                )
+            except Exception as manifest_err:
+                result["manifest_warning"] = str(manifest_err)
+            return result
 
     except LockBusyError:
         return {"status": "blocked", "reason": "이미 실행 중"}
