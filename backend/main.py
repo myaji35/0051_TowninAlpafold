@@ -29,6 +29,7 @@ from pydantic import BaseModel, Field
 
 from backend.db import init_db, get_db
 from backend.batch_queue import get_queue, mock_evaluator
+from backend.whatif_api import router as whatif_router
 from utils.manifest_repo import get_manifest_repo
 from utils.model_review_queue import list_queue
 
@@ -101,6 +102,9 @@ app = FastAPI(
     version=APP_VERSION,
     lifespan=lifespan,
 )
+
+# ISS-219: Reverse What-If 라우터 마운트
+app.include_router(whatif_router)
 
 # CORS — 정적 사이트(:3051) + Vultr 도메인 허용
 app.add_middleware(
