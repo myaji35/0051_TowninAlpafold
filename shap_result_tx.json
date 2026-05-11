@@ -2,117 +2,101 @@
   "target": "tx_volume",
   "feature_importance": [
     {
-      "name": "거래_평균",
-      "shap_mean_abs": 2.5e-05,
+      "name": "카페_평균",
+      "shap_mean_abs": 8e-06,
       "direction": 1,
-      "controllable": false,
-      "excluded": true
+      "controllable": true,
+      "excluded": false
     },
     {
       "name": "소상공_평균",
-      "shap_mean_abs": 1e-06,
+      "shap_mean_abs": 6e-06,
       "direction": -1,
       "controllable": true,
       "excluded": false
     },
     {
-      "name": "카페_평균",
-      "shap_mean_abs": 1e-06,
+      "name": "인과_lag평균",
+      "shap_mean_abs": 5e-06,
       "direction": -1,
-      "controllable": true,
-      "excluded": false
-    },
-    {
-      "name": "소상공_추세",
-      "shap_mean_abs": 0.0,
-      "direction": 1,
       "controllable": false,
       "excluded": true
     },
     {
-      "name": "카페_추세",
-      "shap_mean_abs": 0.0,
+      "name": "소상공_추세",
+      "shap_mean_abs": 2e-06,
       "direction": 1,
       "controllable": false,
       "excluded": true
     },
     {
       "name": "유동_평균",
-      "shap_mean_abs": 0.0,
-      "direction": -1,
+      "shap_mean_abs": 2e-06,
+      "direction": 1,
       "controllable": true,
       "excluded": false
     },
     {
       "name": "유동_추세",
-      "shap_mean_abs": 0.0,
+      "shap_mean_abs": 2e-06,
       "direction": -1,
-      "controllable": false,
-      "excluded": true
-    },
-    {
-      "name": "거래_추세",
-      "shap_mean_abs": 0.0,
-      "direction": 1,
       "controllable": false,
       "excluded": true
     },
     {
       "name": "지가_평균",
-      "shap_mean_abs": 0.0,
-      "direction": 1,
+      "shap_mean_abs": 2e-06,
+      "direction": -1,
       "controllable": false,
       "excluded": true
     },
     {
       "name": "지가_추세",
-      "shap_mean_abs": 0.0,
-      "direction": 1,
+      "shap_mean_abs": 2e-06,
+      "direction": -1,
       "controllable": false,
       "excluded": true
     },
     {
-      "name": "인과_lag평균",
-      "shap_mean_abs": 0.0,
-      "direction": -1,
+      "name": "카페_추세",
+      "shap_mean_abs": 1e-06,
+      "direction": 1,
       "controllable": false,
       "excluded": true
     }
   ],
   "controllable_features": [
-    "소상공_평균",
     "카페_평균",
+    "소상공_평균",
     "유동_평균"
   ],
   "excluded_features": [
-    "거래_평균",
+    "인과_lag평균",
     "소상공_추세",
-    "카페_추세",
     "유동_추세",
-    "거래_추세",
     "지가_평균",
     "지가_추세",
-    "인과_lag평균"
+    "카페_추세"
   ],
   "ranked_controllable": [
     {
-      "name": "소상공_평균",
-      "shap_mean_abs": 1e-06,
-      "direction": -1,
+      "name": "카페_평균",
+      "shap_mean_abs": 8e-06,
+      "direction": 1,
       "controllable": true,
       "excluded": false
     },
     {
-      "name": "카페_평균",
-      "shap_mean_abs": 1e-06,
+      "name": "소상공_평균",
+      "shap_mean_abs": 6e-06,
       "direction": -1,
       "controllable": true,
       "excluded": false
     },
     {
       "name": "유동_평균",
-      "shap_mean_abs": 0.0,
-      "direction": -1,
+      "shap_mean_abs": 2e-06,
+      "direction": 1,
       "controllable": true,
       "excluded": false
     }
