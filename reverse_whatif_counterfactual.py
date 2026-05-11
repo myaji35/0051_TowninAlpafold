@@ -9,7 +9,6 @@ ISS-194 — DiCE Counterfactual 시나리오 생성
 import argparse
 import json
 import os
-import statistics
 import threading
 from pathlib import Path
 
@@ -19,21 +18,15 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 
+from reverse_whatif_common import (
+    _target_suffix, build_feat_row, build_X,
+)
+
 ROOT = Path(__file__).parent
 # ISS-217: REVERSE_WHATIF_DATA 환경변수로 데이터 파일 오버라이드 가능
 _data_env = os.environ.get("REVERSE_WHATIF_DATA")
 SIMULA = Path(_data_env) if _data_env else ROOT / "simula_data_real.json"
 CAUSAL = ROOT / "causal.json"
-
-LAYERS = ["biz_count", "biz_cafe", "visitors_total", "tx_volume", "land_price"]
-LAYER_KO = {
-    "biz_count": "소상공",
-    "biz_cafe": "카페",
-    "visitors_total": "유동",
-    "tx_volume": "거래",
-    "land_price": "지가",
-}
-CONTROLLABLE_LAYERS = {"biz_count", "biz_cafe", "visitors_total"}
 
 SCENARIO_MAX_DELTA = {"최소변경": 0.20, "균형": 0.50, "고효율": 1.50}
 
@@ -56,101 +49,9 @@ def get_scenario_features(ctrl_feats, feat_names, controllable_mask):
     }
 
 
-def trend_slope(values):
-    if len(values) < 12:
-        return 0.0
-    last12 = values[-12:]
-    n = len(last12)
-    xs = list(range(n))
-    mean_y = statistics.mean(last12)
-    if mean_y == 0:
-        return 0.0
-    mean_x = (n - 1) / 2
-    num = sum((x - mean_x) * (y - mean_y) for x, y in zip(xs, last12))
-    den = sum((x - mean_x) ** 2 for x in xs)
-    if den == 0:
-        return 0.0
-    return (num / den) / mean_y
-
-
-def avg_granger_lag(causal, dong_code):
-    info = causal.get("dongs", {}).get(dong_code, {})
-    grangers = info.get("granger", [])
-    if not grangers:
-        return 0
-    return statistics.mean(g.get("lag", 0) for g in grangers)
-
-
-def _exclude_layers_for_target(target):
-    """ISS-216: target별 X에서 제외할 레이어 집합."""
-    if target == "tx_per_visitor":
-        return {"tx_volume", "visitors_total"}
-    elif target == "tx_delta_6m":
-        return {"tx_volume"}
-    return {target}  # 기존: Y 원본 레이어만 제외
-
-
-def build_feat_row(d, causal_data, target=None):
-    """ISS-209 leakage fix: target 레이어 평균/추세를 X에서 제외.
-    ISS-216: tx_per_visitor/tx_delta_6m 신규 exclude_layers 지원.
-    """
-    exclude_layers = _exclude_layers_for_target(target) if target else set()
-    layers = d.get("layers", {})
-    feat = []
-    for L in LAYERS:
-        if L in exclude_layers:
-            continue  # leakage 제외
-        vals = layers.get(L, [])
-        if len(vals) < 12:
-            feat.append(0.0)
-            feat.append(0.0)
-        else:
-            feat.append(statistics.mean(vals) / 1e6)
-            feat.append(trend_slope(vals))
-    feat.append(avg_granger_lag(causal_data, d.get("code", "")))
-    if any(v != v for v in feat):
-        return None
-    return feat
-
-
-def _y_scalar_for_target(d, target):
-    """ISS-216: target별 Y 스칼라 산출."""
-    layers = d.get("layers", {})
-    if target == "tx_per_visitor":
-        tx_s = layers.get("tx_volume", [])
-        vis_s = layers.get("visitors_total", [])
-        if len(tx_s) < 12 or len(vis_s) < 12:
-            return None
-        ratios = [t / v if v > 0 else 0 for t, v in zip(tx_s, vis_s)]
-        return statistics.mean(ratios)
-    elif target == "tx_delta_6m":
-        tx_s = layers.get("tx_volume", [])
-        if len(tx_s) < 12:
-            return None
-        return statistics.mean(tx_s[-6:]) - statistics.mean(tx_s[-12:-6])
-    else:
-        y_raw = layers.get(target, [])
-        if len(y_raw) < 12:
-            return None
-        return statistics.mean(y_raw)
-
-
 def build_X_all(simula, causal_data, target):
-    rows, y_vals = [], []
-    for d in simula["dongs"]:
-        y_scalar = _y_scalar_for_target(d, target)
-        if y_scalar is None or y_scalar == 0:
-            continue
-        feat = build_feat_row(d, causal_data, target=target)
-        if feat is None:
-            continue
-        rows.append(feat)
-        # ISS-216: 신규 타깃은 비율/차이값이므로 /1e6 스케일 다운 불필요
-        if target in ("tx_per_visitor", "tx_delta_6m"):
-            y_vals.append(y_scalar)
-        else:
-            y_vals.append(y_scalar / 1e6)
-    return rows, y_vals
+    """전체 동 X/Y 목록 반환 (공통 build_X 위임)."""
+    return build_X(simula, target, causal_data)
 
 
 def normalize_dong_name(raw):
@@ -316,8 +217,7 @@ def run(dong_name, target, goal):
     print(f"[{target}] 대상 동: {dong_dict['name']} (code={dong_dict.get('code', '')})")
 
     # ISS-216: suffix 매핑 확장
-    suffix = {"tx_volume": "tx", "visitors_total": "vis",
-               "tx_per_visitor": "tpv", "tx_delta_6m": "tdelta"}[target]
+    suffix = _target_suffix(target)
     bundle = joblib.load(ROOT / f"reverse_whatif_model_{suffix}.pkl")
     model = bundle["model"]
     scaler = bundle["scaler"]
@@ -405,7 +305,7 @@ def run(dong_name, target, goal):
             )
 
         if scenario_dict is None:
-            print(f" fallback->scipy", end="", flush=True)
+            print(" fallback->scipy", end="", flush=True)
             X_new = _scipy_counterfactual(
                 X_dong_raw, feat_names, model, scaler, target_y,
                 vary_features=cfg["features"],

@@ -25,58 +25,20 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 
+from reverse_whatif_common import (
+    LAYERS, LAYER_KO,
+    trend_slope, avg_granger_lag,
+    _target_suffix,
+)
+
 ROOT = Path(__file__).parent
 # ISS-217: REVERSE_WHATIF_DATA 환경변수로 데이터 파일 오버라이드 가능
 _data_env = os.environ.get("REVERSE_WHATIF_DATA")
 SIMULA = Path(_data_env) if _data_env else ROOT / "simula_data_real.json"
 CAUSAL = ROOT / "causal.json"
 
-# --- decision_tree_train.py 와 동일 정의 ---
-LAYERS = ["biz_count", "biz_cafe", "visitors_total", "tx_volume", "land_price"]
-LAYER_KO = {
-    "biz_count": "소상공",
-    "biz_cafe": "카페",
-    "visitors_total": "유동",
-    "tx_volume": "거래",
-    "land_price": "지가",
-}
-
 # 통제 가능 특성 집합 (LAYER_KO 이름 기준)
 CONTROLLABLE_LAYERS = {"biz_count", "biz_cafe", "visitors_total"}
-
-
-def trend_slope(values):
-    """간단한 선형 회귀 기울기 (마지막 12개월) — 정규화된 값."""
-    if len(values) < 12:
-        return 0.0
-    last12 = values[-12:]
-    n = len(last12)
-    xs = list(range(n))
-    mean_y = statistics.mean(last12)
-    if mean_y == 0:
-        return 0.0
-    mean_x = (n - 1) / 2
-    num = sum((x - mean_x) * (y - mean_y) for x, y in zip(xs, last12))
-    den = sum((x - mean_x) ** 2 for x in xs)
-    if den == 0:
-        return 0.0
-    slope = num / den
-    return slope / mean_y  # 비율 스케일
-
-
-def avg_granger_lag(causal, dong_code):
-    """동 코드로 Granger 트리플렛 평균 lag (없으면 0)."""
-    info = causal.get("dongs", {}).get(dong_code, {})
-    grangers = info.get("granger", [])
-    if not grangers:
-        return 0
-    return statistics.mean(g.get("lag", 0) for g in grangers)
-
-
-def _target_suffix(target: str) -> str:
-    """ISS-216: target → pkl suffix 매핑."""
-    return {"tx_volume": "tx", "visitors_total": "vis",
-            "tx_per_visitor": "tpv", "tx_delta_6m": "tdelta"}[target]
 
 
 def build_matrix(simula, causal_data, target):

@@ -98,7 +98,7 @@ def main():
             _save_and_exit(args, steps, pipeline_t0, error="train failed")
 
     # ── Step 2: SHAP 설명 ─────────────────────────────────────────
-    print(f"[2/3] explain — SHAP 특성 영향도 분석 중...", flush=True)
+    print("[2/3] explain — SHAP 특성 영향도 분석 중...", flush=True)
     ok, elapsed, stdout, stderr = run_step(
         "explain",
         [PYTHON, "reverse_whatif_explain.py", "--target", args.target],
@@ -124,7 +124,7 @@ def main():
             pass
 
     # ── Step 3: Counterfactual ────────────────────────────────────
-    print(f"[3/3] whatif — DiCE Counterfactual 시나리오 생성 중...", flush=True)
+    print("[3/3] whatif — DiCE Counterfactual 시나리오 생성 중...", flush=True)
     ok, elapsed, stdout, stderr = run_step(
         "whatif",
         [PYTHON, "reverse_whatif_counterfactual.py",

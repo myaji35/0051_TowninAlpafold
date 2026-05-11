@@ -31,13 +31,12 @@ import numpy as np
 from scipy.optimize import minimize
 
 ROOT = Path(__file__).parent
-
-# reverse_whatif_counterfactual.py 의 헬퍼 함수 재사용 (DRY 원칙)
 sys.path.insert(0, str(ROOT))
-from reverse_whatif_counterfactual import (  # noqa: E402
-    build_feat_row,
-    find_dong,
+
+from reverse_whatif_common import (  # noqa: E402
+    _target_suffix, build_feat_row,
 )
+from reverse_whatif_counterfactual import find_dong  # noqa: E402
 
 
 # ── 데이터 로드 ──────────────────────────────────────────────────────────────
@@ -109,8 +108,7 @@ def _scipy_reverify(X_baseline, changes, feat_names, ctrl_features, model, scale
 
 def cross_verify(target: str) -> dict:
     # ISS-216: suffix 매핑 확장
-    suffix = {"tx_volume": "tx", "visitors_total": "vis",
-               "tx_per_visitor": "tpv", "tx_delta_6m": "tdelta"}[target]
+    suffix = _target_suffix(target)
     scenarios_file = ROOT / f"whatif_scenarios_{suffix}.json"
     model_file = ROOT / f"reverse_whatif_model_{suffix}.pkl"
 
@@ -143,8 +141,7 @@ def cross_verify(target: str) -> dict:
     # 내부 스케일 (모델 예측값 단위)
     # tx: current_y 는 이미 소규모 → /1e6 없이 직접 저장돼 있음
     # → counterfactual.py 가 round(pred_y * 1e6, 4) 로 저장했으므로
-    #   baseline_y_internal = baseline_y_real / 1e6
-    baseline_y_internal = baseline_y_real / 1e6
+    #   target_y_internal = target_y_real / 1e6
     target_y_internal = target_y_real / 1e6
 
     # 동 X baseline 재구성 (ISS-209: target 전달로 leakage 특성 제외)
