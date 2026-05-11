@@ -8,6 +8,7 @@ ISS-194 — DiCE Counterfactual 시나리오 생성
 """
 import argparse
 import json
+import os
 import statistics
 import threading
 from pathlib import Path
@@ -19,7 +20,9 @@ import pandas as pd
 from scipy.optimize import minimize
 
 ROOT = Path(__file__).parent
-SIMULA = ROOT / "simula_data_real.json"
+# ISS-217: REVERSE_WHATIF_DATA 환경변수로 데이터 파일 오버라이드 가능
+_data_env = os.environ.get("REVERSE_WHATIF_DATA")
+SIMULA = Path(_data_env) if _data_env else ROOT / "simula_data_real.json"
 CAUSAL = ROOT / "causal.json"
 
 LAYERS = ["biz_count", "biz_cafe", "visitors_total", "tx_volume", "land_price"]
@@ -78,12 +81,24 @@ def avg_granger_lag(causal, dong_code):
     return statistics.mean(g.get("lag", 0) for g in grangers)
 
 
+def _exclude_layers_for_target(target):
+    """ISS-216: target별 X에서 제외할 레이어 집합."""
+    if target == "tx_per_visitor":
+        return {"tx_volume", "visitors_total"}
+    elif target == "tx_delta_6m":
+        return {"tx_volume"}
+    return {target}  # 기존: Y 원본 레이어만 제외
+
+
 def build_feat_row(d, causal_data, target=None):
-    """ISS-209 leakage fix: target 레이어 평균/추세를 X에서 제외."""
+    """ISS-209 leakage fix: target 레이어 평균/추세를 X에서 제외.
+    ISS-216: tx_per_visitor/tx_delta_6m 신규 exclude_layers 지원.
+    """
+    exclude_layers = _exclude_layers_for_target(target) if target else set()
     layers = d.get("layers", {})
     feat = []
     for L in LAYERS:
-        if L == target:
+        if L in exclude_layers:
             continue  # leakage 제외
         vals = layers.get(L, [])
         if len(vals) < 12:
@@ -98,21 +113,43 @@ def build_feat_row(d, causal_data, target=None):
     return feat
 
 
+def _y_scalar_for_target(d, target):
+    """ISS-216: target별 Y 스칼라 산출."""
+    layers = d.get("layers", {})
+    if target == "tx_per_visitor":
+        tx_s = layers.get("tx_volume", [])
+        vis_s = layers.get("visitors_total", [])
+        if len(tx_s) < 12 or len(vis_s) < 12:
+            return None
+        ratios = [t / v if v > 0 else 0 for t, v in zip(tx_s, vis_s)]
+        return statistics.mean(ratios)
+    elif target == "tx_delta_6m":
+        tx_s = layers.get("tx_volume", [])
+        if len(tx_s) < 12:
+            return None
+        return statistics.mean(tx_s[-6:]) - statistics.mean(tx_s[-12:-6])
+    else:
+        y_raw = layers.get(target, [])
+        if len(y_raw) < 12:
+            return None
+        return statistics.mean(y_raw)
+
+
 def build_X_all(simula, causal_data, target):
     rows, y_vals = [], []
     for d in simula["dongs"]:
-        layers = d.get("layers", {})
-        y_raw = layers.get(target, [])
-        if len(y_raw) < 12:
+        y_scalar = _y_scalar_for_target(d, target)
+        if y_scalar is None or y_scalar == 0:
             continue
-        y_scalar = statistics.mean(y_raw)
-        if y_scalar == 0:
-            continue
-        feat = build_feat_row(d, causal_data, target=target)  # ISS-209: leakage 제외
+        feat = build_feat_row(d, causal_data, target=target)
         if feat is None:
             continue
         rows.append(feat)
-        y_vals.append(y_scalar / 1e6)
+        # ISS-216: 신규 타깃은 비율/차이값이므로 /1e6 스케일 다운 불필요
+        if target in ("tx_per_visitor", "tx_delta_6m"):
+            y_vals.append(y_scalar)
+        else:
+            y_vals.append(y_scalar / 1e6)
     return rows, y_vals
 
 
@@ -165,7 +202,7 @@ def _dice_genetic(exp, query, desired_range, features_to_vary, permitted_range,
 
 
 def _parse_dice_cf(cf, label, strategy, X_dong_raw, feat_names, model, scaler, current_y, target_y,
-                   ctrl_features=None):
+                   ctrl_features=None, y_scale=1e6):
     if cf is None:
         return None
     ex = cf.cf_examples_list[0]
@@ -186,7 +223,7 @@ def _parse_dice_cf(cf, label, strategy, X_dong_raw, feat_names, model, scaler, c
     achievement = (pred_y - current_y) / (target_y - current_y) * 100 if target_y != current_y else 100.0
     return {
         "label": label, "strategy": strategy, "method": "dice_genetic",
-        "changes": changes, "predicted_y": round(pred_y * 1e6, 4),
+        "changes": changes, "predicted_y": round(pred_y * y_scale, 4),
         "achievement_pct": round(float(achievement), 2),
     }
 
@@ -231,11 +268,9 @@ def _scipy_counterfactual(X_dong_raw, feat_names, model, scaler, target_y,
 
 
 def _make_scenario_from_scipy(X_new, X_orig, feat_names, model, scaler, current_y, target_y,
-                               label, strategy, ctrl_features=None, vary_features=None):
+                               label, strategy, ctrl_features=None, vary_features=None, y_scale=1e6):
     # changes는 항상 ctrl_features(평균 단위 /1e6 스케일) 기준으로만 기록.
     # 추세 특성은 단위리스(normalized)라 1e6 역변환이 불가 → changes 제외.
-    # optimize의 _scipy_reverify는 changes 키로 reverify_features를 결정하므로
-    # ctrl_features 기반으로만 기록해야 교차검증 일관성 유지됨.
     effective_ctrl = ctrl_features if ctrl_features is not None else [f for f in feat_names if "평균" in f]
     changes = {}
     for f in effective_ctrl:
@@ -256,7 +291,7 @@ def _make_scenario_from_scipy(X_new, X_orig, feat_names, model, scaler, current_
     low_sensitivity = len(changes) == 0 and achievement < 5.0
     result = {
         "label": label, "strategy": strategy, "method": "scipy_fallback",
-        "changes": changes, "predicted_y": round(pred_y * 1e6, 4),
+        "changes": changes, "predicted_y": round(pred_y * y_scale, 4),
         "achievement_pct": round(float(achievement), 2),
     }
     if low_sensitivity:
@@ -280,7 +315,9 @@ def run(dong_name, target, goal):
 
     print(f"[{target}] 대상 동: {dong_dict['name']} (code={dong_dict.get('code', '')})")
 
-    suffix = "tx" if target == "tx_volume" else "vis"
+    # ISS-216: suffix 매핑 확장
+    suffix = {"tx_volume": "tx", "visitors_total": "vis",
+               "tx_per_visitor": "tpv", "tx_delta_6m": "tdelta"}[target]
     bundle = joblib.load(ROOT / f"reverse_whatif_model_{suffix}.pkl")
     model = bundle["model"]
     scaler = bundle["scaler"]
@@ -301,7 +338,9 @@ def run(dong_name, target, goal):
     target_y = current_y * (1 + goal / 100)
     desired_range = [target_y, target_y * 1.30]
 
-    print(f"[{target}] current_y={current_y * 1e6:.2f}  target_y={target_y * 1e6:.2f}  goal={goal}%")
+    # ISS-216: 신규 타깃은 비율/차이값이므로 *1e6 불필요
+    _y_display_scale = 1.0 if target in ("tx_per_visitor", "tx_delta_6m") else 1e6
+    print(f"[{target}] current_y={current_y * _y_display_scale:.4f}  target_y={target_y * _y_display_scale:.4f}  goal={goal}%")
 
     X_all_raw, y_all = build_X_all(simula, causal_data, target)
     df_train = pd.DataFrame(X_all_raw, columns=feat_names)
@@ -362,6 +401,7 @@ def run(dong_name, target, goal):
                 cf, label, strategy,
                 X_dong_raw, feat_names, model, scaler, current_y, target_y,
                 ctrl_features=ctrl_features,
+                y_scale=_y_display_scale,
             )
 
         if scenario_dict is None:
@@ -376,6 +416,7 @@ def run(dong_name, target, goal):
                 X_new, X_dong_raw, feat_names, model, scaler, current_y, target_y,
                 label, strategy, ctrl_features=ctrl_features,
                 vary_features=cfg["features"],
+                y_scale=_y_display_scale,
             )
 
         print(f" 완료 (achievement={scenario_dict.get('achievement_pct', 'N/A')}%)")
@@ -387,8 +428,9 @@ def run(dong_name, target, goal):
         "dong": dong_dict["name"],
         "target": target,
         "goal_pct": goal,
-        "current_y": round(current_y * 1e6, 4),
-        "target_y": round(target_y * 1e6, 4),
+        # ISS-216: 신규 타깃은 비율/차이 단위 그대로, 기존은 *1e6
+        "current_y": round(current_y * _y_display_scale, 4),
+        "target_y": round(target_y * _y_display_scale, 4),
         "scenarios": scenarios,
     }
     out_path = ROOT / f"whatif_scenarios_{suffix}.json"
@@ -400,7 +442,8 @@ def run(dong_name, target, goal):
 def main():
     parser = argparse.ArgumentParser(description="DiCE Counterfactual 시나리오 생성")
     parser.add_argument("--dong", required=True)
-    parser.add_argument("--target", required=True, choices=["tx_volume", "visitors_total"])
+    parser.add_argument("--target", required=True,
+                        choices=["tx_volume", "visitors_total", "tx_per_visitor", "tx_delta_6m"])
     parser.add_argument("--goal", type=float, default=15)
     args = parser.parse_args()
     run(args.dong, args.target, args.goal)

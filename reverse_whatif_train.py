@@ -2,17 +2,21 @@
 """
 ISS-192 — Reverse What-If 모델 학습
 ISS-209 leakage fix: Y와 동일 원본 레이어 X에서 제외
+ISS-216: 신규 Y 타깃 2종 추가 (tx_per_visitor, tx_delta_6m)
 입력 : simula_data_real.json + causal.json
 X    : 9개 특성 (Y 레이어의 평균/추세 제외)
-Y    : tx_volume 또는 visitors_total (동별 60개월 평균, 스칼라)
+Y    : tx_volume / visitors_total / tx_per_visitor / tx_delta_6m (동별 스칼라)
 출력 :
-  reverse_whatif_model_tx.pkl    -- tx_volume 타깃
-  reverse_whatif_model_vis.pkl   -- visitors_total 타깃
+  reverse_whatif_model_tx.pkl     -- tx_volume 타깃
+  reverse_whatif_model_vis.pkl    -- visitors_total 타깃
+  reverse_whatif_model_tpv.pkl    -- tx_per_visitor 타깃
+  reverse_whatif_model_tdelta.pkl -- tx_delta_6m 타깃
   reverse_whatif_feature_matrix.json -- X/Y 행렬 메타
-검증 : R² 0.5~0.85 (leakage 제거 후 정상 범위)
+검증 : R² 0.4~0.9 (leakage 제거 후 정상 범위)
 """
 import argparse
 import json
+import os
 import statistics
 from pathlib import Path
 
@@ -22,7 +26,9 @@ from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 
 ROOT = Path(__file__).parent
-SIMULA = ROOT / "simula_data_real.json"
+# ISS-217: REVERSE_WHATIF_DATA 환경변수로 데이터 파일 오버라이드 가능
+_data_env = os.environ.get("REVERSE_WHATIF_DATA")
+SIMULA = Path(_data_env) if _data_env else ROOT / "simula_data_real.json"
 CAUSAL = ROOT / "causal.json"
 
 # --- decision_tree_train.py 와 동일 정의 ---
@@ -67,18 +73,34 @@ def avg_granger_lag(causal, dong_code):
     return statistics.mean(g.get("lag", 0) for g in grangers)
 
 
+def _target_suffix(target: str) -> str:
+    """ISS-216: target → pkl suffix 매핑."""
+    return {"tx_volume": "tx", "visitors_total": "vis",
+            "tx_per_visitor": "tpv", "tx_delta_6m": "tdelta"}[target]
+
+
 def build_matrix(simula, causal_data, target):
     """X 행렬(9열) + Y 벡터 + 메타 구성.
     ISS-209 leakage fix: target 레이어와 동일 원본의 평균/추세는 X에서 제외.
+    ISS-216: tx_per_visitor, tx_delta_6m 신규 타깃 지원.
+      - tx_per_visitor: tx_volume + visitors_total 둘 다 X에서 제외 (혼합 leakage)
+      - tx_delta_6m: tx_volume만 X에서 제외
     """
+    # ISS-216: 신규 타깃의 X에서 제외할 레이어 결정
+    if target == "tx_per_visitor":
+        exclude_layers = {"tx_volume", "visitors_total"}
+    elif target == "tx_delta_6m":
+        exclude_layers = {"tx_volume"}
+    else:
+        # 기존 타깃: Y 원본 레이어만 제외
+        exclude_layers = {target}
+
     feat_names = []
     controllable_mask = []
     excluded = []
 
-    # 특성명/통제가능 마스크 구성 (target 레이어 평균/추세 제외 → 9개)
     for L in LAYERS:
-        if L == target:
-            # Y 원본 레이어는 X에서 제외 (data leakage 방지)
+        if L in exclude_layers:
             excluded.append(f"{LAYER_KO[L]}_평균")
             excluded.append(f"{LAYER_KO[L]}_추세")
             continue
@@ -97,17 +119,36 @@ def build_matrix(simula, causal_data, target):
         code = d.get("code", "")
         layers = d.get("layers", {})
 
-        # Y: 타깃 레이어 60개월 평균
-        y_raw = layers.get(target, [])
-        if len(y_raw) < 12:
-            continue
-        y_scalar = statistics.mean(y_raw)
+        # Y: 타깃별 산출
+        if target == "tx_per_visitor":
+            # ISS-216: 월별 tx/visitors → 60개월 평균
+            tx_series = layers.get("tx_volume", [])
+            vis_series = layers.get("visitors_total", [])
+            if len(tx_series) < 12 or len(vis_series) < 12:
+                continue
+            ratios = [t / v if v > 0 else 0 for t, v in zip(tx_series, vis_series)]
+            y_scalar = statistics.mean(ratios)
+        elif target == "tx_delta_6m":
+            # ISS-216: 최근 6개월 모멘텀 변화
+            tx_series = layers.get("tx_volume", [])
+            if len(tx_series) < 12:
+                continue
+            recent = statistics.mean(tx_series[-6:])
+            prior = statistics.mean(tx_series[-12:-6])
+            y_scalar = recent - prior
+        else:
+            # 기존 타깃: 60개월 평균
+            y_raw = layers.get(target, [])
+            if len(y_raw) < 12:
+                continue
+            y_scalar = statistics.mean(y_raw)
+
         if y_scalar == 0:
             continue
 
         feat = []
         for L in LAYERS:
-            if L == target:
+            if L in exclude_layers:
                 continue  # leakage 제외
             vals = layers.get(L, [])
             if len(vals) < 12:
@@ -125,7 +166,11 @@ def build_matrix(simula, causal_data, target):
             continue
 
         rows.append(feat)
-        y_vals.append(y_scalar / 1e6)  # 동일 스케일 다운
+        # ISS-216: tx_per_visitor/tx_delta_6m은 비율/차이값이므로 스케일 다운 불필요
+        if target in ("tx_per_visitor", "tx_delta_6m"):
+            y_vals.append(y_scalar)
+        else:
+            y_vals.append(y_scalar / 1e6)  # 기존 타깃: 스케일 다운
         dong_codes.append(code)
         dong_names.append(name)
 
@@ -166,7 +211,8 @@ def train(target: str):
         print(f"[{target}] ℹ️  R² {r2:.4f} < 0.30 — 통제 가능 변수만으로 예측 어려움 (정상 범위)")
 
     # pkl 저장 (모델 + 스케일러 + 메타 dict)
-    suffix = "tx" if target == "tx_volume" else "vis"
+    # ISS-216: suffix 매핑 확장
+    suffix = _target_suffix(target)
     pkl_path = ROOT / f"reverse_whatif_model_{suffix}.pkl"
     joblib.dump(
         {
@@ -190,7 +236,7 @@ def main():
     parser.add_argument(
         "--target",
         required=True,
-        choices=["tx_volume", "visitors_total"],
+        choices=["tx_volume", "visitors_total", "tx_per_visitor", "tx_delta_6m"],
         help="회귀 타깃 레이어",
     )
     args = parser.parse_args()
@@ -201,7 +247,7 @@ def main():
     matrix_path = ROOT / "reverse_whatif_feature_matrix.json"
     matrix = json.loads(matrix_path.read_text()) if matrix_path.exists() else {}
 
-    suffix = "tx" if args.target == "tx_volume" else "vis"
+    suffix = _target_suffix(args.target)
     controllable_indices = [i for i, c in enumerate(controllable_mask) if c]
 
     matrix[args.target] = {

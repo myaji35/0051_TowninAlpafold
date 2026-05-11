@@ -8,12 +8,14 @@ ISS-196 — Reverse What-If 전체 파이프라인 CLI 오케스트레이터
 
 사용:
   python reverse_whatif_pipeline.py --dong 의정부_금오동 --target tx_volume --goal 15
+  python reverse_whatif_pipeline.py --dong 의정부_금오동 --target tx_volume --goal 15 --data wedge_data_geumo.json
   python reverse_whatif_pipeline.py --dong 의정부_금오동 --target visitors_total --goal 15
 산출:
   whatif_result.json — 세 단계 결과 통합
 """
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -23,11 +25,12 @@ ROOT = Path(__file__).parent
 PYTHON = sys.executable
 
 
-def run_step(label, cmd, timeout=120):
+def run_step(label, cmd, timeout=120, env=None):
     """서브프로세스 실행 → (ok, elapsed, stdout, stderr)."""
     t0 = time.time()
+    run_env = {**os.environ, **(env or {})}
     result = subprocess.run(
-        cmd, capture_output=True, text=True, timeout=timeout, cwd=ROOT
+        cmd, capture_output=True, text=True, timeout=timeout, cwd=ROOT, env=run_env
     )
     elapsed = round(time.time() - t0, 1)
     ok = result.returncode == 0
@@ -38,15 +41,37 @@ def main():
     parser = argparse.ArgumentParser(description="Reverse What-If 파이프라인")
     parser.add_argument("--dong", required=True, help="동 이름 (예: 의정부_금오동)")
     parser.add_argument(
-        "--target", required=True, choices=["tx_volume", "visitors_total"]
+        "--target", required=True,
+        choices=["tx_volume", "visitors_total", "tx_per_visitor", "tx_delta_6m"]
     )
     parser.add_argument("--goal", type=float, default=15, help="목표 증가율 %%")
     parser.add_argument(
         "--skip-train", action="store_true", help="모델이 이미 존재하면 학습 단계 건너뜀"
     )
+    # ISS-217: wedge 실데이터 파일 경로 지정 (기본: simula_data_real.json)
+    parser.add_argument(
+        "--data",
+        default=None,
+        help="데이터 파일 경로 (기본: simula_data_real.json). 예: wedge_data_geumo.json",
+    )
     args = parser.parse_args()
 
-    suffix = "tx" if args.target == "tx_volume" else "vis"
+    # --data 옵션 → 절대 경로 변환 후 환경변수로 서브스크립트에 전달
+    data_env = {}
+    if args.data:
+        data_path = Path(args.data)
+        if not data_path.is_absolute():
+            data_path = ROOT / data_path
+        if not data_path.exists():
+            print(f"[ERROR] 데이터 파일 없음: {data_path}", file=sys.stderr)
+            sys.exit(1)
+        data_env["REVERSE_WHATIF_DATA"] = str(data_path)
+        print(f"[pipeline] 데이터 파일: {data_path.name}")
+
+    # ISS-216: suffix 매핑 확장
+    _suffix_map = {"tx_volume": "tx", "visitors_total": "vis",
+                   "tx_per_visitor": "tpv", "tx_delta_6m": "tdelta"}
+    suffix = _suffix_map[args.target]
     model_file = ROOT / f"reverse_whatif_model_{suffix}.pkl"
 
     steps = []
@@ -62,6 +87,7 @@ def main():
             "train",
             [PYTHON, "reverse_whatif_train.py", "--target", args.target],
             timeout=120,
+            env=data_env,
         )
         status = "ok" if ok else "fail"
         print(f"       {status} ({elapsed}s)")
@@ -77,6 +103,7 @@ def main():
         "explain",
         [PYTHON, "reverse_whatif_explain.py", "--target", args.target],
         timeout=180,
+        env=data_env,
     )
     status = "ok" if ok else "fail"
     print(f"       {status} ({elapsed}s)")
@@ -103,6 +130,7 @@ def main():
         [PYTHON, "reverse_whatif_counterfactual.py",
          "--dong", args.dong, "--target", args.target, "--goal", str(args.goal)],
         timeout=300,
+        env=data_env,
     )
     status = "ok" if ok else "fail"
     print(f"       {status} ({elapsed}s)")
@@ -131,6 +159,8 @@ def main():
         "total_elapsed_sec": total_elapsed,
         "steps": steps,
     }
+    if args.data:
+        result["data_file"] = args.data
 
     if shap_summary:
         result["shap_summary"] = shap_summary
