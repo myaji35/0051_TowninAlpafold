@@ -1,0 +1,147 @@
+{
+  "_meta": {
+    "issue": "ISS-138 (DOMAIN_ANALYZE)",
+    "source_issue": "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001",
+    "extracted_from": [
+      "docs/stories/pharmacy-close.md (D절 가중치 + E절 grade)",
+      "components/pharmacy-close.js (UI 상태 기계 + 색 충돌 가드)",
+      "viz/plugins/pharmacy-hazard.js (Hazard 모델 v1)"
+    ],
+    "extracted_at": "2026-05-04",
+    "version": "1.0.0",
+    "purpose": "biz-validator + 시나리오 플레이어 입력 — 약국 폐업평가 도메인의 결정성 검증 룰셋"
+  },
+
+  "domain": "pharmacy.close",
+  "persona": "약국 본사 운영/회계 담당자",
+
+  "scoring_rules": {
+    "score_name": "hazard",
+    "direction": "higher_is_worse",
+    "color_conflict_guard": "위험도 — 높을수록 나쁨 (점포개발 score↑=좋음과 반대)",
+    "factors": [
+      { "key": "revenue_yoy", "weight": -0.25, "direction": "negative_means_risky", "label": "월 매출 YoY", "rationale": "감소 ↑ → hazard ↑" },
+      { "key": "prescription_yoy", "weight": -0.20, "direction": "negative_means_risky", "label": "월 처방건수 YoY" },
+      { "key": "population_yoy", "weight": -0.10, "direction": "negative_means_risky", "label": "동 인구 YoY" },
+      { "key": "clinics_closed_500m_12m", "weight": 0.15, "direction": "positive_means_risky", "label": "인근 의원 폐업 (12M)" },
+      { "key": "competitor_pharmacies_new_12m", "weight": 0.12, "direction": "positive_means_risky", "label": "경쟁 약국 신규 진입 (12M)" },
+      { "key": "rent_yoy", "weight": 0.08, "direction": "positive_means_risky", "label": "동 임대가 YoY", "rationale": "상승 ↑ → 마진 압박 → hazard ↑" },
+      { "key": "operating_months", "weight": -0.10, "direction": "stability_factor", "label": "운영 개월수", "rationale": "오래 운영 = 안정 → hazard 차감" }
+    ],
+    "weight_abs_sum": 1.00,
+    "score_range": [0, 100],
+    "deterministic": true,
+    "normalization_notes": "각 NORMALIZER가 raw → '위험도화'된 [0,1]. operating_months만 안정도(차감)."
+  },
+
+  "grade_mapping": [
+    { "min_hazard": 70, "grade": "high",     "color": "#C9485B", "action": "철수 검토" },
+    { "min_hazard": 50, "grade": "medium",   "color": "#FED766", "action": "관찰 — 3개월 후 재평가" },
+    { "min_hazard": 30, "grade": "low",      "color": "#5BC0EB", "action": "유지" },
+    { "min_hazard": 0,  "grade": "very_low", "color": "#00529B", "action": "유지 — 안전" }
+  ],
+
+  "input_validation": {
+    "store_input": { "required": true, "min_length": 2, "description": "store_id 또는 address" },
+    "operating_months": { "type": "number", "min": 0, "optional": true, "override_rule": "사용자 입력 > 0이면 DEMO features의 operating_months override" },
+    "csv_uploaded": { "type": "boolean", "optional": true, "effect": "true → confidence 0.85, false → 0.55 + estimate_mode 배지" }
+  },
+
+  "ui_state_machine": {
+    "states": ["INITIAL", "TYPING", "SUBMITTING", "SUCCESS", "ERROR"],
+    "transitions": [
+      { "from": "INITIAL", "trigger": "store_input", "to": "TYPING" },
+      { "from": "TYPING", "trigger": "input_blank", "to": "INITIAL" },
+      { "from": "TYPING", "trigger": "evaluate_click", "to": "SUBMITTING" },
+      { "from": "SUBMITTING", "trigger": "result_arrived", "to": "SUCCESS" },
+      { "from": "SUBMITTING", "trigger": "store_not_found", "to": "ERROR" },
+      { "from": "SUCCESS", "trigger": "store_input", "to": "TYPING" }
+    ],
+    "cta_disabled_states": ["INITIAL", "SUBMITTING"],
+    "primary_cta_count_per_state": 1,
+    "always_visible_guards": ["pc-color-guard (위험도 — 높을수록 나쁨)"]
+  },
+
+  "scenarios": [
+    {
+      "id": "S1_HIGH_HAZARD",
+      "title": "high 등급 — 철수 검토",
+      "input": { "store_id": "store-001", "csv_uploaded": false },
+      "expected": { "hazard_min": 50, "grade_in": ["medium", "high"], "action_includes": ["관찰", "철수"], "color_in": ["#FED766", "#C9485B"] }
+    },
+    {
+      "id": "S2_LOW_HAZARD",
+      "title": "low/very_low 등급 — 유지",
+      "input": { "store_id": "store-002", "csv_uploaded": false },
+      "expected": { "hazard_max": 49, "grade_in": ["low", "very_low"], "action_includes": ["유지"], "color_in": ["#5BC0EB", "#00529B"] }
+    },
+    {
+      "id": "S3_CSV_BOOSTS_CONFIDENCE",
+      "title": "CSV 업로드 시 confidence 가산",
+      "input": { "store_id": "store-001", "csv_uploaded": true },
+      "expected": { "confidence_min": 0.80, "estimate_mode": false }
+    },
+    {
+      "id": "S4_NO_CSV_ESTIMATE_MODE",
+      "title": "CSV 미업로드 — 추정 모드 배지",
+      "input": { "store_id": "store-002", "csv_uploaded": false },
+      "expected": { "confidence_max": 0.60, "estimate_mode": true, "ui_badge_present": true }
+    },
+    {
+      "id": "S5_STORE_NOT_FOUND",
+      "title": "잘못된 점포 — 친절한 에러",
+      "input": { "store_input": "존재하지않는점포" },
+      "expected": { "state": "ERROR", "error_includes": "찾을 수 없습니다", "demo_stores_listed": true }
+    },
+    {
+      "id": "S6_DEEP_LINK_ANALYZE",
+      "title": "결과 카드 → Analyze 모드 deep-link",
+      "input": { "store_id": "store-001", "click_after_result": "[data-action=\"goto-analyze\"]" },
+      "expected": { "url_param_mode": "analyze", "view_analyze_visible": true }
+    },
+    {
+      "id": "S7_DETERMINISM",
+      "title": "동일 입력 → 동일 hazard",
+      "input": { "store_id": "store-001", "csv_uploaded": false },
+      "expected": { "deterministic_across_calls": true }
+    },
+    {
+      "id": "S8_DOMAIN_INTUITION",
+      "title": "도메인 직관 일치 — struggling > thriving",
+      "input": { "compare": ["store-001", "store-002"] },
+      "expected": { "store_001_hazard_gt_store_002": true }
+    }
+  ],
+
+  "edge_cases": [
+    { "id": "E1", "case": "operating_months 사용자 입력 시 DEMO features의 operating_months override", "test_path": "viz/plugins/pharmacy-hazard.js evaluatePharmacyClose" },
+    { "id": "E2", "case": "operating_months >= 60 → 정규화 만점 (안정도 차감 최대)", "test_path": "NORMALIZERS.operating_months" },
+    { "id": "E3", "case": "revenue_yoy null → 0.5 (중립값) 적용 → hazard 영향 중간", "test_path": "NORMALIZERS.revenue_yoy" },
+    { "id": "E4", "case": "clinics_closed >= 3 → 정규화 만점 (위험 가산 최대)", "test_path": "NORMALIZERS.clinics_closed_500m_12m" },
+    { "id": "E5", "case": "DEMO_STORE_FEATURES 미정의 점포 → null 반환 → ERROR 상태", "test_path": "evaluatePharmacyClose 진입부" },
+    { "id": "E6", "case": "address 매칭 fallback (store_id 모를 때)", "test_path": "address.includes() 부분 매칭" },
+    { "id": "E7", "case": "CSV 미업로드 → estimate_mode=true + confidence 0.55", "test_path": "evaluatePharmacyClose return" }
+  ],
+
+  "anti_patterns_to_check": [
+    { "pattern": "단일 점추정만 표시 (KM 곡선/생존 신뢰구간 누락)", "current_status": "hazard 단일 + KM 슬롯 표시(INTEGRATE 이슈 대기). 95% CI 음영은 컴포넌트 통합 후" },
+    { "pattern": "출처 라벨 누락", "current_status": "PASS — '출처: pharmacy-hazard.js (가중치 모델 v1)' 카드 하단 노출" },
+    { "pattern": "primary CTA ≠ 1개", "current_status": "PASS — '평가 실행' 1개 (Analyze 링크는 secondary)" },
+    { "pattern": "pLDDT 색 임의 변경", "current_status": "PASS — 4단계 정확히 brand-dna.json 인용 (역방향 매핑)" },
+    { "pattern": "그라디언트/네온", "current_status": "PASS — solid 색상만 사용" },
+    { "pattern": "색 의미 충돌 (점포개발 vs 폐업평가)", "current_status": "PASS — .pc-color-guard 배지 항상 상단 고정 노출 ('위험도 — 높을수록 나쁨')" }
+  ],
+
+  "domain_validation": {
+    "intuition_check": "struggling 점포(매출-22%, 의원폐업 3건) > thriving 점포(매출+12%) — 도메인 직관 일치",
+    "compared_to_pharmacy_develop": "점포개발은 '신규 진입자 마진+경쟁 회피' 가설 / 폐업평가는 '운영 점포의 매출/처방 추세 + 환경 악화'. 두 모델의 score 의미가 반대지만 같은 brand-dna 4단계 색 사용 — UI에서 가드 라벨로 혼동 차단."
+  },
+
+  "biz_validator_input": {
+    "_purpose": "BIZ_VALIDATE_PHARMACY_CLOSE-001 진행 시 본 룰셋을 입력으로 사용",
+    "rules_count": 7,
+    "scenarios_count": 8,
+    "edge_cases_count": 7,
+    "coverage_target": ["all_4_grades", "happy_path", "error_path", "deep_link", "csv_modes", "determinism", "domain_intuition"]
+  }
+}

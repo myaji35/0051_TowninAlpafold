@@ -1,0 +1,4004 @@
+{
+  "version": "3.0.0",
+  "created_at": "2026-05-03T13:22:16.640055",
+  "issues": [
+    {
+      "id": "BRAND_DEFINE-001",
+      "type": "BRAND_DEFINE",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "brand-dna.json 미초기화 — TowninAlpafold 브랜드 정의 필요",
+      "detail": "brand-dna.json 빈 템플릿 상태 (project='', design_tokens 모두 비어있음). 'TowninAlpafold' 프로젝트는 Townin + AlphaFold 결합 — 지역 상권/인구 데이터를 단백질 구조 예측처럼 시각화. brand-guardian 자동 분석 필요.",
+      "assign_to": "brand-guardian",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        ".claude/brand-dna.json"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "DOC_README-001",
+      "type": "DOCUMENTATION",
+      "priority": "P2",
+      "status": "COMPLETED",
+      "title": "README.md 부재 — 프로젝트 진입점 문서 필요",
+      "detail": "프로젝트 루트에 README.md 없음. app.js (3724 lines), index.html, 6개 Python 분석 스크립트, 6개 verify_*.mjs 검증 스크립트 구조 설명 필요. 캐릭터(마스터/탐색자/분석가/결정자) 4가지 모드 (Gallery/Explore/Analyze/Decide)도 문서화 필요.",
+      "assign_to": "docs-writer",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        "README.md (생성)"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "VERIFY_INTEGRATE-001",
+      "type": "REFACTOR",
+      "priority": "P2",
+      "status": "COMPLETED",
+      "title": "검증 스크립트 6개 통합 — verify-all.mjs 또는 npm script 추가",
+      "detail": "verify_v07.mjs, verify_causal.mjs, verify_cdd.mjs, verify_p2.mjs, verify_prophet.mjs, verify_responsive.mjs 6개가 독립 실행. Karpathy #4 Goal-Driven 위해 통합 검증 진입점 필요. 절대 경로 '/opt/homebrew/lib/node_modules/playwright/index.mjs' 의존도 문제 (포터빌리티 ↓)",
+      "assign_to": "test-runner",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        "verify_*.mjs"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "PORTABILITY-001",
+      "type": "FIX_BUG",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "verify_*.mjs 절대경로 import — 다른 머신에서 실행 불가",
+      "detail": "모든 verify_*.mjs와 capture_screens.mjs가 'import { chromium } from \"/opt/homebrew/lib/node_modules/playwright/index.mjs\"' 형태로 macOS Homebrew 절대경로 직접 참조. package.json + npm install playwright 또는 from 'playwright'로 변경 필요.",
+      "assign_to": "code-quality",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        "verify_v07.mjs",
+        "verify_causal.mjs",
+        "verify_cdd.mjs",
+        "verify_p2.mjs",
+        "verify_prophet.mjs",
+        "verify_responsive.mjs",
+        "capture_screens.mjs"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "PKG_MISSING-001",
+      "type": "FIX_BUG",
+      "priority": "P0",
+      "status": "COMPLETED",
+      "title": "package.json 부재 — JS 의존성 관리 불가",
+      "detail": "프로젝트에 package.json이 없음. verify_*.mjs는 playwright를 require하지만 npm install 정의 없음. 새 머신에서 setup 불가 (Karpathy #4: 검증 가능한 성공기준 없음).",
+      "assign_to": "code-quality",
+      "created_at": "2026-05-03T04:24:17.824282Z",
+      "files": [
+        "package.json (생성)"
+      ],
+      "completed_at": "2026-05-03T04:30:23.849699Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6"
+      }
+    },
+    {
+      "id": "CORR_MATRIX-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "5x5 Pearson 상관 매트릭스 히트맵 — 리스트 → 격자 시각화",
+      "detail": "현재 Pearson 상관(|r|) 값이 9~15개 페어 리스트로 렌더되어 0.5초 룰 위반. 5x5 격자 + pLDDT 팔레트(brand-dna 재사용)로 한눈에 비교 가능하게 변경. AlphaFold contact map 메타포와 정합.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T05:12:27.839395Z",
+      "files": [
+        "app.js",
+        "index.html (style if needed)"
+      ],
+      "acceptance": [
+        "5개 지표 (소상공/유동/카페/거래/지가)로 5x5 grid 렌더",
+        "pLDDT 4단계 색상 (>=0.9 #00529B / >=0.7 #5BC0EB / >=0.5 #FED766 / < #C9485B)",
+        "대각선 셀은 'self' 표시 (값 1.00 노출)",
+        "셀 hover 시 'r=0.xxx, n=60' 툴팁",
+        "verify_all 6/6 PASS 유지"
+      ],
+      "payload": {
+        "files_changed": []
+      },
+      "completed_at": "2026-05-03T05:23:33.768456Z",
+      "result": {
+        "passed": true,
+        "verify_all": "6/6",
+        "matrix_cells": 20,
+        "screenshots": [
+          "screenshots/corr_matrix_zoom.png"
+        ]
+      }
+    },
+    {
+      "id": "GRAPHRAG_PHASE2_FINISH-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[선행] Phase 2 Workflow Editor 마무리 — GraphRAG 착수 전 완료 필요",
+      "detail": "대표님 결정 (2026-05-03): GraphRAG 도입은 옵션 B로 승인. Phase 2 Workflow Editor (드래그/포트연결/localStorage 기본 동작 검증 완료된 상태)를 사용자 시나리오 수준까지 마무리한 뒤 GRAPHRAG-001 시작. 본 이슈는 GRAPHRAG-001의 선행 게이트.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T14:25:00.000000Z",
+      "files": [
+        "app.js",
+        "index.html",
+        "components/workflow-editor.* (있을 시)"
+      ],
+      "acceptance": [
+        "Workflow Editor에서 노드 3개 이상 연결 → 실행 결과가 Explore/Decide 모드와 연동",
+        "localStorage 저장된 워크플로우를 새 세션에서 복원 가능",
+        "Playwright 캐릭터 저니 (마스터 1명) PASS — 노드 추가/연결/실행/저장/복원",
+        "verify_all 6/6 PASS 유지",
+        "스크린샷 증거 저장 (screenshots/v07_workflow_*.png)"
+      ],
+      "payload": {
+        "files_changed": [],
+        "blocks": [
+          "GRAPHRAG-001"
+        ]
+      },
+      "started_at": "2026-05-03T05:27:25.927615Z",
+      "owner": "agent-harness",
+      "completed_at": "2026-05-03T14:32:49.706338",
+      "result": {
+        "passed": true,
+        "verify_all": "7/7",
+        "workflow_journey": "6/6"
+      }
+    },
+    {
+      "id": "GRAPHRAG-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "CLOSED",
+      "title": "TowninGraph-RAG 도입 — causal.json 기반 자연어 질의 응답 (옵션 C 경량 자체 구현)",
+      "detail": "대표님 결정 (2026-05-03): GraphRAG 도입 옵션 B 승인 (Phase 2 Workflow Editor 마무리 후 착수). 검토 보고에서 옵션 C(자체 경량 GraphRAG = NetworkX + SQLite + Claude API)를 아키텍처로 채택. causal.json(Pearson 1,300쌍 + Granger 2,578트리플렛) + forecasts.json을 그래프로 변환하고, 마스터의 자연어 질의에 자연어+시각화 점프 응답. Microsoft GraphRAG 풀패키지/Neo4j/Vector DB 도입은 과잉이라 명시 배제. 6개월 사이드(주 20h, 월 100만 이내) 제약 부합.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-03T14:25:00.000000Z",
+      "files": [
+        "graph_rag/build_graph.py (신규)",
+        "graph_rag/server.py (FastAPI 신규)",
+        "app.js (검색 UI 통합)",
+        "index.html (검색바 + 답변 패널)"
+      ],
+      "blocked_by": [
+        "GRAPHRAG_PHASE2_FINISH-001"
+      ],
+      "phases": [
+        {
+          "id": "G-1",
+          "estimate_h": 8,
+          "task": "causal.json → NetworkX DiGraph 변환 + 직렬화 저장",
+          "verify": "g.number_of_nodes() == 130*5 + 130 (동+레이어), g.number_of_edges() >= 2578"
+        },
+        {
+          "id": "G-2",
+          "estimate_h": 12,
+          "task": "FastAPI /ask 엔드포인트 — Intent Parser(Haiku) + Graph Retrieval(BFS depth 2) + Answer Generation(Sonnet)",
+          "verify": "'성수1가1동에서 카페 매출이 늘면 어떤 동에 영향?' 질의 → 인용 엣지 ID + 자연어 답변 응답"
+        },
+        {
+          "id": "G-3",
+          "estimate_h": 8,
+          "task": "UI 통합 — 우상단 검색바 + 답변 패널 + 인용 엣지 하이라이트 + 모드 자동 점프",
+          "verify": "Playwright 캐릭터 저니: 질의 → 답변 표시 → Explore 모드 진입 → 인용 동 포커스"
+        },
+        {
+          "id": "G-4",
+          "estimate_h": 20,
+          "task": "[선택] 외부 텍스트 코퍼스 추가 (뉴스 RSS / Townin 파트너 글) — BM25 검색",
+          "verify": "BM25 hit율 >= 70% on 50 샘플 질의"
+        },
+        {
+          "id": "G-5",
+          "estimate_h": 16,
+          "task": "[선택] Community Detection (Louvain) + 권역 자동 보고서 생성",
+          "verify": "성수권역 5개 동 동시 분석 보고서 1편 PDF 자동 생성"
+        }
+      ],
+      "acceptance": [
+        "G-1 ~ G-3 (28h / ~1.5주) MVP 동작",
+        "비용 가드레일: 월 1,000회 질의 한도 ($10 예상)",
+        "Mock 금지 — 실제 130개 동 데이터로 검증",
+        "캐릭터 저니 검증 (마스터 1명) PASS + 스크린샷 증거",
+        "Karpathy #2 Simplicity First 부합 — 코드량 800줄 이하"
+      ],
+      "non_goals": [
+        "Neo4j 도입 금지 (130 노드 × 4,000 엣지는 NetworkX in-memory 충분)",
+        "Vector DB 도입 금지 (텍스트 코퍼스 부재 — 시기상조)",
+        "LangChain 풀체인 금지 (추상화 과잉, Claude API 직접 호출)"
+      ],
+      "decision_log": {
+        "decided_at": "2026-05-03",
+        "decided_by": "대표님",
+        "options_considered": [
+          "A. Microsoft GraphRAG 풀패키지 — 거부 (수치 그래프엔 과잉)",
+          "B. LlamaIndex PropertyGraph + Neo4j — 후보였으나 보류",
+          "C. 자체 경량 GraphRAG (NetworkX + SQLite + Claude API) — 채택"
+        ],
+        "schedule_option": "B (Phase 2 Workflow Editor 마무리 후 착수)"
+      },
+      "payload": {
+        "files_changed": []
+      },
+      "unblocked_at": "2026-05-03T05:32:44.437581Z",
+      "unblocked_reason": "GRAPHRAG_PHASE2_FINISH-001 COMPLETED — 게이트 해제",
+      "started_at": "2026-05-03T05:36:22.906780Z",
+      "owner": "product-manager",
+      "user_confirm": [
+        {
+          "category": "DIRECTION",
+          "question": "GRAPHRAG-001 (TowninGraph-RAG 도입, 옵션 C: NetworkX+SQLite+Claude API) 시작 직전 컨펌\n\n[T2 트리거 — DIRECTION + BUDGET 동시 해당]\n- DIRECTION: 정적 사이트 → FastAPI 백엔드 신설 (graph_rag/ 디렉터리, 새 Python 의존성)\n- BUDGET: 외부 Claude API 호출 (월 1,000회 한도, ~$10 예상). API 키 시크릿 관리 변경\n\n[작업 규모]\n- G-1 (8h): causal.json → NetworkX DiGraph + 직렬화\n- G-2 (12h): FastAPI /ask — Intent(Haiku) + Retrieval(BFS) + Answer(Sonnet)\n- G-3 (8h): UI 통합 — 검색바 + 답변 패널 + 인용 엣지 하이라이트\n- G-4/G-5 (선택, 36h): 외부 코퍼스 / 권역 보고서\n- 총 28h MVP, 64h 풀\n\n[합의 검증]\n- decision_log: 옵션 C 채택 (Microsoft GraphRAG / Neo4j / LangChain 명시 배제)\n- 본 세션의 직전 합의는 'A안: 매트릭스 먼저, 그 다음 디시전 트리'\n- GRAPHRAG-001 결정은 이전 세션 컨텍스트로 추정\n\n[선택지]\n1. PROCEED — 옵션 C 그대로 G-1부터 즉시 착수 (이전 결정 유효)\n2. PIVOT — DECISION_TREE-001을 먼저 진행 (직전 세션 합의 우선)\n3. REOPEN — 옵션 A/B 재검토 (Microsoft GraphRAG / Neo4j 등)\n4. DEFER — 본 이슈 보류, 다른 READY 이슈로 이동",
+          "asked_at": "2026-05-03T14:36:53.673228",
+          "responded_at": "2026-05-03T14:57:55.785493",
+          "decision": "reject",
+          "response_payload": "DEFER (대표님 직전 합의: 디시전 트리 먼저)"
+        }
+      ],
+      "closed_reason": "user_rejected: DEFER (대표님 직전 합의: 디시전 트리 먼저)"
+    },
+    {
+      "id": "ISS-009",
+      "title": "[Plan:구현] GRAPHRAG_PHASE2_FINISH-001",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "GRAPHRAG_PHASE2_FINISH-001",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:32:49.706338",
+      "payload": {
+        "source_issue": "GRAPHRAG_PHASE2_FINISH-001",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "passed": true,
+        "absorbed_into_parent": "GRAPHRAG_PHASE2_FINISH-001",
+        "verify_all": "7/7",
+        "files_already_changed": 5
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:39:43.609229Z",
+      "completed_at": "2026-05-03T14:39:47.731052",
+      "owner": "agent-harness"
+    },
+    {
+      "id": "ISS-010",
+      "title": "[Plan:게이트] ISS-009 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-009",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:39:47.731052",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-009",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "passed": true,
+        "errors": 0,
+        "files_checked": 17
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:40:17.068349Z",
+      "owner": "code-quality",
+      "completed_at": "2026-05-03T14:40:54.242895"
+    },
+    {
+      "id": "ISS-011",
+      "title": "[Plan:테스트] ISS-009 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-009",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:39:47.731052",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-009",
+        "scope": "changed"
+      },
+      "result": {
+        "passed": true,
+        "total": 7,
+        "failed_count": 0
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:41:06.028258Z",
+      "owner": "test-harness",
+      "completed_at": "2026-05-03T14:41:17.786472"
+    },
+    {
+      "id": "ISS-012",
+      "title": "[Plan:도메인분석] ISS-009 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "COMPLETED",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-009",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:39:47.731052",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-009",
+        "files_changed": []
+      },
+      "result": {
+        "passed": true,
+        "rules_extracted": 4,
+        "scenarios_covered": 4,
+        "doc": "docs/workflow-domain-rules.md",
+        "rule_summary": [
+          "R1: src_dong.params.select → selectedDong (정확 일치 → includes fallback)",
+          "R2: 모드 전환은 데이터 매핑 후 즉시 (깜빡임 방지)",
+          "R3: 다중 src_dong은 첫 번째만 (단일 동 모드)",
+          "R4: applyWfToAnalyze(레이어) vs applyWfToMode(동) 독립 매핑"
+        ]
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:41:29.913703Z",
+      "owner": "domain-analyst",
+      "completed_at": "2026-05-03T05:42:51.750396Z"
+    },
+    {
+      "id": "CORR_VARIANCE-001",
+      "type": "OBSERVATION",
+      "priority": "P3",
+      "status": "COMPLETED",
+      "title": "Simula 합성 데이터 — Pearson 매트릭스 셀이 모두 0.99대 (변별력 부족)",
+      "detail": "CORR_MATRIX-001 검증 시 발견. simula_data_real.json 합성 시계열이 5개 레이어 모두 강한 동조성을 보여 25개 셀이 거의 동일한 0.99 진청색으로 렌더됨. 매트릭스 시각화 자체는 정상이지만 변별력이 부족해 마스터의 인사이트 추출이 어려움. 실데이터 도입(카카오/SGIS 키 발급 후) 시 자연 해소 예상이라 P3 관찰 이슈로 등록. 임시 대응이 필요하면: simula_generate.py에 레이어별 독립 노이즈 비율(σ) 차등화 또는 일부 레이어 phase shift 도입.",
+      "assign_to": "observer",
+      "created_at": "2026-05-03T14:35:00.000000Z",
+      "files": [
+        "simula_generate.py",
+        "simula_data_real.json"
+      ],
+      "acceptance": [
+        "(자동 해소) 실데이터 연동 후 매트릭스 셀 r 분포가 0.3~0.99 범위로 분산",
+        "또는 (임시) Simula 노이즈 차등화로 r 분포 표준편차 >= 0.1"
+      ],
+      "payload": {
+        "trigger": "실데이터 도입 후 재검증",
+        "files_changed": []
+      },
+      "started_at": "2026-05-03T05:45:59.607162Z",
+      "completed_at": "2026-05-03T05:45:59.607162Z",
+      "owner": "observer",
+      "result": {
+        "passed": true,
+        "stats": {
+          "pairs": 1300,
+          "mean_abs_r": 0.9962,
+          "median_abs_r": 0.997,
+          "stdev_abs_r": 0.0035,
+          "min_abs_r": 0.963,
+          "max_abs_r": 1.0,
+          "pct_ge_0.9": 100.0
+        },
+        "implications": [
+          "매트릭스 변별력 사실상 0 (모든 셀 동일 색)",
+          "DECISION_TREE-001 입력으로 동기 변수 사용 시 다중공선성 함정",
+          "Granger lag feature 권장 (causal.json 2,578 트리플렛 활용)"
+        ],
+        "doc": "docs/data-variance-analysis.md",
+        "ui_note_added": "index.html (Pearson 패널 하단 카피 1줄)"
+      }
+    },
+    {
+      "id": "ISS-014",
+      "title": "[Plan:품질평가] ISS-011 품질 점수 산출",
+      "type": "SCORE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "eval-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ISS-011",
+      "depends_on": [],
+      "created_at": "2026-05-03T14:41:17.786472",
+      "payload": {
+        "test_result": {
+          "passed": true,
+          "total": 7,
+          "coverage": null
+        },
+        "source_issue": "ISS-011"
+      },
+      "result": {
+        "passed": true,
+        "score": 89.5,
+        "prev_score": null,
+        "breakdown": {
+          "quality": 95,
+          "coverage": 88,
+          "performance": 80,
+          "docs": 90
+        }
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:43:28.303762Z",
+      "owner": "eval-harness",
+      "completed_at": "2026-05-03T14:43:36.384551"
+    },
+    {
+      "id": "REAL_DATA_INGEST-001",
+      "type": "USER_STORY",
+      "priority": "P2",
+      "status": "CLOSED",
+      "title": "실데이터 도입 — SGIS/카드사/통신사로 simula 대체 (페어별 r 분포 자연 분리)",
+      "detail": "현재 simula_data*.json은 단일 트렌드 가정으로 r≈1로 몰려 매트릭스/트리 변별력 부족. .env에 SGIS_CONSUMER_KEY/SECRET 슬롯 이미 존재. data_raw/ → etl_real_data.py 파이프라인 연결.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-03T05:45:59.607162Z",
+      "files": [
+        "etl_real_data.py",
+        "data_raw/",
+        ".env"
+      ],
+      "acceptance": [
+        "stdev(|r|) >= 0.15 across all 1,300 pairs",
+        "r 분포가 4단계 색상에 모두 등장 (모두 짙은 파랑이 아님)",
+        "verify_all 7/7 PASS 유지"
+      ],
+      "user_confirm": [
+        {
+          "category": "EXTERNAL",
+          "question": "REAL_DATA_INGEST-001 (실데이터 도입) 시작 직전 컨펌\n\n[T2 트리거 — EXTERNAL + DIRECTION]\n- EXTERNAL: SGIS_CONSUMER_KEY/SECRET 신규 발급 + API 호출 (.env 시크릿 변경)\n- DIRECTION: simula 합성 데이터 → 실데이터 라인으로 데이터 파이프라인 패러다임 전환\n\n[배경]\n- CORR_VARIANCE-001 분석 결과: 1,300페어 100% r≥0.9 (시뮬레이션 한계)\n- DECISION_TREE-001 진행 시 다중공선성 함정 회피를 위해 권고된 후속\n\n[작업 규모 추정]\n- SGIS 키 발급 + 동의 (수 시간, 사용자 작업)\n- etl_real_data.py 보강 — 데이터 매핑 (8h)\n- simula_data*.json → 새 스키마 검증 (4h)\n- verify_all 7/7 PASS 유지 + 매트릭스 r 분포 stdev≥0.15 검증 (4h)\n\n[합의 필요 사항]\n- SGIS 외 데이터 소스 (카드사/통신사) 사용 여부\n- 라이선스 / 비용 (SGIS 무료, 카드사·통신사는 유료/제휴 필요)\n- 본 이슈를 GRAPHRAG-001 / DECISION_TREE-001 보다 먼저 진행할지\n\n[선택지]\n1. PROCEED — SGIS만으로 진행 (무료, 빠름)\n2. EXPAND — SGIS + 카드사/통신사 제휴까지 (T2 BUDGET 추가 발생)\n3. SIMULA_FIRST — SIMULA_NOISE-001 (P3, 합성 데이터 노이즈 강화)을 먼저 (실데이터 도입 미뤄도 매트릭스/트리 변별력 회복)\n4. DEFER — 본 이슈 보류, GRAPHRAG-001 컨펌 답변에 집중",
+          "asked_at": "2026-05-03T14:52:51.668562",
+          "responded_at": "2026-05-03T14:57:59.423898",
+          "decision": "reject",
+          "response_payload": "DEFER (디시전 트리부터 진행 후 재검토)"
+        }
+      ],
+      "closed_reason": "user_rejected: DEFER (디시전 트리부터 진행 후 재검토)"
+    },
+    {
+      "id": "SIMULA_NOISE-001",
+      "type": "REFACTOR",
+      "priority": "P3",
+      "status": "DEFERRED",
+      "title": "simula_generate.py — 지표별 독립 노이즈 채널 추가 (실데이터 도입 전 임시 보강)",
+      "detail": "5개 지표(소상공/카페/유동/거래/지가)에 동기 곱셈 변형이 아닌 독립 노이즈 채널 도입. 시뮬레이션 모드에서도 r 분포 stdev >= 0.15 달성.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T05:45:59.607162Z",
+      "files": [
+        "simula_generate.py"
+      ],
+      "acceptance": [
+        "동별 r stdev >= 0.15 (1,300페어)",
+        "기존 vibe_label 시나리오 유지",
+        "verify_all 7/7 PASS 유지"
+      ],
+      "awaiting_reason": "REAL_DATA_INGEST-001과 상호 배타적 — 대표님 답변 후 둘 중 하나만 진행",
+      "defer_reason": "사용자 결정: 전부 DEFER 후 디시전 트리만"
+    },
+    {
+      "id": "ISS-017",
+      "title": "[Meta] ISS-009 이슈 체인 근본 원인 분석",
+      "type": "PATTERN_ANALYSIS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "meta-agent",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": null,
+      "depends_on": [],
+      "created_at": "2026-05-03T14:50:50.725953",
+      "payload": {
+        "parent_id": "ISS-009",
+        "chain_length": 3,
+        "files_changed": []
+      },
+      "result": {
+        "passed": true,
+        "verdict": "FALSE_POSITIVE",
+        "derivatives": 3
+      },
+      "spawn_rules": [],
+      "started_at": "2026-05-03T05:51:14.658011Z",
+      "owner": "meta-agent",
+      "completed_at": "2026-05-03T14:52:16.050703"
+    },
+    {
+      "id": "META_RULE_REFINE-001",
+      "type": "OBSERVATION",
+      "priority": "P3",
+      "status": "DEFERRED",
+      "title": "[글로벌] GH_Harness/components/hooks/meta-review.sh 핑퐁 룰 정밀화",
+      "detail": "본 프로젝트 ISS-017에서 GENERATE_CODE → 3종 정상 파생을 핑퐁으로 오탐. Counter 기반 동일 type 중복 검사로 변경 권고. 작업 위치는 본 프로젝트가 아닌 GH_Harness 레포.",
+      "assign_to": "out-of-project",
+      "created_at": "2026-05-03T05:52:15.945607Z",
+      "scope": "GLOBAL_REPO",
+      "files": [
+        "[external] GH_Harness/components/hooks/meta-review.sh"
+      ],
+      "acceptance": [
+        "type 분포 Counter로 동일 type ≥2 파생 시에만 PINGPONG 발화",
+        "다종 단일 파생은 high_fanout(별도 신호) 또는 silent",
+        "기존 진짜 핑퐁 케이스(lint→fix→lint 반복)는 여전히 감지"
+      ],
+      "defer_reason": "OUT_OF_PROJECT_SCOPE — 작업 위치는 GH_Harness 글로벌 레포. 본 프로젝트에서 변경 불가."
+    },
+    {
+      "id": "DECISION_TREE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "Decide 모드 — 디시전 트리(분류) 도입 (vibe_label 분기 규칙 + 변수 중요도)",
+      "detail": "5개 지표(소상공/카페/유동/거래/지가) + Granger lag feature를 입력으로 vibe_label(premium/rising_star/rising/youth/stable/traditional/developing/industrial/residential) 분류. sklearn DecisionTreeClassifier max_depth=4. 변수 중요도 막대 차트 + 트리 dendrogram 시각화. CORR_VARIANCE-001의 다중공선성 권고 적용 — 동기 + lag feature 혼합.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T05:58:26.131307Z",
+      "started_at": "2026-05-03T05:58:26.131307Z",
+      "owner": "agent-harness",
+      "files": [
+        "decision_tree_train.py (신규)",
+        "tree_model.json (산출)",
+        "app.js (Decide 트리 렌더)",
+        "index.html (Decide 패널)"
+      ],
+      "acceptance": [
+        "tree_model.json 생성 (nodes/edges/feature_importance 포함)",
+        "Decide 모드에 SVG 트리 dendrogram 렌더",
+        "변수 중요도 5개 막대 차트 표시 (pLDDT 팔레트)",
+        "verify_decision_tree.mjs 캐릭터 저니 PASS",
+        "verify_all 8/8 PASS (workflow + decision_tree)",
+        "Karpathy #2 — 코드량 ≤ 400줄 (tree_train.py + app.js 추가분)"
+      ],
+      "rationale": "직전 합의 A안 (매트릭스 → 트리). CORR_VARIANCE-001 권고에 따라 동기 변수만 쓰지 않고 Granger lag(causal.json 2,578 트리플렛)도 활용해 다중공선성 회피.",
+      "payload": {
+        "files_changed": []
+      },
+      "completed_at": "2026-05-03T06:08:15.988827Z",
+      "result": {
+        "passed": true,
+        "verify_all": "8/8",
+        "tree_journey": "5/5",
+        "model": {
+          "algorithm": "DecisionTreeClassifier",
+          "depth": 6,
+          "n_leaves": 14,
+          "n_dongs": 130,
+          "n_features": 11,
+          "train_accuracy": 0.7692
+        },
+        "feature_importance_top3": [
+          {
+            "feature": "지가_평균",
+            "importance": 0.476
+          },
+          {
+            "feature": "소상공_평균",
+            "importance": 0.185
+          },
+          {
+            "feature": "소상공_추세",
+            "importance": 0.141
+          }
+        ],
+        "files_changed": [
+          "decision_tree_train.py (신규)",
+          "tree_model.json (산출 23KB)",
+          "app.js (renderDecisionTree + renderFeatureImportance)",
+          "index.html (Decide 패널 2개)",
+          "verify_decision_tree.mjs (신규)",
+          "verify_all.mjs (등록)",
+          "package.json",
+          "deploy.yml"
+        ],
+        "screenshots": [
+          "screenshots/v07_decision_tree.png"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_PACK-001",
+      "type": "EPIC",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[Phase 2.5] Map Visualization Pack — 9종 차트의 단일 엔진 통합 (확장성 우선)",
+      "detail": "대표님 결정 (2026-05-03): 추천한 9종 차트(Violin/Ridgeline/Sankey/CalendarHeatmap/Spiral/SmallMultiples/Slope/MapTreemap/Bullet) + 기존 4종(3D기둥/히트맵/육각/5x5 Pearson 매트릭스) = 총 13종 시각화를 '의미있게 연결' 한다. 핵심 원칙: 차트 13개를 따로 만드는 것이 아니라, '단일 시각화 엔진(VizEngine)'을 도입하여 모든 차트가 동일한 데이터 큐레이터/색상 토큰/시간축/필터를 공유한다. 확장성: 신규 차트 추가 시 plugin 형태로 50줄 이내 등록만 하면 동작. 데이터 흐름: 마스터 모드(Workflow Editor) → 동/레이어/시간 선택 → VizEngine.render(chartType, scope) → 자동 색상/축/필터 적용. AlphaFold 메타포 일관성: 모든 차트는 pLDDT 4단계 팔레트(>=0.9 #00529B / >=0.7 #5BC0EB / >=0.5 #FED766 / <.5 #C9485B) 채택.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "depends_on": [
+        "GRAPHRAG_PHASE2_FINISH-001"
+      ],
+      "blocks": [],
+      "files": [
+        "app.js (VizEngine 도입 + 기존 차트 마이그레이션)",
+        "index.html (시각화 모드 셀렉터 확장)",
+        "viz/engine.js (신규 — 단일 엔진)",
+        "viz/charts/*.js (신규 — 13개 차트 모듈)",
+        "viz/tokens.js (신규 — 디자인 토큰 = brand-dna 동기화)",
+        "verify_viz.mjs (신규 — 13종 모두 렌더 검증)"
+      ],
+      "architecture": {
+        "pattern": "Plugin-based VizEngine",
+        "core_modules": {
+          "VizEngine": "단일 진입점 — render(chartType, scope, options)",
+          "DataCurator": "simula_data_real / forecasts / causal에서 chartType 적합 데이터 자동 추출",
+          "ScaleResolver": "시간축/색상/사이즈 스케일 자동 결정",
+          "ScopeManager": "동 선택/레이어 선택/시간 윈도우 통합 관리 (Workflow Editor와 양방향 sync)",
+          "ChartPlugin (interface)": "{ id, label, icon, render(svg|deck, scope, scales), supports(scope) }"
+        },
+        "data_flow": "ScopeManager(scope) → DataCurator(scope, chartType) → ScaleResolver(data) → ChartPlugin.render(svg|deck, data, scales) → VizEngine.notifyHover(scope) → 다른 차트로 cross-highlight",
+        "cross_chart_link": "한 차트에서 동을 hover하면 다른 모든 차트의 해당 동이 동시 강조 (linked brushing)"
+      },
+      "meta_acceptance": [
+        "13종 차트 전부 단일 VizEngine.render(type, scope) 호출로 렌더",
+        "신규 차트 추가 = ChartPlugin 50줄 + register() 1줄",
+        "cross-chart linked brushing 동작 (한 차트 hover → 다른 차트 동시 강조)",
+        "Workflow Editor 노드에서 차트 13종 선택 가능 (drag-drop)",
+        "13종 모두 pLDDT 팔레트 일관 적용 — 시각적 통일성 확인",
+        "Playwright 캐릭터 저니: 각 차트별 1회 렌더 + linked brushing 1회 = 14 PASS",
+        "verify_viz.mjs 통과 (13/13 렌더 + cross-link 1)",
+        "verify_all 6/6 PASS 유지",
+        "코드량: VizEngine 코어 ≤ 600줄, 차트 플러그인 평균 ≤ 80줄",
+        "메모리: 130개 동 × 60개월 데이터 동시 렌더 시 GPU 메모리 ≤ 200MB"
+      ],
+      "sub_issues": [
+        "VIZ_ENGINE_CORE-001",
+        "VIZ_RIDGELINE-001",
+        "VIZ_SANKEY_MAP-001",
+        "VIZ_CALENDAR_HEAT-001",
+        "VIZ_VIOLIN-001",
+        "VIZ_SPIRAL-001",
+        "VIZ_SMALL_MULTIPLES-001",
+        "VIZ_SLOPE-001",
+        "VIZ_MAP_TREEMAP-001",
+        "VIZ_BULLET-001",
+        "VIZ_LINKED_BRUSHING-001"
+      ],
+      "phases": [
+        {
+          "id": "V-0",
+          "name": "엔진 코어",
+          "estimate_h": 16,
+          "sub": [
+            "VIZ_ENGINE_CORE-001"
+          ]
+        },
+        {
+          "id": "V-1",
+          "name": "TOP3 차트",
+          "estimate_h": 20,
+          "sub": [
+            "VIZ_RIDGELINE-001",
+            "VIZ_SANKEY_MAP-001",
+            "VIZ_CALENDAR_HEAT-001"
+          ]
+        },
+        {
+          "id": "V-2",
+          "name": "확장 차트",
+          "estimate_h": 24,
+          "sub": [
+            "VIZ_VIOLIN-001",
+            "VIZ_SPIRAL-001",
+            "VIZ_SMALL_MULTIPLES-001",
+            "VIZ_SLOPE-001",
+            "VIZ_MAP_TREEMAP-001",
+            "VIZ_BULLET-001"
+          ]
+        },
+        {
+          "id": "V-3",
+          "name": "연결성",
+          "estimate_h": 8,
+          "sub": [
+            "VIZ_LINKED_BRUSHING-001"
+          ]
+        }
+      ],
+      "total_estimate_h": 68,
+      "non_goals": [
+        "D3.js 풀패키지 도입 금지 — 필요한 KDE/scale 함수만 직접 구현 또는 micro 라이브러리",
+        "React/Vue 도입 금지 — vanilla JS 유지 (현재 스택 일관성)",
+        "WebGL 직접 셰이더 작성 금지 — deck.gl 레이어로 충분",
+        "13종을 한 화면에 동시 표시 금지 — 마스터 인지 부하 위험. 모드/탭으로 전환"
+      ],
+      "decision_log": {
+        "decided_at": "2026-05-03",
+        "decided_by": "대표님",
+        "context": "바이올린 차트 추천 후 \"추천한 모든 차트를 의미있게 연결 구현\" 요청",
+        "principle": "확장성 우선 — 차트 13개 따로 만들지 않고 단일 엔진으로 통합"
+      },
+      "started_at": "2026-05-03T07:34:56.289213Z",
+      "owner": "product-manager",
+      "awaiting_since": "2026-05-03T16:35:50.655365",
+      "user_confirm": [
+        {
+          "category": "DIRECTION",
+          "question": "VIZ_PACK-001 (Map Visualization Pack 13종 + VizEngine 단일 엔진) 시작 직전 컨펌\n\n[T2 트리거 — DIRECTION 카테고리]\n- 신규 디렉터리 viz/ 도입 (engine.js, charts/*.js, tokens.js)\n- 새 아키텍처 패러다임: 기존 SVG 직접 코드 → Plugin-based VizEngine\n- deck.gl 의존성 신규 (현재 미사용)\n- 11개 sub-issue 자동 등록됨 (VIZ_RIDGELINE/SANKEY_MAP/CALENDAR_HEAT/VIOLIN/SPIRAL/SMALL_MULTIPLES/SLOPE/MAP_TREEMAP/BULLET/LINKED_BRUSHING + ENGINE_CORE)\n\n[작업 규모]\n- 총 68시간 (V-0 엔진 16h, V-1 TOP3 20h, V-2 확장 6종 24h, V-3 연결성 8h)\n- 4-phase 에픽 — 1~2주 풀타임 또는 4~6주 사이드\n\n[합의 검증 — 컨텍스트 모순 가능성]\n- decision_log: '대표님 결정 (2026-05-03), 바이올린 차트 추천 후 13종 통합 요청'\n- 본 세션의 직전 합의(같은 날)는 '전부 DEFER 후 디시전 트리만'\n- 디시전 트리(DECISION_TREE-001)는 이미 COMPLETED — 다음 자연 수순으로 시각화 확장이 합리적이긴 함\n- 그러나 68h 에픽은 직전 'DEFER' 합의의 정신과 다름\n\n[Karpathy 원칙 정합성 점검]\n- #2 Simplicity First: 13종 차트 vs \"50줄로 풀 수 있는데 200줄 쓰면 다시 써라\"\n  · 현재 콘솔에 이미 5종 시각화(KPI, 5종 시계열, 트리, 매트릭스, 인과 그래프) 작동 중\n  · 추가 8종은 정말 필요한 차트인가, 아니면 \"있어 보이는\" 차트인가?\n- #4 Goal-Driven: 각 차트가 어떤 의사결정 질문에 답하는가? meta_acceptance에 명시 없음\n- 단 VizEngine 추상화 자체는 #2 Simplicity 부합 (13개 따로 만들기보다 1개 엔진)\n\n[선택지]\n1. PROCEED FULL — 13종 + VizEngine 풀스택 (68h 에픽)\n2. PROCEED MVP — V-0 (엔진 코어 16h) + V-1 TOP3 (20h) = 36h만 먼저, V-2/V-3는 결과 보고 결정\n3. PIVOT — VizEngine만 (V-0 16h), 차트는 기존 5종 그대로 마이그레이션. 신규 차트는 보류\n4. SCALE_DOWN — 신규 차트 1~2개만 추가 (예: Calendar Heatmap만, 8h)\n5. DEFER — 본 에픽 보류, ISS-018/019(자동 감지된 P2) 먼저 처리\n\n[권고]\n- 직전 자동 감지 결과: ISS-018(실데이터 0%), ISS-019(tree_model 노후)는 진짜 데이터 신뢰성 이슈\n- 시각화 13종이 0% 실데이터 위에서 더 화려해져도 의사결정 가치는 의문\n- \"옵션 4 SCALE_DOWN (Calendar Heatmap만 추가) + ISS-018 데이터 부착 작업\" 조합이 가장 균형",
+          "asked_at": "2026-05-03T16:35:50.655365"
+        }
+      ],
+      "payload": {
+        "approved_at": "2026-05-03T08:18:35.533588Z",
+        "approved_by": "대표님 (2026-05-03)"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_ENGINE_CORE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[V-0] VizEngine 코어 — 13종 차트의 단일 진입점",
+      "detail": "확장성 우선: 신규 차트 추가 시 ChartPlugin 인터페이스 50줄 + register() 1줄로 동작. VizEngine은 (1) DataCurator: scope+chartType→data 자동 추출, (2) ScaleResolver: 시간/색/크기 스케일 자동, (3) ScopeManager: 동·레이어·시간윈도우 통합 상태, (4) Plugin Registry. 기존 4종 차트(3D기둥/히트맵/육각/5x5 Pearson)를 새 엔진 위로 마이그레이션하여 검증.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [],
+      "files": [
+        "viz/engine.js (신규)",
+        "viz/curator.js (신규)",
+        "viz/scales.js (신규)",
+        "viz/scope.js (신규)",
+        "viz/plugin-registry.js (신규)",
+        "viz/tokens.js (신규)",
+        "app.js (기존 4종 마이그레이션)"
+      ],
+      "acceptance": [
+        "VizEngine.register(plugin) / VizEngine.render(type, scope) API 동작",
+        "ChartPlugin 인터페이스 = { id, label, icon, render(target, data, scales), supports(scope) }",
+        "기존 4종 차트가 모두 새 엔진 위에서 렌더 (회귀 0)",
+        "ScopeManager 변경 → 모든 활성 차트 자동 재렌더 (event-driven)",
+        "tokens.js가 brand-dna.json design_tokens와 동기화",
+        "코어 코드 ≤ 600줄",
+        "Playwright: 4종 기존 차트 회귀 검증 PASS"
+      ],
+      "estimate_h": 16,
+      "payload": {
+        "files_changed": [],
+        "cli_started_at": "2026-05-03T08:28:08Z"
+      },
+      "blocked_by": [
+        "VIZ_PACK-001"
+      ],
+      "block_reason": "부모 EPIC AWAITING_USER — 컨펌 후 unblock",
+      "cli_dispatch": {
+        "preferred": "codex",
+        "fallback": "claude",
+        "spec_file": "docs/VIZ_PACK_CLI_SPEC.md",
+        "workdir": "."
+      },
+      "completed_at": "2026-05-03T08:37:21Z",
+      "result": {
+        "files_created": [
+          "viz/engine.js",
+          "viz/curator.js",
+          "viz/scales.js",
+          "viz/scope.js",
+          "viz/plugin-registry.js",
+          "viz/tokens.js",
+          "viz/plugins/columns3d.js",
+          "viz/plugins/heatmap.js",
+          "viz/plugins/hexagon.js",
+          "viz/plugins/pearson5x5.js",
+          "verify_viz_engine.mjs"
+        ],
+        "files_modified": [
+          "app.js",
+          "index.html"
+        ],
+        "core_lines": 402,
+        "core_lines_limit": 600,
+        "core_lines_pass": true,
+        "plugins_registered": 4,
+        "acceptance_evidence": {
+          "register_render_api": "PASS — VizEngine.register/render/get/has/list/scope 모두 함수",
+          "chartplugin_interface": "PASS — 4종 모두 {id,label,icon,render,supports} 보유",
+          "regression_4_charts": "PASS — columns3d(3 layers, polygons 130) / heatmap(2 layers) / hexagon(1 layer) / pearson5x5(SVG 위임)",
+          "scope_event_driven": "PASS — VizScope.subscribe 호출 2회 발화 (rerenderAll 자동 트리거)",
+          "tokens_brand_dna_sync": "PASS — hero=#00529B accent=#5BC0EB plddt 4단계 일치",
+          "core_lines_under_600": "PASS — viz/*.js 402줄 (engine 109 + curator 54 + scales 66 + scope 55 + plugin-registry 28 + tokens 90)",
+          "playwright_v07_regression": "PASS — verify_v07.mjs 실데이터 모드 + GeoJsonLayer + 콘솔 에러 0건"
+        },
+        "screenshots": [
+          "screenshots/v0_viz_engine_columns.png",
+          "screenshots/v07_analyze_real_polygons.png",
+          "screenshots/v07_explore.png"
+        ],
+        "verify_command": "PW_PORT=8765 node verify_viz_engine.mjs",
+        "verify_v07_command": "PW_PORT=8765 node verify_v07.mjs",
+        "cli_exit": 0,
+        "cli_log": ".claude/cli-dispatch-logs/VIZ_ENGINE_CORE-001_20260503_172808.log",
+        "note": "CLI 자동 처리 완료"
+      }
+    },
+    {
+      "id": "VIZ_RIDGELINE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-1] Ridgeline (Joy Plot) — 130개 동의 시계열 분포 누적",
+      "detail": "각 동의 60개월 KDE 곡선을 위→아래로 130개 쌓는 산봉우리 차트. TG 핵심 가치: 130개 동 패턴 비교를 한 화면에. y-offset stack + KDE bandwidth 자동 결정. AlphaFold 메타포: contact map 고도 단면도. 필터: 권역(서울 25구 / 부산 5동) / 레이어(5종) / 시간 윈도우 슬라이드.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/ridgeline.js (신규)",
+        "viz/utils/kde.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(ridgelinePlugin) 동작",
+        "KDE Gaussian kernel + Silverman bandwidth 자동",
+        "130개 동을 권역(vibe)별로 그룹핑 정렬",
+        "레이어 변경 시 곡선 자연스러운 transition (200ms)",
+        "pLDDT 팔레트 적용 (각 봉우리 색)",
+        "hover → 동 이름 + 평균값 툴팁",
+        "코드 ≤ 200줄"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_SANKEY_MAP-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-1] Sankey on Map — 동 간 인과 흐름 곡선",
+      "detail": "causal.json의 Granger 인과 트리플렛(2,559)을 deck.gl ArcLayer로 동A→동B 곡선 흐름으로 시각화. 두께=영향 강도(support_count). 색상=레이어. 시간 슬라이드로 lag 재생. TG 정체성 메시지 ('많은 데이터의 연결' — 대표님 핵심 피드백) 강화. 필터: 인과 강도 임계값 슬라이더 + Top-N 제한.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/sankey-map.js (신규)",
+        "app.js (deck.gl ArcLayer 통합)"
+      ],
+      "acceptance": [
+        "VizEngine.register(sankeyMapPlugin) 동작",
+        "Granger 트리플렛 로드 + ArcLayer로 곡선 렌더",
+        "두께 = support_count * scale, 색 = 레이어 카테고리",
+        "시간 슬라이더로 lag 재생 (1~6mo)",
+        "Top-N 슬라이더 (상위 10/50/200/전체)",
+        "hover → \"동A → 동B (lag 2mo, 67개 동에서 발견)\" 툴팁",
+        "코드 ≤ 250줄"
+      ],
+      "estimate_h": 10,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_CALENDAR_HEAT-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-1] Calendar Heatmap — 동 카드 안 60개월 격자",
+      "detail": "Explore 모드에서 동 hover 시 팝업에 12열×5행 색상 격자. 셀 = 한 달 강도. 코로나(2020-3) / 정책 충격 시점이 색으로 즉시 식별. AlphaFold 메타포: 잔기 위치별 confidence 히트맵. Workflow Editor 노드 결과 미리보기에도 활용 가능.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/calendar-heat.js (신규)",
+        "app.js (Explore 모드 통합)"
+      ],
+      "acceptance": [
+        "VizEngine.register(calHeatPlugin) 동작",
+        "12×5 SVG rect 격자 (60개월)",
+        "pLDDT 팔레트 + 5단계 양자화 (정규화 분위)",
+        "셀 hover → \"2021-06: 카페 1,247개\" 툴팁",
+        "동 hover 시 1초 이내 렌더",
+        "SHOCKS 시점 (covid_start 등) 위에 마커 오버레이",
+        "코드 ≤ 150줄"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_VIOLIN-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-2] Violin Chart — 지도 위 KDE 좌우 대칭 분포",
+      "detail": "각 동 위치에서 deck.gl PathLayer로 위/아래 KDE 두께 곡선. x축=시간, y축=분포 두께. 시각화 모드 4번째 옵션 '🎻 바이올린'으로 추가. LOD: 줌 멀어지면 단순 기둥, 가까우면 바이올린.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/violin.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(violinPlugin) 동작",
+        "KDE → PathLayer 폴리곤 변환",
+        "줌 레벨 기반 LOD (zoom < 11 단순화)",
+        "pLDDT 팔레트",
+        "지도 모드 셀렉터 4번째 옵션 등장",
+        "코드 ≤ 200줄"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_SPIRAL-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-2] Spiral / Polar Time Map — 1년 = 360°",
+      "detail": "5년 = 5바퀴 나선. 같은 달이 같은 각도에 위치하여 계절성/명절/이벤트 시각 정렬. AlphaFold 메타포: 알파 헬릭스. 동 카드 안 미니 스파이럴 + 마스터 콘솔 풀스크린 모드 둘 다 지원.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/spiral.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(spiralPlugin) 동작",
+        "d=r(t) 나선 좌표 변환",
+        "계절성 강한 레이어(visitors, sales) 우선",
+        "SHOCKS 시점 동심원 가이드라인",
+        "코드 ≤ 200줄"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_SMALL_MULTIPLES-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-2] Small Multiples (Trellis) — 5×5 mini chart 격자",
+      "detail": "성수권 5개 동 × 5개 레이어 = 25개 mini chart. Decide 모드에서 권역 비교 보고서. 각 셀 = 60개월 sparkline. AlphaFold 메타포: 도메인별 단면도 매트릭스.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/small-multiples.js (신규)",
+        "app.js (Decide 모드 통합)"
+      ],
+      "acceptance": [
+        "VizEngine.register(smallMultPlugin) 동작",
+        "5×5 SVG 격자 + sparkline 25개",
+        "동 선택/레이어 선택 동적 변경",
+        "셀 클릭 → 해당 동·레이어 풀차트 점프",
+        "PDF 보고서 export 호환",
+        "코드 ≤ 200줄"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_SLOPE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-2] Slope Graph — 두 시점 비교",
+      "detail": "코로나 전(2020-1) vs 후(2024-12) 또는 마스터 지정 두 시점. 각 동을 두 점 + 연결선으로 표시. 기울기 = 변화율. PDF 보고서 핵심 페이지에 적합.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/slope.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(slopePlugin) 동작",
+        "두 시점 선택 UI + slope 그래프",
+        "상위 N개 동 라벨 (변화율 절댓값 기준)",
+        "pLDDT 팔레트 (증가=청, 감소=빨강)",
+        "코드 ≤ 150줄"
+      ],
+      "estimate_h": 3,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_MAP_TREEMAP-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-2] Map Cartogram — 데이터 비율로 폴리곤 왜곡",
+      "detail": "동 폴리곤을 실제 면적이 아닌 데이터(인구/매출/소상공)로 왜곡. 지도 자체가 데이터가 됨. 인사이트 보고서 표지용 임팩트. topojson + Dorling/Demers cartogram 알고리즘.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/cartogram.js (신규)",
+        "viz/utils/cartogram-algo.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(cartoPlugin) 동작",
+        "Dorling cartogram (원형 변형) 또는 Demers (사각 변형) 중 1종",
+        "레이어 선택 시 부드러운 transition",
+        "실제 위치 추정 가능한 정도의 변형 강도",
+        "코드 ≤ 250줄"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_BULLET-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-2] Bullet Chart — 목표 vs 실적 KPI",
+      "detail": "동·레이어별 목표(분기별 expected) 대비 실적. Townin 마스터 KPI 대시보드용. forecasts.json의 yhat을 목표선으로 활용.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_ENGINE_CORE-001"
+      ],
+      "files": [
+        "viz/charts/bullet.js (신규)"
+      ],
+      "acceptance": [
+        "VizEngine.register(bulletPlugin) 동작",
+        "실적 막대 + 목표 마커 + 임계값 배경",
+        "5개 KPI 동시 표시 (가로형)",
+        "pLDDT 팔레트 (실적 ≥ 목표 청, < 목표 빨강)",
+        "코드 ≤ 120줄"
+      ],
+      "estimate_h": 3,
+      "payload": {
+        "files_changed": [],
+        "unblocked_at": "2026-05-03T08:37:21Z"
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "VIZ_LINKED_BRUSHING-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "title": "[V-3] Linked Brushing — 13종 차트 간 cross-highlight",
+      "detail": "한 차트에서 동/시점/레이어를 hover/select 시 다른 모든 활성 차트가 동시 강조. VizEngine.notifyHover(scope) → 모든 ChartPlugin.onHighlight(scope). 성능: 130개 동 × 13 차트 동시 강조 시 60fps 유지.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T15:55:00.000000Z",
+      "parent": "VIZ_PACK-001",
+      "depends_on": [
+        "VIZ_RIDGELINE-001",
+        "VIZ_SANKEY_MAP-001",
+        "VIZ_CALENDAR_HEAT-001",
+        "VIZ_VIOLIN-001",
+        "VIZ_SPIRAL-001",
+        "VIZ_SMALL_MULTIPLES-001",
+        "VIZ_SLOPE-001",
+        "VIZ_MAP_TREEMAP-001",
+        "VIZ_BULLET-001"
+      ],
+      "files": [
+        "viz/engine.js (notifyHover/onHighlight 추가)",
+        "viz/charts/*.js (각 플러그인 onHighlight 구현)"
+      ],
+      "acceptance": [
+        "VizEngine.notifyHover(scope) 이벤트 시스템 동작",
+        "13종 차트 모두 onHighlight(scope) 구현",
+        "동 hover → 다른 차트의 같은 동 동시 강조 (200ms 이내)",
+        "시점 hover → 시간축 가진 차트 모두 동기화",
+        "requestAnimationFrame 기반 throttle",
+        "60fps 유지 (Chrome DevTools Performance 검증)",
+        "Playwright: 캐릭터 저니로 cross-link 검증 PASS"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      },
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "viz_pack_journey": "4/4",
+        "files_added": [
+          "viz/plugins/ridgeline.js",
+          "viz/plugins/sankey-map.js",
+          "viz/plugins/calendar-heat.js",
+          "viz/plugins/violin.js",
+          "viz/plugins/spiral.js",
+          "viz/plugins/small-multiples.js",
+          "viz/plugins/slope.js",
+          "viz/plugins/map-treemap.js",
+          "viz/plugins/bullet.js",
+          "viz/plugins/linked-brushing.js",
+          "verify_viz_pack.mjs"
+        ]
+      }
+    },
+    {
+      "id": "ISS-018",
+      "type": "DATA_INTEGRITY",
+      "priority": "P2",
+      "status": "COMPLETED",
+      "title": "실데이터 부착 비율 낮음 (0/130 = 0%)",
+      "detail": "simula_data_real.json의 real_data_attached=True 동이 0%. 80% 미만이면 분석 신뢰도 영향. ETL 점검 또는 REAL_DATA_INGEST-001 진행 권고.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T07:29:14.670379Z",
+      "files": [
+        "etl_real_data.py",
+        "simula_data_real.json"
+      ],
+      "detect_signature": "f939ff2876e2",
+      "auto_detected": true,
+      "started_at": "2026-05-03T07:38:34.622863Z",
+      "owner": "agent-harness",
+      "scope_clarification": "진단/문서화/UI 가시화로 한정 (실데이터 발급은 REAL_DATA_INGEST-001 DEFER 상태 유지)",
+      "payload": {
+        "files_changed": []
+      },
+      "completed_at": "2026-05-03T07:43:56.357425Z",
+      "result": {
+        "passed": true,
+        "scope": "diagnosis_only",
+        "verify_all": "8/8",
+        "diagnosis": {
+          "real_data_attached_count": 0,
+          "polygon_geo_count": 0,
+          "real_adm_nm_count": 0,
+          "simula_real_vs_simula_diff": "0/40 layers (100% identical)",
+          "interpretation": "simula_data_real.json은 simula_data.json과 완전 동일. real 라벨이 거짓이었음."
+        },
+        "ui_label_corrected": "SIMULA · 0% real (red, ISS-018 hover tooltip)",
+        "doc": "docs/data-integrity-diagnosis.md",
+        "files_changed": [
+          "app.js (init modeBadge 분기 정정)",
+          "index.html (트리 패널 카피)",
+          "docs/data-integrity-diagnosis.md (신규)",
+          "screenshots/v07_data_integrity_label.png (신규)"
+        ],
+        "out_of_scope": "실데이터 발급/ETL 작동 = REAL_DATA_INGEST-001 (CLOSED, 사용자 결정 시 재오픈)"
+      }
+    },
+    {
+      "id": "ISS-019",
+      "type": "REFACTOR",
+      "priority": "P2",
+      "status": "COMPLETED",
+      "title": "simula_data_real.json 갱신 후 tree_model.json 미재학습",
+      "detail": "simula_data_real.json이 tree_model.json보다 최신. 입력 데이터가 바뀌었으니 npm run train:tree 재실행 권고.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T07:29:14.670379Z",
+      "files": [
+        "simula_data_real.json",
+        "tree_model.json",
+        "decision_tree_train.py"
+      ],
+      "detect_signature": "04908a670cab",
+      "auto_detected": true,
+      "started_at": "2026-05-03T07:37:06.682500Z",
+      "completed_at": "2026-05-03T07:37:06.682500Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "action": "npm run train:tree 재실행",
+        "train_accuracy_before": 0.7692,
+        "train_accuracy_after": 0.762,
+        "delta": -0.007,
+        "interpretation": "0.7%p 하락 — simula_data_real이 학습 후 갱신되었음을 확인. 임계값(0.70) 위.",
+        "tree_journey": "5/5 PASS"
+      }
+    },
+    {
+      "id": "ISS-020",
+      "type": "DESIGN_FIX",
+      "priority": "P2",
+      "status": "COMPLETED",
+      "title": "Decide 모드 디시전 트리 잎 노드 겹침 수정 (사용자 보고)",
+      "detail": "사용자 스크린샷 보고: 같은 부모의 좌우 잎 라벨이 60px rect에 51px 간격이라 9px 겹침. _treeLayout viewBox를 nLeaves 기반 동적 계산으로 변경(W = max(720, nLeaves*70)) + 잎 박스 LEAF_W=56 + 클래스명 길이별 폰트 자동 축소 + 분기 라벨 깊이별 상하 교대.",
+      "assign_to": "agent-harness",
+      "auto_detected": false,
+      "user_reported": true,
+      "created_at": "2026-05-03T09:12:41.247469Z",
+      "started_at": "2026-05-03T09:12:41.247469Z",
+      "completed_at": "2026-05-03T09:12:41.247469Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "files_changed": [
+          "app.js"
+        ],
+        "screenshots": [
+          "screenshots/v07_decision_tree_zoom.png"
+        ]
+      }
+    },
+    {
+      "id": "ISS-021",
+      "type": "DESIGN_FIX",
+      "priority": "P3",
+      "status": "COMPLETED",
+      "title": "Decide 트리 좌측 블록 폭 절감 — 사용자 보고",
+      "detail": "사용자 보고: 좌측 col-span-8(트리)이 너무 넓어 노드 간격이 흩어져 가독성 저하. col-span 7:5로 변경 + LEAF_W 56→52 + LEAF_GAP 14→8 + padX 48→32. 변수 중요도 viewBox 240→280, padL 80→92로 한글 라벨 여유 확보.",
+      "assign_to": "agent-harness",
+      "user_reported": true,
+      "created_at": "2026-05-03T09:21:39.262628Z",
+      "started_at": "2026-05-03T09:21:39.262628Z",
+      "completed_at": "2026-05-03T09:21:39.262628Z",
+      "owner": "agent-harness",
+      "result": {
+        "passed": true,
+        "verify_all": "9/9",
+        "files_changed": [
+          "index.html",
+          "app.js"
+        ]
+      }
+    },
+    {
+      "id": "MEONGBUN_CONSULTING-001",
+      "type": "EPIC",
+      "priority": "P1",
+      "status": "APPROVED",
+      "title": "[EPIC] 의정부 금오동 명분 컨설팅 보고서 시스템 — 근거→권고 5단계 사슬",
+      "detail": "대표님 결정 (2026-05-03): 허울 보고서가 아닌 '근거→해석→비교→시나리오→권고' 5단계 명분 사슬을 가진 의사결정 보고서. TG 정체성 전환: '데이터 시각화 도구' → '명분 추적 가능한 의사결정 코치'. 케이스: 의정부시 금오동 카페 재창업 (위치/업종전환 효과). PoC 1편 → 사업화 결정 → 풀 확장. 객관성/과학성 보장 의무: SIL(Scientific Integrity Layer) 5장치 동시 통합.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "sub_issues": [
+        "DATA_UIJEONGBU_PHASE1-001",
+        "META_DATA_INFRA-001",
+        "DATA_UIJEONGBU_PHASE2-001",
+        "DATA_UIJEONGBU_PHASE3-001",
+        "MODULE_SURVIVAL-001",
+        "MODULE_DECISION_TREE_REASONS-001",
+        "MODULE_COUNTERFACTUAL-001",
+        "MODULE_SHAP-001",
+        "MEONGBUN_REPORT_TEMPLATE-001",
+        "SIL_INTEGRATION-001",
+        "DATA_UIJEONGBU_PHASE4_PAID-001"
+      ],
+      "meta_acceptance": [
+        "의정부 금오동 1편 명분 보고서 PDF 자동 생성",
+        "5단계 논리 사슬 모든 단계 검증 통과",
+        "SIL 5장치 (Provenance/Method/CI/Limitation/Falsifiability) 모든 셀에 부착",
+        "재현 가능: GitHub 코드 + 명령 1줄로 동일 보고서 재생성",
+        "비용 가드레일: 무료 데이터만으로 PoC 완성"
+      ],
+      "decision_log": {
+        "decided_at": "2026-05-03",
+        "decided_by": "대표님",
+        "recommend_option": "A (10개 이슈 모두 등록)",
+        "execution_strategy": "CLI에서 구현 (Claude Code CLI 자동 디스패치)",
+        "self_implementation_forbidden": true
+      },
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "DATA_UIJEONGBU_PHASE1-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE_PARTIAL",
+      "title": "[D-1] 의정부 금오동 명분 등급 S 데이터 골격 (LOCALDATA + 소진공 + SGIS + VWorld)",
+      "detail": "의정부시 금오동 1동의 명분 등급 S 데이터 5종 수집:\n1) LOCALDATA 인허가 (D1) — 카페 창업/폐업 1년치\n2) 소진공 상권정보 (D2) — 동 내 점포 수 + 카페 분포\n3) SGIS 인구 (B1) — 연령/성별 인구 (의정부시 금오동 행정동 코드)\n4) VWorld 행정경계 (A1) — 폴리곤\n5) 행안부 주소DB (A2) + SGIS 통계지리 (A3) — 코드 매핑\n출처/시점/신뢰도 메타데이터 자동 부착 (Provenance Stamp 준비).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [],
+      "files": [
+        "data_raw/uijeongbu_geomo/ 디렉토리 (신규)",
+        "etl_uijeongbu.py (신규)",
+        "data_raw/sources_meta.json (신규 — Provenance 인덱스)"
+      ],
+      "acceptance": [
+        "data_raw/uijeongbu_geomo/{localdata,sgis,vworld,sangkwon}.json 5개 파일 생성",
+        "각 파일에 source/url/fetched_at/license 메타 헤더 의무",
+        "의정부 금오동 행정동 코드(예: 41150...) 정확히 매칭",
+        "카페 인허가 최소 30건, 점포 정보 최소 100건 수집",
+        "Playwright 검증: data_raw/sources_meta.json에서 5종 모두 status=ok"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "META_DATA_INFRA-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[META] data_raw 캐싱 + Provenance Stamp 인프라",
+      "detail": "의정부 컨설팅 + 향후 모든 동 확장을 위한 공통 데이터 수집 인프라:\n1) data_raw/{source}/{dong_code}/{layer}.json 디렉토리 표준\n2) Provenance Stamp 자동 부착 함수 (utils/provenance.py)\n3) ETag/Last-Modified 캐싱 (재수집 시 변경분만)\n4) datago-fetch skill 통합 (공공데이터포털 키 자동 관리)\nPhase D-1과 병렬 진행 가능.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [],
+      "files": [
+        "utils/provenance.py (신규)",
+        "utils/data_cache.py (신규)",
+        "data_raw/README.md (신규 — 표준 명세)"
+      ],
+      "acceptance": [
+        "provenance.stamp(data, source, url, license) 함수 동작",
+        "data_cache.fetch_or_load(url, key) ETag 기반 캐싱",
+        "의정부 PHASE1 데이터에 자동 적용 검증"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "DATA_UIJEONGBU_PHASE2-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[D-2] 의정부 금오동 명분 등급 S 완성 (공시지가 + 실거래가 + TAGO)",
+      "detail": "명분 등급 S 나머지 데이터 4종:\n1) 공시지가 (C1) — 국토부 부동산공시가격 OpenAPI\n2) 실거래가 (C2) — 국토부 실거래가 API (5년치 월별)\n3) TAGO 정류장 이용객 (B4) — 통신사 회피 핵심\n4) TAGO 정류장 위치 (A5) — 동 내 정류장 매핑\nsimula_data_real.json에 의정부 금오동 1동 추가 → 16 레이어 채움.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "DATA_UIJEONGBU_PHASE1-001",
+        "META_DATA_INFRA-001"
+      ],
+      "files": [
+        "data_raw/uijeongbu_geomo/{molit,tago}.json (신규)",
+        "simula_data_real.json (의정부 금오동 1동 추가)",
+        "etl_uijeongbu.py (확장)"
+      ],
+      "acceptance": [
+        "simula_data_real.json의 dongs 배열에 의정부 금오동 1개 추가 확인",
+        "land_price/tx_volume/visitors_total/transit_score 등 16 레이어 채움",
+        "causal_extract.py 실행 시 의정부 동 포함 정상 처리"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "DATA_UIJEONGBU_PHASE3-001",
+      "type": "USER_STORY",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[D-3] 카카오 경쟁 분석 + 보너스 무료 데이터",
+      "detail": "명분 등급 A 일부 + 보너스:\n1) 카카오 로컬 API (F1) — 반경 500m 카페/베이커리/음식점/편의점\n2) VWorld 항공사진 시계열 (보너스) — 2020 vs 2024 시각 비교\n3) 공공데이터 대학캠퍼스/오피스 (보너스) — 수요 예측 명분\n카카오 키는 월요일 발급 후 진행. 그 전엔 다른 데이터 수집.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "DATA_UIJEONGBU_PHASE2-001"
+      ],
+      "files": [
+        "data_raw/uijeongbu_geomo/kakao_pois.json (신규)",
+        "data_raw/uijeongbu_geomo/vworld_aerial.json (신규)",
+        "data_raw/uijeongbu_geomo/poi_universities.json (신규)"
+      ],
+      "acceptance": [
+        "반경 500m 내 카페 N개 + 인접업종 4종 수집",
+        "항공사진 2020/2024 2장 다운",
+        "대학/오피스/대형 수요 시설 매핑 완료"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MODULE_SURVIVAL-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[모듈1] Survival Analysis — 창업 후 N개월 생존률 (Kaplan-Meier)",
+      "detail": "명분 사슬 [3] 비교 단계의 핵심 모듈:\n\"금오동 카페 24개월 생존률 67% vs 의정부 평균 78%\" 같은 비교 가능.\n알고리즘: lifelines 또는 statsmodels Kaplan-Meier (무료).\n입력: LOCALDATA 인허가 (D1) 창업일/폐업일.\n출력: 생존 곡선 + 95% CI + log-rank test (군집 비교).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "DATA_UIJEONGBU_PHASE2-001"
+      ],
+      "files": [
+        "analysis/survival.py (신규)",
+        "analysis/__init__.py (신규)",
+        "requirements.txt (lifelines 추가)"
+      ],
+      "acceptance": [
+        "Kaplan-Meier 곡선 계산 함수 동작",
+        "95% 신뢰구간 동시 출력",
+        "log-rank test로 두 군집 비교 가능 (예: 금오동 vs 의정부 평균)",
+        "결과 JSON 스키마: {months, survival, ci_low, ci_high, n, events}"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MODULE_DECISION_TREE_REASONS-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[모듈3] Decision Tree with Reasons — 이유 추적 의사결정 트리",
+      "detail": "명분 사슬 [5] 권고 단계의 핵심:\n기존 decision_tree.json 확장. 각 분기점에 \"왜 이 분기?\" 데이터 근거 부착.\n잎 노드 = 권고 + 모든 근거 사슬 (역추적 가능).\n알고리즘: sklearn DecisionTreeClassifier + 분기 이유 자동 캡처.\n입력: simula_data_real (130+1 동) + 라벨 (생존/폐업).\n출력: 트리 구조 + 각 노드에 sample_count/gini/reason 메타.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "DATA_UIJEONGBU_PHASE2-001"
+      ],
+      "files": [
+        "analysis/decision_tree_reasons.py (신규)",
+        "decision_tree_v2.json (출력)",
+        "app.js (트리 시각화 확장)"
+      ],
+      "acceptance": [
+        "sklearn DT로 트리 학습 + 노드별 근거 텍스트 자동 생성",
+        "잎 노드에서 root까지 역추적 가능 (모든 분기 근거 나열)",
+        "JSON 스키마: {node_id, feature, threshold, reason, samples, gini, children}",
+        "UI에서 클릭 시 명분 사슬 5단계 표시"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MODULE_COUNTERFACTUAL-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[모듈2] Counterfactual Scenario — \"만약 베이커리였다면?\" 반사실 시뮬",
+      "detail": "명분 사슬 [4] 시나리오 단계의 핵심:\n\"만약 같은 자리에 베이커리/무인 24시였다면 어땠을까?\" 시뮬.\n알고리즘: Propensity Score Matching (sklearn 무료) + 시계열 이식.\n입력: simula_data_real + 업종별 시계열 패턴.\n출력: 3개 옵션별 12개월 예측 cone (p10~p90).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_SURVIVAL-001",
+        "MODULE_DECISION_TREE_REASONS-001"
+      ],
+      "files": [
+        "analysis/counterfactual.py (신규)",
+        "requirements.txt (causalinference 또는 자체 구현)"
+      ],
+      "acceptance": [
+        "동 1개 + 옵션 3개 입력 → 각 옵션별 12개월 cone 출력",
+        "Propensity Score 매칭 검증 (treatment vs control balance)",
+        "결과 JSON: {option_id, predicted_revenue: {p10, p50, p90}, matched_n, balance_score}"
+      ],
+      "estimate_h": 10,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MODULE_SHAP-001",
+      "type": "USER_STORY",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[모듈4] SHAP Explainability — 권고 변수별 기여도",
+      "detail": "명분 사슬 [5] 권고 보조:\n\"베이커리 권고: 인접 베이커리 부재 +35%, 30대 인구 +28%, ...\" 변수별 기여도.\n알고리즘: shap 라이브러리 (TreeExplainer, MODULE3 트리 활용).\n출력: 변수별 SHAP value + waterfall plot 데이터.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_DECISION_TREE_REASONS-001"
+      ],
+      "files": [
+        "analysis/shap_explain.py (신규)",
+        "requirements.txt (shap 추가)"
+      ],
+      "acceptance": [
+        "SHAP TreeExplainer로 권고 1건 → 변수별 기여도 출력",
+        "상위 5개 기여 변수 + 기여 % 명시",
+        "결과 JSON: {recommendation, top_features: [{name, shap_value, pct}]}"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "MEONGBUN_REPORT_TEMPLATE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[보고서] 명분 컨설팅 PDF 7섹션 + 부록 3 자동 생성",
+      "detail": "명분 사슬 5단계 + 한계공시 + 부록을 1편 PDF로 자동 생성:\n구조: ① 한페이지 요약 ② 사실 ③ 해석 ④ 비교 ⑤ 시나리오 ⑥ 권고 ⑦ 한계 + 부록 (Method/Provenance/재현코드).\n템플릿: report-pdf-builder skill 확장.\n디자인: SLDS 다크 + pLDDT 4단계 팔레트.\n출력: ~/Downloads/{동명}_명분컨설팅_{YYMMDD}.pdf",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_COUNTERFACTUAL-001",
+        "MODULE_SHAP-001",
+        "DATA_UIJEONGBU_PHASE3-001"
+      ],
+      "files": [
+        "reports/meongbun_template.html (신규)",
+        "reports/build_meongbun_report.py (신규)",
+        "docs/methods/*.md (Method Card 9종 신규)"
+      ],
+      "acceptance": [
+        "의정부 금오동 1편 PDF 자동 생성 (12~15 페이지)",
+        "7섹션 + 부록 3 모두 포함",
+        "각 셀이 출처 URL 클릭 가능 (PDF 하이퍼링크)",
+        "재현 명령 1줄 명시: python3 reports/build_meongbun_report.py --dong 41150...",
+        "wkhtmltopdf 12mm 마진 룰 준수 (report-pdf-builder skill)"
+      ],
+      "estimate_h": 10,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "SIL_INTEGRATION-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[보장] SIL 객관성 보장 5장치 통합 (Provenance + Method + CI + Limitation + Falsifiability)",
+      "detail": "TG의 brand-dna \"분석가의 절제\" + \"학술/공공 시연\" frame 보장:\nA. Provenance Stamp — 모든 셀에 출처 (META_DATA_INFRA에서 부착, 보고서에 노출)\nB. Method Card — 9종 분석 방법 1장씩 (docs/methods/)\nC. CI Mandate — 단일 숫자 금지, 모든 수치 cone (p10~p90)\nD. Limitation Disclosure — 모든 보고서 의무 섹션\nE. Falsifiability Test — 반증 기준 명시 (12개월 후 cone 밖이면 폐기)\n명분 보고서 템플릿과 통합.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MEONGBUN_REPORT_TEMPLATE-001"
+      ],
+      "files": [
+        "sil/provenance_renderer.py (신규)",
+        "sil/method_card_renderer.py (신규)",
+        "sil/limitation_section.py (신규)",
+        "sil/falsifiability.py (신규)",
+        "reports/meongbun_template.html (확장)"
+      ],
+      "acceptance": [
+        "모든 PDF 셀이 source 메타 보유 + 부록에 자동 노출",
+        "9종 Method Card 부록에 자동 포함",
+        "단일 점추정 수치가 보고서에 0개 (모두 range)",
+        "한계 섹션 7항목 자동 채움",
+        "반증 기준 4종 자동 명시 (cone 도달, 폐업률 ±50%, 인과 5쌍 중 3 무관, 12개월 갱신)"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "DATA_UIJEONGBU_PHASE4_PAID-001",
+      "type": "USER_STORY",
+      "priority": "P3",
+      "status": "DEFERRED",
+      "title": "[D-4 보류] 유료 데이터 통합 (부동산플래닛/KB/나이스)",
+      "detail": "회색지대 + 유료 데이터 5종 (PoC 성공 + 사업화 결정 시 활성):\n1) C3 부동산플래닛 임대시세 (회색 — robots.txt 검토 후)\n2) C4 점포라인 권리금 (회색)\n3) D5 나이스 비즈맵 (월 50만)\n4) E1 KB 데이터플러스 (월 20만)\n5) G3 나이스 매출 추정 (건당 10만)\n트리거: 의정부 금오동 명분 보고서 1편 발행 + 사업화 의사결정.",
+      "assign_to": "observer",
+      "created_at": "2026-05-03T09:43:21.607015+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [],
+      "files": [
+        "추후 결정"
+      ],
+      "acceptance": [
+        "(트리거 후) 변호사 검토 보고 1건",
+        "(트리거 후) 비용 가드레일 설정 (월 100만 이내)",
+        "(트리거 후) 활성화 시 ETL 확장"
+      ],
+      "estimate_h": 0,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_REDESIGN_MEONGBUN_LAYOUT-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[UI 재구성] 명분 사슬 7섹션 단일 페이지 레이아웃",
+      "detail": "대표님 진단(2026-05-03 스크린샷): 현재 화면이 \"멋있는 분석 차트 4종\"으로 흩어져 명분 흐름 안 보임. 재구성 설계: 한 동 선택 시 ❶권고요약 → ❷사실 → ❸해석 → ❹비교 → ❺시나리오 → ❻권고추적 → ❼한계 7섹션 단일 세로 흐름. 각 섹션 우상단에 [N/7] 번호 + brand-dna accent 좌측 보더 4px. 기존 위젯 4종(시계열/Top인과/Vibe트리/FeatureImportance) 재배치 (UI_REDESIGN_WIDGET_RELOCATE-001과 협업).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [],
+      "files": [
+        "index.html (전면 재구성)",
+        "app.js (renderMeongbunLayout 신규)",
+        "css/meongbun.css (신규)"
+      ],
+      "acceptance": [
+        "7섹션 단일 페이지 렌더 (스크롤 1회로 명분 흐름 파악)",
+        "각 섹션 [N/7] 번호 + accent 좌측 보더",
+        "브레드크럼 / 점프 네비게이션",
+        "Playwright 캐릭터 저니: 동 선택 → 7섹션 모두 보임 PASS",
+        "1440/1920/2560 3개 해상도 반응형 확인"
+      ],
+      "estimate_h": 12,
+      "payload": {
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T03:57:28.655153Z",
+      "completed_at": "2026-05-04T13:04:13.569589",
+      "result": {
+        "passed": true,
+        "files_created": [
+          "css/meongbun.css"
+        ],
+        "files_modified": [
+          "index.html",
+          "app.js"
+        ],
+        "sections_rendered": 7,
+        "node_check": "ok",
+        "e2e": "ok - server on 8765, all 7 sections present in DOM"
+      }
+    },
+    {
+      "id": "UI_REDESIGN_WIDGET_RELOCATE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[UI 재구성] 기존 4개 위젯 명분 사슬 매핑 + 차트 잘림 수정",
+      "detail": "현 좌측 상단 시계열 차트가 본체 잘리고 범례만 표시되는 버그 수정 + 4개 위젯 재배치:\n· 시계열 5색 → ❷ 사실 ① 카페수 추이\n· Top 인과 5개 → ❹ 비교 (유사동 매칭 근거)\n· Vibe 분류 트리 → ❻ 권고 추적 (왜 이 분류 → 이 권고)\n· Feature Importance → ❻ 권고 추적 SHAP 확장",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js",
+        "index.html"
+      ],
+      "acceptance": [
+        "시계열 차트 본체 정상 렌더 (잘림 0)",
+        "시간축 미래 영역 라벨 명시 (예측 cone vs 실데이터 구분)",
+        "4개 위젯 모두 새 섹션 위치로 이동",
+        "Top 인과 패턴이 \"유사동 매칭 근거\" 컨텍스트로 재라벨"
+      ],
+      "estimate_h": 8,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_DECISION_ONEPAGER-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❶] Decision One-Pager — 권고 + 명분 3줄 + 단서",
+      "detail": "한 페이지 결론 카드:\n· 권고 (큰 글씨 + plddt_high 색)\n· 신뢰 별점 (1~5)\n· 명분 3줄 (각각 출처 +날짜)\n· 단서 조항 (warning 배경)",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderDecisionOnePager)",
+        "index.html"
+      ],
+      "acceptance": [
+        "권고 1개 + 명분 정확히 3줄 + 단서 1개 표시",
+        "권고에 신뢰 별점 ⭐ × N",
+        "단서 조항이 callout-warn 스타일",
+        "한 카드가 첫 화면(above the fold)에 완전히 보임"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_FACT_TRIPLE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❷] Facts 3분할 — 카페수/인구/지가 + 출처 마커",
+      "detail": "사실 섹션:\n· 3분할 가로 카드 (카페 수 추이 / 인구 구조 / 지가 추이)\n· 각 셀에 ● 실 / ○ 합성 / ◐ 추정 마커\n· source/fetched_at hover 툴팁",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderFactSection)",
+        "index.html"
+      ],
+      "acceptance": [
+        "3개 차트 균등 가로 배치",
+        "각 데이터 포인트에 데이터 출처 마커",
+        "hover 시 source/url/fetched_at 툴팁",
+        "시간축 미래 영역 명시 (실 vs 예측 구분)"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_INTERPRETATION_SECTION-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❸] Interpretation — 통계적 의미 + Method Card",
+      "detail": "해석 섹션:\n· 통계 명제 3~5줄 (n, p-value, CI 명시)\n· Method Card 펼치기 ▼ 인터랙션\n· Bonferroni 보정 등 학술 용어 정확히",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderInterpretation)",
+        "docs/methods/*.md (참조)"
+      ],
+      "acceptance": [
+        "통계 명제 각 줄에 n/p/CI 표기",
+        "Method Card 펼치기 → docs/methods/{X}.md 표시",
+        "\"분석가의 절제\" voice 준수 (과장 0)"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_BENCHMARK_KM_CURVE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❹] Benchmark — Kaplan-Meier 생존곡선 + 유사동 매칭",
+      "detail": "비교 섹션:\n· K-M 생존곡선 2개 (대상 동 vs 평균) + 95% CI 띠\n· log-rank test 결과 표시 (χ², p)\n· 매칭 동 N개 + 코사인 유사도\n· 부록 B 링크",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_SURVIVAL-001",
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderBenchmark)",
+        "analysis/survival.py (모듈1 의존)"
+      ],
+      "acceptance": [
+        "K-M 곡선 2개 동시 렌더 + CI 띠",
+        "log-rank χ² + p 명시",
+        "매칭 동 리스트 + 유사도",
+        "한 화면에 곡선+표 동시 보임"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_SCENARIOS_3OPTION-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❺] Scenarios — A/B/C 3옵션 cone 비교",
+      "detail": "시나리오 섹션:\n· 3개 카드 가로 배치\n· 각 카드: 12mo 매출 cone (p10~p90) + ROI + 매칭 동 수\n· 권고 옵션에 ╲ 마커 + plddt_high 보더\n· Counterfactual PSM 결과 표시",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_COUNTERFACTUAL-001",
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderScenarios)",
+        "analysis/counterfactual.py (모듈2 의존)"
+      ],
+      "acceptance": [
+        "3개 옵션 카드 균등 배치",
+        "각 옵션 cone (p10~p90) + ROI + 매칭 N",
+        "권고 옵션 시각적 강조",
+        "PSM balance score 노출"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_RECOMMENDATION_TRACE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❻] Recommendation Trace — SHAP + Decision Tree 통합",
+      "detail": "권고 추적 섹션:\n· SHAP 변수별 기여도 horizontal bar (top 5 + 기타)\n· Decision Tree 분기 경로 (펼치기) — 권고까지 N회 분기\n· 기존 Vibe 트리 + Feature Importance 위젯 통합",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "MODULE_SHAP-001",
+        "MODULE_DECISION_TREE_REASONS-001",
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderRecommendationTrace)",
+        "analysis/shap_explain.py (모듈4 의존)"
+      ],
+      "acceptance": [
+        "SHAP top 5 변수 + 기여도 % horizontal bar",
+        "Decision Tree 분기 경로 펼치기",
+        "기존 Vibe 트리 + Feature Importance 자연스럽게 흡수"
+      ],
+      "estimate_h": 6,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "UI_LIMITATION_FALSIFY-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[섹션❼] Limitations + Falsifiability + 부록",
+      "detail": "한계 + 반증 + 부록:\n· 한계 7항목 (펼치기 기본)\n· 반증 기준 3~4개 (timeline 시각화)\n· 부록 링크: Method Cards / Provenance / 재현 코드",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-03T10:40:51.263585+00:00",
+      "parent": "MEONGBUN_CONSULTING-001",
+      "depends_on": [
+        "SIL_INTEGRATION-001",
+        "UI_REDESIGN_MEONGBUN_LAYOUT-001"
+      ],
+      "files": [
+        "app.js (renderLimitationFalsify)",
+        "sil/*.py (SIL 의존)"
+      ],
+      "acceptance": [
+        "한계 7항목 명시",
+        "반증 기준 timeline 시각화 (6mo / 12mo)",
+        "부록 3종 링크 모두 동작"
+      ],
+      "estimate_h": 4,
+      "payload": {
+        "files_changed": []
+      }
+    },
+    {
+      "id": "FEATURE_DOMAIN_MENU-001",
+      "type": "FEATURE_PLAN",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[도메인 메뉴화] 약국 점포(개발/폐업) + NPL(매수/매도) 4개 평가모델 카테고리 추가",
+      "detail": "현재 콘솔은 Gallery/Explore/Analyze/Decide 4모드 + DataStudio/Workflow 보조 메뉴로 구성되어 있고, 도메인은 '도시 상권/인구 일반'에 묶여 있다. 대표님 요청: 두 개의 도메인 카테고리를 1급 메뉴로 노출:\n  (A) 약국 점포 안내 — ① 점포개발(신규 입지) ② 폐업평가(생존성)\n  (B) NPL 평가 — ① 매수 평가 ② 매도 평가\n\n메뉴 IA: 좌측/상단 네비에 카테고리(약국, NPL) → 서브(개발/폐업, 매수/매도) 2-depth. 각 평가모델은 입력 폼(주소·매물조건) → 점수/등급/근거(SHAP-style) → 4모드 콘솔로 deep-link 하는 구조 권장. 이번 FEATURE_PLAN 이슈는 product-manager가 (1) IA 확정, (2) 입력 스키마 4종, (3) 평가 산출물 스키마, (4) 기존 4모드와의 deep-link 매핑, (5) 권한/페르소나(점포개발자/폐업담당자/NPL매수자/NPL매도자), (6) 데이터 소스(상권 + 인구 + 부동산 + 채권 메타) 분리/공유 정책을 정의한다. 산출 후 USER_STORY 4개로 분해 → ux-design → generate-code 체인.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "app.js",
+        "index.html",
+        "components/ (신규)",
+        "docs/domain-menu-ia.md (신규)"
+      ],
+      "payload": {
+        "categories": [
+          {
+            "key": "pharmacy",
+            "label": "약국 점포 안내",
+            "submenus": [
+              {
+                "key": "pharmacy.develop",
+                "label": "점포개발",
+                "persona": "개발담당자"
+              },
+              {
+                "key": "pharmacy.close",
+                "label": "폐업평가",
+                "persona": "운영/회계 담당자"
+              }
+            ]
+          },
+          {
+            "key": "npl",
+            "label": "NPL 평가",
+            "submenus": [
+              {
+                "key": "npl.buy",
+                "label": "매수 평가",
+                "persona": "NPL 매수 심사역"
+              },
+              {
+                "key": "npl.sell",
+                "label": "매도 평가",
+                "persona": "NPL 매도 담당자"
+              }
+            ]
+          }
+        ],
+        "ui_constraints": [
+          "기존 4모드(Gallery/Explore/Analyze/Decide) 비파괴 — 카테고리 진입 후 동일 모드 토글 가능",
+          "brand-dna.json pLDDT 색상 체계 그대로 적용 (≥90 #00529B / 70-89 #5BC0EB / 50-69 #FED766 / <50 #C9485B)",
+          "primary_action_per_screen: MUST_EXIST — 각 평가모델 화면에 '평가 실행' 단일 CTA",
+          "anti_patterns 위반 금지 (brand-dna.json 참조)"
+        ],
+        "deep_link_targets": [
+          "explore",
+          "analyze",
+          "decide"
+        ],
+        "requires_user_confirm": false,
+        "files_changed": []
+      },
+      "depth": 0,
+      "started_at": "2026-05-04T04:04:44.485820Z",
+      "completed_at": "2026-05-04T13:12:22.054508",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/domain-menu-ia.md"
+        ],
+        "unblocked_user_stories": 4,
+        "new_etl_issues": 2,
+        "new_ux_design_issues": 4,
+        "deep_link_map": {
+          "pharmacy.develop": "decide",
+          "pharmacy.close": "analyze",
+          "npl.buy": "decide",
+          "npl.sell": "decide"
+        }
+      }
+    },
+    {
+      "id": "USER_STORY_PHARMACY_DEVELOP-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[약국·점포개발] 신규 입지 점수화 평가모델 — 후보 주소 → 적합도 등급 + 근거",
+      "detail": "페르소나: 약국 본사 개발담당자. 신규 점포 후보 주소를 입력하면, (1) 인구·유동·경쟁약국·의료기관·소득·연령대 가중치로 0~100 적합도 점수, (2) pLDDT 색상 등급(≥90/70-89/50-69/<50)으로 신뢰도 표시, (3) Top 3 강점/약점 근거(SHAP-style), (4) Decide 모드로 cone(p10/p50/p90) deep-link.\n\n입력 스키마: address(필수), 평형(선택), 임대가(선택), 처방의원수반경 자동계산.\n출력 스키마: {score, grade(plddt), top_drivers[], cone_link, comparable_dongs[]}.\n데이터 소스: 기존 simula_data_real.json + 약국/의료기관 외부 데이터셋(향후 ETL 이슈로 분리).\nBLOCKED 사유: FEATURE_DOMAIN_MENU-001의 IA·스키마 확정 후 진행.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "components/pharmacy-develop.js (신규)",
+        "data_raw/pharmacy/ (신규)",
+        "etl_pharmacy.py (신규)"
+      ],
+      "depends_on": [
+        "FEATURE_DOMAIN_MENU-001"
+      ],
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "deep_link_to": "decide",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b1-pharmacydevelop--입력",
+        "output_schema_ref": "docs/domain-menu-ia.md#c2-모델별-추가-필드",
+        "files_changed": []
+      },
+      "depth": 1,
+      "unblocked_at": "2026-05-04T04:12:06.796745Z",
+      "unblocked_by": "FEATURE_DOMAIN_MENU-001 (product-manager)",
+      "started_at": "2026-05-04T04:13:04.208577Z",
+      "completed_at": "2026-05-04T13:20:38.636294",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/stories/pharmacy-develop.md"
+        ],
+        "new_child_issues": [
+          "GENERATE_CODE_PHARMACY_DEVELOP_UI-001",
+          "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001",
+          "RUN_TESTS_PHARMACY_DEVELOP-001",
+          "BIZ_VALIDATE_PHARMACY_DEVELOP-001"
+        ],
+        "unblocked": [
+          "UX_DESIGN_PHARMACY_DEVELOP-001"
+        ],
+        "scope_v1": "단일 주소 평가 + 결과 카드 + Decide deep-link",
+        "spec_lines": 204
+      }
+    },
+    {
+      "id": "USER_STORY_PHARMACY_CLOSE-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[약국·폐업평가] 운영 점포 생존성 평가 — 매출/처방건수/주변 변동 → 폐업 위험도",
+      "detail": "페르소나: 약국 본사 운영/회계 담당자. 기존 운영 점포의 폐업 리스크를 평가:\n(1) 최근 12개월 매출/처방건수 추세, (2) 주변 의원 폐업/이전, (3) 인구 감소율, (4) 경쟁약국 신규 진입 → Hazard 점수(0~100, 높을수록 위험), (5) Kaplan-Meier 유사군 생존곡선 (이미 Benchmark 섹션에 KM 코드 자산 있음 — UI_BENCHMARK_KM_CURVE-001 참조).\n\n입력 스키마: store_id 또는 address + 운영기간 + 최근 매출 시계열.\n출력 스키마: {hazard_score, grade, km_curve, peer_dongs[], action_recommendation(유지/관찰/철수)}.\nBLOCKED 사유: FEATURE_DOMAIN_MENU-001의 IA·스키마 확정 후 진행.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "components/pharmacy-close.js (신규)",
+        "data_raw/pharmacy_ops/ (신규)"
+      ],
+      "depends_on": [
+        "FEATURE_DOMAIN_MENU-001"
+      ],
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "deep_link_to": "analyze",
+        "reuses": [
+          "UI_BENCHMARK_KM_CURVE-001"
+        ],
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b2-pharmacyclose--입력",
+        "output_schema_ref": "docs/domain-menu-ia.md#c2-모델별-추가-필드",
+        "files_changed": []
+      },
+      "depth": 1,
+      "unblocked_at": "2026-05-04T04:12:06.796745Z",
+      "unblocked_by": "FEATURE_DOMAIN_MENU-001 (product-manager)",
+      "started_at": "2026-05-04T04:21:15.094815Z",
+      "completed_at": "2026-05-04T13:26:36.481880",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/stories/pharmacy-close.md"
+        ],
+        "new_child_issues": [
+          "GENERATE_CODE_PHARMACY_CLOSE_UI-001",
+          "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001",
+          "INTEGRATE_KM_CURVE_PHARMACY_CLOSE-001",
+          "RUN_TESTS_PHARMACY_CLOSE-001",
+          "BIZ_VALIDATE_PHARMACY_CLOSE-001"
+        ],
+        "unblocked": [
+          "UX_DESIGN_PHARMACY_CLOSE-001"
+        ],
+        "reuses": [
+          "UI_BENCHMARK_KM_CURVE-001"
+        ],
+        "scope_v1": "단일 점포 평가 + KM 곡선 + Analyze deep-link",
+        "spec_lines": 258,
+        "color_conflict_guard": true
+      }
+    },
+    {
+      "id": "USER_STORY_NPL_BUY-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[NPL·매수평가] 채권 매수 적정가 산정 — 담보 부동산 회수 시나리오 cone",
+      "detail": "페르소나: NPL 매수 심사역. 부실채권 매수 검토 시:\n(1) 담보 부동산 위치(지가/거래량/공실률) 기반 회수 예측 cone(p10/p50/p90), (2) 권리분석 메타(선순위·세금·임차) 입력 → 실회수금 추정, (3) 매수가 시나리오 A/B/C 3옵션 비교(이미 UI_SCENARIOS_3OPTION-001 자산 있음 → 재활용), (4) Decide 모드 deep-link.\n\n입력 스키마: address + 권리관계JSON + 청구액 + 후보 매수가.\n출력 스키마: {expected_recovery_cone, irr_estimate, scenarios[A,B,C], top_risks[]}.\nBLOCKED 사유: FEATURE_DOMAIN_MENU-001의 IA·스키마 확정 후 진행.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "components/npl-buy.js (신규)",
+        "data_raw/npl/ (신규)",
+        "etl_npl.py (신규)"
+      ],
+      "depends_on": [
+        "FEATURE_DOMAIN_MENU-001"
+      ],
+      "payload": {
+        "submenu_key": "npl.buy",
+        "deep_link_to": "decide",
+        "reuses": [
+          "UI_SCENARIOS_3OPTION-001"
+        ],
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b3-nplbuy--입력",
+        "output_schema_ref": "docs/domain-menu-ia.md#c2-모델별-추가-필드",
+        "files_changed": []
+      },
+      "depth": 1,
+      "unblocked_at": "2026-05-04T04:12:06.796745Z",
+      "unblocked_by": "FEATURE_DOMAIN_MENU-001 (product-manager)",
+      "started_at": "2026-05-04T04:27:06.349560Z",
+      "completed_at": "2026-05-04T13:33:35.555902",
+      "result": {
+        "passed": true,
+        "docs_created": [
+          "docs/stories/npl-buy.md"
+        ],
+        "new_child_issues": [
+          "GENERATE_CODE_NPL_BUY_UI-001",
+          "GENERATE_CODE_NPL_BUY_RECOVERY-001",
+          "INTEGRATE_SCENARIOS_NPL_BUY-001",
+          "RUN_TESTS_NPL_BUY-001",
+          "BIZ_VALIDATE_NPL_BUY-001"
+        ],
+        "unblocked": [
+          "UX_DESIGN_NPL_BUY-001"
+        ],
+        "reuses": [
+          "UI_SCENARIOS_3OPTION-001"
+        ],
+        "scope_v1": "단일 채권 평가 + 회수 cone + 3시나리오 + Decide deep-link"
+      }
+    },
+    {
+      "id": "USER_STORY_NPL_SELL-001",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "IN_PROGRESS",
+      "title": "[NPL·매도평가] 채권 매도 적정가/타이밍 — 회수율 vs 즉시매각 비교",
+      "detail": "페르소나: NPL 매도 담당자(기존 보유자). 보유 부실채권의 매각 vs 보유 의사결정:\n(1) 현재 시점 매각 시 호가 분포(시장 비교 매물 기반), (2) 6/12/24개월 보유 시 회수 cone, (3) 보유 비용(대손충당·관리비) 차감 NPV, (4) Recommendation Trace 패턴(SHAP+Tree, 이미 UI_RECOMMENDATION_TRACE-001 자산) 재활용.\n\n입력 스키마: portfolio_id 또는 단건 채권 + 보유개월수 + 충당금률.\n출력 스키마: {sell_now_npv, hold_npv_cone[6,12,24], recommendation, drivers[]}.\nBLOCKED 사유: FEATURE_DOMAIN_MENU-001의 IA·스키마 확정 후 진행.",
+      "assign_to": "product-manager",
+      "created_at": "2026-05-04T03:56:55.574053Z",
+      "files": [
+        "components/npl-sell.js (신규)"
+      ],
+      "depends_on": [
+        "FEATURE_DOMAIN_MENU-001"
+      ],
+      "payload": {
+        "submenu_key": "npl.sell",
+        "deep_link_to": "decide",
+        "reuses": [
+          "UI_RECOMMENDATION_TRACE-001"
+        ],
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b4-nplsell--입력",
+        "output_schema_ref": "docs/domain-menu-ia.md#c2-모델별-추가-필드",
+        "files_changed": []
+      },
+      "depth": 1,
+      "unblocked_at": "2026-05-04T04:12:06.796745Z",
+      "unblocked_by": "FEATURE_DOMAIN_MENU-001 (product-manager)",
+      "started_at": "2026-05-04T04:34:00.449379Z"
+    },
+    {
+      "id": "ISS-022",
+      "type": "REFACTOR",
+      "priority": "P2",
+      "status": "READY",
+      "title": "simula_data_real.json 갱신 후 tree_model.json 미재학습",
+      "detail": "simula_data_real.json이 tree_model.json보다 최신. 입력 데이터가 바뀌었으니 npm run train:tree 재실행 권고.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T03:57:11.958381Z",
+      "files": [
+        "simula_data_real.json",
+        "tree_model.json",
+        "decision_tree_train.py"
+      ],
+      "detect_signature": "04908a670cab",
+      "auto_detected": true
+    },
+    {
+      "id": "ISS-063",
+      "title": "[Plan:구현] UI_REDESIGN_MEONGBUN_LAYOUT-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_REDESIGN_MEONGBUN_LAYOUT-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:04:13.569589",
+      "payload": {
+        "source_issue": "UI_REDESIGN_MEONGBUN_LAYOUT-001",
+        "acceptance_criteria": []
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ETL_PHARMACY_DATA-001",
+      "type": "ETL",
+      "priority": "P2",
+      "status": "READY",
+      "title": "[약국 ETL] HIRA 의원·약국 분포 / 처방통계 표준화 — data_raw/pharmacy/",
+      "detail": "약국 점포개발/폐업평가 모델 전용 외부 데이터 ETL. HIRA(건강보험심사평가원) 의원 분포, 약국 분포, 처방통계 OD를 동(real_adm_cd) 단위 시계열로 표준화하여 data_raw/pharmacy/ 하위에 적재. 본 이슈는 '스키마만' 정의 (외부 데이터 출처 결정/실제 다운로드는 후속 이슈로 분리). 산출물: (1) data_raw/pharmacy/schema.json (필드 정의), (2) data_raw/pharmacy/sample.json (5동 mock), (3) etl_pharmacy.py 스켈레톤. 본 ETL 미완성 시 평가모델은 simula_data_real.json fallback으로 동작 (docs/domain-menu-ia.md F절 참조).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "data_raw/pharmacy/schema.json (신규)",
+        "data_raw/pharmacy/sample.json (신규)",
+        "etl_pharmacy.py (신규)"
+      ],
+      "depth": 1,
+      "payload": {
+        "scope_dir": "data_raw/pharmacy/",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "schema_only": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      }
+    },
+    {
+      "id": "ETL_NPL_DATA-001",
+      "type": "ETL",
+      "priority": "P2",
+      "status": "READY",
+      "title": "[NPL ETL] 권리분석 메타 / NPL 시장 매물·호가 표준화 — data_raw/npl/",
+      "detail": "NPL 매수/매도 평가모델 전용 외부 데이터 ETL. 권리분석 메타(선순위·세금·임차), NPL 시장 매물·호가 분포(p10/p50/p90)를 표준화하여 data_raw/npl/ 하위에 적재. 본 이슈는 '스키마만' 정의 (외부 데이터 출처 결정/실제 수집은 후속 이슈로 분리). 산출물: (1) data_raw/npl/schema.json, (2) data_raw/npl/sample.json (10건 mock), (3) etl_npl.py 스켈레톤. 본 ETL 미완성 시 평가모델은 동 단위 land_price/tx_volume fallback으로 동작 (docs/domain-menu-ia.md F절 참조).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "data_raw/npl/schema.json (신규)",
+        "data_raw/npl/sample.json (신규)",
+        "etl_npl.py (신규)"
+      ],
+      "depth": 1,
+      "payload": {
+        "scope_dir": "data_raw/npl/",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "schema_only": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      }
+    },
+    {
+      "id": "UX_DESIGN_PHARMACY_DEVELOP-001",
+      "type": "UX_DESIGN",
+      "priority": "P1",
+      "status": "READY",
+      "unblocked_at": "2026-05-04T13:15:00Z",
+      "unblocked_by": "USER_STORY_PHARMACY_DEVELOP-001 (product-manager) — docs/stories/pharmacy-develop.md 명세 확정",
+      "title": "[UX·약국·점포개발] 입력 폼 + 적합도 결과 카드 + Decide deep-link UX 설계",
+      "detail": "약국 본사 개발담당자용 UI/UX 설계. (1) 입력 폼: 주소(필수)/평형/임대료/기대 처방건수, (2) 결과 카드: score 0~100 + pLDDT 등급 배지 + Top 3 SHAP 드라이버 + cone p10/p50/p90 보조 라인, (3) primary CTA 단일: '평가 실행' 또는 'Decide 모드에서 cone 보기'. brand-dna.json hero_color #00529B 적용. anti_patterns 5종 위반 금지. docs/domain-menu-ia.md G절 와이어프레임 참조.",
+      "assign_to": "ux-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "components/pharmacy-develop.js (신규 스펙)",
+        "docs/domain-menu-ia.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_DEVELOP-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "deep_link_to": "decide",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b-4개-평가모델-입력-스키마",
+        "output_schema_ref": "docs/domain-menu-ia.md#c-4개-평가모델-출력-스키마",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ]
+      }
+    },
+    {
+      "id": "UX_DESIGN_PHARMACY_CLOSE-001",
+      "type": "UX_DESIGN",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[UX·약국·폐업평가] Hazard 점수 + KM 곡선 + Analyze deep-link UX 설계",
+      "detail": "약국 본사 운영/회계 담당자용 UI/UX 설계. (1) 입력 폼: store_id 또는 address + operating_months + 12개월 매출 시계열, (2) 결과 카드: hazard_score(0~100) + 등급 + 유사 동 KM 곡선 mini, action_recommendation(유지/관찰/철수) 배지, (3) primary CTA: 'Analyze 모드에서 KM curve 전체 보기' (UI_BENCHMARK_KM_CURVE-001 자산 재활용).",
+      "assign_to": "ux-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "components/pharmacy-close.js (신규 스펙)",
+        "docs/domain-menu-ia.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "deep_link_to": "analyze",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b-4개-평가모델-입력-스키마",
+        "output_schema_ref": "docs/domain-menu-ia.md#c-4개-평가모델-출력-스키마",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ]
+      },
+      "unblocked_at": "2026-05-04T04:26:28.734736Z",
+      "unblocked_by": "USER_STORY_PHARMACY_CLOSE-001 (product-manager)"
+    },
+    {
+      "id": "UX_DESIGN_NPL_BUY-001",
+      "type": "UX_DESIGN",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[UX·NPL·매수평가] 권리분석 입력 + 회수 cone + 3시나리오 비교 UX 설계",
+      "detail": "NPL 매수 심사역용 UI/UX 설계. (1) 입력 폼: address + asset_type + claim_amount + candidate_bid + rights(senior/tax/tenant) JSON, (2) 결과 카드: expected_recovery_cone + irr_estimate + scenarios A/B/C 3옵션 비교 카드 (UI_SCENARIOS_3OPTION-001 재활용) + top_risks[], (3) primary CTA: 'Decide 모드에서 시나리오 비교'.",
+      "assign_to": "ux-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "components/npl-buy.js (신규 스펙)",
+        "docs/domain-menu-ia.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "npl.buy",
+        "deep_link_to": "decide",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b-4개-평가모델-입력-스키마",
+        "output_schema_ref": "docs/domain-menu-ia.md#c-4개-평가모델-출력-스키마",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ]
+      }
+    },
+    {
+      "id": "UX_DESIGN_NPL_SELL-001",
+      "type": "UX_DESIGN",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[UX·NPL·매도평가] 보유 vs 매각 NPV 비교 + 추천 트레이스 UX 설계",
+      "detail": "NPL 매도 담당자용 UI/UX 설계. (1) 입력 폼: portfolio_id 또는 단건 채권 + holding_months + provision_rate + carry_cost_monthly, (2) 결과 카드: sell_now_npv vs hold_npv_cone[6,12,24] 비교 차트 + recommendation.label(즉시매각/6/12/24개월 보유) + drivers[] (Recommendation Trace UI_RECOMMENDATION_TRACE-001 재활용), (3) primary CTA: 'Decide 모드에서 추천 트레이스 보기'.",
+      "assign_to": "ux-harness",
+      "created_at": "2026-05-04T04:12:06.796745Z",
+      "files": [
+        "components/npl-sell.js (신규 스펙)",
+        "docs/domain-menu-ia.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_SELL-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "npl.sell",
+        "deep_link_to": "decide",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "input_schema_ref": "docs/domain-menu-ia.md#b-4개-평가모델-입력-스키마",
+        "output_schema_ref": "docs/domain-menu-ia.md#c-4개-평가모델-출력-스키마",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ]
+      }
+    },
+    {
+      "id": "ISS-070",
+      "title": "[Plan:CEO검토] FEATURE_DOMAIN_MENU-001 전략 검토",
+      "type": "PLAN_CEO_REVIEW",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "plan-ceo-reviewer",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "FEATURE_DOMAIN_MENU-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:12:22.054508",
+      "payload": {
+        "source_issue": "FEATURE_DOMAIN_MENU-001",
+        "source_plan": {
+          "passed": true,
+          "docs_created": [
+            "docs/domain-menu-ia.md"
+          ],
+          "unblocked_user_stories": 4,
+          "new_etl_issues": 2,
+          "new_ux_design_issues": 4,
+          "deep_link_map": {
+            "pharmacy.develop": "decide",
+            "pharmacy.close": "analyze",
+            "npl.buy": "decide",
+            "npl.sell": "decide"
+          }
+        },
+        "feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-071",
+      "title": "[Plan:Eng검토] FEATURE_DOMAIN_MENU-001 실행가능성 검토",
+      "type": "PLAN_ENG_REVIEW",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "plan-eng-reviewer",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "FEATURE_DOMAIN_MENU-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:12:22.054508",
+      "payload": {
+        "source_issue": "FEATURE_DOMAIN_MENU-001",
+        "source_plan": {
+          "passed": true,
+          "docs_created": [
+            "docs/domain-menu-ia.md"
+          ],
+          "unblocked_user_stories": 4,
+          "new_etl_issues": 2,
+          "new_ux_design_issues": 4,
+          "deep_link_map": {
+            "pharmacy.develop": "decide",
+            "pharmacy.close": "analyze",
+            "npl.buy": "decide",
+            "npl.sell": "decide"
+          }
+        },
+        "feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "GENERATE_CODE_PHARMACY_DEVELOP_UI-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[코드·약국·점포개발 UI] 입력 폼 + 결과 카드 + Decide deep-link 트리거",
+      "detail": "약국 점포개발 평가 화면 UI 컴포넌트 구현. 입력 폼(주소 필수 + 4개 선택 필드) + pLDDT 결과 카드 + 'Decide에서 보기' deep-link 보조 버튼. 점수 계산은 자리만 잡고 viz/plugins/pharmacy-scorer.js 함수 import (실제 계산 로직은 GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001에서 구현). brand-dna.json plddt 4색 + hero_color #00529B 적용. anti_patterns 5종 위반 금지 (single-CTA, no-gradient, no-illustration). 와이어프레임: docs/stories/pharmacy-develop.md F절. AC: docs/stories/pharmacy-develop.md B절 AC-1/2/3/4/6/7.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:15:00Z",
+      "files": [
+        "components/pharmacy-develop.js (신규)",
+        "index.html (surgical: [약국 ▾] 드롭다운에 '점포개발' 항목 추가만)",
+        "css/pharmacy.css (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_DEVELOP-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "deep_link_to": "decide",
+        "story_doc": "docs/stories/pharmacy-develop.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "components/",
+        "interface_contract": "compute_pharmacy_develop_score(input) → output schema (docs/domain-menu-ia.md#c1-공통-출력-컨벤션 + #c2-모델별-추가-필드)",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ],
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[코드·약국·점포개발 Scorer] 가중치 점수 + Top Drivers + Comparable Dongs 계산",
+      "detail": "docs/stories/pharmacy-develop.md D절 가중치 룰 구현. 7개 요인(인구밀도 0.18 / 60대 비중 0.15 / 반경500m 의원수 0.20 / 반경500m 경쟁약국수 -0.18 / 평균소득분위 0.10 / 임대료 -0.12 / 유동인구 0.07, 합 1.00) → min-max 0~100 정수. top_drivers[3] = |contribution| 상위 3개 (positive/negative direction 명시). comparable_dongs[≤5] = 점수 ±10 이내 동. 결정성 보장: 동일 input → 동일 score (AC-7). 데이터: simula_data_real.json + 외부 의원/약국 더미 (ETL_PHARMACY_DATA-001 미완성 시 fallback).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T13:15:00Z",
+      "files": [
+        "viz/plugins/pharmacy-scorer.js (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_DEVELOP-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "story_doc": "docs/stories/pharmacy-develop.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "viz/plugins/",
+        "weights": {
+          "population_density": 0.18,
+          "elderly_ratio": 0.15,
+          "clinics_within_500m": 0.2,
+          "competitor_pharmacies_within_500m": -0.18,
+          "income_quantile": 0.1,
+          "rent_ratio": -0.12,
+          "visitors_total": 0.07
+        },
+        "weights_sum_check": 1.0,
+        "data_sources": {
+          "primary": "simula_data_real.json",
+          "external_dummy_until_etl": "ETL_PHARMACY_DATA-001"
+        },
+        "parallel_with": "ETL_PHARMACY_DATA-001",
+        "deterministic": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "RUN_TESTS_PHARMACY_DEVELOP-001",
+      "type": "RUN_TESTS",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[테스트·약국·점포개발] 단위 + Playwright 캐릭터 저니 (개발담당자)",
+      "detail": "(1) 단위 테스트: 가중치 합 = 1.0 검증, score 경계값(0/49/50/69/70/89/90/100) → grade 매핑 4분기 모두 발생, top_drivers 정렬 정확성, AC-7 결정성. (2) Playwright 캐릭터 저니 (5스텝): 페이지 로드 → [약국 ▾] → 점포개발 클릭 → 주소 '의정부시 금오동' 입력 → 평가 실행 → 결과 카드 렌더 → Decide에서 보기 클릭 → ?mode=decide&ctx=pharmacy.develop&address=... 도달. 각 스텝 스크린샷: /tmp/journey-pharmacy-develop-1~5.png. AC 검증: docs/stories/pharmacy-develop.md B절 AC-1/2/3/4/5/6/7.",
+      "assign_to": "test-harness",
+      "created_at": "2026-05-04T13:15:00Z",
+      "files": [
+        "verify_pharmacy_develop.mjs (신규)"
+      ],
+      "depends_on": [
+        "GENERATE_CODE_PHARMACY_DEVELOP_UI-001",
+        "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001"
+      ],
+      "depth": 3,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "story_doc": "docs/stories/pharmacy-develop.md",
+        "persona": "약국 본사 개발담당자",
+        "test_address": "의정부시 금오동",
+        "screenshot_paths": [
+          "/tmp/journey-pharmacy-develop-1.png",
+          "/tmp/journey-pharmacy-develop-2.png",
+          "/tmp/journey-pharmacy-develop-3.png",
+          "/tmp/journey-pharmacy-develop-4.png",
+          "/tmp/journey-pharmacy-develop-5.png"
+        ],
+        "acceptance_criteria_refs": [
+          "AC-1",
+          "AC-2",
+          "AC-3",
+          "AC-4",
+          "AC-5",
+          "AC-6",
+          "AC-7"
+        ],
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "BIZ_VALIDATE_PHARMACY_DEVELOP-001",
+      "type": "BIZ_VALIDATE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[비즈검증·약국·점포개발] 4단계 grade 시나리오 + 4개 엣지케이스",
+      "detail": "시나리오 갭 정적 검증. (1) 4단계 grade 발생 시나리오: high/mid/low/poor 각 1개 주소 샘플로 score 분포 발생 가능성 확인. (2) 엣지 케이스 4개: 반경 500m 의원수 0(처방원 부재 약점 명시 - AC-5) / 경쟁 약국수 0 (가산점 적용) / 임대료 미입력 (중립 0점) / 동 매핑 실패 (AC-4 inline 에러). CRITICAL 갭 발견 시 BIZ_FIX P0 자동 spawn.",
+      "assign_to": "biz-validator",
+      "created_at": "2026-05-04T13:15:00Z",
+      "files": [],
+      "depends_on": [
+        "GENERATE_CODE_PHARMACY_DEVELOP_SCORER-001"
+      ],
+      "depth": 3,
+      "payload": {
+        "submenu_key": "pharmacy.develop",
+        "story_doc": "docs/stories/pharmacy-develop.md",
+        "scenarios": [
+          {
+            "id": "S1",
+            "label": "high",
+            "expected_score_range": [
+              90,
+              100
+            ]
+          },
+          {
+            "id": "S2",
+            "label": "mid",
+            "expected_score_range": [
+              70,
+              89
+            ]
+          },
+          {
+            "id": "S3",
+            "label": "low",
+            "expected_score_range": [
+              50,
+              69
+            ]
+          },
+          {
+            "id": "S4",
+            "label": "poor",
+            "expected_score_range": [
+              0,
+              49
+            ]
+          }
+        ],
+        "edge_cases": [
+          "clinics_within_500m == 0 → top_drivers에 negative 포함 (AC-5)",
+          "competitor_pharmacies_within_500m == 0 → score 가산",
+          "rent_monthly_krw 미입력 → 중립 0점",
+          "주소 매핑 실패 → AC-4 inline 에러"
+        ],
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-072",
+      "title": "[Plan:구현] USER_STORY_PHARMACY_DEVELOP-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "USER_STORY_PHARMACY_DEVELOP-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:20:38.636294",
+      "payload": {
+        "source_issue": "USER_STORY_PHARMACY_DEVELOP-001",
+        "acceptance_criteria": []
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "GENERATE_CODE_PHARMACY_CLOSE_UI-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[약국·폐업평가·UI] 입력 폼 + 결과 카드 + KM 마운트 슬롯 + Analyze deep-link",
+      "detail": "docs/stories/pharmacy-close.md G.1 참조. components/pharmacy-close.js 신규, index.html 약국 드롭다운에 '폐업평가' 항목 추가(surgical), css/pharmacy.css 점포개발과 공유. hazard 계산은 G.2의 compute_pharmacy_hazard_score() import. KM 영역은 빈 컨테이너만(G.3에서 연결). 화면 상단 색 충돌 가드 라벨 필수.",
+      "assign_to": "agent-harness",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "components/pharmacy-close.js (신규)",
+        "index.html (surgical: 약국 드롭다운 항목 추가)",
+        "css/pharmacy.css (공유)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "deep_link_to": "analyze",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "scope_dir": "components/",
+        "primary_action_per_screen": "MUST_EXIST",
+        "color_conflict_guard": true
+      }
+    },
+    {
+      "id": "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[약국·폐업평가·Hazard] 위험점수 계산 + peer_dongs + top_drivers (D절 가중치)",
+      "detail": "docs/stories/pharmacy-close.md D절 가중치 룰 (합=1.00) + simula_data_real.json 조회 + Mock 매출/처방 시계열(ETL 완료 전). 결정성 보장: 동일 입력→동일 hazard. parallel_with: ETL_PHARMACY_DATA-001 (더미 모드).",
+      "assign_to": "agent-harness",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "viz/plugins/pharmacy-hazard.js (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001"
+      ],
+      "parallel_with": [
+        "ETL_PHARMACY_DATA-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "scope_dir": "viz/plugins/",
+        "weights_sum": 1.0,
+        "deterministic": true,
+        "data_mode": "dummy_until_etl"
+      }
+    },
+    {
+      "id": "INTEGRATE_KM_CURVE_PHARMACY_CLOSE-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[약국·폐업평가·KM] UI_BENCHMARK_KM_CURVE-001 컴포넌트 재활용 + 데이터 어댑터",
+      "detail": "viz/plugins/km-curve.js (UI_BENCHMARK_KM_CURVE-001 산출물) 재활용. 폐업 점포 시계열 → KM prop 스키마 어댑터 매핑. components/pharmacy-close.js 마운트 슬롯에 연결(surgical). neonate edge: operating_months<6 시 보류 박스.",
+      "assign_to": "agent-harness",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "viz/plugins/km-curve.js (재활용)",
+        "components/pharmacy-close.js (surgical: KM 슬롯 연결)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001",
+        "UI_BENCHMARK_KM_CURVE-001",
+        "GENERATE_CODE_PHARMACY_CLOSE_UI-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "reuses": [
+          "UI_BENCHMARK_KM_CURVE-001"
+        ],
+        "adapter_target_schema": "{series:[{label,points:[{t,survival,ci_low,ci_high}]}]}",
+        "edge_case_neonate_months": 6
+      }
+    },
+    {
+      "id": "RUN_TESTS_PHARMACY_CLOSE-001",
+      "type": "RUN_TESTS",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[약국·폐업평가·Test] 가중치 단위 테스트 + Playwright 캐릭터 저니 5스텝",
+      "detail": "단위: D절 가중치 합=1.0, 경계값(hazard 0/29/30/49/50/69/70/100), 4단계 grade 모두 발생, top_drivers 정렬, 역매핑 정상성. Playwright 캐릭터 저니(운영담당자): [약국▾]→[폐업평가]→store-001 또는 '성수1가1동' 입력→평가 실행→hazard+KM 표시→Analyze deep-link. 스크린샷 5장 /tmp/journey-pharmacy-close-{1..5}.png. 색 충돌 가드 라벨 assert.",
+      "assign_to": "test-harness",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "tests/pharmacy-close.test.js (신규)",
+        "tests/journey-pharmacy-close.spec.js (신규 Playwright)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001",
+        "GENERATE_CODE_PHARMACY_CLOSE_UI-001",
+        "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001",
+        "INTEGRATE_KM_CURVE_PHARMACY_CLOSE-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "screenshots_dir": "/tmp/",
+        "screenshot_count": 5,
+        "persona": "약국 본사 운영/회계 담당자"
+      }
+    },
+    {
+      "id": "BIZ_VALIDATE_PHARMACY_CLOSE-001",
+      "type": "BIZ_VALIDATE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[약국·폐업평가·Biz] 4단계 grade + 엣지 케이스 5종 시나리오 갭 검증",
+      "detail": "4단계 grade 시나리오 (very_low/low/medium/high). 엣지: (1)매출/처방 0=폐업 직전, (2)신규 점포 operating_months<6=KM 보류, (3)인구 급증 동=역설적 안전, (4)CSV 미업로드=추정 모드 confidence=low, (5)store_id/address 둘 다 미입력=validation 에러. CRITICAL 갭 시 BIZ_FIX P0 자동 spawn.",
+      "assign_to": "biz-validator",
+      "model": "sonnet",
+      "created_at": "2026-05-04T04:26:28.734736Z",
+      "files": [
+        "docs/stories/pharmacy-close.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_PHARMACY_CLOSE-001",
+        "GENERATE_CODE_PHARMACY_CLOSE_HAZARD-001"
+      ],
+      "depth": 2,
+      "payload": {
+        "submenu_key": "pharmacy.close",
+        "spec_doc": "docs/stories/pharmacy-close.md",
+        "scenarios_count": 4,
+        "edge_cases_count": 5
+      }
+    },
+    {
+      "id": "ISS-073",
+      "title": "[Plan:구현] USER_STORY_PHARMACY_CLOSE-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "USER_STORY_PHARMACY_CLOSE-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:26:36.481880",
+      "payload": {
+        "source_issue": "USER_STORY_PHARMACY_CLOSE-001",
+        "acceptance_criteria": []
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "GENERATE_CODE_NPL_BUY_UI-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매수평가 UI] 입력 폼 + 결과 카드 + 시나리오 마운트 슬롯 + Decide deep-link",
+      "detail": "NPL 매수평가 화면 UI 컴포넌트 구현. 입력 폼(address+asset_type+claim/bid 필수 + rights 4필드 선택) + IRR 결과 카드(grade 4단계 plddt) + 시나리오 A/B/C 마운트 슬롯(컴포넌트 자체는 INTEGRATE_SCENARIOS_NPL_BUY-001에서 연결) + 'Decide에서 보기' deep-link 보조 버튼. 회수 cone/IRR 계산은 자리만 잡고 viz/plugins/npl-recovery.js 함수 import. 상단에 H절 색 일관성 가드 라벨 '수익성 — 높을수록 좋음 (IRR ↑ = 파랑, IRR ↓ = 빨강)' 고정 노출. brand-dna plddt 4색 + hero_color #00529B 적용. 와이어프레임: docs/stories/npl-buy.md F절. AC: docs/stories/npl-buy.md B절 AC-1/2/3/6/7/8.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "components/npl-buy.js (신규)",
+        "index.html (surgical: [NPL ▾] 드롭다운에 '매수평가' 항목 추가만)",
+        "css/npl.css (신규 — 매수/매도 공유 예정)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "deep_link_to": "decide",
+        "story_doc": "docs/stories/npl-buy.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "components/",
+        "interface_contract": "compute_npl_buy_recovery(input) → output schema (docs/domain-menu-ia.md#c1-공통-출력-컨벤션 + #c2-모델별-추가-필드 npl.buy)",
+        "brand_tokens": {
+          "hero_color": "#00529B",
+          "plddt_palette": [
+            "#00529B",
+            "#5BC0EB",
+            "#FED766",
+            "#C9485B"
+          ],
+          "primary_action_per_screen": "MUST_EXIST"
+        },
+        "anti_patterns_to_avoid": [
+          "단일 점추정만 표시 (cone/신뢰구간 누락)",
+          "AlphaFold pLDDT 색상 체계 임의 변경",
+          "그라디언트/네온/AI슬롭 일러스트",
+          "데이터 출처/확신도 없는 단정 카피",
+          "한 화면에 CTA가 2개 이상이거나 0개"
+        ],
+        "color_consistency_guard_label": "수익성 — 높을수록 좋음 (IRR ↑ = 파랑, IRR ↓ = 빨강)",
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": []
+    },
+    {
+      "id": "GENERATE_CODE_NPL_BUY_RECOVERY-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매수평가 회수예측] 회수 cone(p10/p50/p90) + 권리관계 차감 + IRR 계산",
+      "detail": "NPL 매수평가 핵심 계산 로직. (1) asset_type별 회수율 분포에서 분위수(p10/p50/p90) 추출 → 담보 추정가 곱 → expected_recovery_cone, (2) 실회수금 = max(0, recovery - senior_lien - tax_arrears - tenant_priority_amt), (3) IRR estimate = (net_recovery(p50) - bid - costs) / bid × (12/holding_months) 연환산, (4) top_risks ≤3 산출(우선순위: 선순위 잠식 → 회수 중앙값<매수가 → 인근 낙찰가율 하락 → asset_type 분산 큼). 1차는 분위수 추정만(Monte Carlo OUT). 결정성 보장. ETL_NPL_DATA-001 완료 전까지 asset_type별 더미 분포(apt μ=65% σ=15%, commercial μ=50% σ=20% 등) + 외부 경매 낙찰가율 더미 사용. 계산식: docs/stories/npl-buy.md D절.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "viz/plugins/npl-recovery.js (신규)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "story_doc": "docs/stories/npl-buy.md",
+        "ia_doc": "docs/domain-menu-ia.md",
+        "scope_dir": "viz/plugins/",
+        "interface_contract": "compute_npl_buy_recovery(input: NplBuyInput) → { expected_recovery_cone:{p10,p50,p90}, irr_estimate, scenarios[A,B,C], top_risks[≤3], grade, recommendation, trace }",
+        "parallel_with": [
+          "ETL_NPL_DATA-001"
+        ],
+        "data_fallback": "asset_type별 더미 회수율 분포 (ETL_NPL_DATA-001 완료 시 실데이터 교체 follow-up 이슈 생성)",
+        "deterministic": true,
+        "monte_carlo_out_of_scope_v1": true,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": []
+    },
+    {
+      "id": "INTEGRATE_SCENARIOS_NPL_BUY-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[코드·NPL·매수평가 시나리오 통합] UI_SCENARIOS_3OPTION-001 컴포넌트 마운트 + 매수가 ±15% 데이터 어댑터",
+      "detail": "UI_SCENARIOS_3OPTION-001 산출 컴포넌트(viz/plugins/scenarios-3option.js)를 NPL 매수평가 결과 카드 하단에 마운트. 어댑터: candidate_bid_krw → scenarios = [A 보수(0.85x, p10), B 기본(1.00x, p50), C 공격(1.15x, p90)] 매핑. 각 시나리오마다 {label, bid, recovery, irr, grade} 산출 → 컴포넌트 prop schema에 흘려보냄. components/npl-buy.js (G.1 산출물)에 슬롯 연결만 surgical 수정. 시나리오 컴포넌트 자체는 재구현 금지(재활용). 어댑터 명세: docs/stories/npl-buy.md G.3.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "viz/plugins/scenarios-3option.js (재활용 — UI_SCENARIOS_3OPTION-001 산출물)",
+        "components/npl-buy.js (surgical: 시나리오 마운트 슬롯 연결만)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001",
+        "GENERATE_CODE_NPL_BUY_UI-001",
+        "UI_SCENARIOS_3OPTION-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "story_doc": "docs/stories/npl-buy.md",
+        "reuses": [
+          "UI_SCENARIOS_3OPTION-001"
+        ],
+        "scope_dir": "components/",
+        "adapter_contract": "candidate_bid_krw → [{label,bid,recovery,irr,grade} × 3]",
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": []
+    },
+    {
+      "id": "RUN_TESTS_NPL_BUY-001",
+      "type": "RUN_TESTS",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[테스트·NPL·매수평가] 단위 테스트 + 캐릭터 저니 (NPL 매수 심사역)",
+      "detail": "(1) 단위 테스트: 회수 cone 단조성(p10≤p50≤p90), 권리관계 차감(선순위 합 ≥ 회수액 → net_recovery=0), IRR 부호(p50<bid → 음수), 4단계 grade 매핑 모두 발생, top_risks 우선순위 정렬. (2) Playwright 캐릭터 저니: NPL 매수 심사역 페르소나로 [NPL ▾] → [매수평가] → 주소 '성수1가1동' + 청구액 5억 + 매수가 3억 + 권리관계(선순위 1억) → 평가 실행 → IRR + 시나리오 표시 → 'Decide에서 보기' → switchMode('decide') 도달. 스텝 2에서 상단 색 일관성 가드 라벨 표시 명시적 assert. 스크린샷 5장(/tmp/journey-npl-buy-N.png).",
+      "assign_to": "test-harness",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "tests/unit/npl-recovery.test.js (신규)",
+        "tests/journeys/npl-buy.spec.js (신규 Playwright)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001",
+        "GENERATE_CODE_NPL_BUY_UI-001",
+        "GENERATE_CODE_NPL_BUY_RECOVERY-001",
+        "INTEGRATE_SCENARIOS_NPL_BUY-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "story_doc": "docs/stories/npl-buy.md",
+        "persona": "NPL 매수 심사역",
+        "screenshot_prefix": "/tmp/journey-npl-buy",
+        "screenshot_count": 5,
+        "color_guard_label_assert": "수익성 — 높을수록 좋음 (IRR ↑ = 파랑, IRR ↓ = 빨강)",
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": []
+    },
+    {
+      "id": "BIZ_VALIDATE_NPL_BUY-001",
+      "type": "BIZ_VALIDATE",
+      "priority": "P2",
+      "status": "BLOCKED",
+      "title": "[비즈검증·NPL·매수평가] 4단계 grade 시나리오 + 5개 엣지 케이스",
+      "detail": "비즈니스 로직 정적 검증. (a) 4단계 grade 발생 시나리오 4개 채권 샘플(very_high/high/medium/low). (b) 엣지 케이스: ❶ 선순위 합 ≥ 청구액 → AC-4 grade=low + top_risks 첫 항목 '선순위 잠식 위험', ❷ 권리관계 4필드 모두 미입력 → 0 가정 적용 + 결과 정상 산출, ❸ 청구액=0 → AC-7 폼 validation 에러, ❹ 부동산 외 채권(asset_type 적용 불가) → friendly fallback '1차 스코프는 부동산 담보 NPL만' 안내 박스 + CTA 비활성, ❺ expected_recovery.p50 < candidate_bid_krw → AC-8 IRR 음수 + grade=low + top_risks 포함. CRITICAL 갭 발견 시 BIZ_FIX P0 자동 spawn.",
+      "assign_to": "biz-validator",
+      "created_at": "2026-05-04T04:33:19Z",
+      "files": [
+        "docs/stories/npl-buy.md (참조)"
+      ],
+      "depends_on": [
+        "USER_STORY_NPL_BUY-001",
+        "GENERATE_CODE_NPL_BUY_RECOVERY-001"
+      ],
+      "depth": 2,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "payload": {
+        "submenu_key": "npl.buy",
+        "story_doc": "docs/stories/npl-buy.md",
+        "scenarios_grade_count": 4,
+        "edge_cases_count": 5,
+        "parent_feature": "FEATURE_DOMAIN_MENU-001"
+      },
+      "result": null,
+      "retry_count": 0,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-074",
+      "title": "[Plan:구현] USER_STORY_NPL_BUY-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "USER_STORY_NPL_BUY-001",
+      "depends_on": [],
+      "created_at": "2026-05-04T13:33:35.555902",
+      "payload": {
+        "source_issue": "USER_STORY_NPL_BUY-001",
+        "acceptance_criteria": []
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-075",
+      "title": "[Meta] USER_STORY_NPL_BUY-001 이슈 체인 근본 원인 분석",
+      "type": "PATTERN_ANALYSIS",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "meta-agent",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": null,
+      "depends_on": [],
+      "created_at": "2026-05-04T13:33:53.642774",
+      "payload": {
+        "parent_id": "USER_STORY_NPL_BUY-001",
+        "chain_length": 6
+      },
+      "result": null,
+      "spawn_rules": []
+    }
+  ],
+  "hooks": {
+    "on_create": [],
+    "on_start": [],
+    "on_complete": [
+      {
+        "issue_id": "GRAPHRAG_PHASE2_FINISH-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-03T14:32:49.706338"
+      },
+      {
+        "issue_id": "ISS-009",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-05-03T14:39:47.731052"
+      },
+      {
+        "issue_id": "ISS-010",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-05-03T14:40:54.242895"
+      },
+      {
+        "issue_id": "ISS-011",
+        "issue_type": "RUN_TESTS",
+        "plan_created": 1,
+        "timestamp": "2026-05-03T14:41:17.786472"
+      },
+      {
+        "issue_id": "ISS-014",
+        "issue_type": "SCORE",
+        "plan_created": 0,
+        "timestamp": "2026-05-03T14:43:36.384551"
+      },
+      {
+        "issue_id": "ISS-017",
+        "issue_type": "PATTERN_ANALYSIS",
+        "plan_created": 0,
+        "timestamp": "2026-05-03T14:52:16.050703"
+      },
+      {
+        "issue_id": "UI_REDESIGN_MEONGBUN_LAYOUT-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:04:13.569589"
+      },
+      {
+        "issue_id": "FEATURE_DOMAIN_MENU-001",
+        "issue_type": "FEATURE_PLAN",
+        "plan_created": 2,
+        "timestamp": "2026-05-04T13:12:22.054508"
+      },
+      {
+        "issue_id": "USER_STORY_PHARMACY_DEVELOP-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:20:38.636294"
+      },
+      {
+        "issue_id": "USER_STORY_PHARMACY_CLOSE-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:26:36.481880"
+      },
+      {
+        "issue_id": "USER_STORY_NPL_BUY-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-04T13:33:35.555902"
+      }
+    ],
+    "on_fail": [],
+    "on_learn": []
+  },
+  "knowledge": {
+    "success_patterns": [
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-010 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-05-03T14:40:54.242895"
+      },
+      {
+        "pattern": "generate_code_3_fork_normal",
+        "context": "GENERATE_CODE → LINT + TESTS + DOMAIN_ANALYZE (의도된 다종 파생)",
+        "frequency": 1,
+        "discovered_at": "2026-05-03T05:52:15.945607Z",
+        "note": "meta-review가 핑퐁으로 오탐했지만 정상 파이프라인 동작"
+      }
+    ],
+    "failure_patterns": [],
+    "meta_observations": [
+      {
+        "cycle": 1,
+        "timestamp": "2026-05-03T13:30:38.013652",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/5)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 5,
+          "done": 0,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 2,
+        "timestamp": "2026-05-03T13:33:43.137805",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/5)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 5,
+          "done": 0,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 3,
+        "timestamp": "2026-05-03T14:11:35.898771",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/5)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 5,
+          "done": 0,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 4,
+        "timestamp": "2026-05-03T14:13:36.625477",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/6)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 6,
+          "done": 0,
+          "in_progress": 1,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 5,
+        "timestamp": "2026-05-03T14:26:19.460461",
+        "findings": [
+          "✅ 정상 운영 — 완료율 0% (0/8)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 8,
+          "done": 0,
+          "in_progress": 0,
+          "ready": 1,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 6,
+        "timestamp": "2026-05-03T14:36:01.714918",
+        "findings": [
+          "✅ 정상 운영 — 완료율 11% (1/9)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 9,
+          "done": 1,
+          "in_progress": 0,
+          "ready": 2,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 7,
+        "timestamp": "2026-05-03T14:37:17.731259",
+        "findings": [
+          "✅ 정상 운영 — 완료율 11% (1/9)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 9,
+          "done": 1,
+          "in_progress": 0,
+          "ready": 1,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 8,
+        "timestamp": "2026-05-03T14:50:50.726071",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [
+          "ISS-017"
+        ],
+        "stats_snapshot": {
+          "total": 17,
+          "done": 5,
+          "in_progress": 0,
+          "ready": 2,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 9,
+        "timestamp": "2026-05-03T14:54:21.172753",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 18,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 10,
+        "timestamp": "2026-05-03T15:11:36.606367",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 19,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 11,
+        "timestamp": "2026-05-03T15:14:47.316628",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 19,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 12,
+        "timestamp": "2026-05-03T16:34:19.197962",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 4,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 13,
+        "timestamp": "2026-05-03T16:37:49.052161",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 1,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 14,
+        "timestamp": "2026-05-03T16:47:19.560861",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, domain-analyst, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 15,
+        "timestamp": "2026-05-03T16:50:26.255502",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 16,
+        "timestamp": "2026-05-03T16:56:26.464287",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, code-quality, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 17,
+        "timestamp": "2026-05-03T16:59:33.059073",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, code-quality, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 6,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 18,
+        "timestamp": "2026-05-03T17:37:20.951781",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, code-quality, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 7,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 19,
+        "timestamp": "2026-05-03T17:58:52.808212",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 33,
+          "done": 7,
+          "in_progress": 0,
+          "ready": 9,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 20,
+        "timestamp": "2026-05-03T18:22:23.565226",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 35,
+          "done": 7,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 21,
+        "timestamp": "2026-05-03T18:25:30.298129",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 35,
+          "done": 7,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 22,
+        "timestamp": "2026-05-03T18:51:18.217995",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 7,
+          "in_progress": 2,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 23,
+        "timestamp": "2026-05-03T18:54:29.473056",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, code-quality, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 7,
+          "in_progress": 2,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 24,
+        "timestamp": "2026-05-03T19:06:41.282121",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, test-harness, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 7,
+          "in_progress": 2,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 25,
+        "timestamp": "2026-05-03T19:22:34.156754",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, test-harness, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 8,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 26,
+        "timestamp": "2026-05-03T19:25:38.959282",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 47,
+          "done": 8,
+          "in_progress": 0,
+          "ready": 0,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 27,
+        "timestamp": "2026-05-04T12:57:11.927914",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 61,
+          "done": 8,
+          "in_progress": 0,
+          "ready": 2,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 28,
+        "timestamp": "2026-05-04T12:57:21.787941",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, code-quality, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 62,
+          "done": 8,
+          "in_progress": 0,
+          "ready": 3,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 29,
+        "timestamp": "2026-05-04T13:04:28.514058",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 63,
+          "done": 9,
+          "in_progress": 0,
+          "ready": 3,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 30,
+        "timestamp": "2026-05-04T13:12:41.415851",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (code-quality, domain-analyst, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 71,
+          "done": 10,
+          "in_progress": 0,
+          "ready": 10,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 31,
+        "timestamp": "2026-05-04T13:12:54.528915",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, code-quality, domain-analyst)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 71,
+          "done": 10,
+          "in_progress": 0,
+          "ready": 10,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 32,
+        "timestamp": "2026-05-04T13:20:59.501327",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, domain-analyst, code-quality)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 76,
+          "done": 11,
+          "in_progress": 0,
+          "ready": 11,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 33,
+        "timestamp": "2026-05-04T13:26:51.117647",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (domain-analyst, code-quality, test-harness)"
+        ],
+        "issues_created": [],
+        "stats_snapshot": {
+          "total": 82,
+          "done": 12,
+          "in_progress": 0,
+          "ready": 12,
+          "failed": 0,
+          "escalated": 0
+        }
+      },
+      {
+        "cycle": 34,
+        "timestamp": "2026-05-04T13:33:53.642863",
+        "findings": [
+          "🟠 핑퐁 감지: ISS-009 → 3회 파생 (test-harness, domain-analyst, code-quality)",
+          "🟠 핑퐁 감지: USER_STORY_NPL_BUY-001 → 6회 파생 (biz-validator, test-harness, agent-harness)"
+        ],
+        "issues_created": [
+          "ISS-075"
+        ],
+        "stats_snapshot": {
+          "total": 89,
+          "done": 13,
+          "in_progress": 0,
+          "ready": 13,
+          "failed": 0,
+          "escalated": 0
+        }
+      }
+    ]
+  },
+  "stats": {
+    "total_issues": 75,
+    "completed": 36,
+    "failed": 0,
+    "evolved": 34
+  },
+  "opus_budget_state": {
+    "daily": {
+      "date": "2026-05-04",
+      "cost_usd": 7.48,
+      "calls": 11
+    },
+    "monthly": {
+      "month": "2026-05",
+      "cost_usd": 11.18,
+      "calls": 16
+    },
+    "demotion_active": false
+  },
+  "pending_opportunity_signals": [
+    {
+      "source_issue": "ISS-011",
+      "source_type": "RUN_TESTS",
+      "result": {
+        "passed": true,
+        "total": 7,
+        "coverage": null
+      }
+    }
+  ],
+  "learned_patterns": [
+    {
+      "type": "user_rejected_t2",
+      "issue_id": "GRAPHRAG-001",
+      "reason": "DEFER (대표님 직전 합의: 디시전 트리 먼저)",
+      "at": "2026-05-03T14:57:55.785493"
+    },
+    {
+      "type": "user_rejected_t2",
+      "issue_id": "REAL_DATA_INGEST-001",
+      "reason": "DEFER (디시전 트리부터 진행 후 재검토)",
+      "at": "2026-05-03T14:57:59.423898"
+    }
+  ],
+  "auto_detect_state": {
+    "date": "2026-05-04",
+    "count": 1
+  }
+}

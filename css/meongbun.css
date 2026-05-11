@@ -1,0 +1,506 @@
+/* ─────────────────────────────────────────────
+   meongbun.css — 명분 사슬(Meongbun Chain) 레이아웃 토큰
+   hero color: #00A1E0 (brand-dna 미존재 시 index.html 기존 accent 사용)
+   pLDDT 색상 체계 변경 절대 금지 (anti-pattern)
+───────────────────────────────────────────── */
+
+/* ── 페이지 컨테이너 ── */
+.meongbun-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+  position: relative;
+}
+
+/* ── 섹션 공통 ── */
+.meongbun-section {
+  position: relative;
+  margin-bottom: 40px;
+  padding: 28px 28px 28px 32px;
+  border-radius: 10px;
+  background: rgba(15, 25, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 4px solid #00A1E0;
+}
+
+/* ── 섹션 번호 배지 [N/7] ── */
+.meongbun-section-badge {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: #9CA3AF;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+/* ── 섹션 타이틀 ── */
+.meongbun-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #E8EDF3;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+/* ── 섹션 서브타이틀 ── */
+.meongbun-section-subtitle {
+  font-size: 11px;
+  color: #6B7280;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 16px;
+}
+
+/* ── 준비 중 placeholder 본문 ── */
+.meongbun-placeholder {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(255, 255, 255, 0.10);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.15);
+  color: #4B5563;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── 점프 네비 (우측 fixed) ── */
+.meongbun-jumpnav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 40;
+}
+
+.meongbun-jumpnav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #6B7280;
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.meongbun-jumpnav a:hover,
+.meongbun-jumpnav a.active {
+  background: #00A1E0;
+  border-color: #00A1E0;
+  color: white;
+  box-shadow: 0 0 12px rgba(0, 161, 224, 0.4);
+}
+
+/* ── 상단 브레드크럼 ── */
+.meongbun-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #6B7280;
+  margin-bottom: 24px;
+}
+
+.meongbun-breadcrumb span.sep {
+  color: #374151;
+}
+
+.meongbun-breadcrumb span.current {
+  color: #E8EDF3;
+  font-weight: 600;
+}
+
+/* ── 상단 바 (브레드크럼 + PDF CTA) ── */
+.meongbun-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+/* ── PDF 출력 CTA ── */
+.meongbun-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00A1E0 0%, #5BC0EB 100%);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 161, 224, 0.3);
+  transition: all 0.2s ease;
+}
+
+.meongbun-pdf-btn:hover {
+  box-shadow: 0 6px 20px rgba(0, 161, 224, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ── 반응형 ── */
+@media (min-width: 1920px) {
+  .meongbun-page {
+    max-width: 1280px;
+  }
+  .meongbun-jumpnav {
+    right: 40px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .meongbun-page {
+    max-width: 1440px;
+  }
+  .meongbun-jumpnav {
+    right: 80px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .meongbun-jumpnav {
+    display: none; /* 좁은 화면에서 점프 네비 숨김 */
+  }
+}
+
+/* ── 시계열 차트 잘림 방지 ──
+   #explore-trace SVG가 col-span-2 좁은 컬럼에서 height: 0 계산되는 현상 수정.
+   부모 glass-light div가 flex 자식일 때 min-height 손실 → SVG 본체 미렌더.
+   원인: space-y-3 컬럼이 flex-col + 높이 미지정 시 SVG height attr 무시됨. */
+#explore-trace {
+  display: block;       /* inline(SVG 기본)이 flex 맥락에서 height 손실 유발 */
+  min-height: 160px;    /* viewBox H와 동일 — 본체 렌더 보장 */
+  width: 100%;
+}
+
+/* 예측 cone 구간 라벨 — SVG 외부 wrapper 텍스트 */
+.explore-trace-future-label {
+  display: block;
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(91, 192, 235, 0.65);
+  margin-top: 2px;
+  text-align: right;
+}
+
+/* ── 위젯 카드 — 4개 어댑터 공통 ── */
+.widget-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.widget-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #E8EDF3;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.widget-body {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  color: #6B7280;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── 위젯 슬롯 컨테이너 ── */
+.meongbun-widget-slot,
+.meongbun-widget-slot-tree,
+.meongbun-widget-slot-shap {
+  margin-top: 12px;
+}
+
+/* ─── 섹션❶ Decision One-Pager ─── */
+.decision-onepager-card {
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  margin-top: 16px;
+}
+.onepager-recommendation {
+  font-size: 28px;
+  font-weight: 700;
+  color: #00529B;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.onepager-confidence {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.onepager-stars {
+  color: #FED766;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+.onepager-stars-label {
+  color: #6b7280;
+  font-size: 13px;
+}
+.onepager-reasons {
+  margin: 16px 0 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: reason;
+}
+.onepager-reasons li {
+  counter-increment: reason;
+  padding: 10px 0 10px 28px;
+  position: relative;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.onepager-reasons li:last-child { border-bottom: none; }
+.onepager-reasons li::before {
+  content: counter(reason);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #00529B;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.onepager-reason-text { color: #1a1a1a; }
+.onepager-reason-source {
+  display: block;
+  margin-top: 2px;
+  color: #6b7280;
+  font-size: 12px;
+}
+.onepager-caveat.callout-warn {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #FEF6E0;
+  border-left: 4px solid #FED766;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #6b4f00;
+  line-height: 1.5;
+}
+
+/* ─── 섹션❷ Fact Triple ─── */
+.fact-triple-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+@media (max-width: 1100px) {
+  .fact-triple-grid { grid-template-columns: 1fr; }
+}
+.fact-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  cursor: help;
+  transition: box-shadow 0.15s ease;
+}
+.fact-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 82, 155, 0.08);
+  border-color: #00529B;
+}
+.fact-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.fact-marker {
+  font-size: 14px;
+  line-height: 1;
+  width: 18px;
+  display: inline-block;
+  text-align: center;
+}
+.fact-marker-real     { color: #00529B; }
+.fact-marker-synth    { color: #6b7280; }
+.fact-marker-estimate { color: #FED766; }
+.fact-title {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+.fact-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.fact-unit {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+.fact-delta {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.fact-delta-up   { color: #00529B; }
+.fact-delta-down { color: #C9485B; }
+.fact-future-label {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #6b7280;
+  padding: 4px 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  display: inline-block;
+}
+.fact-source {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #9ca3af;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 6px;
+}
+.fact-triple-empty {
+  padding: 24px;
+  text-align: center;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+/* ─── 섹션❸ Interpretation ─── */
+.interpretation-card {
+  margin-top: 16px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 4px;
+}
+.interp-claims {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: claim;
+}
+.interp-claim {
+  counter-increment: claim;
+  padding: 16px 16px 16px 44px;
+  position: relative;
+  border-bottom: 1px solid #f3f4f6;
+}
+.interp-claim:last-child { border-bottom: none; }
+.interp-claim::before {
+  content: counter(claim);
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #00529B;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.interp-claim-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+.interp-claim-stats {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  font-size: 12px;
+  color: #6b7280;
+}
+.interp-stat {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  color: #374151;
+}
+.interp-method-toggle {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #00529B;
+  font-family: inherit;
+}
+.interp-method-toggle:hover { border-color: #00529B; background: #f0f7ff; }
+.interp-method-arrow {
+  font-size: 9px;
+}
+.interp-method-card {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: #f9fafb;
+  border-left: 3px solid #00529B;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #374151;
+}
+.interp-method-card h3 { font-size: 14px; margin: 0 0 8px 0; color: #1a1a1a; }
+.interp-method-card h4 { font-size: 13px; margin: 12px 0 6px 0; color: #00529B; }
+.interp-method-card h5 { font-size: 12px; margin: 10px 0 4px 0; color: #374151; }
+.interp-method-card p  { margin: 4px 0; }
+.interp-method-card ul { margin: 4px 0 8px 18px; padding: 0; }
+.interp-method-card li { margin: 2px 0; }
+.interp-method-card pre {
+  background: #1f2937; color: #e5e7eb;
+  padding: 8px 10px; border-radius: 4px;
+  font-size: 11px; overflow-x: auto;
+}
+.interpretation-empty {
+  padding: 24px;
+  text-align: center;
+  color: #6b7280;
+  background: #f9fafb;
+}

@@ -51,3 +51,11 @@ Thumbs.db
 .conductor/
 *.tmp
 *.bak
+
+# Backend
+backend/.env
+backend/data/*.db
+backend/data/*.db-journal
+backend/data/*.db-wal
+backend/data/*.db-shm
+.venv-backend/

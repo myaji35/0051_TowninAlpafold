@@ -1,0 +1,145 @@
+{
+  "_meta": {
+    "issue": "ISS-103 (DOMAIN_ANALYZE)",
+    "source_issue": "GENERATE_CODE_PHARMACY_DEVELOP_UI-001",
+    "extracted_from": [
+      "docs/stories/pharmacy-develop.md (D절 가중치 + E절 grade)",
+      "components/pharmacy-develop.js (UI 상태 기계 + Mock 결과)",
+      "viz/plugins/pharmacy-scorer.js (가중치 모델 v1)"
+    ],
+    "extracted_at": "2026-05-04",
+    "version": "1.0.0",
+    "purpose": "biz-validator + 시나리오 플레이어 입력 — 약국 점포개발 도메인의 결정성 검증 룰셋"
+  },
+
+  "domain": "pharmacy.develop",
+  "persona": "약국 본사 개발담당자",
+
+  "scoring_rules": {
+    "factors": [
+      { "key": "population_density", "weight": 0.18, "direction": "positive", "label": "인구 밀도" },
+      { "key": "elderly_ratio", "weight": 0.15, "direction": "positive", "label": "60대+ 인구 비중" },
+      { "key": "clinics_within_500m", "weight": 0.20, "direction": "positive", "label": "반경 500m 의원수" },
+      { "key": "competitor_pharmacies_within_500m", "weight": -0.18, "direction": "negative", "label": "반경 500m 경쟁 약국" },
+      { "key": "income_quantile", "weight": 0.10, "direction": "u_shape", "label": "평균 소득 분위 (7~8 분위 최적)" },
+      { "key": "rent_ratio", "weight": -0.12, "direction": "negative", "label": "임대가 (동 평균 대비)" },
+      { "key": "visitors_total", "weight": 0.07, "direction": "positive", "label": "유동인구" }
+    ],
+    "weight_abs_sum": 1.00,
+    "score_range": [0, 100],
+    "deterministic": true
+  },
+
+  "grade_mapping": [
+    { "min_score": 90, "grade": "very_high", "color": "#00529B", "action": "적극 추천" },
+    { "min_score": 70, "grade": "high",      "color": "#5BC0EB", "action": "추천" },
+    { "min_score": 50, "grade": "medium",    "color": "#FED766", "action": "신중 검토" },
+    { "min_score": 0,  "grade": "low",       "color": "#C9485B", "action": "비추천" }
+  ],
+
+  "input_validation": {
+    "address": { "required": true, "min_length": 2, "max_length": 100 },
+    "area": { "type": "number", "min": 0, "optional": true },
+    "rent": { "type": "number", "min": 0, "unit": "만원", "optional": true },
+    "expected_prescriptions": { "type": "number", "min": 0, "optional": true }
+  },
+
+  "ui_state_machine": {
+    "states": ["INITIAL", "TYPING", "SUBMITTING", "SUCCESS", "ERROR", "ADDRESS_NOT_FOUND"],
+    "transitions": [
+      { "from": "INITIAL", "trigger": "address_input", "to": "TYPING" },
+      { "from": "TYPING", "trigger": "address_blank", "to": "INITIAL" },
+      { "from": "TYPING", "trigger": "evaluate_click", "to": "SUBMITTING" },
+      { "from": "SUBMITTING", "trigger": "result_arrived", "to": "SUCCESS" },
+      { "from": "SUBMITTING", "trigger": "address_not_found", "to": "ADDRESS_NOT_FOUND" },
+      { "from": "SUBMITTING", "trigger": "error", "to": "ERROR" },
+      { "from": "SUCCESS", "trigger": "address_input", "to": "TYPING" },
+      { "from": "ADDRESS_NOT_FOUND", "trigger": "address_input", "to": "TYPING" }
+    ],
+    "cta_disabled_states": ["INITIAL", "SUBMITTING"],
+    "primary_cta_count_per_state": 1
+  },
+
+  "scenarios": [
+    {
+      "id": "S1_VERY_HIGH_GRADE",
+      "title": "very_high 등급 산출 시나리오",
+      "input": { "address": "강남구 역삼1동" },
+      "expected": { "score_min": 80, "grade_in": ["high", "very_high"], "drivers_count": 3, "decide_link_present": true }
+    },
+    {
+      "id": "S2_HIGH_GRADE",
+      "title": "high 등급 산출 시나리오",
+      "input": { "address": "의정부시 민락동" },
+      "expected": { "score_min": 50, "grade_in": ["medium", "high"], "drivers_count": 3 }
+    },
+    {
+      "id": "S3_MEDIUM_GRADE",
+      "title": "medium 등급 산출 시나리오",
+      "input": { "address": "의정부시 낙양동" },
+      "expected": { "score_min": 50, "score_max": 89, "grade_in": ["medium", "high"], "drivers_count": 3 }
+    },
+    {
+      "id": "S4_LOW_GRADE",
+      "title": "low 등급 산출 시나리오 (4단계 grade 커버리지 보장)",
+      "input": { "address": "저밀도 외곽동" },
+      "expected": { "score_max": 49, "grade": "low", "color": "#C9485B" }
+    },
+    {
+      "id": "S5_ADDRESS_NOT_FOUND",
+      "title": "잘못된 주소 — 친절한 에러",
+      "input": { "address": "존재하지않는동" },
+      "expected": { "state": "ADDRESS_NOT_FOUND", "error_includes": "주소를 찾을 수 없습니다", "demo_dongs_listed": true }
+    },
+    {
+      "id": "S6_EMPTY_ADDRESS",
+      "title": "빈 주소 — CTA 잠금",
+      "input": { "address": "" },
+      "expected": { "state": "INITIAL", "cta_disabled": true }
+    },
+    {
+      "id": "S7_DEEP_LINK_DECIDE",
+      "title": "결과 카드 → Decide 모드 deep-link",
+      "input": { "address": "성수1가1동", "click_after_result": "[data-action=\"goto-decide\"]" },
+      "expected": { "url_param_mode": "decide", "view_decide_visible": true }
+    }
+  ],
+
+  "edge_cases": [
+    { "id": "E1", "case": "임대가 입력 시 rent_ratio 재계산 (만원/100 가정)", "test_path": "viz/plugins/pharmacy-scorer.js getFeaturesForDong" },
+    { "id": "E2", "case": "60대 비중 0.30 이상 → elderly_ratio 정규화 만점 (clamp01)", "test_path": "scorer NORMALIZERS" },
+    { "id": "E3", "case": "반경 500m 의원수 0 → clinics_within_500m 0점 (큰 음의 영향)", "test_path": "scorer" },
+    { "id": "E4", "case": "income_quantile 7.5 분위 최적 (역U) — 1분위/10분위 모두 감점", "test_path": "scorer NORMALIZERS.income_quantile" },
+    { "id": "E5", "case": "DEMO_DONG_FEATURES 미정의 동 → null 반환 → ADDRESS_NOT_FOUND", "test_path": "scorer.evaluatePharmacyDevelop" }
+  ],
+
+  "anti_patterns_to_check": [
+    { "pattern": "단일 점추정만 표시 (cone 누락)", "current_status": "score 단일 표시 — Wave 1 한계, Wave 2에서 cone 추가 권장" },
+    { "pattern": "출처 라벨 누락", "current_status": "PASS — '출처: pharmacy-scorer.js (가중치 모델 v1)' 카드 하단 노출" },
+    { "pattern": "primary CTA ≠ 1개", "current_status": "PASS — '평가 실행' 1개 (Decide 링크는 secondary)" },
+    { "pattern": "pLDDT 색 임의 변경", "current_status": "PASS — 4단계 정확히 brand-dna.json 인용" },
+    { "pattern": "그라디언트/네온", "current_status": "PASS — solid 색상만 사용" }
+  ],
+
+  "known_violations": [
+    {
+      "type": "domain_intuition_mismatch_resolved",
+      "severity": "P1",
+      "tracking_issue": "FIX_BUG_PHARMACY_SCORER_NORMALIZER-001",
+      "resolution_at": "2026-05-04",
+      "resolution_decision": "Option A — 현 결과 유지 + 명세서 보강",
+      "rationale": "단순 시장 크기 ≠ 신규 진입자 적합도. 강남(시장 큼+포화+고임대) vs 의정부(시장 작음+저경쟁+저임대) 트레이드오프 모델. 1차 모델은 신규 진입자의 마진+경쟁 회피 가설을 우선. Wave 2에서 ML 학습 + 페르소나(대형 체인 vs 개인) 분리 + 코호트 정규화 권장.",
+      "code_change": "viz/plugins/pharmacy-scorer.js NORMALIZERS 분모 미수정. 주석 블록만 추가하여 명세서와 동기화 명시.",
+      "docs_change": "docs/stories/pharmacy-develop.md D-1 (정규화 룰 표) + D-2 (도메인 해석) 신설.",
+      "decision_log": "domain-analyst (opus) 자율 결정 — 사용자 후속 발화에서 ML/코호트 분리 요청 시 Wave 2 이슈(PHARMACY_SCORER_ML_PERSONA-001)로 재조정 가능"
+    }
+  ],
+
+  "biz_validator_input": {
+    "_purpose": "BIZ_VALIDATE_PHARMACY_DEVELOP-001 진행 시 본 룰셋을 입력으로 사용",
+    "rules_count": 7,
+    "scenarios_count": 7,
+    "edge_cases_count": 5,
+    "coverage_target": ["all_4_grades", "happy_path", "error_path", "deep_link", "edge_normalization"]
+  }
+}

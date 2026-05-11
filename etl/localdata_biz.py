@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils.etl_lock import acquire_lock, LockBusyError
 from utils.etl_retry import with_retry, RetryExhausted
 from utils.rate_tracker import RateTracker
-from utils.etl_base import transform_cell, save_cell, update_manifest
+from utils.etl_base import transform_cell, save_cell, update_manifest, update_dataset_schedule
 
 # ---------------------------------------------------------------------------
 # 상수
@@ -142,6 +142,7 @@ def run(dry_run: bool = False) -> dict:
 
             # manifest_repo 커버리지 갱신 (안전하게 — 실패해도 ETL 성공 유지)
             update_manifest(WEDGE_ADM_CD, DATASET_KEY, 1, 5, rec["marker"], rec["fetched_at"])
+            update_dataset_schedule(DATASET_KEY, "success", rec["fetched_at"])
 
             return {
                 "status": "success",

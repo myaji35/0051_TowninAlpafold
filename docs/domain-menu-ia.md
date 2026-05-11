@@ -6,6 +6,13 @@
 > 근거: CEO 리뷰 ISS-070 (`docs/reviews/ceo-review-feature-domain-menu-001.md#d-wedge-권고`) + Eng 리뷰 ISS-071.
 > 데이터 라이선스 미확정 도메인(NPL) 우선 검증 후 진행.
 
+> **🔄 횡단 비교 보드 (Phase 2 IN, 결정 ISS-092)**
+> 본 콘솔 차별화 코어 = "동일 메타포(pLDDT + cone)로 자산 횡단 비교".
+> Wave 1 = pharmacy.develop 단독 출시 동안 **횡단 비교 보드는 OUT**, **Phase 2 IN으로 명시 확정**.
+> Phase 2 진입 시 `?ctx=pharmacy.develop+npl.buy` 같은 다중 컨텍스트 URL 컨벤션 사용 (`+` 구분).
+> URL 예시: `?mode=decide&ctx=pharmacy.develop+npl.buy&address=의정부시%20금오동` — 두 모델의 cone을 동일 차트에 오버레이.
+> 근거: CEO 리뷰 D~E절 + Phase 2 차별화 핵심 자산. Wave 1 단독 wedge와 일관.
+
 > 작성: product-manager (Harness FEATURE_DOMAIN_MENU-001)
 > 일자: 2026-05-04
 > 적용 브랜드 토큰: `.claude/brand-dna.json` (TowninAlpafold)

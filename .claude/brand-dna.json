@@ -58,7 +58,8 @@
     "AlphaFold pLDDT 색상 체계 임의 변경",
     "그라디언트/네온/AI슬롭 일러스트",
     "데이터 출처/확신도 없는 단정 카피",
-    "한 화면에 CTA가 2개 이상이거나 0개"
+    "한 화면에 CTA가 2개 이상이거나 0개",
+    "UI 아이콘 자리 이모지 사용 (헤더/메뉴/버튼/카드 — feather-outline SVG로 교체 필수, ICON_LINE_HARNESS_GLOBAL-001)"
   ],
   "primary_action_per_screen": "MUST_EXIST",
   "user_decision_clarity": "0.5초 룰 — Gallery에서 카드 한 장 hover 시 다음 모드(Explore/Analyze/Decide) 진입점이 명확해야 한다.",

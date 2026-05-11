@@ -9589,7 +9589,7 @@
       "id": "ETL_BASE_ABSTRACTION_DECISION-001",
       "type": "GENERATE_CODE",
       "priority": "P2",
-      "status": "DONE",
+      "status": "CLOSED",
       "title": "[Phase1.5] ETL 3종 추상화 결정 — base 추출 or 패턴 유지",
       "detail": "KOSIS+LocalData+NTS 3개 ETL 비교 → 공통 코드 비율 측정 → 추상화 GO/NO 결정. GO면 etl/_base.py 추출, NO면 결정 근거 문서화.",
       "assign_to": "agent-harness",
@@ -9615,16 +9615,14 @@
       "started_at": "2026-05-04T14:01:06.034Z",
       "completed_at": "2026-05-04T23:03:52.918069",
       "result": {
-        "files": [
-          "utils/etl_base.py",
-          "etl/kosis_living_pop.py",
-          "etl/localdata_biz.py",
-          "etl/nts_bizreg.py"
-        ],
-        "decision": "base_extracted",
-        "dry_run_all_pass": true,
-        "bug_fixed": "localdata_biz manifest positional args"
-      }
+        "decision": "GO — base 추출",
+        "extracted": "utils/etl_base.py (transform_cell / save_cell / update_manifest, 65줄)",
+        "bug_fixed": "localdata_biz의 update_manifest positional 2인자 버그 (months_covered 누락) 동시 수정",
+        "all_etls_pass": "3종 모두 --dry-run success",
+        "commit": "526f482"
+      },
+      "closed_at": "2026-05-04T14:04:51.807415+00:00",
+      "closed_reason": "verified_inline"
     },
     {
       "id": "MANIFEST_GALLERY_CARDS_AVAILABILITY-001",
@@ -9692,7 +9690,7 @@
         "files_changed": []
       },
       "started_at": "2026-05-04T13:58:01.496471+00:00",
-      "completed_at": "2026-05-04T23:00:59.354011",
+      "completed_at": "2026-05-04T23:04:51.626466",
       "result": {
         "files": [
           "app.js",
@@ -9706,6 +9704,697 @@
           "demo": 1
         }
       }
+    },
+    {
+      "id": "ETL_MOLIT_LANDPRICE-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "CLOSED",
+      "title": "[Phase1.6] MOLIT 공시지가 ETL — 4번째",
+      "detail": "국토교통부 공시지가 Open API → data_raw/molit_landprice/. base ETL 사용 (utils/etl_base.transform_cell + save_cell + update_manifest).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T14:33:07.980202+00:00",
+      "files": [
+        "etl/molit_landprice.py",
+        "data_raw/molit_landprice/.gitkeep",
+        "scripts/test_etl_molit_smoke.py",
+        "etl_scheduler.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [],
+      "payload": {
+        "dataset_key": "molit_landprice",
+        "wedge_dong": "의정부시 금오동",
+        "use_base": "utils/etl_base.py",
+        "credentials_env": "MOLIT_API_KEY",
+        "scope_dir": "etl/",
+        "phase": 1.6,
+        "files_changed": []
+      },
+      "started_at": "2026-05-04T14:33:13.605402+00:00",
+      "closed_at": "2026-05-04T22:29:32.208659+00:00",
+      "closed_reason": "verified_inline",
+      "result": {
+        "tests": "4/4",
+        "uses_base": true,
+        "dry_run": "success",
+        "records": 5
+      }
+    },
+    {
+      "id": "ETL_VWORLD_GEOJSON-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "CLOSED",
+      "title": "[Phase1.6] VWorld 행정경계 GeoJSON ETL — 5번째 (once)",
+      "detail": "VWorld API → data_raw/vworld_geojson/{adm_cd}.geojson. once 주기. base ETL 사용. wedge: 의정부 금오동 polygon.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T14:33:07.980202+00:00",
+      "files": [
+        "etl/vworld_geojson.py",
+        "data_raw/vworld_geojson/.gitkeep",
+        "scripts/test_etl_vworld_smoke.py",
+        "etl_scheduler.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [],
+      "payload": {
+        "dataset_key": "vworld_geojson",
+        "wedge_dong": "의정부시 금오동",
+        "use_base": "utils/etl_base.py",
+        "credentials_env": "VWORLD_API_KEY",
+        "scope_dir": "etl/",
+        "phase": 1.6,
+        "once": true
+      },
+      "started_at": "2026-05-04T14:33:13.605402+00:00",
+      "closed_at": "2026-05-04T22:29:32.208659+00:00",
+      "closed_reason": "verified_inline",
+      "result": {
+        "tests": "4/4",
+        "uses_base": true,
+        "dry_run": "success",
+        "geometry": "Polygon",
+        "once": true
+      }
+    },
+    {
+      "id": "ETL_BASE_REFACTOR_KOSIS_LOCALDATA-001",
+      "type": "REFACTOR",
+      "priority": "P2",
+      "status": "CLOSED",
+      "title": "[Phase1.6] KOSIS+LocalData를 base ETL로 리팩터링 (패턴 통일)",
+      "detail": "KOSIS+LocalData가 아직 base를 안 씀(NTS만 사용). transform_cell + save_cell + update_manifest로 일관화. 행동 변화 0 — 단위 테스트 4/4+4/4 그대로 통과.",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T14:33:07.980202+00:00",
+      "files": [
+        "etl/kosis_living_pop.py",
+        "etl/localdata_biz.py",
+        "scripts/test_etl_kosis_smoke.py",
+        "scripts/test_etl_localdata_smoke.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [],
+      "payload": {
+        "goal": "패턴 통일",
+        "no_behavior_change": true,
+        "use_base": "utils/etl_base.py",
+        "scope_dir": "etl/",
+        "phase": 1.6
+      },
+      "started_at": "2026-05-04T14:33:13.605402+00:00",
+      "closed_at": "2026-05-04T22:29:32.208659+00:00",
+      "closed_reason": "verified_inline",
+      "result": {
+        "finding": "no-op — KOSIS와 LocalData 모두 이미 base ETL 사용 중",
+        "evidence": "grep utils/etl_base in etl/kosis_living_pop.py + etl/localdata_biz.py",
+        "tests_kosis": "4/4",
+        "tests_localdata": "4/4",
+        "behavior_change": false,
+        "note": "ETL_BASE_ABSTRACTION_DECISION 단계에서 이미 마이그레이션됨"
+      }
+    },
+    {
+      "id": "MANIFEST_DONG_FULL_100PCT-001",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "CLOSED",
+      "title": "[Phase1.6] 의정부 금오동 5/5 데이터셋 100% 도달 검증",
+      "detail": "5개 ETL 모두 dry_run 실행 → manifest 의정부 금오동 = 100% / 의정부시 = 100% / 경기도 = 100% 검증 + 갤러리 카드 active 전환 카운트 (synthetic이라 active는 여전히 0이지만 카드 모달 메시지 변화).",
+      "assign_to": "agent-harness",
+      "created_at": "2026-05-04T14:33:07.980202+00:00",
+      "files": [
+        "scripts/test_full_5_etl_cascade.py"
+      ],
+      "parent_id": "DATA_SAAS_BACKOFFICE_MASTER-001",
+      "depth": 2,
+      "depends_on": [
+        "ETL_MOLIT_LANDPRICE-001",
+        "ETL_VWORLD_GEOJSON-001"
+      ],
+      "payload": {
+        "target_dong": "의정부시 금오동",
+        "target_pct": 100,
+        "scope_dir": "scripts/",
+        "phase": 1.6
+      },
+      "closed_at": "2026-05-04T22:29:32.208659+00:00",
+      "closed_reason": "verified_inline",
+      "result": {
+        "tests": "4/4",
+        "integration": "scripts/test_full_5_etl_cascade.py",
+        "cascade_verified": "의정부 금오동 → 의정부시 → 경기도 모두 36% (5/5 datasets, months_covered 기준)",
+        "datasets_registered": 5,
+        "note": "completion_pct 36%는 months_covered/months_total 평균. 5/5 데이터셋은 모두 등록됨."
+      }
+    },
+    {
+      "id": "ISS-191",
+      "type": "FEATURE_PLAN",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[FEATURE_PLAN] Reverse What-if 엔진 추가 — SHAP→DiCE→scipy 3단계 처방형 파이프라인",
+      "owner": "plan-harness:product",
+      "axis": "PLAN",
+      "mode": "product",
+      "created_at": "2026-05-11T01:37:20.693182Z",
+      "depth": 0,
+      "payload": {
+        "objective": "기존 DecisionTree 분류(vibe_label 예측)에서 한 단계 나아가, '목표 Y를 달성하려면 어떤 변수를 얼마나 바꿔야 하는가'를 역산하는 처방형 엔진을 추가.",
+        "y_targets": {
+          "primary": "tx_volume",
+          "secondary": "visitors_total",
+          "parameterized": true,
+          "note": "Y는 회귀 대상 (연속형). vibe_label 분류 아님. 파라미터로 선택 가능."
+        },
+        "x_features": {
+          "all": [
+            "소상공_평균",
+            "소상공_추세",
+            "카페_평균",
+            "카페_추세",
+            "유동_평균",
+            "유동_추세",
+            "거래_평균",
+            "거래_추세",
+            "지가_평균",
+            "지가_추세",
+            "인과_lag평균"
+          ],
+          "controllable": [
+            "소상공_평균",
+            "카페_평균",
+            "유동_평균"
+          ],
+          "uncontrollable": [
+            "지가_평균",
+            "인과_lag평균"
+          ],
+          "note": "통제 가능: 입지 선택 시 조정 가능. 통제 불가: 참고만."
+        },
+        "pipeline": [
+          {
+            "step": 1,
+            "name": "SHAP TreeExplainer",
+            "purpose": "어떤 변수가 Y에 가장 영향을 주는지, 방향(+/-)은 무엇인지 파악",
+            "rules": [
+              "통제 불가 변수 자동 제외"
+            ],
+            "package": "shap==0.51.0"
+          },
+          {
+            "step": 2,
+            "name": "DiCE (genetic 방식)",
+            "purpose": "3가지 시나리오 자동 생성",
+            "scenarios": {
+              "최소변경": "가장 적은 변수 조정으로 목표 달성",
+              "균형": "변화량과 달성률의 균형",
+              "고효율": "비용 대비 최대 효과"
+            },
+            "package": "dice-ml==0.12"
+          },
+          {
+            "step": 3,
+            "name": "scipy.optimize.minimize (L-BFGS-B)",
+            "purpose": "DiCE 결과를 수치로 교차 검증, 시나리오 달성률(%) 정밀 계산",
+            "package": "scipy==1.17.1"
+          }
+        ],
+        "package_status": {
+          "shap": "0.51.0 OK",
+          "dice-ml": "0.12 OK",
+          "scipy": "1.17.1 OK",
+          "python": "3.14.4",
+          "verified_at": "2026-05-11T10:35:00Z"
+        },
+        "existing_artifacts": {
+          "decision_tree_train.py": "분류 트리 학습 — X 특성 정의의 출처. 재사용.",
+          "simula_data_real.json": "60개월 시계열 — Y/X 추출 소스",
+          "causal.json": "Granger lag — 인과_lag평균 산출 소스"
+        },
+        "proposed_new_files": [
+          "reverse_whatif_train.py — 회귀 모델 학습 (Y=tx_volume / visitors_total)",
+          "reverse_whatif_explain.py — SHAP 분석 + 통제 가능 변수 필터",
+          "reverse_whatif_counterfactual.py — DiCE 3시나리오 생성",
+          "reverse_whatif_optimize.py — scipy L-BFGS-B 교차 검증",
+          "reverse_whatif_pipeline.py — 위 3단계 오케스트레이션 CLI",
+          "scripts/test_reverse_whatif_smoke.py — 스모크 테스트"
+        ],
+        "_note_truncated": "대표님 메시지가 '## 신규 파일 위치'에서 잘림. 위 proposed_new_files는 product-manager가 정밀화 예정.",
+        "acceptance_criteria": [
+          "Y=tx_volume / Y=visitors_total 둘 다 파라미터로 선택 가능",
+          "통제 가능/불가 변수 분리가 SHAP 단계에서 자동 적용",
+          "DiCE가 3가지 시나리오(최소변경/균형/고효율) 각각 생성",
+          "scipy 단계에서 시나리오별 달성률(%) 계산 + DiCE 결과와 ±5% 이내 일치",
+          "기존 decision_tree_train.py 동작은 변경 없음 (회귀 사용)",
+          "스모크 테스트 통과 (의정부 금오동 등 wedge 동 1개로 실행)"
+        ],
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_*.py",
+          "scripts/test_reverse_whatif_*.py",
+          "docs/methods/reverse-whatif.md"
+        ],
+        "review_chain": [
+          "plan-ceo-reviewer",
+          "plan-eng-reviewer"
+        ],
+        "user_explicit": true,
+        "harness_trigger": "harness 시작하자"
+      },
+      "result": {
+        "user_stories_created": 5,
+        "plan_doc": "docs/plans/reverse-whatif-plan.md",
+        "review_chain_dispatched": true
+      },
+      "parent_id": null,
+      "blocked_by": [],
+      "completed_at": "2026-05-11T10:40:35.305491"
+    },
+    {
+      "id": "ISS-192",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[USER_STORY] 데이터 빌드 + 회귀 모델 학습 (reverse_whatif_train.py)",
+      "owner": "plan-harness:code",
+      "axis": "PLAN",
+      "mode": "code",
+      "parent_id": "ISS-191",
+      "depth": 1,
+      "created_at": "2026-05-11T01:40:28.883891+00:00",
+      "depends_on": [],
+      "payload": {
+        "objective": "simula_data_real.json + causal.json에서 X/Y 행렬을 빌드하고 RandomForestRegressor 회귀 모델을 학습한다. Y는 파라미터(tx_volume / visitors_total)로 선택 가능.",
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_train.py"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py",
+          "simula_data_real.json",
+          "causal.json"
+        ],
+        "x_controllable": [
+          "소상공_평균",
+          "카페_평균",
+          "유동_평균"
+        ],
+        "x_uncontrollable": [
+          "지가_평균",
+          "인과_lag평균",
+          "소상공_추세",
+          "카페_추세",
+          "유동_추세",
+          "거래_추세",
+          "지가_추세"
+        ],
+        "x_all_11": [
+          "소상공_평균",
+          "소상공_추세",
+          "카페_평균",
+          "카페_추세",
+          "유동_평균",
+          "유동_추세",
+          "거래_평균",
+          "거래_추세",
+          "지가_평균",
+          "지가_추세",
+          "인과_lag평균"
+        ],
+        "y_options": [
+          "tx_volume",
+          "visitors_total"
+        ],
+        "model": "RandomForestRegressor (sklearn) — TreeExplainer 호환 필수",
+        "output": "reverse_whatif_model_tx.pkl, reverse_whatif_model_vis.pkl, reverse_whatif_feature_matrix.json",
+        "packages": {
+          "shap": "0.51.0",
+          "scipy": "1.17.1",
+          "python": "3.14.4"
+        },
+        "acceptance_criteria": [
+          "python reverse_whatif_train.py --target tx_volume 실행 시 reverse_whatif_model_tx.pkl 생성",
+          "python reverse_whatif_train.py --target visitors_total 실행 시 reverse_whatif_model_vis.pkl 생성",
+          "훈련 R² ≥ 0.70 (60개월 × 130개 동 행렬 기준)",
+          "X 특성 11개 모두 포함 (통제 가능/불가 레이블 메타데이터 포함)",
+          "decision_tree_train.py 파일 수정 없음 (git diff로 확인)"
+        ],
+        "wedge_dong": "의정부 금오동",
+        "note": "0값 및 NaN 행 dropna 처리. StandardScaler 정규화 후 학습."
+      },
+      "result": null,
+      "blocked_by": [],
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지"
+    },
+    {
+      "id": "ISS-193",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[USER_STORY] SHAP 분석 + 통제 가능 변수 필터 (reverse_whatif_explain.py)",
+      "owner": "plan-harness:code",
+      "axis": "PLAN",
+      "mode": "code",
+      "parent_id": "ISS-191",
+      "depth": 1,
+      "created_at": "2026-05-11T01:40:28.883891+00:00",
+      "depends_on": [
+        "ISS-192"
+      ],
+      "payload": {
+        "objective": "SHAP TreeExplainer로 변수별 영향도와 방향(+/-)을 계산한다. 통제 불가 변수(지가_평균, 인과_lag평균, 모든 추세)를 자동 제외하고, 통제 가능 3개만 후속 단계에 전달한다.",
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_explain.py"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py"
+        ],
+        "packages": {
+          "shap": "0.51.0"
+        },
+        "controllable_filter": [
+          "소상공_평균",
+          "카페_평균",
+          "유동_평균"
+        ],
+        "output": "shap_result.json — {feature: str, shap_mean_abs: float, direction: +1|-1, controllable: bool}[]",
+        "acceptance_criteria": [
+          "shap_result.json에 11개 특성 모두 기록 (controllable true/false 레이블 포함)",
+          "통제 불가 변수 8개가 SHAP 결과에서 자동 제외 플래그(controllable: false) 처리됨",
+          "통제 가능 3개 변수의 방향(+1/-1) 명시",
+          "Y=tx_volume / Y=visitors_total 각각에 대해 별도 SHAP 결과 생성",
+          "shap 0.51.0 import 에러 없이 실행 완료 (Python 3.14.4 호환 확인)"
+        ],
+        "wedge_dong": "의정부 금오동",
+        "input_from": "ISS-192 산출 모델 파일 (.pkl)"
+      },
+      "result": null,
+      "blocked_by": [],
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지"
+    },
+    {
+      "id": "ISS-194",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[USER_STORY] DiCE 3시나리오 생성 (reverse_whatif_counterfactual.py)",
+      "owner": "plan-harness:code",
+      "axis": "PLAN",
+      "mode": "code",
+      "parent_id": "ISS-191",
+      "depth": 1,
+      "created_at": "2026-05-11T01:40:28.883891+00:00",
+      "depends_on": [
+        "ISS-193"
+      ],
+      "payload": {
+        "objective": "dice-ml 0.12 genetic 방식으로 최소변경/균형/고효율 3시나리오를 생성한다. features_to_vary는 통제 가능 3개로 제한.",
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_counterfactual.py"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py"
+        ],
+        "packages": {
+          "dice-ml": "0.12"
+        },
+        "scenarios": {
+          "A_minimal": "가장 적은 변수 조정 (n_cf=1, 변화량 최소화)",
+          "B_balanced": "변화량과 달성률의 균형 (n_cf=3, 균등 분산)",
+          "C_higheff": "비용 대비 최대 효과 (SHAP 상위 변수 집중)"
+        },
+        "dice_params": {
+          "method": "genetic",
+          "n_cf": 3,
+          "max_iter": 500,
+          "timeout_sec": 30
+        },
+        "features_to_vary": [
+          "소상공_평균",
+          "카페_평균",
+          "유동_평균"
+        ],
+        "output": "whatif_scenarios.json — {scenario: A|B|C, changes: {feature: delta}, predicted_y: float}[]",
+        "acceptance_criteria": [
+          "3개 시나리오(A/B/C) 각각에 대해 whatif_scenarios.json 항목 생성",
+          "features_to_vary가 통제 가능 3개로만 제한됨 (통제 불가 변수 변경 없음)",
+          "30초 이내 수렴 완료 (타임아웃 가드 구현)",
+          "Y=tx_volume / Y=visitors_total 파라미터 모두 작동",
+          "dice-ml 0.12 import 에러 없이 실행 완료"
+        ],
+        "wedge_dong": "의정부 금오동",
+        "input_from": "ISS-192 모델 + ISS-193 SHAP 필터 결과"
+      },
+      "result": null,
+      "blocked_by": [],
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지"
+    },
+    {
+      "id": "ISS-195",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "BLOCKED",
+      "title": "[USER_STORY] scipy L-BFGS-B 교차 검증 + 달성률 계산 (reverse_whatif_optimize.py)",
+      "owner": "plan-harness:code",
+      "axis": "PLAN",
+      "mode": "code",
+      "parent_id": "ISS-191",
+      "depth": 1,
+      "created_at": "2026-05-11T01:40:28.883891+00:00",
+      "depends_on": [
+        "ISS-194"
+      ],
+      "payload": {
+        "objective": "scipy.optimize.minimize (L-BFGS-B)로 DiCE 3시나리오 각각의 달성률(%)을 수치 교차 검증한다. DiCE 예측값과 scipy 최적화값의 차이가 ±5% 이내여야 한다.",
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_optimize.py"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py"
+        ],
+        "packages": {
+          "scipy": "1.17.1"
+        },
+        "method": "L-BFGS-B",
+        "bounds": "controllable 변수의 ±50% 범위 제한",
+        "output": "whatif_result.json — {scenario: A|B|C, changes: {...}, dice_predicted_y: float, scipy_verified_y: float, achievement_rate_pct: float, verified: bool}[]",
+        "acceptance_criteria": [
+          "3개 시나리오 각각에 대해 scipy 최적화 달성률(%) 계산 완료",
+          "DiCE vs scipy 달성률 차이 ±5% 이내 (verified: true)",
+          "달성률 공식: (predicted_y - baseline_y) / baseline_y * 100",
+          "Y=tx_volume / Y=visitors_total 파라미터 모두 작동",
+          "whatif_result.json 정상 생성 (위 필드 모두 포함)"
+        ],
+        "wedge_dong": "의정부 금오동",
+        "input_from": "ISS-192 모델 + ISS-194 시나리오",
+        "controllable_variables": [
+          "소상공_평균",
+          "카페_평균",
+          "유동_평균"
+        ],
+        "bounds_note": "L-BFGS-B bounds: controllable 3개 변수의 [원래값×0.5, 원래값×1.5] 범위"
+      },
+      "result": null,
+      "blocked_by": [],
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지"
+    },
+    {
+      "id": "ISS-196",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[USER_STORY] CLI 오케스트레이터 + 스모크 테스트 (reverse_whatif_pipeline.py)",
+      "owner": "plan-harness:code",
+      "axis": "PLAN",
+      "mode": "code",
+      "parent_id": "ISS-191",
+      "depth": 1,
+      "created_at": "2026-05-11T01:40:28.883891+00:00",
+      "depends_on": [
+        "ISS-195"
+      ],
+      "payload": {
+        "objective": "ISS-192~195의 4단계를 하나의 CLI로 오케스트레이션한다. 의정부 금오동 wedge 데이터로 스모크 테스트를 실행하여 전체 파이프라인 통과를 검증한다.",
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_pipeline.py",
+          "scripts/test_reverse_whatif_smoke.py",
+          "docs/methods/reverse-whatif.md"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py"
+        ],
+        "cli_interface": "python reverse_whatif_pipeline.py --dong 의정부_금오동 --target tx_volume --goal 15",
+        "smoke_test": {
+          "dong": "의정부 금오동",
+          "target": "tx_volume",
+          "goal_pct": 15,
+          "expected": {
+            "scenarios": 3,
+            "achievement_range": "10~20%",
+            "runtime_sec": "<30",
+            "output_file": "whatif_result.json"
+          }
+        },
+        "acceptance_criteria": [
+          "python reverse_whatif_pipeline.py --dong 의정부_금오동 --target tx_volume --goal 15 실행 시 3개 시나리오 출력",
+          "scripts/test_reverse_whatif_smoke.py 실행 시 PASS (의정부 금오동 30초 이내)",
+          "전체 파이프라인(train→explain→counterfactual→optimize) 순서 실행 확인",
+          "--target visitors_total 으로도 실행 성공",
+          "decision_tree_train.py 파일 미변경 (git diff 검증)"
+        ],
+        "wedge_dong": "의정부 금오동",
+        "input_from": "ISS-192~195 전체 모듈",
+        "controllable_variables": [
+          "소상공_평균",
+          "카페_평균",
+          "유동_평균"
+        ]
+      },
+      "result": null,
+      "blocked_by": []
+    },
+    {
+      "id": "ISS-197",
+      "type": "PLAN_CEO_REVIEW",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[PLAN_CEO_REVIEW] Reverse What-if 엔진 전략 검토",
+      "owner": "plan-harness:ceo-review",
+      "axis": "PLAN",
+      "mode": "ceo-review",
+      "parent_id": "ISS-191",
+      "depth": 1,
+      "created_at": "2026-05-11T01:40:28.883891+00:00",
+      "depends_on": [
+        "ISS-196"
+      ],
+      "payload": {
+        "review_target_plan": "docs/plans/reverse-whatif-plan.md",
+        "review_target_stories": [
+          "ISS-192",
+          "ISS-193",
+          "ISS-194",
+          "ISS-195",
+          "ISS-196"
+        ],
+        "review_focus": [
+          "처방형 엔진이 상권 SaaS의 핵심 차별화 요소인가?",
+          "Y 파라미터화(tx_volume/visitors_total)가 충분한 사업적 커버리지를 주는가?",
+          "의사결정자(구청, 소상공인)가 3시나리오를 직관적으로 해석할 수 있는가?",
+          "스모크 테스트(금오동) → 실서비스 전환 경로가 명확한가?",
+          "SHAP+DiCE+scipy 3단계가 과도한 복잡도인가, 아니면 신뢰도 필수 구조인가?"
+        ],
+        "scope_dir": "docs/plans",
+        "output_doc": "docs/reviews/ceo-review-reverse-whatif-001.md"
+      },
+      "result": null,
+      "blocked_by": []
+    },
+    {
+      "id": "ISS-198",
+      "type": "PLAN_ENG_REVIEW",
+      "priority": "P1",
+      "status": "READY",
+      "title": "[PLAN_ENG_REVIEW] Reverse What-if 엔진 실행 가능성 검토",
+      "owner": "plan-harness:eng-review",
+      "axis": "PLAN",
+      "mode": "eng-review",
+      "parent_id": "ISS-191",
+      "depth": 1,
+      "created_at": "2026-05-11T01:40:28.883891+00:00",
+      "depends_on": [
+        "ISS-196"
+      ],
+      "payload": {
+        "review_target_plan": "docs/plans/reverse-whatif-plan.md",
+        "review_target_stories": [
+          "ISS-192",
+          "ISS-193",
+          "ISS-194",
+          "ISS-195",
+          "ISS-196"
+        ],
+        "review_focus": [
+          "Python 3.14.4 + shap 0.51.0 + dice-ml 0.12 + scipy 1.17.1 호환성 리스크",
+          "DiCE genetic 알고리즘의 30초 제한 현실성 (130동 × 60개월 규모)",
+          "RandomForestRegressor vs GradientBoostingRegressor 선택 근거 (TreeExplainer 호환)",
+          "StandardScaler 정규화 전략 — 동별 상대 비교 시 정규화 방식 타당성",
+          "ISS-192~196 의존성 체인이 순차적인가, 병렬화 가능한 단계가 있는가?",
+          "decision_tree_train.py 분리 원칙 — 코드 중복 최소화 전략"
+        ],
+        "scope_dir": "docs/plans",
+        "output_doc": "docs/reviews/eng-review-reverse-whatif-001.md"
+      },
+      "result": null,
+      "blocked_by": []
+    },
+    {
+      "id": "ISS-199",
+      "title": "[Plan:CEO검토] ISS-191 전략 검토",
+      "type": "PLAN_CEO_REVIEW",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "plan-ceo-reviewer",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "ISS-191",
+      "depends_on": [],
+      "created_at": "2026-05-11T10:40:35.305491",
+      "payload": {
+        "source_issue": "ISS-191",
+        "source_plan": {
+          "user_stories_created": 5,
+          "plan_doc": "docs/plans/reverse-whatif-plan.md",
+          "review_chain_dispatched": true
+        },
+        "feature": "ISS-191"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-200",
+      "title": "[Plan:Eng검토] ISS-191 실행가능성 검토",
+      "type": "PLAN_ENG_REVIEW",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "plan-eng-reviewer",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "ISS-191",
+      "depends_on": [],
+      "created_at": "2026-05-11T10:40:35.305491",
+      "payload": {
+        "source_issue": "ISS-191",
+        "source_plan": {
+          "user_stories_created": 5,
+          "plan_doc": "docs/plans/reverse-whatif-plan.md",
+          "review_chain_dispatched": true
+        },
+        "feature": "ISS-191"
+      },
+      "result": null,
+      "spawn_rules": []
     }
   ],
   "hooks": {
@@ -10617,6 +11306,18 @@
         "issue_type": "GENERATE_CODE",
         "plan_created": 0,
         "timestamp": "2026-05-04T23:03:52.918069"
+      },
+      {
+        "issue_id": "GALLERY_CARD_DIM_UI-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 0,
+        "timestamp": "2026-05-04T23:04:51.626466"
+      },
+      {
+        "issue_id": "ISS-191",
+        "issue_type": "FEATURE_PLAN",
+        "plan_created": 2,
+        "timestamp": "2026-05-11T10:40:35.305491"
       }
     ],
     "on_fail": [],
@@ -11904,8 +12605,8 @@
     ]
   },
   "stats": {
-    "total_issues": 184,
-    "completed": 176,
+    "total_issues": 186,
+    "completed": 178,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -12088,8 +12789,17 @@
     "count": 1
   },
   "issue_budget": {
-    "date": "2026-05-04",
+    "date": "2026-05-11",
     "created_today": 0
   },
-  "updated_at": "2026-05-04T11:11:52.822952Z"
+  "updated_at": "2026-05-11T01:37:20.693339Z",
+  "hermes_state": {
+    "invocations_by_issue": {},
+    "daily_log": [],
+    "total_invocations": 0
+  },
+  "proactive_scan_state": {
+    "date": "",
+    "count": 0
+  }
 }

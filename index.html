@@ -3,12 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <title>TowninGraph · Master Console v0.3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://unpkg.com/deck.gl@9.0.30/dist.min.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="css/meongbun.css" rel="stylesheet">
+<link href="css/icons.css" rel="stylesheet">
+<link href="css/pharmacy.css" rel="stylesheet">
+<link href="css/data-studio.css" rel="stylesheet">
+<script src="components/icons.js"></script>
+<script src="utils/url-context.js"></script>
+<script src="viz/plugins/pharmacy-scorer.js"></script>
+<script src="viz/plugins/pharmacy-hazard.js"></script>
+<script src="components/pharmacy-develop.js"></script>
+<script src="components/pharmacy-close.js"></script>
+<script src="components/data-studio-datasets.js" defer></script>
 <style>
   body { font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif; background: #07101F; color: #E8EDF3; margin: 0; }
   .mono { font-family: 'JetBrains Mono', monospace; }
@@ -39,10 +51,37 @@
   .vibe-rising_twin { background: #FF8FB1; color: white; }
 
   /* 모드 탭 */
-  .mode-btn { padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+  /* 헤더 모드 버튼 — 한 줄 강제 + 줄바꿈 방지 */
+  .mode-btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;       /* "갤 러" 처럼 글자 단위 줄바꿈 방지 */
+    flex-shrink: 0;            /* nav 가로 폭 부족해도 버튼이 줄어들지 않음 */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.2;
+  }
+  .mode-btn .feather-icon { flex-shrink: 0; }
   .mode-btn.active { background: linear-gradient(135deg, #00A1E0 0%, #5BC0EB 100%); color: white; box-shadow: 0 4px 12px rgba(0,161,224,0.3); }
   .mode-btn:not(.active) { background: rgba(255,255,255,0.04); color: #9CA3AF; }
   .mode-btn:not(.active):hover { background: rgba(255,255,255,0.08); color: white; }
+  /* 헤더 nav — 가로 스크롤 가능 (좁은 폭에서) + 줄바꿈 절대 안 함 */
+  header > div > nav.flex {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    max-width: 100%;
+    min-width: 0;
+  }
+  header > div > nav.flex::-webkit-scrollbar { height: 4px; }
+  header > div > nav.flex::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+  /* sticky 헤더 본문 가림 방지 — 본문 컨테이너 상단 여백 */
+  main, .view, [id^="view-"] { scroll-margin-top: 80px; }
 
   /* 갤러리 카드 */
   .theme-card {
@@ -155,25 +194,28 @@
       </div>
     </div>
     <nav class="flex items-center gap-2">
-      <button data-mode="gallery" class="mode-btn active">🎨 갤러리</button>
-      <button data-mode="explore" class="mode-btn">🧬 Explore</button>
-      <button data-mode="analyze" class="mode-btn">📊 Analyze</button>
-      <button data-mode="decide" class="mode-btn">🎯 Decide</button>
-      <button data-mode="datastudio" class="mode-btn">🗄️ Data Studio</button>
-      <button data-mode="workflow" class="mode-btn">🧩 Workflow</button>
+      <button data-mode="gallery" data-icon="grid" class="mode-btn active"> 갤러리</button>
+      <button data-mode="explore" data-icon="compass" class="mode-btn"> Explore</button>
+      <button data-mode="analyze" data-icon="bar-chart-2" class="mode-btn"> Analyze</button>
+      <button data-mode="decide" data-icon="target" class="mode-btn"> Decide</button>
+      <button data-mode="datastudio" data-icon="database" class="mode-btn"> Data Studio</button>
+      <button data-mode="workflow" data-icon="git-merge" class="mode-btn"> Workflow</button>
+      <button data-mode="meongbun" data-icon="link" class="mode-btn" style="background:rgba(0,161,224,0.12);border:1px solid rgba(0,161,224,0.3);color:#5BC0EB;"> 명분 사슬</button>
+      <button data-mode="pharmacy-develop" data-icon="package" class="mode-btn"> 약국·점포개발</button>
+      <button data-mode="pharmacy-close" data-icon="alert-triangle" class="mode-btn"> 약국·폐업평가</button>
       <span class="mx-2 text-gray-600">|</span>
-      <a href="manual.html" target="_blank" class="px-2 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 hover:text-white" title="사용자 매뉴얼 (새 창)">📖 매뉴얼</a>
+      <a href="manual.html" target="_blank" class="px-2 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 hover:text-white flex items-center gap-1" title="사용자 매뉴얼 (새 창)" data-icon="book" data-icon-size="14"> 매뉴얼</a>
       <span class="text-[10px] mono text-gray-500" id="meta-info">SIMULA · loading…</span>
     </nav>
   </div>
 </header>
 
-<main class="px-6 py-5 max-w-[1920px] mx-auto">
+<main class="px-6 pt-6 pb-5 max-w-[1920px] mx-auto" style="padding-top: 24px;">
 
   <!-- ════════════ 0. GALLERY ════════════ -->
   <section id="view-gallery" class="block">
     <div class="mb-5">
-      <h2 class="text-2xl font-bold text-white tracking-tight mb-1">🎨 주제 갤러리</h2>
+      <h2 class="text-2xl font-bold text-white tracking-tight mb-1 flex items-center gap-2" data-icon="grid"> 주제 갤러리</h2>
       <p class="text-sm text-gray-400">자주 보는 12개 분석 주제. 카드를 클릭하면 즉시 해당 모드로 진입합니다.</p>
     </div>
 
@@ -187,10 +229,10 @@
     <!-- Category tabs -->
     <div class="flex items-center gap-2 mb-4 overflow-x-auto">
       <button class="px-3 py-1.5 rounded-md text-[11px] font-semibold text-white" style="background:#00A1E0">전체 (12)</button>
-      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5">🔥 트렌드 (4)</button>
-      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5">⚠️ 이상 탐지 (3)</button>
-      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5">🤝 파트너/매출 (3)</button>
-      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5">🌐 비교 분석 (2)</button>
+      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="trending-up" data-icon-size="12"> 트렌드 (4)</button>
+      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="alert-triangle" data-icon-size="12"> 이상 탐지 (3)</button>
+      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="user-check" data-icon-size="12"> 파트너/매출 (3)</button>
+      <button class="px-3 py-1.5 rounded-md text-[11px] text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="globe" data-icon-size="12"> 비교 분석 (2)</button>
     </div>
 
     <!-- Gallery grid -->
@@ -202,8 +244,18 @@
     <div class="mb-5">
       <div class="flex items-baseline justify-between">
         <div>
-          <h2 class="text-2xl font-bold text-white tracking-tight">🧬 Explore — 자동 인사이트</h2>
-          <p class="text-sm text-gray-400">알파폴드 시그니처 + 패턴 자동 탐지. 마스터의 첫 진입점.</p>
+          <!-- ▼ 이 화면이 평가하는 것 -->
+          <div class="screen-context-banner">
+            <div class="ctx-line">
+              <span class="ctx-where" id="explore-ctx-where">전국 130개 동</span>
+              <span class="ctx-arrow">·</span>
+              <span class="ctx-what">신뢰도(pLDDT) + 이상 패턴 자동 탐지</span>
+              <span class="ctx-arrow">·</span>
+              <span class="ctx-when" id="explore-ctx-when">2024-12</span>
+            </div>
+            <div class="ctx-headline" id="explore-ctx-headline">전국 130개 동의 신뢰도와 이상 패턴을 한 화면에서 보기</div>
+          </div>
+          <h2 class="text-base font-semibold text-gray-400 tracking-tight flex items-center gap-2 mt-2" data-icon="compass"> Explore — 자동 인사이트 <span class="text-[11px] text-gray-500 font-normal ml-2">(알파폴드 시그니처 + 패턴 자동 탐지 — 마스터의 첫 진입점)</span></h2>
         </div>
         <div class="text-right">
           <div class="text-[10px] mono text-gray-400">현재 시점</div>
@@ -216,11 +268,11 @@
       <!-- LEFT: 자동 인사이트 -->
       <div class="col-span-2 space-y-3">
         <div class="glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">⚠️ 이상 탐지 (Top 5)</div>
+          <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="alert-triangle" data-icon-size="11"> 이상 탐지 (Top 5)</div>
           <div id="anomaly-list" class="space-y-2"></div>
         </div>
         <div class="glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🔥 급상승 동 (Top 5)</div>
+          <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="trending-up" data-icon-size="11"> 급상승 동 (Top 5)</div>
           <div id="rising-list" class="space-y-2"></div>
         </div>
       </div>
@@ -256,6 +308,7 @@
             <div class="text-[9px] mono" style="color:#5BC0EB">▶ Prophet 12mo</div>
           </div>
           <svg id="explore-trace" width="100%" height="160" viewBox="0 0 360 160" preserveAspectRatio="none"></svg>
+          <span id="explore-trace-future-label" class="explore-trace-future-label" style="display:none">▶ 예측 cone (p10~p90) — 2026-01 이후</span>
           <div class="flex flex-wrap gap-1.5 mt-2 text-[8px] mono">
             <span style="color:#00A1E0">━ 지가</span>
             <span style="color:#FED766">━ 거래</span>
@@ -265,7 +318,7 @@
           </div>
         </div>
         <div class="glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">💡 자동 코멘트</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">자동 코멘트</div>
           <div id="auto-comment" class="text-[11px] text-gray-200 leading-relaxed">동을 클릭하면 자동 분석 코멘트가 생성됩니다.</div>
         </div>
       </div>
@@ -275,15 +328,26 @@
   <!-- ════════════ 2. ANALYZE MODE ════════════ -->
   <section id="view-analyze" class="hidden">
     <div class="mb-5">
-      <h2 class="text-2xl font-bold text-white tracking-tight">📊 Analyze — Tableau 자유 매핑</h2>
-      <p class="text-sm text-gray-400">데이터 패널 + 매핑 슬롯 + 캔버스. 어떤 주제든 직접 만들기.</p>
+      <!-- ▼ 이 화면이 평가하는 것 (장소·주제·시점) — 동적 갱신 -->
+      <div class="screen-context-banner" id="analyze-context-banner">
+        <div class="ctx-line">
+          <span class="ctx-where">전체 동</span>
+          <span class="ctx-arrow">·</span>
+          <span class="ctx-what">유동인구 × 카페수</span>
+          <span class="ctx-arrow">·</span>
+          <span class="ctx-when">2024-12</span>
+        </div>
+        <div class="ctx-headline" id="analyze-context-headline">전체 동의 유동인구를 카페수와 함께 본 2024년 12월 분석</div>
+      </div>
+      <!-- 기능 부제 (보조) -->
+      <h2 class="text-base font-semibold text-gray-400 tracking-tight flex items-center gap-2 mt-2" data-icon="bar-chart-2"> Analyze — Tableau 자유 매핑 <span class="text-[11px] text-gray-500 font-normal ml-2">(데이터 패널 + 매핑 슬롯 + 캔버스로 직접 주제 구성)</span></h2>
     </div>
 
     <div class="grid grid-cols-12 gap-4">
       <!-- LEFT: DATA PANEL -->
       <div class="col-span-2 glass-light rounded-lg p-3 space-y-3" style="max-height: 660px; overflow-y: auto;">
         <div>
-          <div class="text-[10px] mono text-gray-400 mb-2">📂 5종 카테고리</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">5종 카테고리</div>
           <div class="space-y-2 mono text-[10px]">
             <div class="text-gray-400">▾ 위치 / 접근성</div>
             <div class="ml-2 space-y-1">
@@ -412,7 +476,7 @@
         <div class="glass-light rounded-lg p-3">
           <div class="flex items-center justify-between mb-2">
             <div class="text-[10px] mono text-gray-400">Profile Wheel</div>
-            <button id="find-twin" class="text-[9px] mono text-cyan-300 hover:text-white">🔍 자동 Twin</button>
+            <button id="find-twin" class="text-[9px] mono text-cyan-300 hover:text-white flex items-center gap-1" data-icon="globe" data-icon-size="10"> 자동 Twin</button>
           </div>
           <div class="flex items-center gap-1 text-[10px] mono mb-2">
             <span class="text-gray-400">A</span>
@@ -435,8 +499,18 @@
   <!-- ════════════ 3. DECIDE MODE ════════════ -->
   <section id="view-decide" class="hidden">
     <div class="mb-5">
-      <h2 class="text-2xl font-bold text-white tracking-tight">🎯 Decide — 임원/시연용 KPI</h2>
-      <p class="text-sm text-gray-400">한 화면에 의사결정 핵심만. 회의실 모니터에 띄우는 용도.</p>
+      <!-- ▼ 이 화면이 평가하는 것 -->
+      <div class="screen-context-banner">
+        <div class="ctx-line">
+          <span class="ctx-where" id="decide-ctx-where">선택 동 (없음)</span>
+          <span class="ctx-arrow">·</span>
+          <span class="ctx-what">의사결정 KPI + 명분 트리 + 권고 cone</span>
+          <span class="ctx-arrow">·</span>
+          <span class="ctx-when" id="decide-ctx-when">2024-12</span>
+        </div>
+        <div class="ctx-headline" id="decide-ctx-headline">선택한 동의 의사결정 KPI를 한 화면에 펼친 임원 시연 보드</div>
+      </div>
+      <h2 class="text-base font-semibold text-gray-400 tracking-tight flex items-center gap-2 mt-2" data-icon="target"> Decide — 임원/시연용 KPI <span class="text-[11px] text-gray-500 font-normal ml-2">(회의실 모니터용 단일 화면 의사결정 보드)</span></h2>
     </div>
 
     <!-- 4 Big KPIs -->
@@ -480,17 +554,17 @@
       <!-- 우측: Top 동 + 충격 + 인과 패널 -->
       <div class="col-span-4 space-y-3">
         <div class="glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🏆 5년 누적 성장 Top 5</div>
+          <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="trending-up" data-icon-size="11"> 5년 누적 성장 Top 5</div>
           <div id="d-top-growth" class="space-y-2 text-[11px]"></div>
         </div>
         <div class="glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">⚠️ 외부 충격 5건</div>
+          <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="alert-triangle" data-icon-size="11"> 외부 충격 5건</div>
           <div class="space-y-1.5 text-[10px] mono" id="d-shocks"></div>
         </div>
         <!-- [C-5] 전국 Top 인과 패턴 -->
         <div class="glass-light rounded-lg p-3">
           <div class="flex items-center justify-between mb-2">
-            <div class="text-[10px] mono text-gray-400">🧬 전국 Top 인과 패턴</div>
+            <div class="text-[10px] mono text-gray-400 flex items-center gap-1" data-icon="compass" data-icon-size="11"> 전국 Top 인과 패턴</div>
             <div class="text-[9px] mono" style="color:#A78BFA">Granger</div>
           </div>
           <div id="d-top-causal" class="space-y-1 text-[10px]"></div>
@@ -501,16 +575,20 @@
 
     <!-- [DECISION_TREE-001] 분류 트리 + 변수 중요도 -->
     <div class="grid grid-cols-12 gap-4 mt-4">
-      <div class="col-span-7 glass-light rounded-lg p-4" style="overflow-x:auto">
+      <div class="col-span-7 glass-light rounded-lg p-4 vibe-tree-card" id="vibe-tree-card" style="overflow-x:auto;cursor:zoom-in;" role="button" tabindex="0" aria-label="Vibe 분류 트리 — 클릭하면 큰 화면으로 펼치고 한글 해설을 봅니다">
         <div class="flex items-baseline justify-between mb-2">
-          <div class="text-[10px] mono text-gray-400">🌳 Vibe 분류 트리 (Decision Tree)</div>
-          <div class="text-[9px] mono" id="d-tree-meta" style="color:#A78BFA">—</div>
+          <div class="text-[10px] mono text-gray-400 flex items-center gap-1" data-icon="git-merge" data-icon-size="11"> Vibe 분류 트리 (Decision Tree)</div>
+          <div class="flex items-center gap-2">
+            <div class="text-[9px] mono" id="d-tree-meta" style="color:#A78BFA">—</div>
+            <span class="vibe-tree-zoom-badge">⛶ 크게 보기</span>
+          </div>
         </div>
         <svg id="d-tree-canvas" width="100%" height="320" viewBox="0 0 720 320" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="vibe-tree-hint">트리 영역을 클릭하면 큰 화면 + 초보자용 한글 해설이 펼쳐집니다. (각 노드 자체도 개별 클릭 가능)</div>
         <div class="text-[9px] text-gray-500 mt-2 leading-snug">분기 조건은 학습 데이터 기준 임계값. 동을 선택하면 해당 동의 분기 경로가 하이라이트됩니다. <span style="color:#FED766">합성 데이터 위 학습</span> — 실데이터 도입(<a href="docs/data-integrity-diagnosis.md" target="_blank" class="text-cyan-400 underline">ISS-018</a>) 시 정확도 변동 예상.</div>
       </div>
       <div class="col-span-5 glass-light rounded-lg p-4">
-        <div class="text-[10px] mono text-gray-400 mb-2">📊 변수 중요도 (Feature Importance)</div>
+        <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="bar-chart-2" data-icon-size="11"> 변수 중요도 (Feature Importance)</div>
         <svg id="d-tree-importance" width="100%" height="220" viewBox="0 0 280 220"></svg>
         <div class="text-[9px] text-gray-500 mt-1 leading-snug">의사결정에 기여하는 정도. 합산 1.0.</div>
       </div>
@@ -521,7 +599,7 @@
   <section id="view-datastudio" class="hidden">
     <div class="mb-5 flex items-baseline justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-white tracking-tight">🗄️ Data Studio</h2>
+        <h2 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2" data-icon="database"> Data Studio</h2>
         <p class="text-sm text-gray-400">소스 연결, ETL 파이프라인, 품질 검증, 레이어 카탈로그.</p>
       </div>
       <div class="text-[10px] mono text-gray-500">
@@ -531,14 +609,15 @@
 
     <!-- DS sub-tabs -->
     <div class="flex items-center gap-2 mb-4">
-      <button data-ds="sources" class="ds-tab px-3 py-1.5 rounded-md text-xs font-semibold text-white" style="background:#00A1E0">📥 Sources (9)</button>
-      <button data-ds="etl"     class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🔄 ETL Pipeline</button>
-      <button data-ds="quality" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">✅ Quality</button>
-      <button data-ds="catalog" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">📚 Catalog (40)</button>
-      <button data-ds="ai" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🤖 AI Pipeline</button>
-      <button data-ds="causal" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🧬 Causal Graph</button>
-      <button data-ds="stack" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">🚀 6개월 Stack</button>
-      <button data-ds="vizpack" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5">📊 Viz Pack</button>
+      <button data-ds="sources" class="ds-tab px-3 py-1.5 rounded-md text-xs font-semibold text-white flex items-center gap-1" style="background:#00A1E0" data-icon="download" data-icon-size="12"> Sources (9)</button>
+      <button data-ds="etl"     class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="refresh-cw" data-icon-size="12"> ETL Pipeline</button>
+      <button data-ds="quality" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="check-circle" data-icon-size="12"> Quality</button>
+      <button data-ds="catalog" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="book-open" data-icon-size="12"> Catalog (40)</button>
+      <button data-ds="ai" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="cpu" data-icon-size="12"> AI Pipeline</button>
+      <button data-ds="causal" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="compass" data-icon-size="12"> Causal Graph</button>
+      <button data-ds="stack" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="zap" data-icon-size="12"> 6개월 Stack</button>
+      <button data-ds="vizpack" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="bar-chart-2" data-icon-size="12"> Viz Pack</button>
+      <button data-ds="datasets" class="ds-tab px-3 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 flex items-center gap-1" data-icon="database" data-icon-size="12"> 데이터셋 (5)</button>
       <span class="ml-auto text-[10px] mono text-gray-500">마지막 ETL: <span class="text-cyan-300">2026-05-01 03:00</span></span>
     </div>
 
@@ -547,17 +626,17 @@
       <div class="grid grid-cols-12 gap-4">
         <!-- Public sources -->
         <div class="col-span-7 glass-light rounded-lg p-4">
-          <div class="text-[11px] mono text-gray-400 mb-3">🏛️ 공공 데이터 소스</div>
+          <div class="text-[11px] mono text-gray-400 mb-3">공공 데이터 소스</div>
           <div id="public-sources" class="space-y-2"></div>
         </div>
         <!-- Townin internal -->
         <div class="col-span-5 glass-light rounded-lg p-4">
-          <div class="text-[11px] mono text-gray-400 mb-3">🏢 Townin 내부 데이터</div>
+          <div class="text-[11px] mono text-gray-400 mb-3">Townin 내부 데이터</div>
           <div id="townin-sources" class="space-y-2"></div>
         </div>
         <!-- Schedule -->
         <div class="col-span-12 glass-light rounded-lg p-4">
-          <div class="text-[11px] mono text-gray-400 mb-3">⏰ 갱신 스케줄 (다음 24시간)</div>
+          <div class="text-[11px] mono text-gray-400 mb-3">갱신 스케줄 (다음 24시간)</div>
           <div id="schedule-strip"></div>
         </div>
       </div>
@@ -571,7 +650,7 @@
             <div class="text-[11px] mono text-gray-400">ETL 파이프라인 (DAG) <span class="text-gray-500 ml-2">노드 클릭으로 상세 보기</span></div>
             <div class="flex gap-2">
               <button id="etl-run-all" class="px-2 py-1 text-[10px] mono rounded text-white" style="background:#5BC0EB">▶ 전체 재실행</button>
-              <button class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">📜 로그</button>
+              <button class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">로그</button>
             </div>
           </div>
           <svg id="etl-dag" width="100%" height="380" viewBox="0 0 880 380"></svg>
@@ -581,7 +660,7 @@
           <div id="etl-node-detail" class="glass-light rounded-lg p-3 border border-cyan-400/20" style="display:none">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[10px] mono text-cyan-300" id="etl-detail-cat">SOURCE</span>
-              <button id="etl-detail-close" class="text-gray-500 hover:text-white text-xs">✕</button>
+              <button id="etl-detail-close" class="text-gray-500 hover:text-white text-xs">×</button>
             </div>
             <div class="text-sm font-bold text-white mb-1" id="etl-detail-name">—</div>
             <div class="text-[10px] text-gray-400 mb-3" id="etl-detail-desc">—</div>
@@ -601,7 +680,7 @@
             </div>
             <div class="mt-3 flex gap-1">
               <button class="flex-1 px-2 py-1 text-[10px] mono rounded text-white" style="background:#5BC0EB">▶ 재실행</button>
-              <button class="flex-1 px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">⚙ 설정</button>
+              <button class="flex-1 px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">설정</button>
             </div>
           </div>
 
@@ -628,12 +707,12 @@
       <div class="grid grid-cols-12 gap-4">
         <!-- pLDDT distribution -->
         <div class="col-span-5 glass-light rounded-lg p-4">
-          <div class="text-[11px] mono text-gray-400 mb-3">📊 레이어별 pLDDT 분포</div>
+          <div class="text-[11px] mono text-gray-400 mb-3 flex items-center gap-1" data-icon="bar-chart-2" data-icon-size="12"> 레이어별 pLDDT 분포</div>
           <svg id="quality-plddt-bars" width="100%" height="320" viewBox="0 0 380 320"></svg>
         </div>
         <!-- Missing heatmap -->
         <div class="col-span-7 glass-light rounded-lg p-4">
-          <div class="text-[11px] mono text-gray-400 mb-3">🟦 결측/품질 매트릭스 (동 × 시점)</div>
+          <div class="text-[11px] mono text-gray-400 mb-3">결측/품질 매트릭스 (동 × 시점)</div>
           <svg id="quality-heatmap" width="100%" height="320" viewBox="0 0 720 320"></svg>
           <div class="flex items-center gap-3 mt-2 text-[9px] mono">
             <span class="flex items-center gap-1"><span class="w-3 h-2 plddt-90 inline-block"></span>높음</span>
@@ -644,7 +723,7 @@
         </div>
         <!-- Alarms -->
         <div class="col-span-12 glass-light rounded-lg p-4">
-          <div class="text-[11px] mono text-gray-400 mb-3">🚨 품질 알람</div>
+          <div class="text-[11px] mono text-gray-400 mb-3 flex items-center gap-1" data-icon="alert-triangle" data-icon-size="12"> 품질 알람</div>
           <div id="quality-alarms" class="grid grid-cols-3 gap-3"></div>
         </div>
       </div>
@@ -660,8 +739,8 @@
               <div class="text-[10px] text-gray-500 mt-0.5">5단계 추론 흐름 · 노드 클릭으로 모델 상세 확인</div>
             </div>
             <div class="flex gap-2">
-              <button id="ai-run-all" class="px-2 py-1 text-[10px] mono rounded text-white" style="background:#FF8FB1">🤖 추론 시뮬</button>
-              <button class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">📊 모델 메트릭</button>
+              <button id="ai-run-all" class="px-2 py-1 text-[10px] mono rounded text-white flex items-center gap-1" style="background:#FF8FB1" data-icon="cpu" data-icon-size="11"> 추론 시뮬</button>
+              <button class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300 flex items-center gap-1" data-icon="bar-chart-2" data-icon-size="11"> 모델 메트릭</button>
             </div>
           </div>
           <svg id="ai-dag" width="100%" height="420" viewBox="0 0 880 420"></svg>
@@ -670,7 +749,7 @@
           <div id="ai-node-detail" class="glass-light rounded-lg p-3 border border-pink-400/20" style="display:none">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[10px] mono" id="ai-detail-cat">MODEL</span>
-              <button id="ai-detail-close" class="text-gray-500 hover:text-white text-xs">✕</button>
+              <button id="ai-detail-close" class="text-gray-500 hover:text-white text-xs">×</button>
             </div>
             <div class="text-sm font-bold text-white mb-1" id="ai-detail-name">—</div>
             <div class="text-[10px] text-gray-400 mb-3" id="ai-detail-desc">—</div>
@@ -700,15 +779,15 @@
             <div class="text-[10px] mono text-gray-400 mb-2">최신 인사이트 (top 3)</div>
             <div class="space-y-1.5 text-[10px]">
               <div class="insight-card insight-positive rounded-md p-2">
-                <div class="text-[11px] font-semibold text-white">🔥 성수1가1동 급상승</div>
+                <div class="text-[11px] font-semibold text-white flex items-center gap-1" data-icon="trending-up" data-icon-size="11"> 성수1가1동 급상승</div>
                 <div class="text-[9px] text-gray-400 mt-0.5">5년 +127% · 신뢰도 92</div>
               </div>
               <div class="insight-card insight-warning rounded-md p-2">
-                <div class="text-[11px] font-semibold text-white">⚠️ 중구 D3동 폐업↑</div>
+                <div class="text-[11px] font-semibold text-white flex items-center gap-1" data-icon="alert-triangle" data-icon-size="11"> 중구 D3동 폐업↑</div>
                 <div class="text-[9px] text-gray-400 mt-0.5">예측 신뢰구간 이탈</div>
               </div>
               <div class="insight-card insight-positive rounded-md p-2">
-                <div class="text-[11px] font-semibold text-white">🌐 부산 전포 = 성수 Twin</div>
+                <div class="text-[11px] font-semibold text-white flex items-center gap-1" data-icon="globe" data-icon-size="11"> 부산 전포 = 성수 Twin</div>
                 <div class="text-[9px] text-gray-400 mt-0.5">코사인 0.89</div>
               </div>
             </div>
@@ -768,7 +847,7 @@
         <!-- 우: 인과 트리플렛 리스트 -->
         <div class="col-span-3 space-y-3">
           <div class="glass-light rounded-lg p-3" style="max-height:240px; overflow-y:auto;">
-            <div class="text-[10px] mono text-gray-400 mb-2">🧬 Granger 인과 (시차 + p값)</div>
+            <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="compass" data-icon-size="11"> Granger 인과 (시차 + p값)</div>
             <div id="causal-granger-list" class="space-y-1 text-[10px]"></div>
           </div>
           <div class="glass-light rounded-lg p-3" style="max-height:420px; overflow-y:auto;">
@@ -779,7 +858,7 @@
             <div id="causal-pearson-list" class="space-y-1 text-[10px]"></div>
           </div>
           <div class="glass-light rounded-lg p-3">
-            <div class="text-[10px] mono text-gray-400 mb-2">💡 인사이트</div>
+            <div class="text-[10px] mono text-gray-400 mb-2">인사이트</div>
             <div id="causal-insight" class="text-[10px] text-gray-300 leading-relaxed">동을 선택하면 자동 분석이 표시됩니다.</div>
           </div>
         </div>
@@ -796,7 +875,7 @@
             </div>
             <div class="flex gap-2">
               <button id="stack-play" class="px-2 py-1 text-[10px] mono rounded text-white" style="background:#5BC0EB">▶ 6개월 도입 재생</button>
-              <button id="stack-cost-toggle" class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300">💰 비용 표시</button>
+              <button id="stack-cost-toggle" class="px-2 py-1 text-[10px] mono rounded bg-white/5 text-gray-300 flex items-center gap-1" data-icon="dollar-sign" data-icon-size="11"> 비용 표시</button>
             </div>
           </div>
           <svg id="stack-dag" width="100%" height="480" viewBox="0 0 880 480"></svg>
@@ -806,7 +885,7 @@
           <div id="stack-node-detail" class="glass-light rounded-lg p-3 border border-cyan-400/20" style="display:none">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[10px] mono" id="stack-detail-month">MONTH</span>
-              <button id="stack-detail-close" class="text-gray-500 hover:text-white text-xs">✕</button>
+              <button id="stack-detail-close" class="text-gray-500 hover:text-white text-xs">×</button>
             </div>
             <div class="text-sm font-bold text-white mb-1" id="stack-detail-name">—</div>
             <div class="text-[10px] text-gray-400 mb-3" id="stack-detail-desc">—</div>
@@ -866,29 +945,29 @@
     <!-- ─── Viz Pack — VizEngine 9종 차트 갤러리 ─── -->
     <div id="ds-vizpack" class="ds-pane hidden">
       <div class="glass-light rounded-lg p-3 mb-3 text-[11px] mono text-gray-300 leading-relaxed">
-        📊 <strong style="color:#5BC0EB">Viz Pack</strong> — VizEngine 단일 엔진 + 9종 ChartPlugin 갤러리.
+        <strong style="color:#5BC0EB">Viz Pack</strong> — VizEngine 단일 엔진 + 9종 ChartPlugin 갤러리.
         모든 차트는 동일 데이터/스코프/팔레트 공유 (pLDDT 4단계).
         한 차트 hover 시 다른 차트의 같은 동이 동시 강조 (Linked Brushing).
       </div>
       <div class="grid grid-cols-12 gap-3">
         <div class="col-span-6 glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🎚 Ridgeline (Joy Plot) — 30개 동 시계열 누적</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">Ridgeline (Joy Plot) — 30개 동 시계열 누적</div>
           <svg id="viz-ridgeline" width="100%" height="320" viewBox="0 0 720 360"></svg>
         </div>
         <div class="col-span-6 glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🌊 Sankey on Map — 5지표 인과 흐름</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">Sankey on Map — 5지표 인과 흐름</div>
           <svg id="viz-sankey-map" width="100%" height="280" viewBox="0 0 640 320"></svg>
         </div>
         <div class="col-span-6 glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🗓 Calendar Heatmap — 60개월 (선택 동)</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">Calendar Heatmap — 60개월 (선택 동)</div>
           <svg id="viz-calendar-heat" width="100%" height="220" viewBox="0 0 480 220"></svg>
         </div>
         <div class="col-span-6 glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🎻 Violin (KDE) — 시나리오별 분포</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">Violin (KDE) — 시나리오별 분포</div>
           <svg id="viz-violin" width="100%" height="280" viewBox="0 0 720 320"></svg>
         </div>
         <div class="col-span-4 glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🌀 Spiral — 1년=360°, 5년 spiral</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">Spiral — 1년=360°, 5년 spiral</div>
           <svg id="viz-spiral" width="100%" height="320" viewBox="0 0 360 360"></svg>
         </div>
         <div class="col-span-8 glass-light rounded-lg p-3">
@@ -900,17 +979,20 @@
           <svg id="viz-slope" width="100%" height="320" viewBox="0 0 720 360"></svg>
         </div>
         <div class="col-span-4 glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🎯 Bullet — KPI vs 목표</div>
+          <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="target" data-icon-size="11"> Bullet — KPI vs 목표</div>
           <svg id="viz-bullet" width="100%" height="240" viewBox="0 0 640 260"></svg>
         </div>
         <div class="col-span-12 glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">🗺 Cartogram (Squarified Treemap) — 데이터 비율로 영역 왜곡 (Top 50)</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">Cartogram (Squarified Treemap) — 데이터 비율로 영역 왜곡 (Top 50)</div>
           <svg id="viz-map-treemap" width="100%" height="320" viewBox="0 0 720 360"></svg>
         </div>
       </div>
     </div>
 
     <!-- ─── Catalog ─── -->
+    <!-- ─── Datasets ─── -->
+    <div id="ds-datasets" class="ds-pane hidden"></div>
+
     <div id="ds-catalog" class="ds-pane hidden">
       <div class="glass-light rounded-lg p-3 mb-3 flex items-center gap-3">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -953,21 +1035,21 @@
   <section id="view-workflow" class="hidden">
     <div class="mb-5 flex items-baseline justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-white tracking-tight">🧩 Workflow Editor</h2>
+        <h2 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2" data-icon="git-merge"> Workflow Editor</h2>
         <p class="text-sm text-gray-400">노드를 드래그·연결·편집하여 마스터가 직접 분석 워크플로를 만듭니다.</p>
       </div>
       <div class="flex items-center gap-2">
         <!-- 모드 토글 -->
         <div class="flex bg-white/5 rounded-md p-0.5 border border-white/10">
-          <button id="wf-mode-preview" class="px-3 py-1 text-[11px] mono rounded text-white" style="background:#00A1E0">👁 Preview</button>
-          <button id="wf-mode-edit" class="px-3 py-1 text-[11px] mono rounded text-gray-300">✏️ Edit</button>
+          <button id="wf-mode-preview" class="px-3 py-1 text-[11px] mono rounded text-white flex items-center gap-1" style="background:#00A1E0" data-icon="eye" data-icon-size="12"> Preview</button>
+          <button id="wf-mode-edit" class="px-3 py-1 text-[11px] mono rounded text-gray-300 flex items-center gap-1" data-icon="edit-2" data-icon-size="12"> Edit</button>
         </div>
         <button id="wf-new" class="px-3 py-1.5 text-[11px] mono rounded-md bg-white/5 text-gray-300 hover:text-white">+ 새 워크플로</button>
-        <button id="wf-save" class="px-3 py-1.5 text-[11px] mono rounded-md text-white hidden" style="background:#5BC0EB">💾 저장</button>
-        <button id="wf-apply-analyze" class="px-3 py-1.5 text-[11px] mono rounded-md text-white" style="background:#00A1E0">📊 Analyze에 적용</button>
-        <button id="wf-apply-explore" class="px-3 py-1.5 text-[11px] mono rounded-md text-white" style="background:#5BC0EB">🌬 Explore로 보내기</button>
-        <button id="wf-apply-decide" class="px-3 py-1.5 text-[11px] mono rounded-md text-white" style="background:#A78BFA">🎯 Decide로 보내기</button>
-        <button class="px-3 py-1.5 text-[11px] mono rounded-md bg-white/5 text-gray-300">📤 공유</button>
+        <button id="wf-save" class="px-3 py-1.5 text-[11px] mono rounded-md text-white hidden flex items-center gap-1" style="background:#5BC0EB" data-icon="save" data-icon-size="12"> 저장</button>
+        <button id="wf-apply-analyze" class="px-3 py-1.5 text-[11px] mono rounded-md text-white flex items-center gap-1" style="background:#00A1E0" data-icon="bar-chart-2" data-icon-size="12"> Analyze에 적용</button>
+        <button id="wf-apply-explore" class="px-3 py-1.5 text-[11px] mono rounded-md text-white flex items-center gap-1" style="background:#5BC0EB" data-icon="compass" data-icon-size="12"> Explore로 보내기</button>
+        <button id="wf-apply-decide" class="px-3 py-1.5 text-[11px] mono rounded-md text-white flex items-center gap-1" style="background:#A78BFA" data-icon="target" data-icon-size="12"> Decide로 보내기</button>
+        <button class="px-3 py-1.5 text-[11px] mono rounded-md bg-white/5 text-gray-300 flex items-center gap-1" data-icon="share-2" data-icon-size="12"> 공유</button>
       </div>
     </div>
 
@@ -975,7 +1057,7 @@
       <!-- LEFT: NODE PALETTE -->
       <div class="col-span-2 glass-light rounded-lg p-3" style="max-height: 660px; overflow-y: auto;">
         <div class="flex items-center justify-between mb-2">
-          <div class="text-[10px] mono text-gray-400">📦 Node Palette</div>
+          <div class="text-[10px] mono text-gray-400 flex items-center gap-1" data-icon="box" data-icon-size="11"> Node Palette</div>
           <span id="wf-palette-hint" class="text-[9px] mono text-gray-500 hidden">↕ 드래그</span>
         </div>
         <div id="wf-palette" class="space-y-2.5"></div>
@@ -984,7 +1066,7 @@
           <select id="wf-select" class="w-full bg-white/5 border border-white/10 rounded text-[11px] px-2 py-1.5 text-white"></select>
         </div>
         <div id="wf-user-list" class="mt-3 pt-3 border-t border-white/5 hidden">
-          <div class="text-[10px] mono text-gray-400 mb-2">📁 내 워크플로 (저장됨)</div>
+          <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="folder" data-icon-size="11"> 내 워크플로 (저장됨)</div>
           <div id="wf-user-items" class="space-y-1"></div>
         </div>
       </div>
@@ -1012,9 +1094,9 @@
 
         <!-- Context menu (우클릭 시 표시) -->
         <div id="wf-ctxmenu" class="hidden absolute z-20 glass rounded-md shadow-xl text-[11px]" style="min-width:140px; border:1px solid rgba(91,192,235,0.3)">
-          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-gray-200" data-action="duplicate">📋 복제</button>
-          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-gray-200" data-action="rename">✏️ 이름 변경</button>
-          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-red-300" data-action="delete">🗑 삭제 (Del)</button>
+          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-gray-200 flex items-center gap-1" data-action="duplicate" data-icon="clipboard" data-icon-size="12"> 복제</button>
+          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-gray-200 flex items-center gap-1" data-action="rename" data-icon="edit-2" data-icon-size="12"> 이름 변경</button>
+          <button class="ctx-item w-full text-left px-3 py-1.5 hover:bg-white/10 text-red-300 flex items-center gap-1" data-action="delete"> 삭제 (Del)</button>
         </div>
       </div>
 
@@ -1023,7 +1105,7 @@
         <div id="wf-node-inspector" class="glass-light rounded-lg p-3" style="display:none">
           <div class="flex items-center justify-between mb-2">
             <span class="text-[10px] mono" id="wf-insp-cat">SOURCE</span>
-            <button id="wf-insp-close" class="text-gray-500 hover:text-white text-xs">✕</button>
+            <button id="wf-insp-close" class="text-gray-500 hover:text-white text-xs">×</button>
           </div>
           <div class="text-sm font-bold text-white mb-1" id="wf-insp-name">—</div>
           <div class="text-[10px] text-gray-400 mb-3" id="wf-insp-desc">—</div>
@@ -1039,7 +1121,7 @@
         </div>
 
         <div class="glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">📌 워크플로 메타</div>
+          <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="pin" data-icon-size="11"> 워크플로 메타</div>
           <div class="space-y-1.5 text-[10px]">
             <div class="flex justify-between"><span class="text-gray-400">노드 수</span><span class="mono text-white" id="wf-meta-nodes">—</span></div>
             <div class="flex justify-between"><span class="text-gray-400">예상 실행</span><span class="mono text-white" id="wf-meta-time">—</span></div>
@@ -1048,17 +1130,116 @@
         </div>
 
         <div class="glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">📊 예상 결과 (Result Preview)</div>
+          <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="bar-chart-2" data-icon-size="11"> 예상 결과 (Result Preview)</div>
           <div id="wf-results" class="space-y-2"></div>
         </div>
 
         <div class="glass-light rounded-lg p-3">
-          <div class="text-[10px] mono text-gray-400 mb-2">💡 이 워크플로의 의미</div>
+          <div class="text-[10px] mono text-gray-400 mb-2">이 워크플로의 의미</div>
           <div id="wf-explain" class="text-[11px] text-gray-300 leading-relaxed">—</div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ════════════ 7. MEONGBUN CHAIN ════════════ -->
+  <section id="view-meongbun" class="hidden">
+    <div class="meongbun-page">
+
+      <!-- 상단 바: 브레드크럼 + PDF CTA -->
+      <div class="meongbun-topbar">
+        <nav class="meongbun-breadcrumb" aria-label="breadcrumb">
+          <span>홈</span>
+          <span class="sep">/</span>
+          <span>명분 사슬</span>
+          <span class="sep">/</span>
+          <span class="current" id="meongbun-dong-label">동 선택 대기 중</span>
+        </nav>
+        <!-- Primary CTA: 보고서 PDF 출력 (1개) -->
+        <button class="meongbun-pdf-btn" onclick="handleMeongbunPdfExport()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="12" y1="13" x2="12" y2="19"/>
+            <polyline points="9,16 12,19 15,16"/>
+          </svg>
+          보고서 PDF 출력
+        </button>
+      </div>
+
+      <!-- 7섹션 placeholder -->
+      <section id="meongbun-sec-1" data-section="1" class="meongbun-section">
+        <span class="meongbun-section-badge">[1/7]</span>
+        <h2 class="meongbun-section-title">권고 (Recommendation)</h2>
+        <p class="meongbun-section-subtitle">결론 먼저 — 이 동에 대한 투자/운영 권고 요약</p>
+        <div class="meongbun-placeholder">준비 중 — 자식 이슈 UI_DECISION_ONEPAGER-001에서 채워집니다</div>
+      </section>
+
+      <section id="meongbun-sec-2" data-section="2" class="meongbun-section">
+        <span class="meongbun-section-badge">[2/7]</span>
+        <h2 class="meongbun-section-title">사실 (Fact Triple)</h2>
+        <p class="meongbun-section-subtitle">가장 강한 팩트 3개 — 수치·출처·신뢰도</p>
+        <div class="meongbun-placeholder">준비 중 — 자식 이슈 UI_FACT_TRIPLE-001에서 채워집니다</div>
+        <div class="meongbun-widget-slot"></div>
+      </section>
+
+      <section id="meongbun-sec-3" data-section="3" class="meongbun-section">
+        <span class="meongbun-section-badge">[3/7]</span>
+        <h2 class="meongbun-section-title">해석 (Interpretation)</h2>
+        <p class="meongbun-section-subtitle">왜 그 사실이 의미 있는가 — 인과 + 컨텍스트</p>
+        <div class="meongbun-placeholder">준비 중 — 자식 이슈 UI_INTERPRETATION_SECTION-001에서 채워집니다</div>
+      </section>
+
+      <section id="meongbun-sec-4" data-section="4" class="meongbun-section">
+        <span class="meongbun-section-badge">[4/7]</span>
+        <h2 class="meongbun-section-title">비교 (Benchmark)</h2>
+        <p class="meongbun-section-subtitle">KM 생존 곡선 — 유사 동 대비 이 동의 위치</p>
+        <div class="meongbun-placeholder">준비 중 — 자식 이슈 UI_BENCHMARK_KM_CURVE-001에서 채워집니다</div>
+        <div class="meongbun-widget-slot"></div>
+      </section>
+
+      <section id="meongbun-sec-5" data-section="5" class="meongbun-section">
+        <span class="meongbun-section-badge">[5/7]</span>
+        <h2 class="meongbun-section-title">시나리오 (Scenarios)</h2>
+        <p class="meongbun-section-subtitle">3가지 선택지 — 낙관/중립/보수 시나리오 비교</p>
+        <div class="meongbun-placeholder">준비 중 — 자식 이슈 UI_SCENARIOS_3OPTION-001에서 채워집니다</div>
+      </section>
+
+      <section id="meongbun-sec-6" data-section="6" class="meongbun-section">
+        <span class="meongbun-section-badge">[6/7]</span>
+        <h2 class="meongbun-section-title">권고 추적 (Recommendation Trace)</h2>
+        <p class="meongbun-section-subtitle">권고가 어떤 사실·해석·비교로부터 도출되었는지 역추적</p>
+        <div class="meongbun-placeholder">준비 중 — 자식 이슈 UI_RECOMMENDATION_TRACE-001에서 채워집니다</div>
+        <div class="meongbun-widget-slot-tree"></div>
+        <div class="meongbun-widget-slot-shap"></div>
+      </section>
+
+      <section id="meongbun-sec-7" data-section="7" class="meongbun-section">
+        <span class="meongbun-section-badge">[7/7]</span>
+        <h2 class="meongbun-section-title">한계 (Limitation)</h2>
+        <p class="meongbun-section-subtitle">이 분석의 가정·불확실성·반증 가능성 명시</p>
+        <div class="meongbun-placeholder">준비 중 — 자식 이슈 UI_LIMITATION_FALSIFY-001에서 채워집니다</div>
+      </section>
+
+    </div><!-- /meongbun-page -->
+
+    <!-- 우측 점프 네비 (7개 점) -->
+    <nav class="meongbun-jumpnav" aria-label="섹션 점프 네비게이션">
+      <a href="#meongbun-sec-1" title="권고">1</a>
+      <a href="#meongbun-sec-2" title="사실">2</a>
+      <a href="#meongbun-sec-3" title="해석">3</a>
+      <a href="#meongbun-sec-4" title="비교">4</a>
+      <a href="#meongbun-sec-5" title="시나리오">5</a>
+      <a href="#meongbun-sec-6" title="권고 추적">6</a>
+      <a href="#meongbun-sec-7" title="한계">7</a>
+    </nav>
+  </section><!-- /view-meongbun -->
+
+  <!-- ════════════ 약국·점포개발 ════════════ -->
+  <div id="view-pharmacy-develop" class="hidden"></div>
+
+  <!-- ════════════ 약국·폐업평가 ════════════ -->
+  <div id="view-pharmacy-close" class="hidden"></div>
 
   <footer class="text-center py-6 text-[10px] mono text-gray-600">
     Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

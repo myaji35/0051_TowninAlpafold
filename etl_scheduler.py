@@ -23,6 +23,9 @@ REGISTRY_PATH = Path(__file__).resolve().parent / "data_raw/_registry/datasets.j
 ETL_MODULE_MAP = {
     "kosis_living_pop": "etl.kosis_living_pop",
     "localdata_biz": "etl.localdata_biz",
+    "nts_bizreg": "etl.nts_bizreg",
+    "molit_landprice": "etl.molit_landprice",
+    "vworld_geojson": "etl.vworld_geojson",
 }
 
 FREQUENCY_DAYS = {

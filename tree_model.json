@@ -4,7 +4,7 @@
     "max_depth": 6,
     "min_samples_leaf": 5,
     "random_state": 42,
-    "train_accuracy": 0.7615,
+    "train_accuracy": 0.7692,
     "depth": 6,
     "n_leaves": 14,
     "n_dongs": 130,
@@ -41,7 +41,7 @@
       "leaf": false,
       "feature_idx": 8,
       "feature_name": "지가_평균",
-      "threshold": 7.2489,
+      "threshold": 12.7323,
       "samples": 130,
       "left": 1,
       "right": 24
@@ -51,51 +51,79 @@
       "leaf": false,
       "feature_idx": 0,
       "feature_name": "소상공_평균",
-      "threshold": 0.0005,
-      "samples": 102,
+      "threshold": 0.0006,
+      "samples": 108,
       "left": 2,
-      "right": 7
+      "right": 9
     },
     {
       "id": 2,
       "leaf": false,
-      "feature_idx": 2,
-      "feature_name": "카페_평균",
-      "threshold": 0.0001,
-      "samples": 26,
+      "feature_idx": 8,
+      "feature_name": "지가_평균",
+      "threshold": 4.6914,
+      "samples": 27,
       "left": 3,
-      "right": 4
+      "right": 6
     },
     {
       "id": 3,
+      "leaf": false,
+      "feature_idx": 0,
+      "feature_name": "소상공_평균",
+      "threshold": 0.0004,
+      "samples": 10,
+      "left": 4,
+      "right": 5
+    },
+    {
+      "id": 4,
       "leaf": true,
       "class": "industrial",
-      "samples": 8,
+      "samples": 5,
       "value": [
         0.0,
-        0.875,
+        1.0,
         0.0,
         0.0,
         0.0,
         0.0,
         0.0,
         0.0,
-        0.125,
+        0.0,
         0.0
       ]
     },
     {
-      "id": 4,
-      "leaf": false,
-      "feature_idx": 1,
-      "feature_name": "소상공_추세",
-      "threshold": 0.0807,
-      "samples": 18,
-      "left": 5,
-      "right": 6
+      "id": 5,
+      "leaf": true,
+      "class": "industrial",
+      "samples": 5,
+      "value": [
+        0.0,
+        0.8,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        0.0
+      ]
     },
     {
-      "id": 5,
+      "id": 6,
+      "leaf": false,
+      "feature_idx": 3,
+      "feature_name": "카페_추세",
+      "threshold": 0.0899,
+      "samples": 17,
+      "left": 7,
+      "right": 8
+    },
+    {
+      "id": 7,
       "leaf": true,
       "class": "traditional",
       "samples": 12,
@@ -113,147 +141,221 @@
       ]
     },
     {
-      "id": 6,
+      "id": 8,
       "leaf": true,
-      "class": "industrial",
-      "samples": 6,
+      "class": "traditional",
+      "samples": 5,
       "value": [
-        0.0,
-        0.5,
-        0.0,
-        0.0,
+        0.2,
+        0.2,
         0.0,
         0.0,
         0.0,
         0.0,
-        0.5,
+        0.0,
+        0.0,
+        0.6,
         0.0
       ]
-    },
-    {
-      "id": 7,
-      "leaf": false,
-      "feature_idx": 2,
-      "feature_name": "카페_평균",
-      "threshold": 0.0003,
-      "samples": 76,
-      "left": 8,
-      "right": 17
-    },
-    {
-      "id": 8,
-      "leaf": false,
-      "feature_idx": 6,
-      "feature_name": "거래_평균",
-      "threshold": 0.0001,
-      "samples": 45,
-      "left": 9,
-      "right": 14
     },
     {
       "id": 9,
       "leaf": false,
-      "feature_idx": 7,
-      "feature_name": "거래_추세",
-      "threshold": 0.1073,
-      "samples": 34,
+      "feature_idx": 1,
+      "feature_name": "소상공_추세",
+      "threshold": 0.1035,
+      "samples": 81,
       "left": 10,
-      "right": 11
+      "right": 17
     },
     {
       "id": 10,
-      "leaf": true,
-      "class": "stable",
-      "samples": 6,
-      "value": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.5,
-        0.3333333333333333,
-        0.16666666666666666
-      ]
+      "leaf": false,
+      "feature_idx": 8,
+      "feature_name": "지가_평균",
+      "threshold": 7.8963,
+      "samples": 41,
+      "left": 11,
+      "right": 16
     },
     {
       "id": 11,
       "leaf": false,
-      "feature_idx": 7,
-      "feature_name": "거래_추세",
-      "threshold": 0.119,
-      "samples": 28,
+      "feature_idx": 6,
+      "feature_name": "거래_평균",
+      "threshold": 0.0001,
+      "samples": 34,
       "left": 12,
-      "right": 13
+      "right": 15
     },
     {
       "id": 12,
-      "leaf": true,
-      "class": "residential",
-      "samples": 17,
-      "value": [
-        0.0,
-        0.0,
-        0.0,
-        0.8235294117647058,
-        0.0,
-        0.0,
-        0.0,
-        0.17647058823529413,
-        0.0,
-        0.0
-      ]
+      "leaf": false,
+      "feature_idx": 4,
+      "feature_name": "유동_평균",
+      "threshold": 0.0449,
+      "samples": 26,
+      "left": 13,
+      "right": 14
     },
     {
       "id": 13,
       "leaf": true,
       "class": "residential",
-      "samples": 11,
+      "samples": 12,
       "value": [
-        0.09090909090909091,
-        0.0,
-        0.0,
-        0.36363636363636365,
         0.0,
         0.0,
         0.0,
-        0.36363636363636365,
-        0.18181818181818182,
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.08333333333333333,
+        0.16666666666666666,
         0.0
       ]
     },
     {
       "id": 14,
-      "leaf": false,
-      "feature_idx": 8,
-      "feature_name": "지가_평균",
-      "threshold": 4.7418,
-      "samples": 11,
-      "left": 15,
-      "right": 16
+      "leaf": true,
+      "class": "stable",
+      "samples": 14,
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.14285714285714285,
+        0.0,
+        0.0,
+        0.0,
+        0.7142857142857143,
+        0.07142857142857142,
+        0.07142857142857142
+      ]
     },
     {
       "id": 15,
       "leaf": true,
-      "class": "developing",
-      "samples": 6,
+      "class": "residential",
+      "samples": 8,
       "value": [
-        0.3333333333333333,
+        0.125,
         0.0,
         0.0,
-        0.3333333333333333,
+        0.875,
         0.0,
         0.0,
         0.0,
         0.0,
         0.0,
-        0.3333333333333333
+        0.0
       ]
     },
     {
       "id": 16,
+      "leaf": true,
+      "class": "developing",
+      "samples": 7,
+      "value": [
+        0.2857142857142857,
+        0.0,
+        0.14285714285714285,
+        0.14285714285714285,
+        0.2857142857142857,
+        0.0,
+        0.0,
+        0.0,
+        0.14285714285714285,
+        0.0
+      ]
+    },
+    {
+      "id": 17,
+      "leaf": false,
+      "feature_idx": 8,
+      "feature_name": "지가_평균",
+      "threshold": 5.9246,
+      "samples": 40,
+      "left": 18,
+      "right": 19
+    },
+    {
+      "id": 18,
+      "leaf": true,
+      "class": "youth",
+      "samples": 8,
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "id": 19,
+      "leaf": false,
+      "feature_idx": 9,
+      "feature_name": "지가_추세",
+      "threshold": 0.118,
+      "samples": 32,
+      "left": 20,
+      "right": 23
+    },
+    {
+      "id": 20,
+      "leaf": false,
+      "feature_idx": 3,
+      "feature_name": "카페_추세",
+      "threshold": 0.1218,
+      "samples": 27,
+      "left": 21,
+      "right": 22
+    },
+    {
+      "id": 21,
+      "leaf": true,
+      "class": "rising",
+      "samples": 22,
+      "value": [
+        0.045454545454545456,
+        0.0,
+        0.0,
+        0.045454545454545456,
+        0.5909090909090909,
+        0.0,
+        0.045454545454545456,
+        0.0,
+        0.0,
+        0.2727272727272727
+      ]
+    },
+    {
+      "id": 22,
+      "leaf": true,
+      "class": "rising_star",
+      "samples": 5,
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        0.6,
+        0.2,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": 23,
       "leaf": true,
       "class": "developing",
       "samples": 5,
@@ -271,114 +373,12 @@
       ]
     },
     {
-      "id": 17,
-      "leaf": false,
-      "feature_idx": 8,
-      "feature_name": "지가_평균",
-      "threshold": 3.7594,
-      "samples": 31,
-      "left": 18,
-      "right": 19
-    },
-    {
-      "id": 18,
-      "leaf": true,
-      "class": "youth",
-      "samples": 9,
-      "value": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.1111111111111111,
-        0.0,
-        0.8888888888888888
-      ]
-    },
-    {
-      "id": 19,
-      "leaf": false,
-      "feature_idx": 1,
-      "feature_name": "소상공_추세",
-      "threshold": 0.1052,
-      "samples": 22,
-      "left": 20,
-      "right": 21
-    },
-    {
-      "id": 20,
-      "leaf": true,
-      "class": "rising",
-      "samples": 8,
-      "value": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    {
-      "id": 21,
-      "leaf": false,
-      "feature_idx": 8,
-      "feature_name": "지가_평균",
-      "threshold": 5.3018,
-      "samples": 14,
-      "left": 22,
-      "right": 23
-    },
-    {
-      "id": 22,
-      "leaf": true,
-      "class": "rising",
-      "samples": 8,
-      "value": [
-        0.125,
-        0.0,
-        0.0,
-        0.0,
-        0.625,
-        0.0,
-        0.25,
-        0.0,
-        0.0,
-        0.0
-      ]
-    },
-    {
-      "id": 23,
-      "leaf": true,
-      "class": "youth",
-      "samples": 6,
-      "value": [
-        0.16666666666666666,
-        0.0,
-        0.0,
-        0.0,
-        0.16666666666666666,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.6666666666666666
-      ]
-    },
-    {
       "id": 24,
       "leaf": false,
       "feature_idx": 0,
       "feature_name": "소상공_평균",
       "threshold": 0.001,
-      "samples": 28,
+      "samples": 22,
       "left": 25,
       "right": 26
     },
@@ -386,7 +386,7 @@
       "id": 25,
       "leaf": true,
       "class": "premium",
-      "samples": 21,
+      "samples": 17,
       "value": [
         0.0,
         0.0,
@@ -403,15 +403,15 @@
     {
       "id": 26,
       "leaf": true,
-      "class": "rising_star",
-      "samples": 7,
+      "class": "premium",
+      "samples": 5,
       "value": [
-        0.14285714285714285,
+        0.2,
+        0.0,
+        0.6,
         0.0,
         0.0,
-        0.0,
-        0.2857142857142857,
-        0.5714285714285714,
+        0.2,
         0.0,
         0.0,
         0.0,
@@ -422,34 +422,34 @@
   "feature_importance": [
     {
       "feature": "지가_평균",
-      "importance": 0.3417
+      "importance": 0.4758
     },
     {
       "feature": "소상공_평균",
-      "importance": 0.2699
-    },
-    {
-      "feature": "카페_평균",
-      "importance": 0.2086
-    },
-    {
-      "feature": "거래_추세",
-      "importance": 0.064
-    },
-    {
-      "feature": "거래_평균",
-      "importance": 0.0581
+      "importance": 0.1851
     },
     {
       "feature": "소상공_추세",
-      "importance": 0.0577
-    },
-    {
-      "feature": "카페_추세",
-      "importance": 0.0
+      "importance": 0.1413
     },
     {
       "feature": "유동_평균",
+      "importance": 0.0708
+    },
+    {
+      "feature": "카페_추세",
+      "importance": 0.047
+    },
+    {
+      "feature": "지가_추세",
+      "importance": 0.0445
+    },
+    {
+      "feature": "거래_평균",
+      "importance": 0.0355
+    },
+    {
+      "feature": "카페_평균",
       "importance": 0.0
     },
     {
@@ -457,7 +457,7 @@
       "importance": 0.0
     },
     {
-      "feature": "지가_추세",
+      "feature": "거래_추세",
       "importance": 0.0
     },
     {
@@ -499,14 +499,14 @@
     {
       "dong": "강동구 D1동",
       "true": "stable",
-      "pred": "youth",
-      "correct": false
+      "pred": "stable",
+      "correct": true
     },
     {
       "dong": "강동구 D2동",
       "true": "stable",
-      "pred": "residential",
-      "correct": false
+      "pred": "stable",
+      "correct": true
     },
     {
       "dong": "강동구 D3동",
@@ -523,14 +523,14 @@
     {
       "dong": "강동구 D5동",
       "true": "stable",
-      "pred": "residential",
-      "correct": false
+      "pred": "stable",
+      "correct": true
     },
     {
       "dong": "강북구 E1동",
       "true": "traditional",
-      "pred": "industrial",
-      "correct": false
+      "pred": "traditional",
+      "correct": true
     },
     {
       "dong": "강북구 E2동",
@@ -541,7 +541,7 @@
     {
       "dong": "강북구 E3동",
       "true": "traditional",
-      "pred": "stable",
+      "pred": "residential",
       "correct": false
     },
     {
@@ -553,8 +553,8 @@
     {
       "dong": "강북구 E5동",
       "true": "traditional",
-      "pred": "industrial",
-      "correct": false
+      "pred": "traditional",
+      "correct": true
     },
     {
       "dong": "강서구 F1동",
@@ -565,14 +565,14 @@
     {
       "dong": "강서구 F2동",
       "true": "developing",
-      "pred": "rising_star",
+      "pred": "premium",
       "correct": false
     },
     {
       "dong": "강서구 F3동",
       "true": "developing",
-      "pred": "developing",
-      "correct": true
+      "pred": "traditional",
+      "correct": false
     },
     {
       "dong": "강서구 F4동",
@@ -589,8 +589,8 @@
     {
       "dong": "관악구 C1동",
       "true": "youth",
-      "pred": "youth",
-      "correct": true
+      "pred": "stable",
+      "correct": false
     },
     {
       "dong": "관악구 C2동",
@@ -607,8 +607,8 @@
     {
       "dong": "관악구 C4동",
       "true": "youth",
-      "pred": "youth",
-      "correct": true
+      "pred": "rising",
+      "correct": false
     },
     {
       "dong": "관악구 C5동",
@@ -619,8 +619,8 @@
     {
       "dong": "광진구 B1동",
       "true": "rising",
-      "pred": "rising",
-      "correct": true
+      "pred": "rising_star",
+      "correct": false
     },
     {
       "dong": "광진구 B2동",
@@ -637,7 +637,7 @@
     {
       "dong": "광진구 B4동",
       "true": "rising",
-      "pred": "rising_star",
+      "pred": "developing",
       "correct": false
     },
     {
@@ -679,8 +679,8 @@
     {
       "dong": "금천구 G1동",
       "true": "industrial",
-      "pred": "industrial",
-      "correct": true
+      "pred": "traditional",
+      "correct": false
     },
     {
       "dong": "금천구 G2동",
@@ -709,14 +709,14 @@
     {
       "dong": "노원구 H1동",
       "true": "residential",
-      "pred": "developing",
-      "correct": false
+      "pred": "residential",
+      "correct": true
     },
     {
       "dong": "노원구 H2동",
       "true": "residential",
-      "pred": "residential",
-      "correct": true
+      "pred": "stable",
+      "correct": false
     },
     {
       "dong": "노원구 H3동",
@@ -727,8 +727,8 @@
     {
       "dong": "노원구 H4동",
       "true": "residential",
-      "pred": "residential",
-      "correct": true
+      "pred": "stable",
+      "correct": false
     },
     {
       "dong": "노원구 H5동",
@@ -763,8 +763,8 @@
     {
       "dong": "도봉구 H5동",
       "true": "residential",
-      "pred": "developing",
-      "correct": false
+      "pred": "residential",
+      "correct": true
     },
     {
       "dong": "동대문구 E1동",
@@ -781,14 +781,14 @@
     {
       "dong": "동대문구 E3동",
       "true": "traditional",
-      "pred": "stable",
+      "pred": "residential",
       "correct": false
     },
     {
       "dong": "동대문구 E4동",
       "true": "traditional",
-      "pred": "industrial",
-      "correct": false
+      "pred": "traditional",
+      "correct": true
     },
     {
       "dong": "동대문구 E5동",
@@ -799,8 +799,8 @@
     {
       "dong": "동작구 H1동",
       "true": "residential",
-      "pred": "residential",
-      "correct": true
+      "pred": "rising",
+      "correct": false
     },
     {
       "dong": "동작구 H2동",
@@ -823,8 +823,8 @@
     {
       "dong": "동작구 H5동",
       "true": "residential",
-      "pred": "residential",
-      "correct": true
+      "pred": "developing",
+      "correct": false
     },
     {
       "dong": "마포구 B1동",
@@ -841,8 +841,8 @@
     {
       "dong": "마포구 B3동",
       "true": "rising",
-      "pred": "rising",
-      "correct": true
+      "pred": "developing",
+      "correct": false
     },
     {
       "dong": "마포구 B4동",
@@ -853,14 +853,14 @@
     {
       "dong": "마포구 B5동",
       "true": "rising",
-      "pred": "developing",
-      "correct": false
+      "pred": "rising",
+      "correct": true
     },
     {
       "dong": "서대문구 C1동",
       "true": "youth",
-      "pred": "youth",
-      "correct": true
+      "pred": "rising",
+      "correct": false
     },
     {
       "dong": "서대문구 C2동",
@@ -871,20 +871,20 @@
     {
       "dong": "서대문구 C3동",
       "true": "youth",
-      "pred": "developing",
-      "correct": false
+      "pred": "youth",
+      "correct": true
     },
     {
       "dong": "서대문구 C4동",
       "true": "youth",
-      "pred": "stable",
+      "pred": "rising",
       "correct": false
     },
     {
       "dong": "서대문구 C5동",
       "true": "youth",
-      "pred": "youth",
-      "correct": true
+      "pred": "rising",
+      "correct": false
     },
     {
       "dong": "서초구 A1동",
@@ -901,8 +901,8 @@
     {
       "dong": "서초구 A3동",
       "true": "premium",
-      "pred": "premium",
-      "correct": true
+      "pred": "developing",
+      "correct": false
     },
     {
       "dong": "서초구 A4동",
@@ -919,8 +919,8 @@
     {
       "dong": "성수1가1동",
       "true": "rising_star",
-      "pred": "rising_star",
-      "correct": true
+      "pred": "premium",
+      "correct": false
     },
     {
       "dong": "성수1가2동",
@@ -943,14 +943,14 @@
     {
       "dong": "송정동",
       "true": "stable",
-      "pred": "residential",
-      "correct": false
+      "pred": "stable",
+      "correct": true
     },
     {
       "dong": "성북구 C1동",
       "true": "youth",
-      "pred": "youth",
-      "correct": true
+      "pred": "rising",
+      "correct": false
     },
     {
       "dong": "성북구 C2동",
@@ -961,14 +961,14 @@
     {
       "dong": "성북구 C3동",
       "true": "youth",
-      "pred": "developing",
-      "correct": false
+      "pred": "youth",
+      "correct": true
     },
     {
       "dong": "성북구 C4동",
       "true": "youth",
-      "pred": "youth",
-      "correct": true
+      "pred": "rising",
+      "correct": false
     },
     {
       "dong": "성북구 C5동",
@@ -1045,14 +1045,14 @@
     {
       "dong": "영등포구 B2동",
       "true": "rising",
-      "pred": "rising_star",
-      "correct": false
+      "pred": "rising",
+      "correct": true
     },
     {
       "dong": "영등포구 B3동",
       "true": "rising",
-      "pred": "youth",
-      "correct": false
+      "pred": "rising",
+      "correct": true
     },
     {
       "dong": "영등포구 B4동",
@@ -1111,20 +1111,20 @@
     {
       "dong": "은평구 F3동",
       "true": "developing",
-      "pred": "residential",
-      "correct": false
-    },
-    {
-      "dong": "은평구 F4동",
-      "true": "developing",
       "pred": "developing",
       "correct": true
     },
     {
+      "dong": "은평구 F4동",
+      "true": "developing",
+      "pred": "residential",
+      "correct": false
+    },
+    {
       "dong": "은평구 F5동",
       "true": "developing",
-      "pred": "youth",
-      "correct": false
+      "pred": "developing",
+      "correct": true
     },
     {
       "dong": "종로구 E1동",
@@ -1135,8 +1135,8 @@
     {
       "dong": "종로구 E2동",
       "true": "traditional",
-      "pred": "industrial",
-      "correct": false
+      "pred": "traditional",
+      "correct": true
     },
     {
       "dong": "종로구 E3동",
@@ -1159,8 +1159,8 @@
     {
       "dong": "중구 E1동",
       "true": "traditional",
-      "pred": "traditional",
-      "correct": true
+      "pred": "industrial",
+      "correct": false
     },
     {
       "dong": "중구 E2동",
@@ -1171,7 +1171,7 @@
     {
       "dong": "중구 E3동",
       "true": "traditional",
-      "pred": "residential",
+      "pred": "developing",
       "correct": false
     },
     {
@@ -1183,14 +1183,14 @@
     {
       "dong": "중구 E5동",
       "true": "traditional",
-      "pred": "residential",
+      "pred": "stable",
       "correct": false
     },
     {
       "dong": "중랑구 D1동",
       "true": "stable",
-      "pred": "residential",
-      "correct": false
+      "pred": "stable",
+      "correct": true
     },
     {
       "dong": "중랑구 D2동",
@@ -1201,14 +1201,14 @@
     {
       "dong": "중랑구 D3동",
       "true": "stable",
-      "pred": "residential",
-      "correct": false
+      "pred": "stable",
+      "correct": true
     },
     {
       "dong": "중랑구 D4동",
       "true": "stable",
-      "pred": "residential",
-      "correct": false
+      "pred": "stable",
+      "correct": true
     },
     {
       "dong": "중랑구 D5동",
@@ -1225,14 +1225,14 @@
     {
       "dong": "부산_전포2동",
       "true": "rising_twin",
-      "pred": "rising",
+      "pred": "rising_star",
       "correct": false
     },
     {
       "dong": "부산_부전1동",
       "true": "rising",
-      "pred": "rising",
-      "correct": true
+      "pred": "developing",
+      "correct": false
     },
     {
       "dong": "부산_광안1동",

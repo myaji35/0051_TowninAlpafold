@@ -8,24 +8,55 @@
     {
       "name": "경기도",
       "code": "41",
-      "completion_pct": 0,
+      "completion_pct": 36.0,
       "sigungu_total": 1,
-      "sigungu_covered": 0,
+      "sigungu_covered": 1,
       "dong_total": 1,
-      "dong_covered": 0,
+      "dong_covered": 1,
       "sigungu": [
         {
           "name": "의정부시",
           "code": "4115",
-          "completion_pct": 0,
+          "completion_pct": 36.0,
           "dong_total": 1,
-          "dong_covered": 0,
+          "dong_covered": 1,
           "dongs": [
             {
               "adm_cd": "4115011000",
               "name": "의정부시 금오동",
-              "completion_pct": 0,
-              "datasets": {}
+              "completion_pct": 36.0,
+              "datasets": {
+                "kosis_living_pop": {
+                  "months_covered": 1,
+                  "months_total": 5,
+                  "marker": "synthetic",
+                  "last_updated": "2026-05-04T22:34:54.124165+00:00"
+                },
+                "nts_bizreg": {
+                  "months_covered": 1,
+                  "months_total": 5,
+                  "marker": "synthetic",
+                  "last_updated": "2026-05-04T22:34:54.319745+00:00"
+                },
+                "localdata_biz": {
+                  "months_covered": 1,
+                  "months_total": 5,
+                  "marker": "synthetic",
+                  "last_updated": "2026-05-04T22:34:54.221432+00:00"
+                },
+                "molit_landprice": {
+                  "months_covered": 1,
+                  "months_total": 5,
+                  "marker": "synthetic",
+                  "last_updated": "2026-05-04T22:34:54.413443+00:00"
+                },
+                "vworld_geojson": {
+                  "months_covered": 1,
+                  "months_total": 1,
+                  "marker": "synthetic",
+                  "last_updated": "2026-05-04T22:34:54.508763+00:00"
+                }
+              }
             }
           ]
         }
@@ -33,5 +64,87 @@
     }
   ],
   "datasets_summary": [],
-  "gallery_cards_availability": []
+  "gallery_cards_availability": [
+    {
+      "id": "sungsu_rise",
+      "status": "dim",
+      "missing_datasets": [
+        "localdata_biz"
+      ]
+    },
+    {
+      "id": "covid_shock",
+      "status": "dim",
+      "missing_datasets": [
+        "localdata_biz"
+      ]
+    },
+    {
+      "id": "cafe_boom",
+      "status": "dim",
+      "missing_datasets": [
+        "localdata_biz"
+      ]
+    },
+    {
+      "id": "youth_inflow",
+      "status": "dim",
+      "missing_datasets": []
+    },
+    {
+      "id": "closure_alert",
+      "status": "demo_only",
+      "missing_datasets": [
+        "localdata_biz"
+      ]
+    },
+    {
+      "id": "plddt_drop",
+      "status": "dim",
+      "missing_datasets": []
+    },
+    {
+      "id": "visit_drop",
+      "status": "dim",
+      "missing_datasets": []
+    },
+    {
+      "id": "partner_recruit",
+      "status": "dim",
+      "missing_datasets": [
+        "localdata_biz"
+      ]
+    },
+    {
+      "id": "sales_alert",
+      "status": "dim",
+      "missing_datasets": [
+        "localdata_biz"
+      ]
+    },
+    {
+      "id": "ad_target",
+      "status": "dim",
+      "missing_datasets": [
+        "localdata_biz"
+      ]
+    },
+    {
+      "id": "twin_seoul",
+      "status": "dim",
+      "missing_datasets": [
+        "localdata_biz",
+        "vworld_geojson"
+      ]
+    },
+    {
+      "id": "gangnam_compare",
+      "status": "dim",
+      "missing_datasets": [
+        "localdata_biz",
+        "molit_landprice",
+        "vworld_geojson"
+      ]
+    }
+  ]
 }
