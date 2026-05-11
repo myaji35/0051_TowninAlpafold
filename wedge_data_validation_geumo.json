@@ -1,0 +1,216 @@
+{
+  "dong": "의정부 금오동",
+  "goal_pct": 15.0,
+  "tx_volume_source": "proxy:business_count_change",
+  "nearest_simula_dong": "구로구 G5동",
+  "nearest_simula_dist": 1.7172,
+  "ceo_concern_verdict": "confirmed",
+  "results_by_target": {
+    "tx_volume": {
+      "baseline_y": 63.349872,
+      "target_y": 72.852353,
+      "actual_wedge_y": 8.148333,
+      "ood_ratio": 0.889,
+      "ood_status": "OOD",
+      "scenarios": {
+        "최소변경": {
+          "method": "scipy_fallback",
+          "max_delta": 0.2,
+          "changes": {},
+          "predicted_y": 63.349872,
+          "achievement_pct": 0.0,
+          "verified": false
+        },
+        "균형": {
+          "method": "scipy_fallback",
+          "max_delta": 0.5,
+          "changes": {},
+          "predicted_y": 63.349872,
+          "achievement_pct": 0.0,
+          "verified": false
+        },
+        "고효율": {
+          "method": "scipy_fallback",
+          "max_delta": 1.5,
+          "changes": {},
+          "predicted_y": 63.349872,
+          "achievement_pct": 0.0,
+          "verified": false
+        }
+      },
+      "all_verified": false,
+      "achievement_avg": 0.0,
+      "verified_reason": "OOD(89% 피처 이탈)"
+    },
+    "visitors_total": {
+      "baseline_y": 20286.882,
+      "target_y": 23329.9143,
+      "actual_wedge_y": 18508.57,
+      "ood_ratio": 1.0,
+      "ood_status": "OOD",
+      "scenarios": {
+        "최소변경": {
+          "method": "scipy_fallback",
+          "max_delta": 0.2,
+          "changes": {},
+          "predicted_y": 20286.882,
+          "achievement_pct": 0.0,
+          "verified": false
+        },
+        "균형": {
+          "method": "scipy_fallback",
+          "max_delta": 0.5,
+          "changes": {},
+          "predicted_y": 20286.882,
+          "achievement_pct": 0.0,
+          "verified": false
+        },
+        "고효율": {
+          "method": "scipy_fallback",
+          "max_delta": 1.5,
+          "changes": {},
+          "predicted_y": 20286.882,
+          "achievement_pct": 0.0,
+          "verified": false
+        }
+      },
+      "all_verified": false,
+      "achievement_avg": 0.0,
+      "verified_reason": "OOD(100% 피처 이탈)"
+    },
+    "tx_per_visitor": {
+      "baseline_y": 0.002576,
+      "target_y": 0.002962,
+      "actual_wedge_y": 0.00044,
+      "ood_ratio": 1.0,
+      "ood_status": "OOD",
+      "scenarios": {
+        "최소변경": {
+          "method": "scipy_fallback",
+          "max_delta": 0.2,
+          "changes": {},
+          "predicted_y": 0.002576,
+          "achievement_pct": 0.0,
+          "verified": false
+        },
+        "균형": {
+          "method": "scipy_fallback",
+          "max_delta": 0.5,
+          "changes": {},
+          "predicted_y": 0.002576,
+          "achievement_pct": 0.0,
+          "verified": false
+        },
+        "고효율": {
+          "method": "scipy_fallback",
+          "max_delta": 1.5,
+          "changes": {},
+          "predicted_y": 0.002576,
+          "achievement_pct": 0.0,
+          "verified": false
+        }
+      },
+      "all_verified": false,
+      "achievement_avg": 0.0,
+      "verified_reason": "OOD(100% 피처 이탈)"
+    },
+    "tx_delta_6m": {
+      "baseline_y": 129.616167,
+      "target_y": 149.058592,
+      "actual_wedge_y": 0.158333,
+      "ood_ratio": 0.889,
+      "ood_status": "OOD",
+      "scenarios": {
+        "최소변경": {
+          "method": "scipy_fallback",
+          "max_delta": 0.2,
+          "changes": {
+            "유동_평균": 925.4285
+          },
+          "predicted_y": 130.699833,
+          "achievement_pct": 5.57,
+          "verified": false
+        },
+        "균형": {
+          "method": "scipy_fallback",
+          "max_delta": 0.5,
+          "changes": {
+            "유동_평균": 925.4285
+          },
+          "predicted_y": 130.699833,
+          "achievement_pct": 5.57,
+          "verified": false
+        },
+        "고효율": {
+          "method": "scipy_fallback",
+          "max_delta": 1.5,
+          "changes": {
+            "소상공_평균": -11.5135,
+            "카페_평균": 0.9543,
+            "유동_평균": 468.6342
+          },
+          "predicted_y": 130.699833,
+          "achievement_pct": 5.57,
+          "verified": false
+        }
+      },
+      "all_verified": false,
+      "achievement_avg": 5.57,
+      "verified_reason": "OOD(89% 피처 이탈)"
+    }
+  },
+  "comparison_with_simula": {
+    "tx_volume": {
+      "simula_r2_train": 0.926533,
+      "wedge_predict_method": "simula_model_predict",
+      "ood_ratio": 0.889,
+      "ood_status": "OOD",
+      "achievement_wedge": 0.0,
+      "nearest_simula_dong": "구로구 G5동",
+      "nearest_simula_dist": 1.7172,
+      "note": "simula R²는 simula 내부 분포 기준. wedge 동이 OOD 구간에 있어 예측 신뢰도 낮음."
+    },
+    "visitors_total": {
+      "simula_r2_train": 0.930611,
+      "wedge_predict_method": "simula_model_predict",
+      "ood_ratio": 1.0,
+      "ood_status": "OOD",
+      "achievement_wedge": 0.0,
+      "nearest_simula_dong": "구로구 G5동",
+      "nearest_simula_dist": 1.7172,
+      "note": "simula R²는 simula 내부 분포 기준. wedge 동이 OOD 구간에 있어 예측 신뢰도 낮음."
+    },
+    "tx_per_visitor": {
+      "simula_r2_train": 0.858751,
+      "wedge_predict_method": "simula_model_predict",
+      "ood_ratio": 1.0,
+      "ood_status": "OOD",
+      "achievement_wedge": 0.0,
+      "nearest_simula_dong": "구로구 G5동",
+      "nearest_simula_dist": 1.7172,
+      "note": "simula R²는 simula 내부 분포 기준. wedge 동이 OOD 구간에 있어 예측 신뢰도 낮음."
+    },
+    "tx_delta_6m": {
+      "simula_r2_train": 0.91981,
+      "wedge_predict_method": "simula_model_predict",
+      "ood_ratio": 0.889,
+      "ood_status": "OOD",
+      "achievement_wedge": 5.57,
+      "nearest_simula_dong": "구로구 G5동",
+      "nearest_simula_dist": 1.7172,
+      "note": "simula R²는 simula 내부 분포 기준. wedge 동이 OOD 구간에 있어 예측 신뢰도 낮음."
+    }
+  },
+  "limitations": [
+    "N=1 동: 의정부 금오동 단일 동만 wedge로 검증",
+    "proxy tx_volume: 실제 카드매출 API 없음, biz_count 변화량으로 대리",
+    "60개월 합성 시계열: 앵커값 기반 모의 생성 (localdata_biz/kosis_living_pop/molit_landprice 모두 synthetic)",
+    "OOD 외삽: wedge 동 규모(biz_count~268, visitors~18,508)가 simula 학습 분포 최소값(biz_count~309, visitors~17,234) 경계 또는 이하",
+    "simula R² 0.92는 simula 내부 분포(130개 동, 서울/수도권 대규모) 기준 측정값"
+  ],
+  "next_steps": [
+    "실제 카드매출/거래 API 연결 (공공 데이터 포털 BC카드/삼성카드 Open API)",
+    "다중 동 wedge 확대: 의정부시 전 동(약 19개) + 인근 도시",
+    "소규모 도시 simula 재학습: 기존 simula는 서울 규모, 읍면동 수준 분포 추가 필요"
+  ]
+}
