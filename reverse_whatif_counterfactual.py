@@ -31,16 +31,26 @@ LAYER_KO = {
     "land_price": "지가",
 }
 CONTROLLABLE_LAYERS = {"biz_count", "biz_cafe", "visitors_total"}
-CTRL_FEATURES = [f"{LAYER_KO[L]}_평균" for L in LAYERS if L in CONTROLLABLE_LAYERS]
 
-SCENARIO_FEATURES = {
-    "최소변경": CTRL_FEATURES,
-    "균형":     CTRL_FEATURES,
-    "고효율":   CTRL_FEATURES + [
-        f"{LAYER_KO[L]}_추세" for L in LAYERS if L in CONTROLLABLE_LAYERS
-    ],
-}
 SCENARIO_MAX_DELTA = {"최소변경": 0.20, "균형": 0.50, "고효율": 1.50}
+
+
+def get_ctrl_features(feat_names, controllable_mask):
+    """ISS-209: bundle의 controllable_mask 기반 동적 추출."""
+    return [feat_names[i] for i, c in enumerate(controllable_mask) if c]
+
+
+def get_scenario_features(ctrl_feats, feat_names, controllable_mask):
+    """ISS-209: 시나리오별 vary 특성 동적 구성."""
+    ctrl_trend = [
+        feat_names[i] for i, c in enumerate(controllable_mask)
+        if not c and i > 0 and controllable_mask[i - 1]
+    ]
+    return {
+        "최소변경": ctrl_feats,
+        "균형":     ctrl_feats,
+        "고효율":   ctrl_feats + ctrl_trend,
+    }
 
 
 def trend_slope(values):
@@ -68,10 +78,13 @@ def avg_granger_lag(causal, dong_code):
     return statistics.mean(g.get("lag", 0) for g in grangers)
 
 
-def build_feat_row(d, causal_data):
+def build_feat_row(d, causal_data, target=None):
+    """ISS-209 leakage fix: target 레이어 평균/추세를 X에서 제외."""
     layers = d.get("layers", {})
     feat = []
     for L in LAYERS:
+        if L == target:
+            continue  # leakage 제외
         vals = layers.get(L, [])
         if len(vals) < 12:
             feat.append(0.0)
@@ -95,7 +108,7 @@ def build_X_all(simula, causal_data, target):
         y_scalar = statistics.mean(y_raw)
         if y_scalar == 0:
             continue
-        feat = build_feat_row(d, causal_data)
+        feat = build_feat_row(d, causal_data, target=target)  # ISS-209: leakage 제외
         if feat is None:
             continue
         rows.append(feat)
@@ -151,15 +164,18 @@ def _dice_genetic(exp, query, desired_range, features_to_vary, permitted_range,
     return result[0], None
 
 
-def _parse_dice_cf(cf, label, strategy, X_dong_raw, feat_names, model, scaler, current_y, target_y):
+def _parse_dice_cf(cf, label, strategy, X_dong_raw, feat_names, model, scaler, current_y, target_y,
+                   ctrl_features=None):
     if cf is None:
         return None
     ex = cf.cf_examples_list[0]
     if ex.final_cfs_df is None or ex.final_cfs_df.empty:
         return None
     new_x = ex.final_cfs_df[feat_names].values[0]
+    # ISS-209: ctrl_features를 동적 인자로 받아 하드코딩 제거
+    effective_ctrl = ctrl_features if ctrl_features is not None else [f for f in feat_names if "평균" in f]
     changes = {}
-    for f in CTRL_FEATURES:
+    for f in effective_ctrl:
         if f in feat_names:
             idx = feat_names.index(f)
             delta_scaled = float(new_x[idx]) - float(X_dong_raw[idx])
@@ -215,16 +231,29 @@ def _scipy_counterfactual(X_dong_raw, feat_names, model, scaler, target_y,
 
 
 def _make_scenario_from_scipy(X_new, X_orig, feat_names, model, scaler, current_y, target_y,
-                               label, strategy):
+                               label, strategy, ctrl_features=None, vary_features=None):
+    # changes는 항상 ctrl_features(평균 단위 /1e6 스케일) 기준으로만 기록.
+    # 추세 특성은 단위리스(normalized)라 1e6 역변환이 불가 → changes 제외.
+    # optimize의 _scipy_reverify는 changes 키로 reverify_features를 결정하므로
+    # ctrl_features 기반으로만 기록해야 교차검증 일관성 유지됨.
+    effective_ctrl = ctrl_features if ctrl_features is not None else [f for f in feat_names if "평균" in f]
     changes = {}
-    for f in CTRL_FEATURES:
+    for f in effective_ctrl:
         if f in feat_names:
             idx = feat_names.index(f)
             delta_scaled = float(X_new[idx]) - float(X_orig[idx])
-            changes[f] = round(delta_scaled * 1e6, 4)
-    pred_y = float(model.predict(scaler.transform([X_new]))[0])
+            if abs(delta_scaled) > 1e-12:
+                changes[f] = round(delta_scaled * 1e6, 4)
+    # predicted_y: ctrl_features 변화만 적용한 예측 (추세 제외 → optimize diff 일관성)
+    import numpy as np
+    X_ctrl_only = np.array(X_orig, dtype=float)
+    for f, delta_real in changes.items():
+        if f in feat_names:
+            idx = feat_names.index(f)
+            X_ctrl_only[idx] += delta_real / 1e6
+    pred_y = float(model.predict(scaler.transform([X_ctrl_only]))[0])
     achievement = (pred_y - current_y) / (target_y - current_y) * 100 if target_y != current_y else 100.0
-    low_sensitivity = all(abs(v) < 0.01 for v in changes.values()) and achievement < 5.0
+    low_sensitivity = len(changes) == 0 and achievement < 5.0
     result = {
         "label": label, "strategy": strategy, "method": "scipy_fallback",
         "changes": changes, "predicted_y": round(pred_y * 1e6, 4),
@@ -256,8 +285,14 @@ def run(dong_name, target, goal):
     model = bundle["model"]
     scaler = bundle["scaler"]
     feat_names = bundle["feature_names"]
+    ctrl_mask = bundle["controllable_mask"]
 
-    X_dong_raw = build_feat_row(dong_dict, causal_data)
+    # ISS-209: controllable_mask 기반 동적 추출
+    ctrl_features = get_ctrl_features(feat_names, ctrl_mask)
+    scenario_features = get_scenario_features(ctrl_features, feat_names, ctrl_mask)
+    print(f"[{target}] 통제 가능 특성 ({len(ctrl_features)}개): {ctrl_features}")
+
+    X_dong_raw = build_feat_row(dong_dict, causal_data, target=target)  # ISS-209: leakage 제외
     if X_dong_raw is None:
         raise ValueError("동 특성 빌드 실패 (NaN)")
 
@@ -277,21 +312,22 @@ def run(dong_name, target, goal):
     exp = dice_ml.Dice(d_obj, m_obj, method="genetic")
     query = pd.DataFrame([X_dong_raw], columns=feat_names)
 
+    # ISS-209: scenario_features 동적 구성
     scenario_configs = [
         ("최소변경", "minimum_change", {
-            "features": SCENARIO_FEATURES["최소변경"],
+            "features": scenario_features["최소변경"],
             "max_delta": SCENARIO_MAX_DELTA["최소변경"],
             "dice_kwargs": {"sparsity_weight": 2.0, "proximity_weight": 2.0, "diversity_weight": 1.0},
             "scipy_sparsity": 0.5,
         }),
         ("균형", "balanced", {
-            "features": SCENARIO_FEATURES["균형"],
+            "features": scenario_features["균형"],
             "max_delta": SCENARIO_MAX_DELTA["균형"],
             "dice_kwargs": {"sparsity_weight": 1.0, "proximity_weight": 1.0, "diversity_weight": 1.0},
             "scipy_sparsity": 0.2,
         }),
         ("고효율", "high_efficiency", {
-            "features": SCENARIO_FEATURES["고효율"],
+            "features": scenario_features["고효율"],
             "max_delta": SCENARIO_MAX_DELTA["고효율"],
             "dice_kwargs": {"sparsity_weight": 0.2, "proximity_weight": 0.5, "diversity_weight": 2.0},
             "scipy_sparsity": 0.0,
@@ -324,7 +360,8 @@ def run(dong_name, target, goal):
         if dice_err is None:
             scenario_dict = _parse_dice_cf(
                 cf, label, strategy,
-                X_dong_raw, feat_names, model, scaler, current_y, target_y
+                X_dong_raw, feat_names, model, scaler, current_y, target_y,
+                ctrl_features=ctrl_features,
             )
 
         if scenario_dict is None:
@@ -337,7 +374,8 @@ def run(dong_name, target, goal):
             )
             scenario_dict = _make_scenario_from_scipy(
                 X_new, X_dong_raw, feat_names, model, scaler, current_y, target_y,
-                label, strategy
+                label, strategy, ctrl_features=ctrl_features,
+                vary_features=cfg["features"],
             )
 
         print(f" 완료 (achievement={scenario_dict.get('achievement_pct', 'N/A')}%)")

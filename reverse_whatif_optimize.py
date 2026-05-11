@@ -106,8 +106,6 @@ def _scipy_reverify(X_baseline, changes, feat_names, ctrl_features, model, scale
 
 # ── 메인 교차 검증 로직 ───────────────────────────────────────────────────────
 
-CTRL_FEATURES = ["소상공_평균", "카페_평균", "유동_평균"]
-
 
 def cross_verify(target: str) -> dict:
     suffix = "tx" if target == "tx_volume" else "vis"
@@ -130,6 +128,10 @@ def cross_verify(target: str) -> dict:
     model = bundle["model"]
     scaler = bundle["scaler"]
     feat_names = bundle["feature_names"]
+    # ISS-209: bundle의 controllable_mask 기반 동적 추출
+    ctrl_mask = bundle["controllable_mask"]
+    ctrl_features = [feat_names[i] for i, c in enumerate(ctrl_mask) if c]
+    print(f"[{target}] 통제 가능 특성 ({len(ctrl_features)}개): {ctrl_features}")
 
     dong_name = scenarios_data["dong"]
     baseline_y_real = float(scenarios_data["current_y"])   # 실제 단위
@@ -143,13 +145,13 @@ def cross_verify(target: str) -> dict:
     baseline_y_internal = baseline_y_real / 1e6
     target_y_internal = target_y_real / 1e6
 
-    # 동 X baseline 재구성
+    # 동 X baseline 재구성 (ISS-209: target 전달로 leakage 특성 제외)
     simula, causal_data = _load_data()
     dong_dict = find_dong(simula, dong_name)
     if dong_dict is None:
         raise ValueError(f"동 '{dong_name}' 을 simula_data_real.json 에서 찾을 수 없습니다.")
 
-    X_baseline = build_feat_row(dong_dict, causal_data)
+    X_baseline = build_feat_row(dong_dict, causal_data, target=target)
     if X_baseline is None:
         raise ValueError(f"동 '{dong_name}' 의 X baseline 빌드 실패 (NaN 포함).")
     X_baseline = np.array(X_baseline, dtype=float)
@@ -182,9 +184,9 @@ def cross_verify(target: str) -> dict:
         )
         scipy_direct_real = scipy_direct_internal * 1e6
 
-        # scipy Nelder-Mead 재수렴
+        # scipy Nelder-Mead 재수렴 (ISS-209: ctrl_features 동적)
         scipy_opt_internal = _scipy_reverify(
-            X_baseline, changes, feat_names, CTRL_FEATURES,
+            X_baseline, changes, feat_names, ctrl_features,
             model, scaler, target_y_internal
         )
         scipy_verified_y_real = scipy_opt_internal * 1e6

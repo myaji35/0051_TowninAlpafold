@@ -56,7 +56,9 @@ def avg_granger_lag(causal, dong_code):
 
 
 def build_X(target: str):
-    """simula_data_real.json + causal.json 에서 X 행렬 전체 재구성."""
+    """simula_data_real.json + causal.json 에서 X 행렬 전체 재구성.
+    ISS-209 leakage fix: target 레이어 평균/추세는 X에서 제외.
+    """
     simula = json.loads(SIMULA.read_text())
     causal_data = json.loads(CAUSAL.read_text()) if CAUSAL.exists() else {"dongs": {}}
 
@@ -74,6 +76,8 @@ def build_X(target: str):
 
         feat = []
         for L in LAYERS:
+            if L == target:
+                continue  # leakage 제외
             vals = layers.get(L, [])
             if len(vals) < 12:
                 feat.append(0.0)
