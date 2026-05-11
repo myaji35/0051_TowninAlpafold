@@ -1,0 +1,52 @@
+{
+  "dong": "강남구 A1동",
+  "target": "visitors_total",
+  "goal_pct": 15.0,
+  "baseline_y": 44981.3488,
+  "target_y": 51728.5511,
+  "scenarios": [
+    {
+      "scenario": "최소변경",
+      "strategy": "minimum_change",
+      "changes": {
+        "소상공_평균": -5.511,
+        "카페_평균": -6.8924,
+        "유동_평균": 6701.9502
+      },
+      "dice_predicted_y": 51760.5722,
+      "scipy_verified_y": 51754.1453,
+      "achievement_rate_pct": 100.38,
+      "diff_pct": 0.0,
+      "verified": true
+    },
+    {
+      "scenario": "균형",
+      "strategy": "balanced",
+      "changes": {
+        "소상공_평균": -0.9551,
+        "카페_평균": -25.6325,
+        "유동_평균": 6701.9502
+      },
+      "dice_predicted_y": 51760.5722,
+      "scipy_verified_y": 51730.4379,
+      "achievement_rate_pct": 100.03,
+      "diff_pct": 0.0,
+      "verified": true
+    },
+    {
+      "scenario": "고효율",
+      "strategy": "high_efficiency",
+      "changes": {
+        "소상공_평균": -5.1761,
+        "카페_평균": 21.0174,
+        "유동_평균": 6701.9502
+      },
+      "dice_predicted_y": 51761.4718,
+      "scipy_verified_y": 51755.7426,
+      "achievement_rate_pct": 100.4,
+      "diff_pct": 0.0,
+      "verified": true
+    }
+  ],
+  "all_verified": true
+}
