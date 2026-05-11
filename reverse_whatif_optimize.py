@@ -108,7 +108,9 @@ def _scipy_reverify(X_baseline, changes, feat_names, ctrl_features, model, scale
 
 
 def cross_verify(target: str) -> dict:
-    suffix = "tx" if target == "tx_volume" else "vis"
+    # ISS-216: suffix 매핑 확장
+    suffix = {"tx_volume": "tx", "visitors_total": "vis",
+               "tx_per_visitor": "tpv", "tx_delta_6m": "tdelta"}[target]
     scenarios_file = ROOT / f"whatif_scenarios_{suffix}.json"
     model_file = ROOT / f"reverse_whatif_model_{suffix}.pkl"
 
@@ -252,7 +254,7 @@ def main():
     parser.add_argument(
         "--target",
         required=True,
-        choices=["tx_volume", "visitors_total"],
+        choices=["tx_volume", "visitors_total", "tx_per_visitor", "tx_delta_6m"],
         help="검증 타깃 레이어",
     )
     args = parser.parse_args()

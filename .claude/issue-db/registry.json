@@ -10966,6 +10966,352 @@
       },
       "spawn_rules": [],
       "completed_at": "2026-05-11T02:46:19.086343+00:00"
+    },
+    {
+      "id": "ISS-216",
+      "type": "FEATURE_PLAN",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[FEATURE_PLAN] tx_volume 타깃 재정의 — tx_per_visitor / tx_delta 회귀로 achievement 50%+ 회복",
+      "owner": "agent-harness",
+      "axis": "PLAN",
+      "mode": "code",
+      "created_at": "2026-05-11T02:49:06.549045+00:00",
+      "started_at": "2026-05-11T02:49:06.549045+00:00",
+      "depth": 1,
+      "parent_id": "ISS-209",
+      "blocked_by": [],
+      "payload": {
+        "problem": "ISS-209 leakage 수정 후 tx_volume achievement가 16.6%에 머무름. 통제 가능 변수(소상공/카페/유동)만으로 거래량 절대치 15% 상승은 시뮬 한계상 불가.",
+        "hypothesis": "Y를 절대치 대신 (1) tx_per_visitor (전환율) 또는 (2) tx_delta_6m (6개월 증분)로 바꾸면 통제 가능 변수의 영향력이 상대적으로 증대.",
+        "y_candidates": [
+          {
+            "name": "tx_per_visitor",
+            "formula": "tx_volume / visitors_total (월별)",
+            "rationale": "전환율은 카페/소상공 밀도에 직접 반응"
+          },
+          {
+            "name": "tx_delta_6m",
+            "formula": "(tx_volume[-1:-6 avg]) - (tx_volume[-7:-12 avg])",
+            "rationale": "최근 6개월 모멘텀 변화량"
+          }
+        ],
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_train.py",
+          "reverse_whatif_pipeline.py"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py"
+        ],
+        "acceptance_criteria": [
+          "--target tx_per_visitor / --target tx_delta_6m CLI 옵션 추가",
+          "두 신규 타깃 모두 R² 0.4~0.9 범위 (시뮬 한계 고려)",
+          "기존 --target tx_volume / visitors_total은 그대로 작동 (회귀 방지)",
+          "ISS-209 leakage 규칙 동일 적용 (Y 원본 레이어 X에서 제외)",
+          "스모크 테스트 신규 타깃 포함 PASS",
+          "achievement_rate_pct 평균 ≥ 50% 중 적어도 하나의 시나리오에서 달성"
+        ],
+        "next_steps_if_success": [
+          "ISS-218 자연어 처방 변환에서 새 Y도 지원"
+        ],
+        "files_changed": []
+      },
+      "result": {
+        "targets_added": [
+          "tx_per_visitor",
+          "tx_delta_6m"
+        ],
+        "regression_pass": true,
+        "smoke_pass": true,
+        "note": "tx_per_visitor/tx_delta_6m 이미 reverse_whatif_train.py에 구현 완료 (이전 세션)"
+      }
+    },
+    {
+      "id": "ISS-217",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[USER_STORY] 의정부 금오동 실데이터 연결 — simula 더미에서 wedge 실데이터로 전환",
+      "owner": "agent-harness",
+      "axis": "PLAN",
+      "mode": "code",
+      "created_at": "2026-05-11T02:49:06.549045+00:00",
+      "started_at": "2026-05-11T02:49:06.549045+00:00",
+      "depth": 1,
+      "parent_id": "ISS-191",
+      "blocked_by": [],
+      "payload": {
+        "problem": "ISS-194~205 모든 산출물이 simula_data_real.json에 의정부 금오동이 없어 강남구 A1동 fallback 사용. 실 비즈니스 의사결정 불가능.",
+        "wedge_dong": "의정부 금오동",
+        "data_sources_available": {
+          "localdata_biz": "etl/localdata_biz.py — 의정부 금오동 wedge 사업체 (이미 ETL 완료, c1676c5 커밋)",
+          "kosis_living_pop": "etl/kosis_living_pop.py — 유동인구",
+          "nts_bizreg": "etl/nts_bizreg.py — 사업자 등록",
+          "molit_landprice": "etl/molit_landprice.py — 공시지가",
+          "vworld_geojson": "etl/vworld_geojson.py — 경계"
+        },
+        "missing": "tx_volume (거래량) 데이터 출처. KB부동산? 카드 매출? — 우선은 사업체 매출세를 proxy로 사용.",
+        "scope_dir": ".",
+        "files_hint": [
+          "scripts/build_wedge_data.py",
+          "wedge_data_geumo.json"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py",
+          "simula_data_real.json"
+        ],
+        "acceptance_criteria": [
+          "wedge_data_geumo.json 생성 — 의정부 금오동 60개월 시계열 5개 레이어 (biz_count/biz_cafe/visitors_total/tx_volume/land_price)",
+          "scripts/build_wedge_data.py — ETL 데이터 통합 CLI",
+          "reverse_whatif_pipeline.py --data wedge_data_geumo.json --dong 의정부_금오동 --target tx_volume --goal 15 실행 성공",
+          "기존 simula 동들 회귀 없음 (테스트 PASS 유지)",
+          "tx_volume 데이터 미가용 시 명시적 'proxy:사업체매출' 메타 기록"
+        ]
+      },
+      "completed_at": "2026-05-11T12:01:39.427651",
+      "result": {
+        "files_created": [
+          "scripts/build_wedge_data.py",
+          "wedge_data_geumo.json"
+        ],
+        "layers_built": 5,
+        "months_coverage": 60,
+        "tx_volume_source": "proxy:business_count_change",
+        "smoke_pass": true,
+        "do_not_touch_intact": true
+      }
+    },
+    {
+      "id": "ISS-218",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[USER_STORY] 자연어 처방 변환 — JSON 시나리오 → 한국어 비즈니스 권고문",
+      "owner": "agent-harness",
+      "axis": "PLAN",
+      "mode": "code",
+      "created_at": "2026-05-11T02:49:06.549045+00:00",
+      "depth": 1,
+      "parent_id": "ISS-197",
+      "blocked_by": [
+        "ISS-216",
+        "ISS-217"
+      ],
+      "payload": {
+        "objective": "whatif_result_*.json의 시나리오(changes + achievement)를 비전문가도 이해할 한국어 처방문으로 변환.",
+        "example_input": {
+          "changes": {
+            "소상공_평균": 1.2,
+            "카페_평균": 0.5,
+            "유동_평균": 2.1
+          },
+          "achievement_rate_pct": 92.4,
+          "scenario": "균형"
+        },
+        "example_output_korean": "거래량 15% 상승 목표를 92% 달성하려면: 균형 시나리오 — 소상공 1.2단위 증가, 카페 0.5단위 증가, 유동인구 2.1단위 증가. 변화 노력은 중간 수준.",
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_narrate.py"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py"
+        ],
+        "acceptance_criteria": [
+          "CLI: python reverse_whatif_narrate.py --result whatif_result_tx.json → narration_tx.txt",
+          "3개 시나리오 모두 한국어 권고문 1~3문장",
+          "수치 단위/방향(+/-) 정확히 반영",
+          "achievement 30% 미만은 '도달 어려움' 명시",
+          "Y 4종(tx_volume, visitors_total, tx_per_visitor, tx_delta_6m) 모두 지원"
+        ],
+        "depends_on_note": "ISS-216(타깃 재정의), ISS-217(실데이터) 완료 후 실데이터 기반 narration 생성 가능"
+      },
+      "completed_at": "2026-05-11T12:03:43.158673",
+      "result": {
+        "files_created": [
+          "reverse_whatif_narrate.py"
+        ],
+        "targets_supported": 4,
+        "smoke_pass": true
+      }
+    },
+    {
+      "id": "ISS-219",
+      "type": "USER_STORY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[USER_STORY] REST API 엔드포인트 — POST /api/whatif",
+      "owner": "agent-harness",
+      "axis": "PLAN",
+      "mode": "code",
+      "created_at": "2026-05-11T02:49:06.549045+00:00",
+      "depth": 1,
+      "parent_id": "ISS-197",
+      "blocked_by": [
+        "ISS-218"
+      ],
+      "payload": {
+        "objective": "FastAPI 엔드포인트로 reverse_whatif 파이프라인을 HTTP 접근 가능하게 한다.",
+        "endpoint": {
+          "method": "POST",
+          "path": "/api/whatif",
+          "body": {
+            "dong": "string",
+            "target": "tx_volume|visitors_total|tx_per_visitor|tx_delta_6m",
+            "goal_pct": "number"
+          },
+          "response": {
+            "scenarios": "object[]",
+            "narration": "string[]",
+            "verified": "bool"
+          }
+        },
+        "scope_dir": "backend",
+        "files_hint": [
+          "backend/whatif_api.py",
+          "backend/__init__.py"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py",
+          "backend/batch_queue.py"
+        ],
+        "acceptance_criteria": [
+          "uvicorn backend.whatif_api:app 기동 후 POST /api/whatif 200 응답",
+          "응답 본문에 scenarios + narration + verified 포함",
+          "goal_pct 검증 (0~100 범위)",
+          "잘못된 dong 명: 404 + 가용 동 리스트",
+          "응답 시간 < 30초 (DiCE/scipy 캐시 고려)",
+          "기존 backend FastAPI 라우터 회귀 없음"
+        ]
+      },
+      "completed_at": "2026-05-11T12:12:08.035461",
+      "result": {
+        "files_created": [
+          "backend/whatif_api.py"
+        ],
+        "endpoints": [
+          "POST /api/whatif",
+          "GET /api/whatif/targets"
+        ],
+        "smoke_pass": true,
+        "http_200": true,
+        "verified_field": true
+      }
+    },
+    {
+      "id": "ISS-220",
+      "title": "[Plan:구현] ISS-217",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-217",
+      "depends_on": [],
+      "created_at": "2026-05-11T12:01:39.427651",
+      "payload": {
+        "source_issue": "ISS-217",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "note": "Source issue ISS-217 already completed — no additional work needed"
+      },
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-221",
+      "title": "[Plan:구현] ISS-218",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-218",
+      "depends_on": [],
+      "created_at": "2026-05-11T12:03:43.158673",
+      "payload": {
+        "source_issue": "ISS-218",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "note": "Source issue ISS-218 already completed — no additional work needed"
+      },
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-222",
+      "title": "[Plan:구현] ISS-219",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-219",
+      "depends_on": [],
+      "created_at": "2026-05-11T12:12:08.035461",
+      "payload": {
+        "source_issue": "ISS-219",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "note": "Source issue ISS-219 already completed — no additional work needed"
+      },
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-203",
+      "type": "CODE_SMELL",
+      "title": "미커밋 변경 23개 파일 — 리뷰 필요",
+      "priority": "P1",
+      "status": "READY",
+      "assign_to": "code-quality",
+      "created_at": "2026-05-11T12:13:04.832066",
+      "created_by": "proactive-scan",
+      "depth": 0,
+      "detail": "git diff에서 23개 파일 변경 감지",
+      "parent": null
+    },
+    {
+      "id": "ISS-204",
+      "type": "CODE_SMELL",
+      "title": "TODO/FIXME 코멘트 4089개 발견",
+      "priority": "P3",
+      "status": "READY",
+      "assign_to": "code-quality",
+      "created_at": "2026-05-11T12:13:04.832118",
+      "created_by": "proactive-scan",
+      "depth": 0,
+      "detail": "./.venv/lib/python3.14/site-packages/pip/_internal/build_env.py:312:            # TODO: hash-checking should be extended to build deps, but that is\n./.venv/lib/python3.14/site-packages/pip/_internal/build_env.py:559:                # FIXME: Consider direct URL?\n./.venv/lib/python3.14/site-packages/pip/_internal/cache.py:280:                # TODO: use DirectUrl.equivalent when\n./.venv/lib/python3.14/site-packages/pip/_internal/configuration.py:339:    # XXX: This is patched in the tests.\n./.venv/lib/python3.14/site-packages/pip/_internal/configuration.py:389:    # XXX: This is patched in the tests.",
+      "parent": null
+    },
+    {
+      "id": "ISS-205",
+      "type": "CODE_SMELL",
+      "title": "console.error/warn 잔재 17개 — 프로덕션 코드 정리 필요",
+      "priority": "P2",
+      "status": "READY",
+      "assign_to": "code-quality",
+      "created_at": "2026-05-11T12:13:04.832152",
+      "created_by": "proactive-scan",
+      "depth": 0,
+      "detail": "./components/icons.js:63:    console.warn('[icons] unknown icon:', name);\n./components/pharmacy-develop.js:241:      console.warn('[pharmacy-develop] no container');\n./components/pharmacy-close.js:357:    if (!container) { console.warn('[pharmacy-close] no container'); return; }\n./components/sidebar.js:57:      console.warn('[sidebar] categories.json fetch 실패', e);\n./components/data-studio-datasets.js:149:              console.warn('[DataStudioDatasets] fallback fetch 실패:', err);",
+      "parent": null
+    },
+    {
+      "id": "ISS-206",
+      "type": "CODE_SMELL",
+      "title": "빈 catch 블록 1개 — 에러 삼킴 위험",
+      "priority": "P1",
+      "status": "READY",
+      "assign_to": "code-quality",
+      "created_at": "2026-05-11T12:13:04.832187",
+      "created_by": "proactive-scan",
+      "depth": 0,
+      "detail": "./app.js:5576:    } catch(e) {}",
+      "parent": null
     }
   ],
   "hooks": {
@@ -12039,6 +12385,24 @@
         "issue_type": "OPPORTUNITY",
         "plan_created": 0,
         "timestamp": "2026-05-11T11:46:01.705881"
+      },
+      {
+        "issue_id": "ISS-217",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-11T12:01:39.427651"
+      },
+      {
+        "issue_id": "ISS-218",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-11T12:03:43.158673"
+      },
+      {
+        "issue_id": "ISS-219",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-11T12:12:08.035461"
       }
     ],
     "on_fail": [],
@@ -13338,8 +13702,8 @@
     ]
   },
   "stats": {
-    "total_issues": 199,
-    "completed": 203,
+    "total_issues": 206,
+    "completed": 206,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -13543,14 +13907,14 @@
     "date": "2026-05-11",
     "created_today": 0
   },
-  "updated_at": "2026-05-11T02:46:19.086481+00:00",
+  "updated_at": "2026-05-11T02:49:06.549045+00:00",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
     "total_invocations": 0
   },
   "proactive_scan_state": {
-    "date": "",
-    "count": 0
+    "date": "2026-05-11",
+    "count": 1
   }
 }

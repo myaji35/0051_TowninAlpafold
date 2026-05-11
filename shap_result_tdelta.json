@@ -1,0 +1,104 @@
+{
+  "target": "tx_delta_6m",
+  "feature_importance": [
+    {
+      "name": "카페_평균",
+      "shap_mean_abs": 19.819756,
+      "direction": -1,
+      "controllable": true,
+      "excluded": false
+    },
+    {
+      "name": "인과_lag평균",
+      "shap_mean_abs": 16.728034,
+      "direction": 1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "소상공_평균",
+      "shap_mean_abs": 15.635755,
+      "direction": 1,
+      "controllable": true,
+      "excluded": false
+    },
+    {
+      "name": "소상공_추세",
+      "shap_mean_abs": 11.343073,
+      "direction": 1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "유동_추세",
+      "shap_mean_abs": 10.158017,
+      "direction": -1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "유동_평균",
+      "shap_mean_abs": 6.886007,
+      "direction": 1,
+      "controllable": true,
+      "excluded": false
+    },
+    {
+      "name": "지가_평균",
+      "shap_mean_abs": 6.114852,
+      "direction": -1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "지가_추세",
+      "shap_mean_abs": 5.435624,
+      "direction": -1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "카페_추세",
+      "shap_mean_abs": 5.049049,
+      "direction": 1,
+      "controllable": false,
+      "excluded": true
+    }
+  ],
+  "controllable_features": [
+    "카페_평균",
+    "소상공_평균",
+    "유동_평균"
+  ],
+  "excluded_features": [
+    "인과_lag평균",
+    "소상공_추세",
+    "유동_추세",
+    "지가_평균",
+    "지가_추세",
+    "카페_추세"
+  ],
+  "ranked_controllable": [
+    {
+      "name": "카페_평균",
+      "shap_mean_abs": 19.819756,
+      "direction": -1,
+      "controllable": true,
+      "excluded": false
+    },
+    {
+      "name": "소상공_평균",
+      "shap_mean_abs": 15.635755,
+      "direction": 1,
+      "controllable": true,
+      "excluded": false
+    },
+    {
+      "name": "유동_평균",
+      "shap_mean_abs": 6.886007,
+      "direction": 1,
+      "controllable": true,
+      "excluded": false
+    }
+  ]
+}

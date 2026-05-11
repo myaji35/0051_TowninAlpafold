@@ -81,6 +81,40 @@ def test_visitors_total():
     return ok
 
 
+def test_tx_per_visitor():
+    """ISS-216: tx_per_visitor 타깃 파이프라인 실행 확인."""
+    print(f"[smoke] tx_per_visitor 타깃 테스트...")
+    t0 = time.time()
+    result = subprocess.run(
+        [PYTHON, "reverse_whatif_pipeline.py",
+         "--dong", DONG, "--target", "tx_per_visitor", "--goal", str(GOAL)],
+        capture_output=True, text=True, timeout=MAX_RUNTIME_SEC, cwd=ROOT
+    )
+    elapsed = round(time.time() - t0, 1)
+    ok = result.returncode == 0
+    if not ok:
+        print(f"       STDERR: {result.stderr[-300:]}")
+    print(f"       tx_per_visitor: {'PASS' if ok else 'FAIL'} ({elapsed}s)")
+    return ok
+
+
+def test_tx_delta_6m():
+    """ISS-216: tx_delta_6m 타깃 파이프라인 실행 확인."""
+    print(f"[smoke] tx_delta_6m 타깃 테스트...")
+    t0 = time.time()
+    result = subprocess.run(
+        [PYTHON, "reverse_whatif_pipeline.py",
+         "--dong", DONG, "--target", "tx_delta_6m", "--goal", str(GOAL)],
+        capture_output=True, text=True, timeout=MAX_RUNTIME_SEC, cwd=ROOT
+    )
+    elapsed = round(time.time() - t0, 1)
+    ok = result.returncode == 0
+    if not ok:
+        print(f"       STDERR: {result.stderr[-300:]}")
+    print(f"       tx_delta_6m: {'PASS' if ok else 'FAIL'} ({elapsed}s)")
+    return ok
+
+
 def test_decision_tree_unchanged():
     """decision_tree_train.py 파일이 변경되지 않았는지 확인."""
     result = subprocess.run(
@@ -105,9 +139,14 @@ def main():
     if ok:
         results["output_file"] = {"pass": test_output_file()}
         results["visitors_total"] = {"pass": test_visitors_total()}
+        # ISS-216: 신규 타깃 스모크 (각 timeout 30s 포함 → MAX_RUNTIME_SEC 내)
+        results["tx_per_visitor"] = {"pass": test_tx_per_visitor()}
+        results["tx_delta_6m"] = {"pass": test_tx_delta_6m()}
     else:
         results["output_file"] = {"pass": False, "skip": "pipeline failed"}
         results["visitors_total"] = {"pass": False, "skip": "pipeline failed"}
+        results["tx_per_visitor"] = {"pass": False, "skip": "pipeline failed"}
+        results["tx_delta_6m"] = {"pass": False, "skip": "pipeline failed"}
 
     results["decision_tree_unchanged"] = {"pass": test_decision_tree_unchanged()}
 

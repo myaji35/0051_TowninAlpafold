@@ -1,0 +1,81 @@
+{
+  "target": "tx_per_visitor",
+  "feature_importance": [
+    {
+      "name": "소상공_평균",
+      "shap_mean_abs": 6.8e-05,
+      "direction": -1,
+      "controllable": true,
+      "excluded": false
+    },
+    {
+      "name": "인과_lag평균",
+      "shap_mean_abs": 6.8e-05,
+      "direction": 1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "카페_평균",
+      "shap_mean_abs": 6.5e-05,
+      "direction": -1,
+      "controllable": true,
+      "excluded": false
+    },
+    {
+      "name": "지가_평균",
+      "shap_mean_abs": 6.1e-05,
+      "direction": -1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "지가_추세",
+      "shap_mean_abs": 2.2e-05,
+      "direction": -1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "소상공_추세",
+      "shap_mean_abs": 1.6e-05,
+      "direction": 1,
+      "controllable": false,
+      "excluded": true
+    },
+    {
+      "name": "카페_추세",
+      "shap_mean_abs": 1.3e-05,
+      "direction": 1,
+      "controllable": false,
+      "excluded": true
+    }
+  ],
+  "controllable_features": [
+    "소상공_평균",
+    "카페_평균"
+  ],
+  "excluded_features": [
+    "인과_lag평균",
+    "지가_평균",
+    "지가_추세",
+    "소상공_추세",
+    "카페_추세"
+  ],
+  "ranked_controllable": [
+    {
+      "name": "소상공_평균",
+      "shap_mean_abs": 6.8e-05,
+      "direction": -1,
+      "controllable": true,
+      "excluded": false
+    },
+    {
+      "name": "카페_평균",
+      "shap_mean_abs": 6.5e-05,
+      "direction": -1,
+      "controllable": true,
+      "excluded": false
+    }
+  ]
+}
