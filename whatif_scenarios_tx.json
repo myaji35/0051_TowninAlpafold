@@ -1,0 +1,47 @@
+{
+  "dong": "강남구 A1동",
+  "target": "tx_volume",
+  "goal_pct": 15.0,
+  "current_y": 70.284,
+  "target_y": 80.8266,
+  "scenarios": {
+    "최소변경": {
+      "label": "최소변경",
+      "strategy": "minimum_change",
+      "method": "scipy_fallback",
+      "changes": {
+        "소상공_평균": 0.0,
+        "카페_평균": 0.0,
+        "유동_평균": 0.0
+      },
+      "predicted_y": 70.284,
+      "achievement_pct": 0.0,
+      "note": "ctrl_features가 모델 출력에 미치는 영향이 작습니다 (feature_importance < 10%)"
+    },
+    "균형": {
+      "label": "균형",
+      "strategy": "balanced",
+      "method": "scipy_fallback",
+      "changes": {
+        "소상공_평균": 0.0,
+        "카페_평균": 0.0,
+        "유동_평균": 0.0
+      },
+      "predicted_y": 70.284,
+      "achievement_pct": 0.0,
+      "note": "ctrl_features가 모델 출력에 미치는 영향이 작습니다 (feature_importance < 10%)"
+    },
+    "고효율": {
+      "label": "고효율",
+      "strategy": "high_efficiency",
+      "method": "scipy_fallback",
+      "changes": {
+        "소상공_평균": 34.053,
+        "카페_평균": -24.2373,
+        "유동_평균": -20.3618
+      },
+      "predicted_y": 70.5466,
+      "achievement_pct": 2.49
+    }
+  }
+}
