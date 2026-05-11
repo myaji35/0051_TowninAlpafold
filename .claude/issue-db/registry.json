@@ -9978,7 +9978,7 @@
       "id": "ISS-192",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "READY",
+      "status": "DONE",
       "title": "[USER_STORY] 데이터 빌드 + 회귀 모델 학습 (reverse_whatif_train.py)",
       "owner": "plan-harness:code",
       "axis": "PLAN",
@@ -10044,20 +10044,39 @@
           "decision_tree_train.py 파일 수정 없음 (git diff로 확인)"
         ],
         "wedge_dong": "의정부 금오동",
-        "note": "0값 및 NaN 행 dropna 처리. StandardScaler 정규화 후 학습."
+        "note": "0값 및 NaN 행 dropna 처리. StandardScaler 정규화 후 학습.",
+        "files_changed": []
       },
-      "result": null,
+      "result": {
+        "files_created": [
+          "reverse_whatif_train.py",
+          "reverse_whatif_model_tx.pkl",
+          "reverse_whatif_model_vis.pkl",
+          "reverse_whatif_feature_matrix.json"
+        ],
+        "r2_tx": 0.9961,
+        "r2_vis": 0.9964,
+        "rows": 130,
+        "controllable_indices": [
+          0,
+          2,
+          4
+        ],
+        "do_not_touch_intact": true
+      },
       "blocked_by": [],
       "tags": [
         "pingpong_blocked"
       ],
-      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지"
+      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지",
+      "started_at": "2026-05-11T01:42:12.184387+00:00",
+      "completed_at": "2026-05-11T10:44:17.399498"
     },
     {
       "id": "ISS-193",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "BLOCKED",
+      "status": "DONE",
       "title": "[USER_STORY] SHAP 분석 + 통제 가능 변수 필터 (reverse_whatif_explain.py)",
       "owner": "plan-harness:code",
       "axis": "PLAN",
@@ -10094,20 +10113,40 @@
           "shap 0.51.0 import 에러 없이 실행 완료 (Python 3.14.4 호환 확인)"
         ],
         "wedge_dong": "의정부 금오동",
-        "input_from": "ISS-192 산출 모델 파일 (.pkl)"
+        "input_from": "ISS-192 산출 모델 파일 (.pkl)",
+        "files_changed": []
       },
-      "result": null,
+      "result": {
+        "files_created": [
+          "reverse_whatif_explain.py",
+          "shap_result_tx.json",
+          "shap_result_vis.json"
+        ],
+        "top_controllable_tx": [
+          "소상공_평균",
+          "카페_평균",
+          "유동_평균"
+        ],
+        "top_controllable_vis": [
+          "유동_평균",
+          "소상공_평균",
+          "카페_평균"
+        ],
+        "do_not_touch_intact": true
+      },
       "blocked_by": [],
       "tags": [
         "pingpong_blocked"
       ],
-      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지"
+      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지",
+      "started_at": "2026-05-11T01:44:26.386738+00:00",
+      "completed_at": "2026-05-11T10:46:53.208867"
     },
     {
       "id": "ISS-194",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "BLOCKED",
+      "status": "DONE",
       "title": "[USER_STORY] DiCE 3시나리오 생성 (reverse_whatif_counterfactual.py)",
       "owner": "plan-harness:code",
       "axis": "PLAN",
@@ -10155,14 +10194,27 @@
           "dice-ml 0.12 import 에러 없이 실행 완료"
         ],
         "wedge_dong": "의정부 금오동",
-        "input_from": "ISS-192 모델 + ISS-193 SHAP 필터 결과"
+        "input_from": "ISS-192 모델 + ISS-193 SHAP 필터 결과",
+        "files_changed": []
       },
-      "result": null,
+      "result": {
+        "files_created": [
+          "reverse_whatif_counterfactual.py",
+          "whatif_scenarios_tx.json",
+          "whatif_scenarios_vis.json"
+        ],
+        "scenarios_tx": 3,
+        "scenarios_vis": 3,
+        "runtime_sec": 140,
+        "do_not_touch_intact": true
+      },
       "blocked_by": [],
       "tags": [
         "pingpong_blocked"
       ],
-      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지"
+      "blocked_reason": "pingpong_guard: (USER_STORY, src=ISS-191) 5건 중복 감지",
+      "started_at": "2026-05-11T01:46:55.534112+00:00",
+      "completed_at": "2026-05-11T11:15:16.342611"
     },
     {
       "id": "ISS-195",
@@ -10221,7 +10273,7 @@
       "id": "ISS-196",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "READY",
+      "status": "DONE",
       "title": "[USER_STORY] CLI 오케스트레이터 + 스모크 테스트 (reverse_whatif_pipeline.py)",
       "owner": "plan-harness:code",
       "axis": "PLAN",
@@ -10270,14 +10322,25 @@
           "유동_평균"
         ]
       },
-      "result": null,
-      "blocked_by": []
+      "result": {
+        "files_created": [
+          "reverse_whatif_pipeline.py",
+          "scripts/test_reverse_whatif_smoke.py",
+          "whatif_result.json"
+        ],
+        "smoke_test_pass": true,
+        "tests_pass": 4,
+        "runtime_tx_sec": 145,
+        "runtime_vis_sec": 23
+      },
+      "blocked_by": [],
+      "completed_at": "2026-05-11T11:19:22.722221"
     },
     {
       "id": "ISS-197",
       "type": "PLAN_CEO_REVIEW",
       "priority": "P1",
-      "status": "READY",
+      "status": "DONE",
       "title": "[PLAN_CEO_REVIEW] Reverse What-if 엔진 전략 검토",
       "owner": "plan-harness:ceo-review",
       "axis": "PLAN",
@@ -10307,14 +10370,26 @@
         "scope_dir": "docs/plans",
         "output_doc": "docs/reviews/ceo-review-reverse-whatif-001.md"
       },
-      "result": null,
-      "blocked_by": []
+      "result": {
+        "decision": "CONDITIONAL_PROCEED",
+        "output_doc": "docs/reviews/ceo-review-reverse-whatif-001.md",
+        "key_gaps": [
+          "UX/API 미완성",
+          "의정부 금오동 실데이터 미연결"
+        ],
+        "next_sprint_p1": [
+          "자연어 변환 출력",
+          "REST API 엔드포인트"
+        ]
+      },
+      "blocked_by": [],
+      "completed_at": "2026-05-11T11:20:35.433688"
     },
     {
       "id": "ISS-198",
       "type": "PLAN_ENG_REVIEW",
       "priority": "P1",
-      "status": "READY",
+      "status": "DONE",
       "title": "[PLAN_ENG_REVIEW] Reverse What-if 엔진 실행 가능성 검토",
       "owner": "plan-harness:eng-review",
       "axis": "PLAN",
@@ -10345,14 +10420,21 @@
         "scope_dir": "docs/plans",
         "output_doc": "docs/reviews/eng-review-reverse-whatif-001.md"
       },
-      "result": null,
-      "blocked_by": []
+      "result": {
+        "decision": "APPROVED",
+        "output_doc": "docs/reviews/eng-review-reverse-whatif-001.md",
+        "tech_debt_count": 4,
+        "compatibility": "all_ok",
+        "key_finding": "tx_volume_controllable_feature_limited_to_6pct"
+      },
+      "blocked_by": [],
+      "completed_at": "2026-05-11T11:21:36.482021"
     },
     {
       "id": "ISS-199",
       "title": "[Plan:CEO검토] ISS-191 전략 검토",
       "type": "PLAN_CEO_REVIEW",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "plan-ceo-reviewer",
       "depth": 1,
@@ -10369,14 +10451,17 @@
         },
         "feature": "ISS-191"
       },
-      "result": null,
+      "result": {
+        "decision": "SKIP_DUPLICATE",
+        "note": "ISS-197에서 동일 검토 완료 (ceo-review-reverse-whatif-001.md)"
+      },
       "spawn_rules": []
     },
     {
       "id": "ISS-200",
       "title": "[Plan:Eng검토] ISS-191 실행가능성 검토",
       "type": "PLAN_ENG_REVIEW",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "plan-eng-reviewer",
       "depth": 1,
@@ -10393,7 +10478,98 @@
         },
         "feature": "ISS-191"
       },
-      "result": null,
+      "result": {
+        "decision": "SKIP_DUPLICATE",
+        "note": "동일 검토가 이미 완료됨"
+      },
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-201",
+      "title": "[Plan:구현] ISS-192",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-192",
+      "depends_on": [],
+      "created_at": "2026-05-11T10:43:53.280823",
+      "payload": {
+        "source_issue": "ISS-192",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "decision": "SKIP_DUPLICATE",
+        "note": "ISS-192/193 구현 이미 완료"
+      },
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-202",
+      "title": "[Plan:구현] ISS-193",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-193",
+      "depends_on": [],
+      "created_at": "2026-05-11T10:46:39.543370",
+      "payload": {
+        "source_issue": "ISS-193",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "decision": "SKIP_DUPLICATE",
+        "note": "ISS-192/193 구현 이미 완료"
+      },
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-203",
+      "title": "[Plan:구현] ISS-194",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-194",
+      "depends_on": [],
+      "created_at": "2026-05-11T11:15:16.342611",
+      "payload": {
+        "source_issue": "ISS-194",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "decision": "SKIP_DUPLICATE",
+        "note": "동일 검토가 이미 완료됨"
+      },
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-204",
+      "title": "[Plan:구현] ISS-196",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-196",
+      "depends_on": [],
+      "created_at": "2026-05-11T11:19:22.722221",
+      "payload": {
+        "source_issue": "ISS-196",
+        "acceptance_criteria": []
+      },
+      "result": {
+        "decision": "SKIP_DUPLICATE",
+        "note": "동일 검토가 이미 완료됨"
+      },
       "spawn_rules": []
     }
   ],
@@ -11318,6 +11494,54 @@
         "issue_type": "FEATURE_PLAN",
         "plan_created": 2,
         "timestamp": "2026-05-11T10:40:35.305491"
+      },
+      {
+        "issue_id": "ISS-192",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-11T10:43:53.280823"
+      },
+      {
+        "issue_id": "ISS-192",
+        "issue_type": "USER_STORY",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T10:44:17.399498"
+      },
+      {
+        "issue_id": "ISS-193",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-11T10:46:39.543370"
+      },
+      {
+        "issue_id": "ISS-193",
+        "issue_type": "USER_STORY",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T10:46:53.208867"
+      },
+      {
+        "issue_id": "ISS-194",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-11T11:15:16.342611"
+      },
+      {
+        "issue_id": "ISS-196",
+        "issue_type": "USER_STORY",
+        "plan_created": 1,
+        "timestamp": "2026-05-11T11:19:22.722221"
+      },
+      {
+        "issue_id": "ISS-197",
+        "issue_type": "PLAN_CEO_REVIEW",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T11:20:35.433688"
+      },
+      {
+        "issue_id": "ISS-198",
+        "issue_type": "PLAN_ENG_REVIEW",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T11:21:36.482021"
       }
     ],
     "on_fail": [],
@@ -12605,24 +12829,24 @@
     ]
   },
   "stats": {
-    "total_issues": 186,
-    "completed": 178,
+    "total_issues": 190,
+    "completed": 186,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
   },
   "opus_budget_state": {
     "daily": {
-      "date": "2026-05-04",
-      "cost_usd": 19.98,
-      "calls": 27
+      "date": "2026-05-11",
+      "cost_usd": 0.45,
+      "calls": 1
     },
     "monthly": {
       "month": "2026-05",
-      "cost_usd": 23.68,
-      "calls": 32
+      "cost_usd": 24.13,
+      "calls": 33
     },
-    "demotion_active": true
+    "demotion_active": false
   },
   "pending_opportunity_signals": [
     {
@@ -12792,7 +13016,7 @@
     "date": "2026-05-11",
     "created_today": 0
   },
-  "updated_at": "2026-05-11T01:37:20.693339Z",
+  "updated_at": "2026-05-11T01:46:55.534295+00:00",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
