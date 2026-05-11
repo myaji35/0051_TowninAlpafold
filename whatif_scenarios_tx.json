@@ -2,15 +2,15 @@
   "dong": "강남구 A1동",
   "target": "tx_volume",
   "goal_pct": 15.0,
-  "current_y": 70.5691,
-  "target_y": 81.1545,
+  "current_y": 8.1483,
+  "target_y": 9.3706,
   "scenarios": {
     "최소변경": {
       "label": "최소변경",
       "strategy": "minimum_change",
       "method": "scipy_fallback",
       "changes": {},
-      "predicted_y": 70.5691,
+      "predicted_y": 8.1483,
       "achievement_pct": 0.0,
       "note": "ctrl_features가 모델 출력에 미치는 영향이 작습니다 (feature_importance < 10%)"
     },
@@ -19,7 +19,7 @@
       "strategy": "balanced",
       "method": "scipy_fallback",
       "changes": {},
-      "predicted_y": 70.5691,
+      "predicted_y": 8.1483,
       "achievement_pct": 0.0,
       "note": "ctrl_features가 모델 출력에 미치는 영향이 작습니다 (feature_importance < 10%)"
     },
@@ -27,13 +27,10 @@
       "label": "고효율",
       "strategy": "high_efficiency",
       "method": "scipy_fallback",
-      "changes": {
-        "소상공_평균": 54.5215,
-        "카페_평균": 8.85,
-        "유동_평균": 642.4671
-      },
-      "predicted_y": 71.8008,
-      "achievement_pct": 11.64
+      "changes": {},
+      "predicted_y": 8.1483,
+      "achievement_pct": 0.0,
+      "note": "ctrl_features가 모델 출력에 미치는 영향이 작습니다 (feature_importance < 10%)"
     }
   }
 }

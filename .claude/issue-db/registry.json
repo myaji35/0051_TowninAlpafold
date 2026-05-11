@@ -11357,6 +11357,235 @@
       },
       "spawn_rules": [],
       "completed_at": "2026-05-11T03:17:06.931205+00:00"
+    },
+    {
+      "id": "ISS-225",
+      "type": "REFACTOR",
+      "priority": "P3",
+      "status": "DONE",
+      "title": "[REFACTOR] build_X / build_feat_row 공통 모듈화 — 4개 파일 중복 제거",
+      "owner": "agent-harness",
+      "axis": "PLAN",
+      "mode": "code",
+      "created_at": "2026-05-11T03:35:49.251155+00:00",
+      "started_at": "2026-05-11T03:35:49.251155+00:00",
+      "depth": 1,
+      "parent_id": "ISS-224",
+      "blocked_by": [],
+      "payload": {
+        "tech_debt_source": "ISS-224 Eng Review tech_debt[0]",
+        "problem": "build_X / build_feat_row / _exclude_layers_for_target / _target_suffix가 train, explain, counterfactual, optimize 4개 파일에 중복 정의됨. ISS-216 4타깃 분기 로직도 동일하게 4번 복제됨.",
+        "fix": {
+          "new_module": "reverse_whatif_common.py",
+          "extract_functions": [
+            "build_X(simula_data, target, causal_data)",
+            "build_feat_row(dong_data, target, causal_data, feat_names)",
+            "_exclude_layers_for_target(target)",
+            "_target_suffix(target)",
+            "_y_scalar_for_target(layers, target)",
+            "trend_slope(values)",
+            "avg_granger_lag(causal, dong_code)",
+            "LAYERS / LAYER_KO 상수"
+          ],
+          "imports_to_update": [
+            "reverse_whatif_train.py",
+            "reverse_whatif_explain.py",
+            "reverse_whatif_counterfactual.py",
+            "reverse_whatif_optimize.py"
+          ]
+        },
+        "scope_dir": ".",
+        "files_hint": [
+          "reverse_whatif_common.py",
+          "reverse_whatif_train.py",
+          "reverse_whatif_explain.py",
+          "reverse_whatif_counterfactual.py",
+          "reverse_whatif_optimize.py"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py",
+          "simula_data_real.json",
+          "causal.json"
+        ],
+        "acceptance_criteria": [
+          "reverse_whatif_common.py 생성, 모든 공통 함수/상수 이전",
+          "4개 파일이 from reverse_whatif_common import ... 사용",
+          "pyflakes 경고 4건 동시 해소 (f-string placeholder + unused var)",
+          "스모크 테스트 6/6 PASS 유지 (4타깃 회귀 없음)",
+          "코드 라인 수 net 감소 (중복 제거 효과 측정 가능)",
+          "decision_tree_train.py 미수정"
+        ],
+        "user_explicit": true,
+        "files_changed": []
+      },
+      "completed_at": "2026-05-11T12:59:03.049350",
+      "result": {
+        "common_module": "reverse_whatif_common.py",
+        "files_refactored": 4,
+        "pyflakes_clean": true,
+        "smoke_pass": true,
+        "do_not_touch_intact": true,
+        "lines_net_change": -225,
+        "reduction_pct": 18.8
+      }
+    },
+    {
+      "id": "ISS-226",
+      "type": "VERIFY",
+      "priority": "P1",
+      "status": "DONE",
+      "title": "[VERIFY] ISS-217 wedge 실데이터로 ISS-216 4타깃 재실행 — 시뮬 vs 실데이터 비교",
+      "owner": "agent-harness",
+      "axis": "PLAN",
+      "mode": "code",
+      "created_at": "2026-05-11T03:35:49.251155+00:00",
+      "started_at": "2026-05-11T03:35:49.251155+00:00",
+      "depth": 1,
+      "parent_id": "ISS-217",
+      "blocked_by": [],
+      "payload": {
+        "objective": "ISS-217이 생성한 wedge_data_geumo.json(의정부 금오동 60개월)을 ISS-216 4타깃(tx_volume, visitors_total, tx_per_visitor, tx_delta_6m)에 모두 적용하여 시뮬데이터와 비교. 실데이터 R²와 achievement 측정.",
+        "data_input": "wedge_data_geumo.json (의정부 금오동 단일 동, proxy:business_count_change)",
+        "targets_to_run": [
+          "tx_volume",
+          "visitors_total",
+          "tx_per_visitor",
+          "tx_delta_6m"
+        ],
+        "goal_pct": 15,
+        "execution_plan": [
+          "1. REVERSE_WHATIF_DATA=wedge_data_geumo.json python reverse_whatif_pipeline.py --dong 의정부_금오동 --target <T> --goal 15 (4회)",
+          "2. 각 결과의 R² + achievement + verified 수집",
+          "3. 시뮬데이터 결과와 비교표 생성 (docs/methods/wedge-validation.md)",
+          "4. CEO 우려사항(시뮬 R² 0.92 의심) 검증: 실데이터 R²가 시뮬보다 현저히 낮으면 시뮬 데이터 한계 확인"
+        ],
+        "scope_dir": ".",
+        "files_hint": [
+          "docs/methods/wedge-validation.md"
+        ],
+        "do_not_touch": [
+          "decision_tree_train.py",
+          "wedge_data_geumo.json",
+          "simula_data_real.json"
+        ],
+        "acceptance_criteria": [
+          "4타깃 × 의정부 금오동 모두 실행 성공",
+          "각 타깃별 R² (실데이터) + R² (시뮬) 비교표 작성",
+          "각 타깃별 achievement (실데이터) + achievement (시뮬) 비교표 작성",
+          "wedge_data_validation_geumo.json 산출 (4타깃 결과 통합)",
+          "docs/methods/wedge-validation.md 작성 — 비교 + CEO 우려 검증 결론",
+          "단일 동(N=1) 한계 명시"
+        ],
+        "expected_findings": [
+          "단일 동 데이터로 학습 시 R²는 변동 클 수 있음 (다양성 부족)",
+          "proxy tx_volume 사용으로 achievement 해석 주의 명시 필요",
+          "tx_delta_6m이 가장 안정적 신호일 가능성 (변화량 기반)"
+        ],
+        "depends_on": "ISS-217 완료 (wedge_data_geumo.json 존재)",
+        "user_explicit": true
+      },
+      "completed_at": "2026-05-11T12:59:03.154170",
+      "result": {
+        "files_created": [
+          "scripts/wedge_validate.py",
+          "wedge_data_validation_geumo.json",
+          "docs/methods/wedge-validation.md"
+        ],
+        "targets_validated": 4,
+        "achievement_wedge_tx": 0.0,
+        "achievement_wedge_vis": 0.0,
+        "achievement_wedge_tpv": 0.0,
+        "achievement_wedge_tdelta": 5.6,
+        "ceo_concern_verdict": "confirmed",
+        "ood_ratio_avg": 94.5,
+        "do_not_touch_intact": true
+      }
+    },
+    {
+      "id": "ISS-227",
+      "title": "[Plan:게이트] ISS-225 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-225",
+      "depends_on": [],
+      "created_at": "2026-05-11T12:58:42.600119",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-225",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "pyflakes_clean": true,
+        "compile_pass": true,
+        "gate": "PASS",
+        "source": "ISS-225"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-11T03:59:15.950193+00:00"
+    },
+    {
+      "id": "ISS-228",
+      "title": "[Plan:테스트] ISS-225 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-225",
+      "depends_on": [],
+      "created_at": "2026-05-11T12:58:42.600119",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-225",
+        "scope": "changed"
+      },
+      "result": {
+        "passed": true,
+        "smoke_tests_pass": "6/6",
+        "runtime_sec": 14.9,
+        "source": "ISS-225/226"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-11T03:59:15.950193+00:00"
+    },
+    {
+      "id": "ISS-229",
+      "title": "[Plan:도메인분석] ISS-225 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-225",
+      "depends_on": [],
+      "created_at": "2026-05-11T12:58:42.600119",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-225"
+      },
+      "result": {
+        "score": 85.0,
+        "breakdown": {
+          "quality": 100,
+          "coverage": 80,
+          "performance": 75,
+          "docs": 90
+        },
+        "verdict": "PASS"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-11T03:59:15.950193+00:00"
     }
   ],
   "hooks": {
@@ -12478,6 +12707,30 @@
         "issue_type": "USER_STORY",
         "plan_created": 0,
         "timestamp": "2026-05-11T12:14:46.488709"
+      },
+      {
+        "issue_id": "ISS-226",
+        "issue_type": "VERIFY",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T12:44:56.557332"
+      },
+      {
+        "issue_id": "ISS-225",
+        "issue_type": "REFACTOR",
+        "plan_created": 3,
+        "timestamp": "2026-05-11T12:58:42.600119"
+      },
+      {
+        "issue_id": "ISS-225",
+        "issue_type": "REFACTOR",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T12:59:03.049350"
+      },
+      {
+        "issue_id": "ISS-226",
+        "issue_type": "VERIFY",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T12:59:03.154170"
       }
     ],
     "on_fail": [],
@@ -13777,8 +14030,8 @@
     ]
   },
   "stats": {
-    "total_issues": 208,
-    "completed": 211,
+    "total_issues": 211,
+    "completed": 215,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -13982,7 +14235,7 @@
     "date": "2026-05-11",
     "created_today": 0
   },
-  "updated_at": "2026-05-11T03:17:06.931205+00:00",
+  "updated_at": "2026-05-11T03:59:15.950193+00:00",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
