@@ -11018,14 +11018,18 @@
         "files_changed": []
       },
       "result": {
-        "targets_added": [
+        "new_targets": [
           "tx_per_visitor",
           "tx_delta_6m"
         ],
-        "regression_pass": true,
+        "r2_tpv": 0.8588,
+        "r2_tdelta": 0.9198,
+        "best_achievement_tpv": 78.79,
+        "best_achievement_tdelta": 104.42,
         "smoke_pass": true,
-        "note": "tx_per_visitor/tx_delta_6m 이미 reverse_whatif_train.py에 구현 완료 (이전 세션)"
-      }
+        "do_not_touch_intact": true
+      },
+      "completed_at": "2026-05-11T12:14:46.114874"
     },
     {
       "id": "ISS-217",
@@ -11069,7 +11073,7 @@
           "tx_volume 데이터 미가용 시 명시적 'proxy:사업체매출' 메타 기록"
         ]
       },
-      "completed_at": "2026-05-11T12:01:39.427651",
+      "completed_at": "2026-05-11T12:14:46.230002",
       "result": {
         "files_created": [
           "scripts/build_wedge_data.py",
@@ -11126,7 +11130,7 @@
         ],
         "depends_on_note": "ISS-216(타깃 재정의), ISS-217(실데이터) 완료 후 실데이터 기반 narration 생성 가능"
       },
-      "completed_at": "2026-05-11T12:03:43.158673",
+      "completed_at": "2026-05-11T12:14:46.358954",
       "result": {
         "files_created": [
           "reverse_whatif_narrate.py"
@@ -11184,7 +11188,7 @@
           "기존 backend FastAPI 라우터 회귀 없음"
         ]
       },
-      "completed_at": "2026-05-11T12:12:08.035461",
+      "completed_at": "2026-05-11T12:14:46.488709",
       "result": {
         "files_created": [
           "backend/whatif_api.py"
@@ -11193,9 +11197,7 @@
           "POST /api/whatif",
           "GET /api/whatif/targets"
         ],
-        "smoke_pass": true,
-        "http_200": true,
-        "verified_field": true
+        "backend_regression": "none"
       }
     },
     {
@@ -11262,56 +11264,99 @@
       "spawn_rules": []
     },
     {
-      "id": "ISS-203",
-      "type": "CODE_SMELL",
-      "title": "미커밋 변경 23개 파일 — 리뷰 필요",
+      "id": "ISS-223",
+      "title": "[Plan:CEO검토] ISS-216 전략 검토",
+      "type": "PLAN_CEO_REVIEW",
+      "status": "DONE",
       "priority": "P1",
-      "status": "READY",
-      "assign_to": "code-quality",
-      "created_at": "2026-05-11T12:13:04.832066",
-      "created_by": "proactive-scan",
-      "depth": 0,
-      "detail": "git diff에서 23개 파일 변경 감지",
-      "parent": null
+      "assign_to": "plan-ceo-reviewer",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-216",
+      "depends_on": [],
+      "created_at": "2026-05-11T12:14:14.754147",
+      "payload": {
+        "source_issue": "ISS-216",
+        "source_plan": {
+          "new_targets": [
+            "tx_per_visitor",
+            "tx_delta_6m"
+          ],
+          "r2_tpv": 0.8588,
+          "r2_tdelta": 0.9198,
+          "best_achievement_tpv": 78.79,
+          "best_achievement_tdelta": 104.42,
+          "smoke_pass": true,
+          "do_not_touch_intact": true
+        },
+        "feature": "ISS-216"
+      },
+      "result": {
+        "verdict": "APPROVED",
+        "summary": "ISS-216 신규 Y타깃(tx_per_visitor, tx_delta_6m) 도입으로 achievement 16%→78~104% 회복. CEO 관점 비즈니스 가치 입증.",
+        "key_findings": [
+          "tx_per_visitor 78.79% achievement — 전환율 관점에서 통제 가능 변수 영향력 충분 입증",
+          "tx_delta_6m 104.42% achievement — 모멘텀 변화 관점은 시뮬데이터에서도 통제 가능",
+          "기존 tx_volume/visitors_total 회귀 없음 (PASS)",
+          "decision_tree_train.py 미수정 유지",
+          "다음 사용자 가치: 자연어 처방(ISS-218) + REST API(ISS-219) 이미 구현 완료"
+        ],
+        "concerns": [
+          "시뮬데이터 R² 0.92는 여전히 높음 — 실데이터 ETL(ISS-217 완료) 적용 후 재검증 권장",
+          "tx_volume 절대치 16.6% achievement는 도메인 한계로 수용 (CEO 노트)"
+        ],
+        "recommendation_next": "ISS-217 wedge 실데이터로 ISS-216 4타깃 재실행하여 achievement 비교"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-11T03:17:06.931205+00:00"
     },
     {
-      "id": "ISS-204",
-      "type": "CODE_SMELL",
-      "title": "TODO/FIXME 코멘트 4089개 발견",
-      "priority": "P3",
-      "status": "READY",
-      "assign_to": "code-quality",
-      "created_at": "2026-05-11T12:13:04.832118",
-      "created_by": "proactive-scan",
-      "depth": 0,
-      "detail": "./.venv/lib/python3.14/site-packages/pip/_internal/build_env.py:312:            # TODO: hash-checking should be extended to build deps, but that is\n./.venv/lib/python3.14/site-packages/pip/_internal/build_env.py:559:                # FIXME: Consider direct URL?\n./.venv/lib/python3.14/site-packages/pip/_internal/cache.py:280:                # TODO: use DirectUrl.equivalent when\n./.venv/lib/python3.14/site-packages/pip/_internal/configuration.py:339:    # XXX: This is patched in the tests.\n./.venv/lib/python3.14/site-packages/pip/_internal/configuration.py:389:    # XXX: This is patched in the tests.",
-      "parent": null
-    },
-    {
-      "id": "ISS-205",
-      "type": "CODE_SMELL",
-      "title": "console.error/warn 잔재 17개 — 프로덕션 코드 정리 필요",
-      "priority": "P2",
-      "status": "READY",
-      "assign_to": "code-quality",
-      "created_at": "2026-05-11T12:13:04.832152",
-      "created_by": "proactive-scan",
-      "depth": 0,
-      "detail": "./components/icons.js:63:    console.warn('[icons] unknown icon:', name);\n./components/pharmacy-develop.js:241:      console.warn('[pharmacy-develop] no container');\n./components/pharmacy-close.js:357:    if (!container) { console.warn('[pharmacy-close] no container'); return; }\n./components/sidebar.js:57:      console.warn('[sidebar] categories.json fetch 실패', e);\n./components/data-studio-datasets.js:149:              console.warn('[DataStudioDatasets] fallback fetch 실패:', err);",
-      "parent": null
-    },
-    {
-      "id": "ISS-206",
-      "type": "CODE_SMELL",
-      "title": "빈 catch 블록 1개 — 에러 삼킴 위험",
+      "id": "ISS-224",
+      "title": "[Plan:Eng검토] ISS-216 실행가능성 검토",
+      "type": "PLAN_ENG_REVIEW",
+      "status": "DONE",
       "priority": "P1",
-      "status": "READY",
-      "assign_to": "code-quality",
-      "created_at": "2026-05-11T12:13:04.832187",
-      "created_by": "proactive-scan",
-      "depth": 0,
-      "detail": "./app.js:5576:    } catch(e) {}",
-      "parent": null
+      "assign_to": "plan-eng-reviewer",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-216",
+      "depends_on": [],
+      "created_at": "2026-05-11T12:14:14.754147",
+      "payload": {
+        "source_issue": "ISS-216",
+        "source_plan": {
+          "new_targets": [
+            "tx_per_visitor",
+            "tx_delta_6m"
+          ],
+          "r2_tpv": 0.8588,
+          "r2_tdelta": 0.9198,
+          "best_achievement_tpv": 78.79,
+          "best_achievement_tdelta": 104.42,
+          "smoke_pass": true,
+          "do_not_touch_intact": true
+        },
+        "feature": "ISS-216"
+      },
+      "result": {
+        "verdict": "APPROVED",
+        "summary": "leakage 제외 규칙 일관 적용 (Y 원본 레이어 X에서 제외). 4타깃 분기 처리 깔끔. CTRL_FEATURES 하드코딩 제거하고 bundle mask 동적 추출.",
+        "key_findings": [
+          "_target_suffix, _exclude_layers_for_target, _y_scalar_for_target 헬퍼 분리 — DRY OK",
+          "argparse choices 4종 확장 — 5개 파일 동기화 완료",
+          "스모크 테스트 6/6 PASS (test_tx_per_visitor, test_tx_delta_6m 추가)",
+          "기존 tx/vis 회귀 테스트 없음 — 백워드 호환 검증됨",
+          "y_scale 파라미터로 단위 차이(절대값 vs 비율) 분기 처리"
+        ],
+        "tech_debt": [
+          "build_X / build_feat_row 중복 정의 (train/explain/counterfactual에 각각) — 공통 모듈화 권장 (P3)",
+          "pyflakes 경고 4건 (f-string placeholder, unused var) — non-blocking",
+          "tx_volume 데이터 leakage 잔재 의심: tx_delta_6m R² 0.92도 약간 높음 → tx_volume의 일부가 여전히 X에 남아 있을 가능성"
+        ],
+        "recommendation_next": "공통 build_X 모듈 분리 (refactor 이슈 P3)"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-05-11T03:17:06.931205+00:00"
     }
   ],
   "hooks": {
@@ -12403,6 +12448,36 @@
         "issue_type": "USER_STORY",
         "plan_created": 1,
         "timestamp": "2026-05-11T12:12:08.035461"
+      },
+      {
+        "issue_id": "ISS-216",
+        "issue_type": "FEATURE_PLAN",
+        "plan_created": 2,
+        "timestamp": "2026-05-11T12:14:14.754147"
+      },
+      {
+        "issue_id": "ISS-216",
+        "issue_type": "FEATURE_PLAN",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T12:14:46.114874"
+      },
+      {
+        "issue_id": "ISS-217",
+        "issue_type": "USER_STORY",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T12:14:46.230002"
+      },
+      {
+        "issue_id": "ISS-218",
+        "issue_type": "USER_STORY",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T12:14:46.358954"
+      },
+      {
+        "issue_id": "ISS-219",
+        "issue_type": "USER_STORY",
+        "plan_created": 0,
+        "timestamp": "2026-05-11T12:14:46.488709"
       }
     ],
     "on_fail": [],
@@ -13702,8 +13777,8 @@
     ]
   },
   "stats": {
-    "total_issues": 206,
-    "completed": 206,
+    "total_issues": 208,
+    "completed": 211,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -13907,7 +13982,7 @@
     "date": "2026-05-11",
     "created_today": 0
   },
-  "updated_at": "2026-05-11T02:49:06.549045+00:00",
+  "updated_at": "2026-05-11T03:17:06.931205+00:00",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
