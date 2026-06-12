@@ -21,9 +21,15 @@
     return Math.max(0, Math.min(1, x));
   }
 
-  // ── 낙찰가율 분포 (감정가 대비, 경매 통계 기반 — 수도권 아파트 평균) ──
-  // p10(비관) / p50(중앙) / p90(낙관). 물건유형 보정은 후속 ETL에서.
-  const AUCTION_RATE = Object.freeze({ p10: 0.68, p50: 0.82, p90: 0.95 });
+  // ── 낙찰가율 (V1: 지역×담보유형 동적 행렬 — utils/npl-auction-rates.js) ──
+  // 미연동 시 fallback 상수. region_code/collateral_type 있으면 행렬 조회.
+  const AUCTION_RATE_FALLBACK = Object.freeze({ p10: 0.68, p50: 0.82, p90: 0.95 });
+  function getAuctionRate(inp) {
+    if (window.NplAuctionRates && (inp.region_code || inp.collateral_type)) {
+      return window.NplAuctionRates.auctionRate(inp.region_code, inp.collateral_type);
+    }
+    return AUCTION_RATE_FALLBACK;
+  }
 
   // 회수기간 (개월) — 경매 평균. 보유비용/할인에 사용.
   const DEFAULT_RECOVERY_MONTHS = 12;
@@ -38,12 +44,14 @@
    */
   function recoveryCone(inp) {
     const appraisal = num(inp.appraisal);
+    // V1: 지역×담보유형 동적 낙찰가율
+    const rate = getAuctionRate(inp);
     // 권리관계 차감 합 (회수액에서 우선 변제되는 금액)
     const deduction = num(inp.senior) + num(inp.tax) + num(inp.deposit);
     const gross = {
-      p10: appraisal * AUCTION_RATE.p10,
-      p50: appraisal * AUCTION_RATE.p50,
-      p90: appraisal * AUCTION_RATE.p90,
+      p10: appraisal * rate.p10,
+      p50: appraisal * rate.p50,
+      p90: appraisal * rate.p90,
     };
     // 순회수액 = 처분액 − 선순위/세금/보증금 (음수 방지)
     const net = {
@@ -219,7 +227,7 @@
     computeIRR: computeIRR,
     irrToGrade: irrToGrade,
     comparable: comparable,
-    AUCTION_RATE: AUCTION_RATE,
+    getAuctionRate: getAuctionRate,
     DEMO_CLAIMS: DEMO_CLAIMS,
   };
 })();

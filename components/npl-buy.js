@@ -23,6 +23,8 @@
       +   '<div class="npl-grid">'
       +     '<section class="npl-form-panel" aria-label="채권 정보 입력">'
       +       fld('담보 부동산 주소', 'address', 'text', '예: 의정부시 금오동 123', false)
+      +       selFld('담보 유형', 'collateral_type', [['apt','아파트'],['officetel','오피스텔'],['commercial','상가'],['land','토지']])
+      +       selFld('지역 권역', 'region_code', [['11680','수도권 (서울/경기/인천)'],['26350','광역시 (부산/대구 등)'],['51110','지방']])
       +       fld('청구액 (만원)', 'claim', 'number', '필수', true)
       +       fld('후보 매수가 (만원)', 'buy_price', 'number', '필수', true)
       +       fld('감정가 (만원)', 'appraisal', 'number', '미입력 시 청구액×1.2 추정', false)
@@ -52,9 +54,16 @@
       + 'placeholder="' + placeholder + '"' + (required ? ' required' : '') + ' /></label>';
   }
 
+  function selFld(label, key, opts) {
+    var o = opts.map(function(op){ return '<option value="' + op[0] + '">' + op[1] + '</option>'; }).join('');
+    return '<label class="npl-field"><span class="npl-field-label">' + label + '</span>'
+      + '<select class="npl-input" data-field="' + key + '">' + o + '</select></label>';
+  }
+
   function bindEvents(container) {
     container.querySelectorAll('[data-field]').forEach(function(input) {
-      input.addEventListener('input', function(e) {
+      var evt = input.tagName === 'SELECT' ? 'change' : 'input';
+      input.addEventListener(evt, function(e) {
         var k = e.target.dataset.field;
         state.formData[k] = e.target.value;
         updateState(container);
@@ -78,6 +87,8 @@
     setTimeout(function() {
       var inp = {
         address: state.formData.address,
+        collateral_type: state.formData.collateral_type || 'apt',
+        region_code: state.formData.region_code || '11680',
         claim: parseFloat(state.formData.claim),
         buy_price: parseFloat(state.formData.buy_price),
         appraisal: parseFloat(state.formData.appraisal) || 0,

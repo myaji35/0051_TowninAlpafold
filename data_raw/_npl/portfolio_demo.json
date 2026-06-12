@@ -21,8 +21,8 @@
     "carrying_monthly": 831
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000002",
@@ -45,8 +45,8 @@
     "carrying_monthly": 552
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000003",
@@ -55,12 +55,12 @@
    "address": "경기 성남시 분당동 779-96",
    "collateral_type": "commercial",
    "region_code": "41130",
-   "score_irr": 0.1502,
+   "score_irr": -0.0461,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 21861.0,
-   "recovery_p50": 26362.0,
-   "recovery_p90": 30542.0,
+   "grade": "low",
+   "recovery_p10": 15740.0,
+   "recovery_p50": 21861.0,
+   "recovery_p90": 26671.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 24239,
@@ -71,8 +71,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000004",
@@ -81,12 +81,12 @@
    "address": "경기 고양시 행신동 842-57",
    "collateral_type": "apt",
    "region_code": "41280",
-   "score_irr": 0.2967,
+   "score_irr": 0.4005,
    "score_npv": null,
    "grade": "very_high",
-   "recovery_p10": 30699.0,
-   "recovery_p50": 42650.0,
-   "recovery_p90": 53747.0,
+   "recovery_p10": 33585.0,
+   "recovery_p50": 46064.0,
+   "recovery_p90": 54874.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 57472,
@@ -97,8 +97,8 @@
     "deposit": 5206
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000005",
@@ -107,12 +107,12 @@
    "address": "서울 관악구 봉천동 384-47",
    "collateral_type": "apt",
    "region_code": "11620",
-   "score_irr": -0.0337,
+   "score_irr": 0.0158,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 32507.0,
-   "recovery_p50": 39602.0,
-   "recovery_p90": 46191.0,
+   "recovery_p10": 34220.0,
+   "recovery_p50": 41630.0,
+   "recovery_p90": 46860.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 34792,
@@ -123,8 +123,8 @@
     "deposit": 947
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000006",
@@ -133,12 +133,12 @@
    "address": "인천 미추홀구 주안동 454-50",
    "collateral_type": "land",
    "region_code": "28177",
-   "score_irr": -0.0059,
+   "score_irr": -0.1513,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 33863.0,
-   "recovery_p50": 40835.0,
-   "recovery_p90": 47309.0,
+   "recovery_p10": 24402.0,
+   "recovery_p50": 34859.0,
+   "recovery_p90": 44620.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 37797,
@@ -149,8 +149,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000007",
@@ -159,12 +159,12 @@
    "address": "강원 춘천시 퇴계동 321-69",
    "collateral_type": "officetel",
    "region_code": "51110",
-   "score_irr": 0.2137,
+   "score_irr": -0.179,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 5218.0,
-   "recovery_p50": 7113.0,
-   "recovery_p90": 8873.0,
+   "grade": "low",
+   "recovery_p10": 3052.0,
+   "recovery_p50": 4812.0,
+   "recovery_p90": 6132.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 8759,
@@ -175,8 +175,8 @@
     "deposit": 1241
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000008",
@@ -185,12 +185,12 @@
    "address": "부산 부산진구 부전동 187-66",
    "collateral_type": "land",
    "region_code": "26230",
-   "score_irr": 0.1581,
+   "score_irr": -0.0961,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 18957.0,
-   "recovery_p50": 22860.0,
-   "recovery_p90": 26484.0,
+   "grade": "low",
+   "recovery_p10": 12489.0,
+   "recovery_p50": 17842.0,
+   "recovery_p90": 22838.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 22130,
@@ -201,8 +201,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000009",
@@ -225,8 +225,8 @@
     "carrying_monthly": 838
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000010",
@@ -249,8 +249,8 @@
     "carrying_monthly": 217
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000011",
@@ -259,12 +259,12 @@
    "address": "경기 용인시 죽전동 687-23",
    "collateral_type": "apt",
    "region_code": "41460",
-   "score_irr": -0.2746,
+   "score_irr": -0.1419,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 3487.0,
-   "recovery_p50": 9694.0,
-   "recovery_p90": 15457.0,
+   "recovery_p10": 4985.0,
+   "recovery_p50": 11467.0,
+   "recovery_p90": 16042.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 30582,
@@ -275,8 +275,8 @@
     "deposit": 3280
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000012",
@@ -285,12 +285,12 @@
    "address": "강원 춘천시 석사동 49-36",
    "collateral_type": "officetel",
    "region_code": "51110",
-   "score_irr": 0.3877,
+   "score_irr": 0.0427,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 9506.0,
-   "recovery_p50": 11954.0,
-   "recovery_p90": 14227.0,
+   "grade": "low",
+   "recovery_p10": 6709.0,
+   "recovery_p50": 8982.0,
+   "recovery_p90": 10687.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 16309,
@@ -301,8 +301,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000013",
@@ -311,12 +311,12 @@
    "address": "인천 미추홀구 주안동 968-38",
    "collateral_type": "apt",
    "region_code": "28177",
-   "score_irr": -0.0359,
+   "score_irr": 0.0112,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 27605.0,
-   "recovery_p50": 33309.0,
-   "recovery_p90": 38606.0,
+   "recovery_p10": 28982.0,
+   "recovery_p50": 34939.0,
+   "recovery_p90": 39144.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 30793,
@@ -327,8 +327,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000014",
@@ -337,12 +337,12 @@
    "address": "경남 창원시 상남동 630-50",
    "collateral_type": "apt",
    "region_code": "48120",
-   "score_irr": -0.0696,
+   "score_irr": -0.2581,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 11149.0,
-   "recovery_p50": 17277.0,
-   "recovery_p90": 22967.0,
+   "recovery_p10": 8269.0,
+   "recovery_p50": 13776.0,
+   "recovery_p90": 17662.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 37611,
@@ -353,8 +353,8 @@
     "deposit": 1190
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000015",
@@ -377,8 +377,8 @@
     "carrying_monthly": 113
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000016",
@@ -387,12 +387,12 @@
    "address": "경기 수원시 인계동 938-39",
    "collateral_type": "apt",
    "region_code": "41110",
-   "score_irr": 0.5426,
+   "score_irr": 0.6179,
    "score_npv": null,
    "grade": "very_high",
-   "recovery_p10": 52136.0,
-   "recovery_p50": 62869.0,
-   "recovery_p90": 72836.0,
+   "recovery_p10": 54727.0,
+   "recovery_p50": 65936.0,
+   "recovery_p90": 73849.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 70896,
@@ -403,8 +403,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000017",
@@ -413,12 +413,12 @@
    "address": "서울 강남구 대치동 631-60",
    "collateral_type": "commercial",
    "region_code": "11680",
-   "score_irr": 0.2072,
+   "score_irr": -0.0224,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 73867.0,
-   "recovery_p50": 91209.0,
-   "recovery_p90": 107312.0,
+   "grade": "low",
+   "recovery_p10": 50282.0,
+   "recovery_p50": 73867.0,
+   "recovery_p90": 92398.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 91729,
@@ -429,8 +429,8 @@
     "deposit": 10364
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000018",
@@ -439,12 +439,12 @@
    "address": "인천 서구 검단동 585-52",
    "collateral_type": "officetel",
    "region_code": "28260",
-   "score_irr": 0.1502,
+   "score_irr": 0.0926,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 14105.0,
-   "recovery_p50": 17104.0,
-   "recovery_p90": 19888.0,
+   "grade": "medium",
+   "recovery_p10": 12905.0,
+   "recovery_p50": 16247.0,
+   "recovery_p90": 18753.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 14296,
@@ -455,8 +455,8 @@
     "deposit": 460
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000019",
@@ -465,12 +465,12 @@
    "address": "부산 해운대구 중동 335-95",
    "collateral_type": "apt",
    "region_code": "26350",
-   "score_irr": 0.0359,
+   "score_irr": -0.0205,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 7327.0,
-   "recovery_p50": 11834.0,
-   "recovery_p90": 16018.0,
+   "recovery_p10": 6812.0,
+   "recovery_p50": 11190.0,
+   "recovery_p90": 14280.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 29589,
@@ -481,8 +481,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000020",
@@ -491,12 +491,12 @@
    "address": "경기 성남시 서현동 701-78",
    "collateral_type": "apt",
    "region_code": "41130",
-   "score_irr": 0.1525,
+   "score_irr": 0.2095,
    "score_npv": null,
    "grade": "high",
-   "recovery_p10": 54653.0,
-   "recovery_p50": 66101.0,
-   "recovery_p90": 76731.0,
+   "recovery_p10": 57417.0,
+   "recovery_p50": 69371.0,
+   "recovery_p90": 77810.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 58268,
@@ -507,8 +507,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000021",
@@ -517,12 +517,12 @@
    "address": "인천 서구 가정동 421-59",
    "collateral_type": "apt",
    "region_code": "28260",
-   "score_irr": 0.1694,
+   "score_irr": 0.323,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 7482.0,
-   "recovery_p50": 13850.0,
-   "recovery_p90": 19763.0,
+   "grade": "very_high",
+   "recovery_p10": 9019.0,
+   "recovery_p50": 15669.0,
+   "recovery_p90": 20363.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 30274,
@@ -533,8 +533,8 @@
     "deposit": 2024
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000022",
@@ -543,12 +543,12 @@
    "address": "서울 노원구 상계동 726-92",
    "collateral_type": "apt",
    "region_code": "11350",
-   "score_irr": 0.4244,
+   "score_irr": 0.4942,
    "score_npv": null,
    "grade": "very_high",
-   "recovery_p10": 57949.0,
-   "recovery_p50": 69945.0,
-   "recovery_p90": 81085.0,
+   "recovery_p10": 60845.0,
+   "recovery_p50": 73373.0,
+   "recovery_p90": 82216.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 66397,
@@ -559,8 +559,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000023",
@@ -583,8 +583,8 @@
     "carrying_monthly": 418
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000024",
@@ -593,12 +593,12 @@
    "address": "경기 의정부시 신곡동 512-29",
    "collateral_type": "land",
    "region_code": "41150",
-   "score_irr": 0.3322,
+   "score_irr": 0.1357,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 37427.0,
-   "recovery_p50": 45207.0,
-   "recovery_p90": 52431.0,
+   "grade": "medium",
+   "recovery_p10": 26869.0,
+   "recovery_p50": 38539.0,
+   "recovery_p90": 49431.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 37179,
@@ -609,8 +609,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000025",
@@ -619,12 +619,12 @@
    "address": "서울 강남구 논현동 732-1",
    "collateral_type": "officetel",
    "region_code": "11680",
-   "score_irr": 0.3052,
+   "score_irr": 0.2351,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 35333.0,
-   "recovery_p50": 43514.0,
-   "recovery_p90": 51111.0,
+   "grade": "high",
+   "recovery_p10": 32061.0,
+   "recovery_p50": 41177.0,
+   "recovery_p90": 48014.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 42623,
@@ -635,8 +635,8 @@
     "deposit": 3274
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000026",
@@ -645,12 +645,12 @@
    "address": "대구 수성구 수성동 587-58",
    "collateral_type": "apt",
    "region_code": "27260",
-   "score_irr": 0.1931,
+   "score_irr": 0.1522,
    "score_npv": null,
    "grade": "high",
-   "recovery_p10": 11400.0,
-   "recovery_p50": 14999.0,
-   "recovery_p90": 18342.0,
+   "recovery_p10": 10988.0,
+   "recovery_p50": 14485.0,
+   "recovery_p90": 16953.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 20810,
@@ -661,8 +661,8 @@
     "deposit": 509
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000027",
@@ -685,8 +685,8 @@
     "carrying_monthly": 99
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000028",
@@ -695,12 +695,12 @@
    "address": "경기 부천시 중동 89-34",
    "collateral_type": "apt",
    "region_code": "41190",
-   "score_irr": -0.0844,
+   "score_irr": -0.0376,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 34699.0,
-   "recovery_p50": 42253.0,
-   "recovery_p90": 49269.0,
+   "recovery_p10": 36523.0,
+   "recovery_p50": 44412.0,
+   "recovery_p90": 49981.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 32491,
@@ -711,8 +711,8 @@
     "deposit": 1997
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000029",
@@ -721,12 +721,12 @@
    "address": "인천 미추홀구 주안동 613-19",
    "collateral_type": "commercial",
    "region_code": "28177",
-   "score_irr": 0.0391,
+   "score_irr": -0.1548,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 14406.0,
-   "recovery_p50": 17712.0,
-   "recovery_p90": 20781.0,
+   "recovery_p10": 9911.0,
+   "recovery_p50": 14406.0,
+   "recovery_p90": 17939.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 17286,
@@ -737,8 +737,8 @@
     "deposit": 1313
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000030",
@@ -761,8 +761,8 @@
     "carrying_monthly": 555
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000031",
@@ -771,12 +771,12 @@
    "address": "대전 유성구 노은동 932-74",
    "collateral_type": "apt",
    "region_code": "30200",
-   "score_irr": 0.1341,
+   "score_irr": 0.1059,
    "score_npv": null,
    "grade": "medium",
-   "recovery_p10": 40873.0,
-   "recovery_p50": 49478.0,
-   "recovery_p90": 57470.0,
+   "recovery_p10": 39889.0,
+   "recovery_p50": 48249.0,
+   "recovery_p90": 54150.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 38687,
@@ -787,8 +787,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000032",
@@ -797,12 +797,12 @@
    "address": "강원 춘천시 석사동 858-49",
    "collateral_type": "apt",
    "region_code": "51110",
-   "score_irr": 0.2823,
+   "score_irr": 0.1381,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 18483.0,
-   "recovery_p50": 23012.0,
-   "recovery_p90": 27218.0,
+   "grade": "medium",
+   "recovery_p10": 16354.0,
+   "recovery_p50": 20424.0,
+   "recovery_p90": 23297.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 21851,
@@ -813,8 +813,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000033",
@@ -837,8 +837,8 @@
     "carrying_monthly": 283
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000034",
@@ -847,12 +847,12 @@
    "address": "부산 해운대구 중동 210-28",
    "collateral_type": "apt",
    "region_code": "26350",
-   "score_irr": 0.2077,
+   "score_irr": 0.1741,
    "score_npv": null,
    "grade": "high",
-   "recovery_p10": 38336.0,
-   "recovery_p50": 47627.0,
-   "recovery_p90": 56254.0,
+   "recovery_p10": 37274.0,
+   "recovery_p50": 46300.0,
+   "recovery_p90": 52670.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 59786,
@@ -863,8 +863,8 @@
     "deposit": 5937
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000035",
@@ -873,12 +873,12 @@
    "address": "경기 부천시 중동 713-69",
    "collateral_type": "commercial",
    "region_code": "41190",
-   "score_irr": 0.1245,
+   "score_irr": -0.0708,
    "score_npv": null,
-   "grade": "medium",
-   "recovery_p10": 15092.0,
-   "recovery_p50": 18264.0,
-   "recovery_p90": 21209.0,
+   "grade": "low",
+   "recovery_p10": 10778.0,
+   "recovery_p50": 15092.0,
+   "recovery_p90": 18481.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 18403,
@@ -889,8 +889,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000036",
@@ -899,12 +899,12 @@
    "address": "경기 용인시 기흥동 953-10",
    "collateral_type": "land",
    "region_code": "41460",
-   "score_irr": 0.4348,
+   "score_irr": 0.2232,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 88734.0,
-   "recovery_p50": 107176.0,
-   "recovery_p90": 124300.0,
+   "grade": "high",
+   "recovery_p10": 63707.0,
+   "recovery_p50": 91369.0,
+   "recovery_p90": 117187.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 115101,
@@ -915,8 +915,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000037",
@@ -939,8 +939,8 @@
     "carrying_monthly": 304
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000038",
@@ -949,12 +949,12 @@
    "address": "부산 부산진구 부전동 723-54",
    "collateral_type": "land",
    "region_code": "26230",
-   "score_irr": 0.2926,
+   "score_irr": -0.9311,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 2119.0,
-   "recovery_p50": 8036.0,
-   "recovery_p90": 13531.0,
+   "grade": "low",
+   "recovery_p10": 0.0,
+   "recovery_p50": 429.0,
+   "recovery_p90": 8002.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 28473,
@@ -965,8 +965,8 @@
     "deposit": 1088
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000039",
@@ -989,8 +989,8 @@
     "carrying_monthly": 248
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000040",
@@ -999,12 +999,12 @@
    "address": "서울 송파구 잠실동 263-75",
    "collateral_type": "officetel",
    "region_code": "11710",
-   "score_irr": -0.0771,
+   "score_irr": -0.1269,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 43692.0,
-   "recovery_p50": 53854.0,
-   "recovery_p90": 63290.0,
+   "recovery_p10": 39627.0,
+   "recovery_p50": 50951.0,
+   "recovery_p90": 59443.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 54129,
@@ -1015,8 +1015,8 @@
     "deposit": 5665
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000041",
@@ -1039,8 +1039,8 @@
     "carrying_monthly": 849
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000042",
@@ -1063,8 +1063,8 @@
     "carrying_monthly": 1047
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000043",
@@ -1087,8 +1087,8 @@
     "carrying_monthly": 971
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000044",
@@ -1097,12 +1097,12 @@
    "address": "경기 수원시 영통동 876-58",
    "collateral_type": "commercial",
    "region_code": "41110",
-   "score_irr": 0.4609,
+   "score_irr": 0.2107,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 40950.0,
-   "recovery_p50": 49415.0,
-   "recovery_p90": 57275.0,
+   "grade": "high",
+   "recovery_p10": 29438.0,
+   "recovery_p50": 40950.0,
+   "recovery_p90": 49995.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 52820,
@@ -1113,8 +1113,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000045",
@@ -1123,12 +1123,12 @@
    "address": "경남 창원시 중앙동 369-49",
    "collateral_type": "officetel",
    "region_code": "48120",
-   "score_irr": -0.0366,
+   "score_irr": -0.2383,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 28962.0,
-   "recovery_p50": 34995.0,
-   "recovery_p90": 40597.0,
+   "recovery_p10": 22066.0,
+   "recovery_p50": 27669.0,
+   "recovery_p90": 31871.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 28389,
@@ -1139,8 +1139,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000046",
@@ -1163,8 +1163,8 @@
     "carrying_monthly": 674
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000047",
@@ -1173,12 +1173,12 @@
    "address": "서울 노원구 중계동 710-74",
    "collateral_type": "apt",
    "region_code": "11350",
-   "score_irr": 0.1545,
+   "score_irr": 0.2613,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 9613.0,
-   "recovery_p50": 14216.0,
-   "recovery_p90": 18490.0,
+   "grade": "very_high",
+   "recovery_p10": 10725.0,
+   "recovery_p50": 15531.0,
+   "recovery_p90": 18924.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 21532,
@@ -1189,8 +1189,8 @@
     "deposit": 536
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000048",
@@ -1199,12 +1199,12 @@
    "address": "대구 수성구 수성동 426-57",
    "collateral_type": "apt",
    "region_code": "27260",
-   "score_irr": 0.1487,
+   "score_irr": 0.1105,
    "score_npv": null,
    "grade": "medium",
-   "recovery_p10": 36508.0,
-   "recovery_p50": 47591.0,
-   "recovery_p90": 57883.0,
+   "recovery_p10": 35241.0,
+   "recovery_p50": 46008.0,
+   "recovery_p90": 53608.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 73344,
@@ -1215,8 +1215,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000049",
@@ -1225,12 +1225,12 @@
    "address": "경기 부천시 중동 780-45",
    "collateral_type": "officetel",
    "region_code": "41190",
-   "score_irr": 0.2454,
+   "score_irr": 0.1834,
    "score_npv": null,
    "grade": "high",
-   "recovery_p10": 20785.0,
-   "recovery_p50": 25168.0,
-   "recovery_p90": 29237.0,
+   "recovery_p10": 19032.0,
+   "recovery_p50": 23916.0,
+   "recovery_p90": 27578.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 23927,
@@ -1241,8 +1241,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000050",
@@ -1251,12 +1251,12 @@
    "address": "인천 서구 검단동 604-21",
    "collateral_type": "commercial",
    "region_code": "28260",
-   "score_irr": 0.246,
+   "score_irr": -0.014,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 32988.0,
-   "recovery_p50": 41689.0,
-   "recovery_p90": 49768.0,
+   "grade": "low",
+   "recovery_p10": 21154.0,
+   "recovery_p50": 32988.0,
+   "recovery_p90": 42285.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 48340,
@@ -1267,8 +1267,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000051",
@@ -1291,8 +1291,8 @@
     "carrying_monthly": 264
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000052",
@@ -1301,12 +1301,12 @@
    "address": "경기 수원시 영통동 473-8",
    "collateral_type": "apt",
    "region_code": "41110",
-   "score_irr": 0.1528,
+   "score_irr": 0.2094,
    "score_npv": null,
    "grade": "high",
-   "recovery_p10": 26155.0,
-   "recovery_p50": 31580.0,
-   "recovery_p90": 36618.0,
+   "recovery_p10": 27465.0,
+   "recovery_p50": 33130.0,
+   "recovery_p90": 37130.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 36487,
@@ -1317,8 +1317,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000053",
@@ -1341,8 +1341,8 @@
     "carrying_monthly": 870
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000054",
@@ -1365,8 +1365,8 @@
     "carrying_monthly": 1508
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000055",
@@ -1375,12 +1375,12 @@
    "address": "부산 부산진구 양정동 322-34",
    "collateral_type": "apt",
    "region_code": "26230",
-   "score_irr": 0.3262,
+   "score_irr": 0.2402,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 11548.0,
-   "recovery_p50": 21160.0,
-   "recovery_p90": 30085.0,
+   "grade": "high",
+   "recovery_p10": 10449.0,
+   "recovery_p50": 19787.0,
+   "recovery_p90": 26378.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 51441,
@@ -1391,8 +1391,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000056",
@@ -1401,12 +1401,12 @@
    "address": "경기 고양시 행신동 342-27",
    "collateral_type": "apt",
    "region_code": "41280",
-   "score_irr": 0.2834,
+   "score_irr": 0.3524,
    "score_npv": null,
    "grade": "very_high",
-   "recovery_p10": 52422.0,
-   "recovery_p50": 64581.0,
-   "recovery_p90": 75872.0,
+   "recovery_p10": 55358.0,
+   "recovery_p50": 68056.0,
+   "recovery_p90": 77019.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 81874,
@@ -1417,8 +1417,8 @@
     "deposit": 6638
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000057",
@@ -1427,12 +1427,12 @@
    "address": "경기 용인시 죽전동 392-76",
    "collateral_type": "officetel",
    "region_code": "41460",
-   "score_irr": 0.2158,
+   "score_irr": 0.1376,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 18080.0,
-   "recovery_p50": 23338.0,
-   "recovery_p90": 28220.0,
+   "grade": "medium",
+   "recovery_p10": 15977.0,
+   "recovery_p50": 21836.0,
+   "recovery_p90": 26230.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 34690,
@@ -1443,8 +1443,8 @@
     "deposit": 98
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000058",
@@ -1453,12 +1453,12 @@
    "address": "경기 수원시 권선동 685-7",
    "collateral_type": "apt",
    "region_code": "41110",
-   "score_irr": 0.1687,
+   "score_irr": 0.2366,
    "score_npv": null,
    "grade": "high",
-   "recovery_p10": 52969.0,
-   "recovery_p50": 66482.0,
-   "recovery_p90": 79029.0,
+   "recovery_p10": 56232.0,
+   "recovery_p50": 70342.0,
+   "recovery_p90": 80303.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 58756,
@@ -1469,8 +1469,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000059",
@@ -1479,12 +1479,12 @@
    "address": "서울 강서구 등촌동 327-39",
    "collateral_type": "officetel",
    "region_code": "11500",
-   "score_irr": 0.1279,
+   "score_irr": 0.035,
    "score_npv": null,
-   "grade": "medium",
-   "recovery_p10": 11565.0,
-   "recovery_p50": 16247.0,
-   "recovery_p90": 20595.0,
+   "grade": "low",
+   "recovery_p10": 9692.0,
+   "recovery_p50": 14909.0,
+   "recovery_p90": 18822.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 30359,
@@ -1495,8 +1495,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000060",
@@ -1505,12 +1505,12 @@
    "address": "서울 강남구 대치동 60-92",
    "collateral_type": "officetel",
    "region_code": "11680",
-   "score_irr": -0.0444,
+   "score_irr": -0.1491,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 12301.0,
-   "recovery_p50": 19950.0,
-   "recovery_p90": 27054.0,
+   "recovery_p10": 9241.0,
+   "recovery_p50": 17765.0,
+   "recovery_p90": 24158.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 46144,
@@ -1521,8 +1521,8 @@
     "deposit": 4783
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000061",
@@ -1531,12 +1531,12 @@
    "address": "서울 강서구 염창동 687-75",
    "collateral_type": "land",
    "region_code": "11500",
-   "score_irr": -0.323,
+   "score_irr": -0.6888,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 8709.0,
-   "recovery_p50": 23564.0,
-   "recovery_p90": 37358.0,
+   "recovery_p10": 0.0,
+   "recovery_p50": 10831.0,
+   "recovery_p90": 31628.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 85990,
@@ -1547,8 +1547,8 @@
     "deposit": 9782
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000062",
@@ -1557,12 +1557,12 @@
    "address": "대전 유성구 봉명동 862-25",
    "collateral_type": "commercial",
    "region_code": "30200",
-   "score_irr": 0.011,
+   "score_irr": -0.2963,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 18284.0,
-   "recovery_p50": 23225.0,
-   "recovery_p90": 27813.0,
+   "recovery_p10": 10040.0,
+   "recovery_p50": 16167.0,
+   "recovery_p90": 20981.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 24215,
@@ -1573,8 +1573,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000063",
@@ -1583,12 +1583,12 @@
    "address": "경기 성남시 정자동 890-11",
    "collateral_type": "apt",
    "region_code": "41130",
-   "score_irr": 0.4447,
+   "score_irr": 0.5723,
    "score_npv": null,
    "grade": "very_high",
-   "recovery_p10": 31128.0,
-   "recovery_p50": 45063.0,
-   "recovery_p90": 58003.0,
+   "recovery_p10": 34492.0,
+   "recovery_p50": 49045.0,
+   "recovery_p90": 59317.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 79703,
@@ -1599,8 +1599,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000064",
@@ -1609,12 +1609,12 @@
    "address": "서울 관악구 봉천동 540-47",
    "collateral_type": "apt",
    "region_code": "11620",
-   "score_irr": 0.2691,
+   "score_irr": 0.331,
    "score_npv": null,
    "grade": "very_high",
-   "recovery_p10": 25527.0,
-   "recovery_p50": 30782.0,
-   "recovery_p90": 35662.0,
+   "recovery_p10": 26795.0,
+   "recovery_p50": 32284.0,
+   "recovery_p90": 36158.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 26497,
@@ -1625,8 +1625,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000065",
@@ -1635,12 +1635,12 @@
    "address": "경기 의정부시 금오동 542-67",
    "collateral_type": "land",
    "region_code": "41150",
-   "score_irr": 0.1853,
+   "score_irr": -0.1483,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 22971.0,
-   "recovery_p50": 34204.0,
-   "recovery_p90": 44634.0,
+   "grade": "low",
+   "recovery_p10": 7728.0,
+   "recovery_p50": 24576.0,
+   "recovery_p90": 40301.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 61753,
@@ -1651,8 +1651,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000066",
@@ -1661,12 +1661,12 @@
    "address": "경기 용인시 수지동 545-25",
    "collateral_type": "land",
    "region_code": "41460",
-   "score_irr": 0.1166,
+   "score_irr": -0.0468,
    "score_npv": null,
-   "grade": "medium",
-   "recovery_p10": 76046.0,
-   "recovery_p50": 91702.0,
-   "recovery_p90": 106240.0,
+   "grade": "low",
+   "recovery_p10": 54798.0,
+   "recovery_p50": 78282.0,
+   "recovery_p90": 100201.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 69345,
@@ -1677,8 +1677,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000067",
@@ -1701,8 +1701,8 @@
     "carrying_monthly": 142
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000068",
@@ -1725,8 +1725,8 @@
     "carrying_monthly": 339
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000069",
@@ -1749,8 +1749,8 @@
     "carrying_monthly": 254
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000070",
@@ -1759,12 +1759,12 @@
    "address": "경기 수원시 영통동 542-5",
    "collateral_type": "officetel",
    "region_code": "41110",
-   "score_irr": 0.1003,
+   "score_irr": 0.0466,
    "score_npv": null,
-   "grade": "medium",
-   "recovery_p10": 26142.0,
-   "recovery_p50": 31529.0,
-   "recovery_p90": 36531.0,
+   "grade": "low",
+   "recovery_p10": 23987.0,
+   "recovery_p50": 29990.0,
+   "recovery_p90": 34492.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 23870,
@@ -1775,8 +1775,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000071",
@@ -1799,8 +1799,8 @@
     "carrying_monthly": 358
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000072",
@@ -1809,12 +1809,12 @@
    "address": "서울 송파구 가락동 436-64",
    "collateral_type": "apt",
    "region_code": "11710",
-   "score_irr": 0.423,
+   "score_irr": 0.6103,
    "score_npv": null,
    "grade": "very_high",
-   "recovery_p10": 7395.0,
-   "recovery_p50": 13711.0,
-   "recovery_p90": 19576.0,
+   "recovery_p10": 8920.0,
+   "recovery_p50": 15516.0,
+   "recovery_p90": 20172.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 41729,
@@ -1825,8 +1825,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000073",
@@ -1835,12 +1835,12 @@
    "address": "부산 부산진구 부전동 201-82",
    "collateral_type": "apt",
    "region_code": "26230",
-   "score_irr": 0.5788,
+   "score_irr": 0.5402,
    "score_npv": null,
    "grade": "very_high",
-   "recovery_p10": 47210.0,
-   "recovery_p50": 56945.0,
-   "recovery_p90": 65985.0,
+   "recovery_p10": 46097.0,
+   "recovery_p50": 55554.0,
+   "recovery_p90": 62230.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 43928,
@@ -1851,8 +1851,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000074",
@@ -1861,12 +1861,12 @@
    "address": "경기 부천시 상동 792-95",
    "collateral_type": "land",
    "region_code": "41190",
-   "score_irr": -0.0732,
+   "score_irr": -0.2217,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 18473.0,
-   "recovery_p50": 22718.0,
-   "recovery_p90": 26661.0,
+   "recovery_p10": 12711.0,
+   "recovery_p50": 19080.0,
+   "recovery_p90": 25023.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 20323,
@@ -1877,8 +1877,8 @@
     "deposit": 1638
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000075",
@@ -1887,12 +1887,12 @@
    "address": "경기 부천시 송내동 775-49",
    "collateral_type": "commercial",
    "region_code": "41190",
-   "score_irr": 0.0149,
+   "score_irr": -0.1584,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 31667.0,
-   "recovery_p50": 38187.0,
-   "recovery_p90": 44241.0,
+   "recovery_p10": 22800.0,
+   "recovery_p50": 31667.0,
+   "recovery_p90": 38634.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 30194,
@@ -1903,8 +1903,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000076",
@@ -1913,12 +1913,12 @@
    "address": "서울 강남구 역삼동 319-79",
    "collateral_type": "officetel",
    "region_code": "11680",
-   "score_irr": 0.1925,
+   "score_irr": 0.1302,
    "score_npv": null,
-   "grade": "high",
-   "recovery_p10": 72825.0,
-   "recovery_p50": 89118.0,
-   "recovery_p90": 104247.0,
+   "grade": "medium",
+   "recovery_p10": 66308.0,
+   "recovery_p50": 84463.0,
+   "recovery_p90": 98079.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 103235,
@@ -1929,8 +1929,8 @@
     "deposit": 6178
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000077",
@@ -1939,12 +1939,12 @@
    "address": "부산 부산진구 전포동 508-59",
    "collateral_type": "apt",
    "region_code": "26230",
-   "score_irr": -0.1012,
+   "score_irr": -0.1251,
    "score_npv": null,
    "grade": "low",
-   "recovery_p10": 25645.0,
-   "recovery_p50": 31522.0,
-   "recovery_p90": 36980.0,
+   "recovery_p10": 24973.0,
+   "recovery_p50": 30683.0,
+   "recovery_p90": 34713.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 39204,
@@ -1955,8 +1955,8 @@
     "deposit": 2629
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000078",
@@ -1965,12 +1965,12 @@
    "address": "인천 미추홀구 용현동 393-64",
    "collateral_type": "commercial",
    "region_code": "28177",
-   "score_irr": 0.0998,
+   "score_irr": -0.2837,
    "score_npv": null,
-   "grade": "medium",
-   "recovery_p10": 10420.0,
-   "recovery_p50": 15999.0,
-   "recovery_p90": 21180.0,
+   "grade": "low",
+   "recovery_p10": 2832.0,
+   "recovery_p50": 10420.0,
+   "recovery_p90": 16382.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 34915,
@@ -1981,8 +1981,8 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000079",
@@ -1991,12 +1991,12 @@
    "address": "경기 부천시 송내동 685-98",
    "collateral_type": "apt",
    "region_code": "41190",
-   "score_irr": 0.164,
+   "score_irr": 0.2233,
    "score_npv": null,
    "grade": "high",
-   "recovery_p10": 46723.0,
-   "recovery_p50": 56846.0,
-   "recovery_p90": 66246.0,
+   "recovery_p10": 49167.0,
+   "recovery_p50": 59738.0,
+   "recovery_p90": 67200.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 64988,
@@ -2007,8 +2007,8 @@
     "deposit": 2446
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   },
   {
    "id": "NPL-MOCK-000080",
@@ -2017,12 +2017,12 @@
    "address": "전북 전주시 송천동 304-93",
    "collateral_type": "commercial",
    "region_code": "52110",
-   "score_irr": 0.5119,
+   "score_irr": 0.0131,
    "score_npv": null,
-   "grade": "very_high",
-   "recovery_p10": 9505.0,
-   "recovery_p50": 11466.0,
-   "recovery_p90": 13288.0,
+   "grade": "low",
+   "recovery_p10": 5526.0,
+   "recovery_p50": 7684.0,
+   "recovery_p90": 9379.0,
    "confidence": 0.6,
    "raw_input": {
     "claim": 12183,
@@ -2033,22 +2033,22 @@
     "deposit": 0
    },
    "source": "csv",
-   "created_at": "2026-06-12T03:03:48.126298+00:00",
-   "updated_at": "2026-06-12T03:03:48.126298+00:00"
+   "created_at": "2026-06-12T06:39:30.033944+00:00",
+   "updated_at": "2026-06-12T06:39:30.033944+00:00"
   }
  ],
  "summary": {
   "total": 80,
   "grade_distribution": {
-   "very_high": 17,
-   "high": 20,
+   "very_high": 10,
+   "high": 13,
    "medium": 27,
-   "low": 16
+   "low": 30
   },
   "total_recovery_cone": {
-   "p10": 2303855.0,
-   "p50": 3168398.0,
-   "p90": 3993343.0
+   "p10": 2095039.0,
+   "p50": 3016290.0,
+   "p90": 3834671.0
   },
   "avg_confidence": 0.594
  },
@@ -2057,67 +2057,67 @@
   "count": 58,
   "bins": [
    {
-    "lo": -0.323,
-    "hi": -0.24785000000000001,
-    "count": 2
-   },
-   {
-    "lo": -0.24785000000000001,
-    "hi": -0.17270000000000002,
-    "count": 0
-   },
-   {
-    "lo": -0.17270000000000002,
-    "hi": -0.09755,
+    "lo": -0.9311,
+    "hi": -0.8020166666666667,
     "count": 1
    },
    {
-    "lo": -0.09755,
-    "hi": -0.02240000000000003,
-    "count": 8
+    "lo": -0.8020166666666667,
+    "hi": -0.6729333333333334,
+    "count": 1
    },
    {
-    "lo": -0.02240000000000003,
-    "hi": 0.052749999999999964,
+    "lo": -0.6729333333333334,
+    "hi": -0.54385,
+    "count": 0
+   },
+   {
+    "lo": -0.54385,
+    "hi": -0.41476666666666673,
+    "count": 0
+   },
+   {
+    "lo": -0.41476666666666673,
+    "hi": -0.2856833333333334,
+    "count": 1
+   },
+   {
+    "lo": -0.2856833333333334,
+    "hi": -0.15659999999999996,
+    "count": 6
+   },
+   {
+    "lo": -0.15659999999999996,
+    "hi": -0.027516666666666745,
+    "count": 12
+   },
+   {
+    "lo": -0.027516666666666745,
+    "hi": 0.10156666666666658,
+    "count": 10
+   },
+   {
+    "lo": 0.10156666666666658,
+    "hi": 0.2306499999999998,
+    "count": 14
+   },
+   {
+    "lo": 0.2306499999999998,
+    "hi": 0.35973333333333324,
+    "count": 7
+   },
+   {
+    "lo": 0.35973333333333324,
+    "hi": 0.48881666666666646,
+    "count": 1
+   },
+   {
+    "lo": 0.48881666666666646,
+    "hi": 0.6179000000000001,
     "count": 5
-   },
-   {
-    "lo": 0.052749999999999964,
-    "hi": 0.1279,
-    "count": 4
-   },
-   {
-    "lo": 0.1279,
-    "hi": 0.20305,
-    "count": 15
-   },
-   {
-    "lo": 0.20305,
-    "hi": 0.27819999999999995,
-    "count": 7
-   },
-   {
-    "lo": 0.27819999999999995,
-    "hi": 0.3533499999999999,
-    "count": 7
-   },
-   {
-    "lo": 0.3533499999999999,
-    "hi": 0.42849999999999994,
-    "count": 3
-   },
-   {
-    "lo": 0.42849999999999994,
-    "hi": 0.5036499999999999,
-    "count": 3
-   },
-   {
-    "lo": 0.5036499999999999,
-    "hi": 0.5788,
-    "count": 3
    }
   ],
-  "min": -0.323,
-  "max": 0.5788
+  "min": -0.9311,
+  "max": 0.6179
  }
 }

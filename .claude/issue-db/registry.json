@@ -11769,6 +11769,32 @@
         ],
         "verified": "단일+포트폴리오 리포트 print 방식, cone/백분위/등급분포/Top-Bottom 렌더 PASS"
       }
+    },
+    {
+      "id": "NPL_VALUATION_V1-001",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "title": "[NPL 전문평가 V1] 고정 낙찰가율 → 지역×담보유형 동적 행렬",
+      "payload": {
+        "source_issue": null,
+        "doc": "docs/npl-professional-valuation.md",
+        "target_files": [
+          "backend/npl_auction_rates.py",
+          "utils/npl-auction-rates.js"
+        ]
+      },
+      "result": {
+        "verified": "수도권 아파트 IRR 37.6% vs 지방 토지 -7.2% 차등, JS=Python 일치",
+        "files": [
+          "backend/npl_auction_rates.py",
+          "backend/npl_scorer.py",
+          "utils/npl-auction-rates.js",
+          "viz/plugins/npl-buy-scorer.js",
+          "components/npl-buy.js"
+        ]
+      },
+      "created_at": "2026-06-12T15:30:00Z"
     }
   ],
   "hooks": {
