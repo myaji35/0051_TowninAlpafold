@@ -11665,7 +11665,7 @@
     {
       "id": "FEATURE_NPL_PORTFOLIO-001",
       "type": "FEATURE_PLAN",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "title": "[NPL 포트폴리오] 물건 등록→누적→비교 + 객관성 시각화 + 리포트",
       "payload": {
@@ -11678,8 +11678,19 @@
       },
       "created_at": "2026-06-12T12:00:00Z",
       "history": [
-        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md"
-      ]
+        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md",
+        "2026-06-12 P1 백엔드 구현+검증 완료"
+      ],
+      "result": {
+        "phase": "P1 backend complete",
+        "files": [
+          "backend/db.py",
+          "backend/npl_scorer.py",
+          "backend/npl_api.py"
+        ],
+        "verified": "7 API end-to-end PASS, Python=JS scorer 정합, comparable/집계/분포/CSV 검증",
+        "remaining": "P2 화면, P3 백분위 시각화, P4 대시보드, P5 리포트"
+      }
     },
     {
       "id": "GENERATE_CODE_NPL_PORTFOLIO_STORE-001",
@@ -14387,7 +14398,7 @@
     "count": 1
   },
   "issue_budget": {
-    "date": "2026-05-11",
+    "date": "2026-06-12",
     "created_today": 0
   },
   "updated_at": "2026-05-11T03:59:15.950193+00:00",
@@ -14399,5 +14410,9 @@
   "proactive_scan_state": {
     "date": "2026-05-11",
     "count": 1
+  },
+  "background_state": {
+    "active": 0,
+    "issues": []
   }
 }
