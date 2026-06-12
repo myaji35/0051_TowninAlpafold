@@ -109,3 +109,45 @@
 .npl-cone-horizon { font-weight: 700; color: #374151; width: 40px; }
 .npl-cone-band { font-size: 13px; color: #4b5563; flex: 1; }
 .npl-cone-flag { font-size: 11px; font-weight: 700; color: #6b7280; }
+
+/* ── 포트폴리오 (P2) ── */
+.npl-pf-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 4px 0 16px; }
+@media (max-width: 1000px) { .npl-pf-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+.npl-kpi-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; }
+.npl-kpi-label { font-size: 11px; color: #6b7280; font-weight: 600; }
+.npl-kpi-value { font-size: 28px; font-weight: 800; color: #1a1a1a; line-height: 1.2; }
+.npl-kpi-sub { font-size: 11px; color: #9ca3af; }
+.npl-kpi-grades { grid-row: span 1; }
+.npl-gradebar-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+.npl-gradebar-label { font-size: 11px; font-weight: 700; flex: 0 0 64px; }
+.npl-gradebar-track { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
+.npl-gradebar-fill { display: block; height: 100%; border-radius: 4px; }
+.npl-gradebar-num { font-size: 10px; color: #6b7280; flex: 0 0 64px; text-align: right; }
+
+/* IRR 분포 히스토그램 */
+.npl-hist-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+.npl-hist { display: flex; align-items: flex-end; gap: 3px; height: 90px; }
+.npl-hist-bar { flex: 1; border-radius: 3px 3px 0 0; min-height: 3px; transition: height 0.3s; }
+.npl-hist-axis { display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; margin-top: 6px; }
+
+/* 필터 */
+.npl-pf-filters { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.npl-pf-filter { padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 7px; font-size: 13px; background: #fff; color: #374151; }
+.npl-pf-count { font-size: 12px; color: #6b7280; margin-left: auto; }
+
+/* 테이블 */
+.npl-pf-table-wrap { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+.npl-pf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.npl-pf-table th { background: #f9fafb; color: #6b7280; font-size: 11px; font-weight: 600; text-align: left; padding: 9px 12px; border-bottom: 1px solid #e5e7eb; }
+.npl-pf-table td { padding: 9px 12px; border-bottom: 1px solid #f3f4f6; color: #374151; }
+.npl-pf-table tbody tr:hover { background: #f9fafb; }
+.npl-td-id { font-family: monospace; font-size: 11px; color: #6b7280; }
+.npl-td-metric { font-weight: 700; }
+.npl-td-grade { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.npl-td-conf { color: #6b7280; }
+.npl-td-cone { font-size: 11px; color: #9ca3af; }
+.npl-td-empty { text-align: center; color: #9ca3af; padding: 30px; }
+.npl-pager { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 12px; }
+.npl-pager-btn { padding: 6px 14px; border: 1px solid #d1d5db; border-radius: 7px; background: #fff; color: #374151; font-size: 13px; cursor: pointer; }
+.npl-pager-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.npl-pager-info { font-size: 13px; color: #6b7280; }

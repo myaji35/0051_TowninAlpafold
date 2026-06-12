@@ -11715,7 +11715,7 @@
     {
       "id": "GENERATE_CODE_NPL_PORTFOLIO_VIEW-001",
       "type": "GENERATE_CODE",
-      "status": "DEFERRED",
+      "status": "DONE",
       "priority": "P1",
       "title": "[코드·NPL 포트폴리오] 목록/비교 화면 + 객관성 지표 패널",
       "payload": {
@@ -11730,8 +11730,16 @@
       ],
       "created_at": "2026-06-12T12:02:00Z",
       "history": [
-        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md"
-      ]
+        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md",
+        "2026-06-12 P2 포트폴리오 화면 구현+검증"
+      ],
+      "result": {
+        "files": [
+          "components/npl-portfolio.js",
+          "css/npl.css"
+        ],
+        "verified": "80건 목록+KPI+IRR분포+필터+페이지네이션 렌더 PASS, API실패시 정적JSON fallback"
+      }
     },
     {
       "id": "GENERATE_CODE_NPL_REPORT-001",
