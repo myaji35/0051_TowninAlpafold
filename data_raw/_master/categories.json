@@ -1,0 +1,247 @@
+{
+  "_meta": {
+    "version": 1,
+    "schema": "categories_v1",
+    "updated_at": "2026-05-05",
+    "policy": "단일 진실 원본 — 사이드바/카탈로그/검색 자동 생성"
+  },
+  "groups": [
+    {
+      "id": "console",
+      "label": "분석 콘솔",
+      "icon": "compass",
+      "always_open": true,
+      "items": [
+        {
+          "id": "gallery",
+          "ko": "갤러리",
+          "icon": "grid",
+          "mode": "gallery"
+        },
+        {
+          "id": "explore",
+          "ko": "Explore",
+          "icon": "compass",
+          "mode": "explore"
+        },
+        {
+          "id": "analyze",
+          "ko": "Analyze",
+          "icon": "bar-chart-2",
+          "mode": "analyze"
+        },
+        {
+          "id": "decide",
+          "ko": "Decide",
+          "icon": "target",
+          "mode": "decide"
+        },
+        {
+          "id": "datastudio",
+          "ko": "Data Studio",
+          "icon": "database",
+          "mode": "datastudio"
+        },
+        {
+          "id": "workflow",
+          "ko": "Workflow",
+          "icon": "git-merge",
+          "mode": "workflow"
+        },
+        {
+          "id": "meongbun",
+          "ko": "명분 사슬",
+          "icon": "link",
+          "mode": "meongbun",
+          "accent": true
+        }
+      ]
+    },
+    {
+      "id": "industry",
+      "label": "업종 SaaS",
+      "icon": "briefcase",
+      "addable": true,
+      "add_label": "+ 새 업종",
+      "subgroups": [
+        {
+          "id": "pharmacy",
+          "ko": "약국",
+          "icon": "package",
+          "status": "active",
+          "items": [
+            {
+              "id": "pharmacy-develop",
+              "ko": "점포개발",
+              "icon": "package",
+              "mode": "pharmacy-develop"
+            },
+            {
+              "id": "pharmacy-close",
+              "ko": "폐업평가",
+              "icon": "alert-triangle",
+              "mode": "pharmacy-close"
+            }
+          ]
+        },
+        {
+          "id": "cafe",
+          "ko": "카페",
+          "icon": "coffee",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "입지 선정",
+            "원두 분석",
+            "매출 예측"
+          ]
+        },
+        {
+          "id": "convenience",
+          "ko": "편의점",
+          "icon": "shopping-bag",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "입지 선정",
+            "경쟁 매출"
+          ]
+        },
+        {
+          "id": "academy",
+          "ko": "학원",
+          "icon": "book-open",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "수요 예측",
+            "경쟁 밀도"
+          ]
+        },
+        {
+          "id": "salon",
+          "ko": "미용실",
+          "icon": "scissors",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "입지 적합도"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "asset",
+      "label": "자산 / 부동산",
+      "icon": "home",
+      "addable": true,
+      "add_label": "+ 새 자산 유형",
+      "subgroups": [
+        {
+          "id": "npl",
+          "ko": "NPL",
+          "icon": "trending-up",
+          "status": "active",
+          "items": [
+            {
+              "id": "npl-portfolio",
+              "ko": "포트폴리오",
+              "icon": "layers",
+              "mode": "npl-portfolio"
+            },
+            {
+              "id": "npl-buy",
+              "ko": "매수 평가",
+              "icon": "trending-up",
+              "mode": "npl-buy"
+            },
+            {
+              "id": "npl-sell",
+              "ko": "매도 평가",
+              "icon": "trending-down",
+              "mode": "npl-sell"
+            }
+          ]
+        },
+        {
+          "id": "retail-rent",
+          "ko": "상가 임대",
+          "icon": "tag",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "적정 임대가"
+          ]
+        },
+        {
+          "id": "land-dev",
+          "ko": "토지 개발",
+          "icon": "map",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "매입 후보지"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "label": "공공 / 정책",
+      "icon": "shield",
+      "addable": true,
+      "add_label": "+ 새 정책 영역",
+      "subgroups": [
+        {
+          "id": "depopulation",
+          "ko": "인구 위기",
+          "icon": "users",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "위기 동 자동 추천"
+          ]
+        },
+        {
+          "id": "vacancy",
+          "ko": "빈집 활용",
+          "icon": "home",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "활용 후보지"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "personal",
+      "label": "개인 의사결정",
+      "icon": "user",
+      "addable": true,
+      "add_label": "+ 새 라이프 영역",
+      "subgroups": [
+        {
+          "id": "moving",
+          "ko": "이사 적합 동",
+          "icon": "navigation",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "조건 매칭"
+          ]
+        },
+        {
+          "id": "school-area",
+          "ko": "학교 주변",
+          "icon": "shield",
+          "status": "planned",
+          "items": [],
+          "planned_modules": [
+            "안전도 분석"
+          ]
+        }
+      ]
+    }
+  ]
+}
