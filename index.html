@@ -13,14 +13,21 @@
 <link href="css/meongbun.css" rel="stylesheet">
 <link href="css/icons.css" rel="stylesheet">
 <link href="css/pharmacy.css" rel="stylesheet">
+<link href="css/npl.css" rel="stylesheet">
 <link href="css/data-studio.css" rel="stylesheet">
+<link href="css/sidebar.css" rel="stylesheet">
 <script src="components/icons.js"></script>
 <script src="utils/url-context.js"></script>
 <script src="viz/plugins/pharmacy-scorer.js"></script>
 <script src="viz/plugins/pharmacy-hazard.js"></script>
+<script src="viz/plugins/npl-buy-scorer.js"></script>
+<script src="viz/plugins/npl-sell-scorer.js"></script>
 <script src="components/pharmacy-develop.js"></script>
 <script src="components/pharmacy-close.js"></script>
+<script src="components/npl-buy.js"></script>
+<script src="components/npl-sell.js"></script>
 <script src="components/data-studio-datasets.js" defer></script>
+<script src="components/sidebar.js" defer></script>
 <style>
   body { font-family: 'Inter', 'Apple SD Gothic Neo', sans-serif; background: #07101F; color: #E8EDF3; margin: 0; }
   .mono { font-family: 'JetBrains Mono', monospace; }
@@ -181,7 +188,7 @@
 
 <!-- ───── HEADER ───── -->
 <header class="glass sticky top-0 z-50 px-6 py-3">
-  <div class="flex items-center justify-between max-w-[1920px] mx-auto">
+  <div class="flex items-center justify-between max-w-[1600px] mx-auto">
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-md flex items-center justify-center" style="background: linear-gradient(135deg, #00A1E0 0%, #5BC0EB 100%);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -194,23 +201,13 @@
       </div>
     </div>
     <nav class="flex items-center gap-2">
-      <button data-mode="gallery" data-icon="grid" class="mode-btn active"> 갤러리</button>
-      <button data-mode="explore" data-icon="compass" class="mode-btn"> Explore</button>
-      <button data-mode="analyze" data-icon="bar-chart-2" class="mode-btn"> Analyze</button>
-      <button data-mode="decide" data-icon="target" class="mode-btn"> Decide</button>
-      <button data-mode="datastudio" data-icon="database" class="mode-btn"> Data Studio</button>
-      <button data-mode="workflow" data-icon="git-merge" class="mode-btn"> Workflow</button>
-      <button data-mode="meongbun" data-icon="link" class="mode-btn" style="background:rgba(0,161,224,0.12);border:1px solid rgba(0,161,224,0.3);color:#5BC0EB;"> 명분 사슬</button>
-      <button data-mode="pharmacy-develop" data-icon="package" class="mode-btn"> 약국·점포개발</button>
-      <button data-mode="pharmacy-close" data-icon="alert-triangle" class="mode-btn"> 약국·폐업평가</button>
-      <span class="mx-2 text-gray-600">|</span>
       <a href="manual.html" target="_blank" class="px-2 py-1.5 rounded-md text-xs text-gray-300 hover:bg-white/5 hover:text-white flex items-center gap-1" title="사용자 매뉴얼 (새 창)" data-icon="book" data-icon-size="14"> 매뉴얼</a>
       <span class="text-[10px] mono text-gray-500" id="meta-info">SIMULA · loading…</span>
     </nav>
   </div>
 </header>
 
-<main class="px-6 pt-6 pb-5 max-w-[1920px] mx-auto" style="padding-top: 24px;">
+<main class="px-6 pt-6 pb-5 max-w-[1600px] mx-auto" style="padding-top: 24px;">
 
   <!-- ════════════ 0. GALLERY ════════════ -->
   <section id="view-gallery" class="block">
@@ -573,9 +570,9 @@
       </div>
     </div>
 
-    <!-- [DECISION_TREE-001] 분류 트리 + 변수 중요도 -->
+    <!-- [DECISION_TREE-001] 분류 트리 풀폭 + 변수 중요도 아래 (1+3 정돈) -->
     <div class="grid grid-cols-12 gap-4 mt-4">
-      <div class="col-span-7 glass-light rounded-lg p-4 vibe-tree-card" id="vibe-tree-card" style="overflow-x:auto;cursor:zoom-in;" role="button" tabindex="0" aria-label="Vibe 분류 트리 — 클릭하면 큰 화면으로 펼치고 한글 해설을 봅니다">
+      <div class="col-span-12 glass-light rounded-lg p-4 vibe-tree-card" id="vibe-tree-card" style="cursor:zoom-in;" role="button" tabindex="0" aria-label="Vibe 분류 트리 — 클릭하면 큰 화면으로 펼치고 한글 해설을 봅니다">
         <div class="flex items-baseline justify-between mb-2">
           <div class="text-[10px] mono text-gray-400 flex items-center gap-1" data-icon="git-merge" data-icon-size="11"> Vibe 분류 트리 (Decision Tree)</div>
           <div class="flex items-center gap-2">
@@ -583,13 +580,13 @@
             <span class="vibe-tree-zoom-badge">⛶ 크게 보기</span>
           </div>
         </div>
-        <svg id="d-tree-canvas" width="100%" height="320" viewBox="0 0 720 320" preserveAspectRatio="xMidYMid meet"></svg>
+        <svg id="d-tree-canvas" width="100%" height="340" viewBox="0 0 1200 340" preserveAspectRatio="xMidYMid meet"></svg>
         <div class="vibe-tree-hint">트리 영역을 클릭하면 큰 화면 + 초보자용 한글 해설이 펼쳐집니다. (각 노드 자체도 개별 클릭 가능)</div>
         <div class="text-[9px] text-gray-500 mt-2 leading-snug">분기 조건은 학습 데이터 기준 임계값. 동을 선택하면 해당 동의 분기 경로가 하이라이트됩니다. <span style="color:#FED766">합성 데이터 위 학습</span> — 실데이터 도입(<a href="docs/data-integrity-diagnosis.md" target="_blank" class="text-cyan-400 underline">ISS-018</a>) 시 정확도 변동 예상.</div>
       </div>
-      <div class="col-span-5 glass-light rounded-lg p-4">
-        <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="bar-chart-2" data-icon-size="11"> 변수 중요도 (Feature Importance)</div>
-        <svg id="d-tree-importance" width="100%" height="220" viewBox="0 0 280 220"></svg>
+      <div class="col-span-12 glass-light rounded-lg p-4">
+        <div class="text-[10px] mono text-gray-400 mb-2 flex items-center gap-1" data-icon="bar-chart-2" data-icon-size="11"> 변수 중요도 (Feature Importance) — 가로형</div>
+        <svg id="d-tree-importance" width="100%" height="160" viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid meet"></svg>
         <div class="text-[9px] text-gray-500 mt-1 leading-snug">의사결정에 기여하는 정도. 합산 1.0.</div>
       </div>
     </div>
@@ -623,18 +620,27 @@
 
     <!-- ─── Sources ─── -->
     <div id="ds-sources" class="ds-pane block">
+      <!-- Phase 1.7.3: Sources = 시스템 요구 데이터 진단 보드 (Demand 보드) -->
+      <div class="mb-4 p-3 rounded-md" style="background:rgba(0,161,224,0.08);border:1px solid rgba(0,161,224,0.2)">
+        <div class="text-[12px] font-semibold text-white mb-1">시스템이 요구하는 데이터 — 충족 진단</div>
+        <div class="text-[11px] text-gray-300">갤러리 카드 + 모델 카탈로그 + 명분 사슬 모듈이 필요로 하는 데이터를 자동 도출합니다. 미충족 항목은 데이터셋 탭에서 새 ETL을 등록하세요.</div>
+      </div>
+      <div id="sources-summary" class="grid grid-cols-4 gap-3 mb-4"></div>
       <div class="grid grid-cols-12 gap-4">
-        <!-- Public sources -->
-        <div class="col-span-7 glass-light rounded-lg p-4">
-          <div class="text-[11px] mono text-gray-400 mb-3">공공 데이터 소스</div>
-          <div id="public-sources" class="space-y-2"></div>
+        <div class="col-span-8 glass-light rounded-lg p-4">
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="text-[11px] mono text-gray-400">공공 / 외부 요구 데이터</div>
+            <div class="text-[10px] mono text-gray-500" id="sources-public-count">—</div>
+          </div>
+          <div id="sources-public-list" class="space-y-2"></div>
         </div>
-        <!-- Townin internal -->
-        <div class="col-span-5 glass-light rounded-lg p-4">
-          <div class="text-[11px] mono text-gray-400 mb-3">Townin 내부 데이터</div>
-          <div id="townin-sources" class="space-y-2"></div>
+        <div class="col-span-4 glass-light rounded-lg p-4">
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="text-[11px] mono text-gray-400">Townin 내부 데이터</div>
+            <div class="text-[10px] mono text-gray-500" id="sources-internal-count">—</div>
+          </div>
+          <div id="sources-internal-list" class="space-y-2"></div>
         </div>
-        <!-- Schedule -->
         <div class="col-span-12 glass-light rounded-lg p-4">
           <div class="text-[11px] mono text-gray-400 mb-3">갱신 스케줄 (다음 24시간)</div>
           <div id="schedule-strip"></div>
@@ -1240,6 +1246,12 @@
 
   <!-- ════════════ 약국·폐업평가 ════════════ -->
   <div id="view-pharmacy-close" class="hidden"></div>
+
+  <!-- ════════════ NPL·매수평가 ════════════ -->
+  <div id="view-npl-buy" class="hidden"></div>
+
+  <!-- ════════════ NPL·매도평가 ════════════ -->
+  <div id="view-npl-sell" class="hidden"></div>
 
   <footer class="text-center py-6 text-[10px] mono text-gray-600">
     Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

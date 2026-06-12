@@ -362,12 +362,15 @@ function executeCmd(idx) {
 // ─────────────────────────────────────────────
 // MODE SWITCHER
 // ─────────────────────────────────────────────
+window.switchMode = switchMode;
 function switchMode(mode) {
   currentMode = mode;
   document.querySelectorAll('[data-mode]').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === mode);
   });
-  ['gallery','explore','analyze','decide','datastudio','workflow','meongbun','pharmacy-develop','pharmacy-close'].forEach(m => {
+  // sidebar 동기화
+  document.dispatchEvent(new CustomEvent('mode-changed', { detail: { mode } }));
+  ['gallery','explore','analyze','decide','datastudio','workflow','meongbun','pharmacy-develop','pharmacy-close','npl-buy','npl-sell'].forEach(m => {
     const el = document.getElementById(`view-${m}`);
     if (el) {
       el.classList.toggle('hidden', m !== mode);
@@ -405,6 +408,16 @@ function switchMode(mode) {
     const view = document.getElementById('view-pharmacy-close');
     if (view && typeof window.renderPharmacyClose === 'function') {
       window.renderPharmacyClose(view);
+    }
+  } else if (mode === 'npl-buy') {
+    const view = document.getElementById('view-npl-buy');
+    if (view && typeof window.renderNplBuy === 'function') {
+      window.renderNplBuy(view);
+    }
+  } else if (mode === 'npl-sell') {
+    const view = document.getElementById('view-npl-sell');
+    if (view && typeof window.renderNplSell === 'function') {
+      window.renderNplSell(view);
     }
   }
 }
@@ -1552,11 +1565,12 @@ function renderDecisionTree() {
   const maxDepth = Math.max(...allNodes.map(n=>n.depth));
   const leafNodes = allNodes.filter(n=>n.leaf);
   const nLeaves = leafNodes.length;
-  // 잎 박스 폭 보장: 최소 60px/잎 → viewBox 동적 확장 (겹침 방지) + 좌측 블록 폭 절감
-  const LEAF_W = 52, LEAF_GAP = 8;
-  const padX = 32, padY = 28;
-  const W = Math.max(720, padX*2 + nLeaves * (LEAF_W + LEAF_GAP));
-  const H = 320;
+  // 잎 박스 폭 보장: 최소 60px/잎 → viewBox 동적 확장 (겹침 방지)
+  // Phase 1.7.2: 트리 풀폭 컨테이너로 변경 — minimum 1200, leaf 60px
+  const LEAF_W = 60, LEAF_GAP = 12;
+  const padX = 40, padY = 28;
+  const W = Math.max(1200, padX*2 + nLeaves * (LEAF_W + LEAF_GAP));
+  const H = 340;
   const innerW = W - padX*2, innerH = H - padY*2;
   allNodes.forEach(n => {
     n.px = padX + (n.x / Math.max(1, nLeaves - 1)) * innerW;
@@ -1648,22 +1662,30 @@ function renderFeatureImportance() {
   const svg = document.getElementById('d-tree-importance');
   if (!svg) return;
   if (!TREE_MODEL) {
-    svg.innerHTML = '<text x="120" y="100" text-anchor="middle" fill="#9CA3AF" font-size="11" font-family="JetBrains Mono">데이터 없음</text>';
+    svg.innerHTML = '<text x="600" y="80" text-anchor="middle" fill="#9CA3AF" font-size="14" font-family="JetBrains Mono">데이터 없음</text>';
     return;
   }
   const items = TREE_MODEL.feature_importance.filter(f => f.importance > 0).slice(0, 8);
-  const W = 280, H = 220;
-  const padL = 92, padR = 40, padT = 8, padB = 8;
+  // 가로형: 변수명 위 + 막대 아래 (1200x160 viewBox)
+  const W = 1200, H = 160;
+  const padL = 12, padR = 12, padT = 30, padB = 28;
   const innerW = W - padL - padR;
-  const rowH = (H - padT - padB) / Math.max(1, items.length);
+  const colW = innerW / Math.max(1, items.length);
+  const maxImp = Math.max(...items.map(it => it.importance), 0.001);
+  const barAreaH = H - padT - padB;
   let s = '';
   items.forEach((it, i) => {
-    const y = padT + i * rowH;
-    const w = it.importance * innerW;
+    const x = padL + i * colW;
+    const cx = x + colW/2;
+    const h = (it.importance / maxImp) * barAreaH;
+    const y = padT + (barAreaH - h);
     const color = it.importance >= 0.3 ? '#00529B' : it.importance >= 0.1 ? '#5BC0EB' : it.importance >= 0.05 ? '#FED766' : '#C9485B';
-    s += `<text x="${padL-4}" y="${y + rowH/2 + 3}" text-anchor="end" fill="#A4B0C0" font-size="9" font-family="ui-sans-serif">${it.feature}</text>`;
-    s += `<rect x="${padL}" y="${y+2}" width="${w}" height="${rowH-4}" rx="2" fill="${color}"/>`;
-    s += `<text x="${padL + w + 3}" y="${y + rowH/2 + 3}" fill="#A4B0C0" font-size="8" font-family="ui-monospace">${(it.importance*100).toFixed(1)}%</text>`;
+    // 변수명 (위)
+    s += `<text x="${cx}" y="${padT - 8}" text-anchor="middle" fill="#A4B0C0" font-size="11" font-family="ui-sans-serif">${it.feature}</text>`;
+    // 막대
+    s += `<rect x="${x + 8}" y="${y}" width="${colW - 16}" height="${h}" rx="3" fill="${color}"/>`;
+    // 퍼센트 (아래)
+    s += `<text x="${cx}" y="${H - 10}" text-anchor="middle" fill="#A4B0C0" font-size="10" font-family="ui-monospace">${(it.importance*100).toFixed(1)}%</text>`;
   });
   svg.innerHTML = s;
 }
@@ -2273,32 +2295,175 @@ function emitAiParticle(fromId, toId, nodeMap) {
   requestAnimationFrame(step);
 }
 
-function renderDsSources() {
-  const renderList = (el, items) => {
-    el.innerHTML = '';
-    items.forEach(s => {
-      const st = STATUS_STYLE[s.status];
-      el.insertAdjacentHTML('beforeend', `
-        <div class="flex items-center gap-3 p-2.5 rounded-md hover:bg-white/5 transition cursor-pointer">
-          <span class="text-base mono" style="color:${st.color}">${st.icon}</span>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2">
-              <span class="text-[12px] font-semibold text-white truncate">${s.name}</span>
-              <span class="text-[9px] mono px-1.5 py-0.5 rounded" style="background:${st.color}22;color:${st.color}">${st.label}</span>
-            </div>
-            <div class="text-[10px] text-gray-400 truncate">${s.desc}</div>
-          </div>
-          <div class="text-right text-[9px] mono text-gray-400 whitespace-nowrap">
-            <div>${s.cycle}</div>
-            <div>${s.layers} layers</div>
-          </div>
-          <button class="text-[10px] mono text-cyan-300 hover:text-white px-2">▶ 갱신</button>
-        </div>
-      `);
+async function renderDsSources() {
+  // Phase 1.7.3: Sources = Demand 보드 — 시스템 요구 데이터 + 충족 진단
+  // 출처: data_demands.json + datasets.json + gallery_cards_catalog.json + categories.json
+  const [demandsR, datasetsR, galleryR, catR] = await Promise.allSettled([
+    fetch('/data_raw/_master/data_demands.json').then(r => r.json()),
+    fetch('/data_raw/_registry/datasets.json').then(r => r.json()),
+    fetch('/data_raw/_master/gallery_cards_catalog.json').then(r => r.json()),
+    fetch('/data_raw/_master/categories.json').then(r => r.json()),
+  ]);
+  const demands = demandsR.status === 'fulfilled' ? demandsR.value : { demands: [], internal_demands: [] };
+  const datasets = datasetsR.status === 'fulfilled' ? (datasetsR.value.datasets || []) : [];
+  const gallery = galleryR.status === 'fulfilled' ? (galleryR.value.cards || []) : [];
+  const cat = catR.status === 'fulfilled' ? (catR.value.groups || []) : [];
+
+  // datasets key → meta map
+  const dsByKey = {};
+  datasets.forEach(d => { dsByKey[d.key] = d; });
+
+  // 사용처 합산: 갤러리 카드 + categories.json (모든 그룹의 active items + planned_modules)
+  // demand_id ↔ dataset_key 매칭은 demands[].fulfilled_by 로 연결
+  const usageByDataset = {};
+  // (a) 갤러리 카드 사용처
+  gallery.forEach(c => {
+    (c.required_datasets || []).forEach(dsKey => {
+      (usageByDataset[dsKey] ||= []).push({ src: 'gallery', label: c.title });
     });
-  };
-  renderList(document.getElementById('public-sources'), DS_PUBLIC_SOURCES);
-  renderList(document.getElementById('townin-sources'), DS_TOWNIN_SOURCES);
+  });
+  // (b) categories.json 사용처 — active items + planned_modules
+  cat.forEach(g => {
+    if (g.subgroups) {
+      g.subgroups.forEach(sg => {
+        (sg.items || []).forEach(it => {
+          // active 모듈은 그룹/서브그룹 라벨로 표기, 매핑은 추후 모듈별 required_datasets 확장 필요
+          // 현재는 "사용처" 텍스트만 합산 (요구 도출용)
+          // 약국 점포개발은 living_pop + biz_directory + biz_registration 등 사용 가정
+          if (sg.id === 'pharmacy') {
+            ['kosis_living_pop','localdata_biz','nts_bizreg','molit_landprice'].forEach(k => {
+              (usageByDataset[k] ||= []).push({ src: 'category', label: `${g.label}·${sg.ko}·${it.ko}` });
+            });
+          }
+        });
+        // planned 모듈도 데이터 요구 표시 (잠재 요구)
+        (sg.planned_modules || []).forEach(pm => {
+          // 휴리스틱: 자산/부동산 → real_estate_trade + land_price, 공공 → living_pop, 등등
+          let likelyKeys = [];
+          if (g.id === 'asset')   likelyKeys = ['molit_landprice','vworld_geojson'];
+          if (g.id === 'policy')  likelyKeys = ['kosis_living_pop','vworld_geojson'];
+          if (g.id === 'industry') likelyKeys = ['kosis_living_pop','localdata_biz','vworld_geojson'];
+          if (g.id === 'personal') likelyKeys = ['kosis_living_pop','vworld_geojson'];
+          likelyKeys.forEach(k => {
+            (usageByDataset[k] ||= []).push({ src: 'planned', label: `${g.label}·${sg.ko}·${pm}` });
+          });
+        });
+      });
+    }
+  });
+
+  // demand별 충족 상태 산출
+  const rows = (demands.demands || []).map(dm => {
+    const ds = dm.fulfilled_by ? dsByKey[dm.fulfilled_by] : null;
+    let status, statusLabel, statusColor;
+    if (!dm.fulfilled_by) {
+      status = 'missing'; statusLabel = '미충족'; statusColor = '#C9485B';
+    } else if (!ds) {
+      status = 'undefined'; statusLabel = '미정의'; statusColor = '#9CA3AF';
+    } else {
+      const sched = ds.schedule || {};
+      const last = sched.last_run_status;
+      const credReg = (ds.credentials || {}).registered_at;
+      if (last === 'success' && credReg) { status = 'fulfilled'; statusLabel = '충족'; statusColor = '#5BC0EB'; }
+      else if (last === 'success' && !credReg) { status = 'partial'; statusLabel = '부분(키 미등록)'; statusColor = '#FED766'; }
+      else if (last === 'failure') { status = 'failed'; statusLabel = '실패'; statusColor = '#C9485B'; }
+      else { status = 'pending'; statusLabel = '대기'; statusColor = '#9CA3AF'; }
+    }
+    const usage = usageByDataset[dm.fulfilled_by] || [];
+    const uniqUsageLabels = [...new Set(usage.map(u => u.label))].slice(0, 3);
+    return {
+      id: dm.id, ko: dm.ko, desc: dm.desc, geo_unit: dm.geo_unit, time_unit: dm.time_unit,
+      fulfilled_by: dm.fulfilled_by, ds, status, statusLabel, statusColor,
+      next_action: dm.next_action || null,
+      usage_count: usage.length,
+      usage_sample: uniqUsageLabels,
+    };
+  });
+
+  // 요약 카운트
+  const summary = { fulfilled: 0, partial: 0, failed: 0, pending: 0, missing: 0, undefined: 0 };
+  rows.forEach(r => { summary[r.status] = (summary[r.status] || 0) + 1; });
+  const total = rows.length;
+
+  const sumEl = document.getElementById('sources-summary');
+  if (sumEl) {
+    sumEl.innerHTML = `
+      <div class="glass-light rounded-md p-3"><div class="text-[10px] mono text-gray-400">전체 요구</div><div class="text-2xl font-bold text-white">${total}</div></div>
+      <div class="glass-light rounded-md p-3" style="border-left:3px solid #5BC0EB"><div class="text-[10px] mono text-gray-400">충족</div><div class="text-2xl font-bold" style="color:#5BC0EB">${summary.fulfilled}</div></div>
+      <div class="glass-light rounded-md p-3" style="border-left:3px solid #FED766"><div class="text-[10px] mono text-gray-400">부분/대기</div><div class="text-2xl font-bold" style="color:#FED766">${(summary.partial||0)+(summary.pending||0)}</div></div>
+      <div class="glass-light rounded-md p-3" style="border-left:3px solid #C9485B"><div class="text-[10px] mono text-gray-400">미충족/실패</div><div class="text-2xl font-bold" style="color:#C9485B">${(summary.missing||0)+(summary.failed||0)+(summary.undefined||0)}</div></div>
+    `;
+  }
+
+  // 공공 demand 리스트 렌더
+  const renderRow = (r) => `
+    <div class="flex items-center gap-3 p-2.5 rounded-md hover:bg-white/5 transition" data-demand="${r.id}">
+      <span class="text-base mono" style="color:${r.statusColor}">●</span>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[12px] font-semibold text-white truncate">${r.ko}</span>
+          <span class="text-[9px] mono px-1.5 py-0.5 rounded" style="background:${r.statusColor}22;color:${r.statusColor}">${r.statusLabel}</span>
+          ${r.fulfilled_by ? `<span class="text-[9px] mono text-gray-500">↳ ${r.fulfilled_by}</span>` : ''}
+        </div>
+        <div class="text-[10px] text-gray-400 truncate">${r.desc}</div>
+        ${r.usage_sample.length ? `<div class="text-[9px] text-gray-500 mt-0.5">사용처: ${r.usage_sample.join(' · ')}${r.usage_count > 3 ? ` 외 ${r.usage_count-3}건` : ''}</div>` : ''}
+        ${r.next_action ? `<div class="text-[9px] mt-1" style="color:#FED766">→ ${r.next_action}</div>` : ''}
+      </div>
+      <div class="text-right text-[9px] mono text-gray-400 whitespace-nowrap">
+        <div>${r.geo_unit || '-'}</div>
+        <div>${r.time_unit || '-'}</div>
+      </div>
+      ${r.fulfilled_by
+        ? `<button class="text-[10px] mono text-cyan-300 hover:text-white px-2" data-action="goto-dataset" data-key="${r.fulfilled_by}">▶ 데이터셋</button>`
+        : `<button class="text-[10px] mono px-2" style="color:#FED766" data-action="add-dataset">+ 등록</button>`}
+    </div>
+  `;
+  const pubEl = document.getElementById('sources-public-list');
+  if (pubEl) pubEl.innerHTML = rows.map(renderRow).join('');
+  const pubCount = document.getElementById('sources-public-count');
+  if (pubCount) pubCount.textContent = `${rows.length}건`;
+
+  // 내부 demand
+  const internalRows = (demands.internal_demands || []).map(d => {
+    const ok = d.status === 'connected';
+    return `
+      <div class="flex items-center gap-3 p-2.5 rounded-md hover:bg-white/5">
+        <span class="text-base mono" style="color:${ok ? '#5BC0EB' : '#9CA3AF'}">${ok ? '●' : '○'}</span>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-[12px] font-semibold text-white truncate">${d.ko}</span>
+            <span class="text-[9px] mono px-1.5 py-0.5 rounded" style="background:${ok ? 'rgba(91,192,235,0.13)' : 'rgba(156,163,175,0.13)'};color:${ok ? '#5BC0EB' : '#9CA3AF'}">${ok ? '연결됨' : '대기'}</span>
+          </div>
+          <div class="text-[10px] text-gray-400 truncate">${d.desc}</div>
+        </div>
+      </div>
+    `;
+  });
+  const intEl = document.getElementById('sources-internal-list');
+  if (intEl) intEl.innerHTML = internalRows.join('');
+  const intCount = document.getElementById('sources-internal-count');
+  if (intCount) intCount.textContent = `${internalRows.length}건`;
+
+  // 데이터셋 탭으로 이동 핸들러 (1회 등록)
+  if (!window._sourcesGotoBound) {
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action="goto-dataset"]');
+      if (btn) {
+        const dsTab = document.querySelector('button[data-ds="datasets"]');
+        if (dsTab) dsTab.click();
+      }
+      const addBtn = e.target.closest('[data-action="add-dataset"]');
+      if (addBtn) {
+        const dsTab = document.querySelector('button[data-ds="datasets"]');
+        if (dsTab) dsTab.click();
+        setTimeout(() => {
+          const reg = document.querySelector('.ds-register-btn');
+          if (reg) reg.click();
+        }, 400);
+      }
+    });
+    window._sourcesGotoBound = true;
+  }
 
   // schedule strip — 24시간 timeline
   const sc = document.getElementById('schedule-strip');
