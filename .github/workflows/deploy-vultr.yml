@@ -1,0 +1,95 @@
+name: Deploy to Vultr (nip.io)
+
+# CI/CD 기준 (0012_InsureGraph Pro 패턴):
+#   1. CI(Playwright 6 suites)가 먼저 통과해야 배포 (게이트)
+#   2. 서버에서 빌드 금지 — 정적 자산만 rsync (서버 CPU 부하 회피)
+#   3. 배포 후 헬스체크(/healthz) 통과 확인 — 실패 시 워크플로우 실패
+# 도메인: towninalpafold.<VULTR_IP>.nip.io
+
+on:
+  workflow_run:
+    workflows: ["CI"]        # ci.yml 의 name
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vultr-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Stage & Deploy to Vultr
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    # 게이트: CI 성공 시에만 (수동 dispatch는 게이트 면제)
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify required static assets exist
+        run: |
+          for f in index.html app.js manual.html; do
+            [ -f "$f" ] || { echo "::error::missing $f"; exit 1; }
+          done
+          echo "✓ static assets present"
+
+      - name: Stage site (exclude dev/heavy artifacts)
+        run: |
+          mkdir -p _site
+          cp -r index.html app.js manual.html _site/
+          [ -f report_v07_alpha.html ] && cp report_v07_alpha.html _site/
+          for j in simula_data_real.json simula_data.json forecasts.json causal.json tree_model.json; do
+            [ -f "$j" ] && cp "$j" _site/
+          done
+          [ -d components ] && cp -r components _site/components
+          [ -d css ] && cp -r css _site/css
+          [ -d utils ] && cp -r utils _site/utils
+          [ -d viz ] && cp -r viz _site/viz
+          [ -d docs ] && cp -r docs _site/docs
+          [ -d screenshots ] && cp -r screenshots _site/screenshots
+          du -sh _site/
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VULTR_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.VULTR_IP }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Rsync site to Vultr
+        env:
+          USER: ${{ secrets.VULTR_DEPLOY_USER }}
+          IP: ${{ secrets.VULTR_IP }}
+        run: |
+          rsync -az --delete -e "ssh -i ~/.ssh/deploy_key" \
+            _site/ "$USER@$IP:/home/$USER/towninalpafold/_site/"
+          rsync -az -e "ssh -i ~/.ssh/deploy_key" \
+            Caddyfile docker-compose.vultr.yml "$USER@$IP:/home/$USER/towninalpafold/"
+
+      - name: Restart Caddy + register kamal-proxy route
+        env:
+          USER: ${{ secrets.VULTR_DEPLOY_USER }}
+          IP: ${{ secrets.VULTR_IP }}
+        run: |
+          ssh -i ~/.ssh/deploy_key "$USER@$IP" \
+            "cd /home/$USER/towninalpafold && docker compose -f docker-compose.vultr.yml up -d"
+          # kamal-proxy host 라우팅 등록 (멱등)
+          ssh -i ~/.ssh/deploy_key "$USER@$IP" \
+            "docker exec kamal-proxy kamal-proxy deploy townin --target townin-caddy:8080 --host towninalpafold.$IP.nip.io --tls --health-check-path /healthz"
+
+      - name: Health check
+        env:
+          IP: ${{ secrets.VULTR_IP }}
+        run: |
+          URL="https://towninalpafold.$IP.nip.io/healthz"
+          echo "헬스체크: $URL"
+          for i in $(seq 1 10); do
+            code=$(curl -sk -o /dev/null -w "%{http_code}" "$URL" || echo 000)
+            [ "$code" = "200" ] && { echo "✓ 배포 검증 통과 ($code)"; exit 0; }
+            echo "  시도 $i/10 → $code (SSL 발급 대기 중...)"; sleep 15
+          done
+          echo "::error::헬스체크 실패 — 배포 검증 불가"; exit 1

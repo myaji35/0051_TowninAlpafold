@@ -1,0 +1,32 @@
+# TowninAlpafold — Vultr Caddy 정적 컨테이너 (기존 서버 재사용)
+# 80/443은 kamal-proxy 점유 → Caddy는 kamal 네트워크에 합류, host 라우팅 위임.
+# 사용: docker compose -f docker-compose.vultr.yml up -d
+# 라우팅 등록(1회):
+#   docker exec kamal-proxy kamal-proxy deploy townin \
+#     --target townin-caddy:8080 --host towninalpafold.158.247.235.31.nip.io \
+#     --tls --health-check-path /healthz
+# 참조: docs/deploy/vultr-nipio-plan.md
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: townin-caddy
+    restart: unless-stopped
+    # 포트 노출 없음 — kamal 네트워크 내부에서만 접근 (80/443 충돌 회피)
+    expose:
+      - "8080"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./_site:/srv:ro
+    networks:
+      - kamal
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  kamal:
+    external: true   # kamal-proxy가 생성한 기존 네트워크 재사용

@@ -1,0 +1,28 @@
+# TowninAlpafold — Caddy 정적 서빙 (내부 포트 전용)
+# 기존 서버(158.247.235.31) 재사용: 80/443은 kamal-proxy가 점유 →
+# Caddy는 내부 8080만 노출, kamal-proxy가 towninalpafold.*.nip.io host를
+# 이 컨테이너로 라우팅 + Let's Encrypt SSL 처리.
+# 참조: docs/deploy/vultr-nipio-plan.md
+
+:8080 {
+	root * /srv
+	file_server
+	encode gzip zstd
+
+	@data path *.json
+	header @data Cache-Control "public, max-age=300"
+
+	@html path *.html
+	header @html Cache-Control "public, max-age=60"
+
+	@assets path *.js *.css *.svg *.png
+	header @assets Cache-Control "public, max-age=3600"
+
+	# 헬스체크 (kamal-proxy readiness + CI 검증용)
+	respond /healthz "ok" 200
+
+	log {
+		output stdout
+		format json
+	}
+}
