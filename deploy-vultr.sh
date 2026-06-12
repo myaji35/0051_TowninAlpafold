@@ -23,7 +23,10 @@ stage() {
   for j in simula_data_real.json simula_data.json forecasts.json causal.json tree_model.json; do
     [ -f "$j" ] && cp "$j" _site/ || true
   done
-  for d in components css utils viz docs screenshots; do [ -d "$d" ] && cp -r "$d" "_site/$d" || true; done
+  for d in components css utils viz docs screenshots data_raw; do [ -d "$d" ] && cp -r "$d" "_site/$d" || true; done
+  # 사이드바/브랜드가 fetch하는 메타 (categories.json 등) — data_raw에 포함됨
+  # brand-dna.json (디자인 토큰만, 민감정보 없음) — 사이드바가 fetch
+  if [ -f .claude/brand-dna.json ]; then mkdir -p _site/.claude && cp .claude/brand-dna.json _site/.claude/; fi
   du -sh _site
 }
 

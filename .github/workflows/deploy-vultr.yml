@@ -44,7 +44,7 @@ jobs:
           for j in simula_data_real.json simula_data.json forecasts.json causal.json tree_model.json; do
             [ -f "$j" ] && cp "$j" _site/
           done
-          for d in components css utils viz docs screenshots; do
+          for d in components css utils viz docs screenshots data_raw; do
             [ -d "$d" ] && cp -r "$d" "_site/$d"
           done
           du -sh _site/
