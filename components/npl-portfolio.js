@@ -196,6 +196,17 @@
         renderTable(container);
       });
     });
+
+    // 행 클릭 → 단건 객관성 상세 패널 (P3)
+    container.querySelectorAll('.npl-pf-table tbody tr[data-asset-id]').forEach(function(tr) {
+      tr.addEventListener('click', function() {
+        var id = tr.dataset.assetId;
+        var asset = state.items.filter(function(x){ return x.id === id; })[0];
+        if (asset && typeof window.showNplDetail === 'function') {
+          window.showNplDetail(asset, state.items);
+        }
+      });
+    });
   }
 
   window.renderNplPortfolio = function(container) {
