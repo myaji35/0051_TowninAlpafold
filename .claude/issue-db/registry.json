@@ -11661,6 +11661,86 @@
       },
       "spawn_rules": [],
       "completed_at": "2026-05-11T03:59:15.950193+00:00"
+    },
+    {
+      "id": "FEATURE_NPL_PORTFOLIO-001",
+      "type": "FEATURE_PLAN",
+      "status": "READY",
+      "priority": "P1",
+      "title": "[NPL 포트폴리오] 물건 등록→누적→비교 + 객관성 시각화 + 리포트",
+      "payload": {
+        "source_issue": null,
+        "scope": "NPL 물건 1개 투입→포트폴리오 분석→cone/SHAP/comparable 객관성→PDF 리포트",
+        "files_changed": [],
+        "architecture_doc": "docs/npl-portfolio-architecture.md",
+        "scale": "50000 assets",
+        "data_intake": "individual + CSV bulk"
+      },
+      "created_at": "2026-06-12T12:00:00Z",
+      "history": [
+        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md"
+      ]
+    },
+    {
+      "id": "GENERATE_CODE_NPL_PORTFOLIO_STORE-001",
+      "type": "GENERATE_CODE",
+      "status": "DEFERRED",
+      "priority": "P1",
+      "title": "[코드·NPL 포트폴리오] 물건 스토어 + localStorage 영속 + comparable",
+      "payload": {
+        "source_issue": "FEATURE_NPL_PORTFOLIO-001",
+        "target_files": [
+          "components/npl-portfolio.js"
+        ]
+      },
+      "depends_on": [
+        "FEATURE_NPL_PORTFOLIO-001"
+      ],
+      "created_at": "2026-06-12T12:01:00Z",
+      "history": [
+        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md"
+      ]
+    },
+    {
+      "id": "GENERATE_CODE_NPL_PORTFOLIO_VIEW-001",
+      "type": "GENERATE_CODE",
+      "status": "DEFERRED",
+      "priority": "P1",
+      "title": "[코드·NPL 포트폴리오] 목록/비교 화면 + 객관성 지표 패널",
+      "payload": {
+        "source_issue": "FEATURE_NPL_PORTFOLIO-001",
+        "target_files": [
+          "components/npl-portfolio-view.js",
+          "css/npl.css"
+        ]
+      },
+      "depends_on": [
+        "GENERATE_CODE_NPL_PORTFOLIO_STORE-001"
+      ],
+      "created_at": "2026-06-12T12:02:00Z",
+      "history": [
+        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md"
+      ]
+    },
+    {
+      "id": "GENERATE_CODE_NPL_REPORT-001",
+      "type": "GENERATE_CODE",
+      "status": "DEFERRED",
+      "priority": "P1",
+      "title": "[코드·NPL 리포트] scorer 출력→HTML 리포트(cone+SHAP+신뢰도+comparable)",
+      "payload": {
+        "source_issue": "FEATURE_NPL_PORTFOLIO-001",
+        "target_files": [
+          "components/npl-report.js"
+        ]
+      },
+      "depends_on": [
+        "GENERATE_CODE_NPL_PORTFOLIO_STORE-001"
+      ],
+      "created_at": "2026-06-12T12:03:00Z",
+      "history": [
+        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md"
+      ]
     }
   ],
   "hooks": {

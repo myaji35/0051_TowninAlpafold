@@ -190,11 +190,35 @@
       appraisal: 110000, senior: 8000, tax: 1200, deposit: 2000 },
   ]);
 
+  /**
+   * 포트폴리오 객관성 — 같은 모집단 내 IRR 백분위 + 동급 채권 비교.
+   * 단일 평가가 "한 점"이 아니라 "분포 속 어디인지" 보여주는 객관성 지표.
+   * @param {object} target - evaluate() 결과
+   * @param {Array} peers - 다른 채권들의 evaluate() 결과 배열
+   * @returns {object} { percentile, rank, total, peers:[{id,irr_pct,grade,delta}] }
+   */
+  function comparable(target, peers) {
+    var all = (peers || []).filter(function(p){ return p && typeof p.irr === 'number'; });
+    var below = all.filter(function(p){ return p.irr < target.irr; }).length;
+    var total = all.length + 1;
+    var percentile = total > 1 ? Math.round(below / (total - 1) * 100) : 50;
+    var sorted = all.slice().sort(function(a,b){ return b.irr - a.irr; });
+    return {
+      percentile: percentile,                 // 0~100, 높을수록 포트폴리오 내 우수
+      rank: all.filter(function(p){ return p.irr > target.irr; }).length + 1,
+      total: total,
+      peers: sorted.slice(0, 5).map(function(p){
+        return { irr_pct: p.irr_pct, grade: p.grade.label, delta: Math.round((target.irr - p.irr) * 1000) / 10 };
+      }),
+    };
+  }
+
   window.NplBuyScorer = {
     evaluate: evaluateNplBuy,
     recoveryCone: recoveryCone,
     computeIRR: computeIRR,
     irrToGrade: irrToGrade,
+    comparable: comparable,
     AUCTION_RATE: AUCTION_RATE,
     DEMO_CLAIMS: DEMO_CLAIMS,
   };
