@@ -705,9 +705,9 @@ function makeMap(containerId) {
           paint:{'raster-opacity':1.0,'raster-brightness-min':0.08,'raster-brightness-max':1.0,'raster-contrast':0.15} },
         // 한글 시군구 라벨
         { id:'kr-labels', type:'symbol', source:'kr-labels',
-          layout:{ 'text-field':['get','name'], 'text-size':['interpolate',['linear'],['zoom'],8,11,11,15],
-                   'text-font':['Open Sans Regular'], 'text-allow-overlap':false, 'text-padding':4 },
-          paint:{ 'text-color':'#A4B0C0', 'text-halo-color':'#07101F', 'text-halo-width':1.4 } },
+          layout:{ 'text-field':['get','name'], 'text-size':['interpolate',['linear'],['zoom'],8,12,11,16],
+                   'text-font':['Open Sans Bold'], 'text-allow-overlap':false, 'text-padding':4 },
+          paint:{ 'text-color':'#E8EEF6', 'text-halo-color':'#07101F', 'text-halo-width':2.0, 'text-halo-blur':0.5 } },
       ],
       glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
     },
