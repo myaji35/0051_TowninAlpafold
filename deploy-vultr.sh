@@ -1,52 +1,57 @@
 #!/usr/bin/env bash
-# TowninAlpafold — Vultr 서버 초기 프로비저닝 (1회 실행)
-# 사용: VULTR_IP=158.x.x.x ./deploy-vultr.sh provision
-#       VULTR_IP=158.x.x.x ./deploy-vultr.sh deploy   (수동 배포 — 평소엔 GitHub Actions가 처리)
+# TowninAlpafold — Vultr 정적 배포 (호스트 nginx + Certbot 패턴)
+# 서버 158.247.235.31는 호스트 nginx가 80/443 종단 + Certbot SSL.
+# 정적 사이트는 /var/www/towninalpafold 에 rsync, nginx 사이트로 서빙.
+# 사용:
+#   ./deploy-vultr.sh stage     — _site/ 스테이징
+#   ./deploy-vultr.sh deploy    — rsync + 권한 + nginx reload
+#   ./deploy-vultr.sh setup     — nginx 사이트 + certbot SSL (1회)
 # 참조: docs/deploy/vultr-nipio-plan.md
 set -euo pipefail
 
-: "${VULTR_IP:?VULTR_IP 환경변수 필요 (예: VULTR_IP=158.247.235.31)}"
-DEPLOY_USER="${VULTR_DEPLOY_USER:-deploy}"
+IP="${VULTR_IP:-158.247.235.31}"
+KEY="${VULTR_SSH_KEY:-$HOME/.ssh/id_rsa}"
+DOMAIN="towninalpafold.${IP}.nip.io"
+WEBROOT="/var/www/towninalpafold"
+SSH="ssh -i $KEY -o StrictHostKeyChecking=no root@$IP"
 CMD="${1:-deploy}"
-APP_DIR="/home/$DEPLOY_USER/towninalpafold"
+
+stage() {
+  rm -rf _site && mkdir -p _site
+  cp index.html app.js manual.html _site/
+  [ -f report_v07_alpha.html ] && cp report_v07_alpha.html _site/
+  for j in simula_data_real.json simula_data.json forecasts.json causal.json tree_model.json; do
+    [ -f "$j" ] && cp "$j" _site/ || true
+  done
+  for d in components css utils viz docs screenshots; do [ -d "$d" ] && cp -r "$d" "_site/$d" || true; done
+  du -sh _site
+}
 
 case "$CMD" in
-  provision)
-    echo "▶ Vultr 서버 프로비저닝 시작 ($VULTR_IP)"
-    ssh "root@$VULTR_IP" bash -s <<'REMOTE'
-set -euo pipefail
-apt-get update -y && apt-get upgrade -y
-# Docker
-if ! command -v docker >/dev/null; then
-  curl -fsSL https://get.docker.com | sh
-fi
-# deploy 사용자
-id deploy >/dev/null 2>&1 || adduser --disabled-password --gecos "" deploy
-usermod -aG docker,sudo deploy
-mkdir -p /home/deploy/towninalpafold/_site /home/deploy/.ssh
-cp /root/.ssh/authorized_keys /home/deploy/.ssh/authorized_keys 2>/dev/null || true
-chown -R deploy:deploy /home/deploy/.ssh /home/deploy/towninalpafold
-chmod 700 /home/deploy/.ssh
-# UFW
-ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp
-ufw --force enable
-echo "✓ 프로비저닝 완료"
-REMOTE
-    echo "✓ 다음: GitHub Secrets 등록 (VULTR_IP / VULTR_SSH_KEY / VULTR_DEPLOY_USER)"
-    ;;
+  stage) stage ;;
 
   deploy)
-    echo "▶ 수동 배포 ($VULTR_IP) — 평소엔 GitHub Actions 사용 권장"
-    rsync -az --delete -e ssh _site/ "$DEPLOY_USER@$VULTR_IP:$APP_DIR/_site/"
-    rsync -az -e ssh Caddyfile docker-compose.vultr.yml "$DEPLOY_USER@$VULTR_IP:$APP_DIR/"
-    ssh "$DEPLOY_USER@$VULTR_IP" "cd $APP_DIR && docker compose -f docker-compose.vultr.yml up -d"
-    # kamal-proxy에 host 라우팅 등록 (멱등 — 이미 있으면 갱신)
-    ssh "$DEPLOY_USER@$VULTR_IP" "docker exec kamal-proxy kamal-proxy deploy townin \
-      --target townin-caddy:8080 --host towninalpafold.$VULTR_IP.nip.io \
-      --tls --health-check-path /healthz" || echo '⚠️ kamal-proxy 라우팅 등록 실패 — 수동 확인 필요'
-    echo "✓ 배포 완료 → https://towninalpafold.$VULTR_IP.nip.io/"
+    stage
+    $SSH "mkdir -p $WEBROOT"
+    rsync -az --delete -e "ssh -i $KEY -o StrictHostKeyChecking=no" _site/ "root@$IP:$WEBROOT/"
+    # nginx(www-data)가 읽도록 권한 (rsync는 root 소유로 복사됨)
+    $SSH "chown -R www-data:www-data $WEBROOT && chmod -R a+rX $WEBROOT && systemctl reload nginx"
+    echo "✓ 배포 완료 → https://$DOMAIN/"
     ;;
 
-  *)
-    echo "사용법: $0 {provision|deploy}" >&2; exit 1 ;;
+  setup)
+    # nginx 사이트 + certbot SSL (1회). 이미 적용됨 — 재해 복구용.
+    $SSH "ln -sf /etc/nginx/sites-available/towninalpafold /etc/nginx/sites-enabled/ && nginx -t && systemctl reload nginx"
+    $SSH "certbot --nginx -d $DOMAIN --non-interactive --agree-tos --redirect -m socialdoctors35@gmail.com"
+    echo "✓ SSL 발급 완료"
+    ;;
+
+  verify)
+    for p in / /app.js /healthz; do
+      code=$(curl -s -o /dev/null -w "%{http_code}" "https://$DOMAIN$p")
+      echo "  $code  $p"
+    done
+    ;;
+
+  *) echo "사용법: $0 {stage|deploy|setup|verify}" >&2; exit 1 ;;
 esac

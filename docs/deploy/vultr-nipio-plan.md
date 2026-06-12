@@ -1,7 +1,31 @@
-# 배포 수정 계획 — `TowninAlpafold.<VULTR_IP>.nip.io`
+# 배포 — `towninalpafold.158.247.235.31.nip.io` ✅ 배포 완료 (2026-06-12)
 
-> 작성일: 2026-05-04 / 참조: `0030_OmniVibePro/{deploy-vultr.sh, docker-compose.vultr.yml, VULTR_QUICK_START.md, nginx/}`
-> 사용자 요청: "TowninAlpafold.00.00....io 형식으로 수정계획 잡아줘" — `nip.io` 와일드카드 DNS 패턴
+> 작성일: 2026-05-04 / 실행: 2026-06-12
+> **실배포 URL: https://towninalpafold.158.247.235.31.nip.io/ (HTTP 200, SSL 발급 완료)**
+
+## ⚠️ 실행 시 발견 — 계획 수정 (2026-06-12)
+
+5월 계획은 0030_OmniVibePro의 **Caddy+Docker** 패턴을 가정했으나, 실제 서버(158.247.235.31)는
+**호스트 nginx + Certbot** 패턴이었다 (0012_InsureGraph 등 20+ 사이트 공유). 서버를 직접 점검해
+구조를 확인한 뒤 Caddy/docker-compose 산출물을 폐기하고 nginx 패턴으로 교체했다.
+
+**실제 배포 구조 (확정):**
+- 80/443 종단 = **호스트 nginx** (kamal-proxy/Caddy 아님), SSL = **Certbot 자동 갱신**
+- 정적 사이트 = `/var/www/towninalpafold` (소유 www-data), nginx `root` 서빙
+- SSH 접속 = `root@158.247.235.31` (`~/.ssh/id_rsa`)
+- 배포 = `rsync --delete` → `chown www-data` → `nginx reload`
+
+**최종 산출물:**
+- `deploy-vultr.sh` (stage/deploy/setup/verify)
+- `deploy/nginx-towninalpafold.conf` (서버 적용본 보존)
+- `.github/workflows/deploy-vultr.yml` (CI 게이트 → rsync → 권한 → /healthz 검증)
+
+**검증 결과:** `/` `/app.js` `/manual.html` `/healthz` `/components/*` `/forecasts.json` 전부 HTTP 200,
+HTTP→HTTPS 301 리다이렉트, Let's Encrypt 인증서(만료 2026-09-10, 자동 갱신).
+
+> 아래 5월 계획(Caddy/Docker 기반)은 **참고용 이력**으로 보존. 실제 구조는 위 섹션이 정답.
+
+---
 
 ## 1. 결정 — 도메인 형식
 

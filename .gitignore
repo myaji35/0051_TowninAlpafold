@@ -59,3 +59,8 @@ backend/data/*.db-journal
 backend/data/*.db-wal
 backend/data/*.db-shm
 .venv-backend/
+.claude/worktrees
+worktrees/
+.harness-worktree-meta
+.claude/worktrees.json
+_site/
