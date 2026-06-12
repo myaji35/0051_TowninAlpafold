@@ -715,9 +715,9 @@ function makeMap(containerId) {
           paint:{'raster-opacity':1.0,'raster-brightness-min':0.08,'raster-brightness-max':1.0,'raster-contrast':0.15} },
         // 한글 시군구 라벨
         { id:'kr-labels', type:'symbol', source:'kr-labels',
-          layout:{ 'text-field':['get','name'], 'text-size':['interpolate',['linear'],['zoom'],8,12,11,16],
-                   'text-font':['Open Sans Bold'], 'text-allow-overlap':false, 'text-padding':4 },
-          paint:{ 'text-color':'#E8EEF6', 'text-halo-color':'#07101F', 'text-halo-width':2.0, 'text-halo-blur':0.5 } },
+          layout:{ 'text-field':['get','name'], 'text-size':['interpolate',['linear'],['zoom'],8,6,11,8],
+                   'text-font':['Open Sans Regular'], 'text-allow-overlap':false, 'text-padding':4 },
+          paint:{ 'text-color':'#8A97A8', 'text-halo-color':'#07101F', 'text-halo-width':1.2, 'text-opacity':0.7 } },
       ],
       glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
     },
@@ -810,7 +810,7 @@ function buildAnalyzeLayers() {
         lineWidthMinPixels: 0.6,
         getFillColor: f => {
           const c = colorGrad(f.properties.colorVal);
-          return [c[0], c[1], c[2], 90];  // 반투명 채움
+          return [c[0], c[1], c[2], 141];  // 폴리곤 불투명도 +20% (90→141)
         },
         getLineColor: [255, 255, 255, 70],
         onClick: handlePickAnalyzeFromGeo,
@@ -821,7 +821,7 @@ function buildAnalyzeLayers() {
         id:'analyze-area', data:points, filled:true, stroked:true, lineWidthMinPixels:0.5,
         radiusUnits:'meters', getRadius:600,
         getPosition:d=>d.coordinates,
-        getFillColor:d=>{const c=colorGrad(d.colorVal); return [c[0],c[1],c[2],60];},
+        getFillColor:d=>{const c=colorGrad(d.colorVal); return [c[0],c[1],c[2],111];},  // +20%
         getLineColor:[255,255,255,40],
       }));
     }
