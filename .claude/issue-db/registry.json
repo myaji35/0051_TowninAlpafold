@@ -11795,6 +11795,66 @@
         ]
       },
       "created_at": "2026-06-12T15:30:00Z"
+    },
+    {
+      "id": "NPL_VALUATION_V2-001",
+      "type": "GENERATE_CODE",
+      "status": "PARKED",
+      "priority": "P1",
+      "title": "[NPL 전문평가 V2] 건축물대장 연동 — 연식·구조·위반건축물 보정",
+      "payload": {
+        "source_issue": null,
+        "doc": "docs/npl-professional-valuation.md §2.2",
+        "data_source": "건축HUB 공공 API (data.go.kr)",
+        "blocker": "data.go.kr 인증키 발급(T2 EXTERNAL)",
+        "logic": "연식 신축×1.05/노후×0.85, 구조 RC×1.0/조적×0.9, 위반건축물×0.7(NPL 핵심리스크)"
+      },
+      "created_at": "2026-06-12T15:45:00Z"
+    },
+    {
+      "id": "NPL_VALUATION_V3-001",
+      "type": "GENERATE_CODE",
+      "status": "PARKED",
+      "priority": "P1",
+      "title": "[NPL 전문평가 V3] 실거래가 연동 — 감정가 신뢰도 보정",
+      "payload": {
+        "source_issue": null,
+        "doc": "docs/npl-professional-valuation.md §2.3",
+        "data_source": "국토부 실거래가 공개 API (apis.data.go.kr)",
+        "blocker": "data.go.kr 인증키(T2)",
+        "logic": "감정가 vs 실거래 중위가 ±15% → 신뢰; <0.85배 → 과대평가 의심+보수적용+confidence↓"
+      },
+      "created_at": "2026-06-12T15:46:00Z"
+    },
+    {
+      "id": "NPL_VALUATION_V4-001",
+      "type": "GENERATE_CODE",
+      "status": "PARKED",
+      "priority": "P2",
+      "title": "[NPL 전문평가 V4] 소액임차·조세채권 정밀 권리관계",
+      "payload": {
+        "source_issue": null,
+        "doc": "docs/npl-professional-valuation.md §2.4",
+        "data_source": "지역별 소액임차 최우선변제 한도표(공개)",
+        "blocker": "없음(자체 구현 가능)",
+        "logic": "소액임차 최우선변제 지역별 한도 + 조세 최우선 + 가압류시 recovery_months↑"
+      },
+      "created_at": "2026-06-12T15:47:00Z"
+    },
+    {
+      "id": "NPL_VALUATION_V5-001",
+      "type": "GENERATE_CODE",
+      "status": "PARKED",
+      "priority": "P3",
+      "title": "[NPL 전문평가 V5] 등기부·온나라 통합열람 (유료/기관계약)",
+      "payload": {
+        "source_issue": null,
+        "doc": "docs/npl-professional-valuation.md §3",
+        "data_source": "인터넷등기소 등기부 / 국토부 온나라 부동산종합공부",
+        "blocker": "건당 유료·기관권한(T2 DIRECTION) — 자동연동 vs 수동입력 vs 클라이언트계약 결정 필요",
+        "logic": "등기부 권리관계 자동확인 + 온나라 토지/건물 통합열람"
+      },
+      "created_at": "2026-06-12T15:48:00Z"
     }
   ],
   "hooks": {
