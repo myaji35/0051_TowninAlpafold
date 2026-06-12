@@ -150,6 +150,12 @@
               "mode": "npl-portfolio"
             },
             {
+              "id": "npl-dashboard",
+              "ko": "분석 대시보드",
+              "icon": "bar-chart-2",
+              "mode": "npl-dashboard"
+            },
+            {
               "id": "npl-buy",
               "ko": "매수 평가",
               "icon": "trending-up",

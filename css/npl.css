@@ -192,3 +192,32 @@
 /* 신뢰도 바 */
 .npl-conf-bar { height: 10px; background: #f3f4f6; border-radius: 5px; overflow: hidden; }
 .npl-conf-fill { display: block; height: 100%; background: linear-gradient(90deg,#5BC0EB,#00529B); }
+
+/* ── 분석 대시보드 (P4) ── */
+.npl-dashboard { max-width: 1100px; }
+.npl-dash-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+
+/* 위험 히트맵 */
+.npl-heatmap { width: 100%; border-collapse: separate; border-spacing: 4px; }
+.npl-heatmap th { font-size: 11px; color: #6b7280; font-weight: 600; padding: 4px; text-align: center; }
+.npl-hm-region { font-size: 12px; color: #374151; font-weight: 600; text-align: left; white-space: nowrap; padding-right: 8px; }
+.npl-hm-cell { text-align: center; font-weight: 700; font-size: 14px; color: #fff; border-radius: 6px; padding: 8px 4px; min-width: 56px; position: relative; }
+.npl-hm-risk { display: block; font-size: 9px; font-weight: 600; opacity: 0.85; }
+.npl-hm-empty { background: #f3f4f6 !important; color: #d1d5db; font-weight: 400; }
+.npl-hm-legend { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #6b7280; margin-top: 10px; }
+.npl-hm-legend span { width: 16px; height: 12px; border-radius: 3px; display: inline-block; margin-left: 8px; }
+
+/* 회수 cone 누적 */
+.npl-rcone-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+.npl-rcone-label { font-size: 12px; font-weight: 700; flex: 0 0 110px; }
+.npl-rcone-track { position: relative; flex: 1; height: 18px; background: #f9fafb; border-radius: 4px; }
+.npl-rcone-band { position: absolute; left: 0; top: 0; height: 100%; border-radius: 4px; }
+.npl-rcone-p50mark { position: absolute; top: -2px; width: 2px; height: 22px; background: #1a1a1a; transform: translateX(-50%); }
+.npl-rcone-val { font-size: 12px; font-weight: 700; color: #374151; flex: 0 0 60px; text-align: right; }
+
+/* 신뢰도 분포 */
+.npl-conf-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+.npl-conf-label { font-size: 12px; font-weight: 700; flex: 0 0 160px; }
+.npl-conf-track { flex: 1; height: 12px; background: #f3f4f6; border-radius: 6px; overflow: hidden; }
+.npl-conf-fill2 { display: block; height: 100%; border-radius: 6px; }
+.npl-conf-num { font-size: 12px; color: #6b7280; flex: 0 0 48px; text-align: right; }
