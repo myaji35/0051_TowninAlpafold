@@ -58,7 +58,12 @@
 
   function renderDash(container) {
     var el = container.querySelector('[data-region="dash"]');
-    el.innerHTML = riskHeatmap() + recoveryDist() + confidenceFlags();
+    el.innerHTML = '<div class="npl-dash-toolbar"><button class="npl-detail-report" data-action="pf-report">📄 포트폴리오 종합 리포트</button></div>'
+      + riskHeatmap() + recoveryDist() + confidenceFlags();
+    var btn = el.querySelector('[data-action="pf-report"]');
+    if (btn) btn.addEventListener('click', function() {
+      if (window.nplReport && window.nplReport.portfolio) window.nplReport.portfolio(state.items);
+    });
   }
 
   // ── 위험 히트맵 — 지역(행) × 담보(열), 셀 = low등급 비중(위험도) ──

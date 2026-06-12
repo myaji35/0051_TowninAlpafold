@@ -11691,7 +11691,7 @@
         ],
         "verified": "7 API end-to-end PASS, Python=JS scorer 정합, comparable/집계/분포/CSV 검증",
         "remaining": "P2 화면, P3 백분위 시각화, P4 대시보드, P5 리포트",
-        "phases_done": "P1(백엔드) P2(목록) P3(단건객관성) P4(대시보드)"
+        "phases_done": "P1~P5 전체 완료"
       }
     },
     {
@@ -11746,7 +11746,7 @@
     {
       "id": "GENERATE_CODE_NPL_REPORT-001",
       "type": "GENERATE_CODE",
-      "status": "DEFERRED",
+      "status": "DONE",
       "priority": "P1",
       "title": "[코드·NPL 리포트] scorer 출력→HTML 리포트(cone+SHAP+신뢰도+comparable)",
       "payload": {
@@ -11760,8 +11760,15 @@
       ],
       "created_at": "2026-06-12T12:03:00Z",
       "history": [
-        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md"
-      ]
+        "2026-06-12 5만건 규모 확인 → localStorage 폐기, 서버 아키텍처로 전환. 설계: docs/npl-portfolio-architecture.md",
+        "2026-06-12 P5 리포트 완료"
+      ],
+      "result": {
+        "files": [
+          "components/npl-report.js"
+        ],
+        "verified": "단일+포트폴리오 리포트 print 방식, cone/백분위/등급분포/Top-Bottom 렌더 PASS"
+      }
     }
   ],
   "hooks": {

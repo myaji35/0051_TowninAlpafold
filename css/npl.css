@@ -221,3 +221,9 @@
 .npl-conf-track { flex: 1; height: 12px; background: #f3f4f6; border-radius: 6px; overflow: hidden; }
 .npl-conf-fill2 { display: block; height: 100%; border-radius: 6px; }
 .npl-conf-num { font-size: 12px; color: #6b7280; flex: 0 0 48px; text-align: right; }
+
+/* ── 리포트 버튼 (P5) ── */
+.npl-detail-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.npl-detail-report { padding: 9px 16px; background: #00529B; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.npl-detail-report:hover { background: #003e75; }
+.npl-dash-toolbar { display: flex; justify-content: flex-end; margin-bottom: 12px; }

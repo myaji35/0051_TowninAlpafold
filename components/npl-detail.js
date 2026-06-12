@@ -116,7 +116,10 @@
       +     '<div class="npl-detail-objnote">입력 완전성 기반 — 결측이 많을수록 신뢰도 하락.</div>'
       +   '</div>'
 
-      +   '<button class="pd-deep-link" data-action="goto-eval">' + (asset.eval_type === 'buy' ? '매수' : '매도') + ' 평가 화면에서 재평가</button>'
+      +   '<div class="npl-detail-actions">'
+      +     '<button class="npl-detail-report" data-action="report">📄 리포트 생성</button>'
+      +     '<button class="pd-deep-link" data-action="goto-eval">' + (asset.eval_type === 'buy' ? '매수' : '매도') + ' 평가 화면에서 재평가</button>'
+      +   '</div>'
       + '</aside>';
 
     var host = document.getElementById('npl-detail-host');
@@ -133,6 +136,10 @@
     if (goto) goto.addEventListener('click', function() {
       close();
       if (typeof window.switchMode === 'function') window.switchMode(asset.eval_type === 'buy' ? 'npl-buy' : 'npl-sell');
+    });
+    var rpt = host.querySelector('[data-action="report"]');
+    if (rpt) rpt.addEventListener('click', function() {
+      if (window.nplReport && window.nplReport.single) window.nplReport.single(asset, all);
     });
     document.addEventListener('keydown', _esc);
   }
