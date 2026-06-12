@@ -188,7 +188,7 @@
 
 <!-- ───── HEADER ───── -->
 <header class="glass sticky top-0 z-50 px-6 py-3">
-  <div class="flex items-center justify-between max-w-[1600px] mx-auto">
+  <div class="flex items-center justify-between max-w-[2400px] mx-auto">
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-md flex items-center justify-center" style="background: linear-gradient(135deg, #00A1E0 0%, #5BC0EB 100%);">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -207,7 +207,7 @@
   </div>
 </header>
 
-<main class="px-6 pt-6 pb-5 max-w-[1600px] mx-auto" style="padding-top: 24px;">
+<main class="px-6 pt-6 pb-5 max-w-[2400px] mx-auto" style="padding-top: 24px;">
 
   <!-- ════════════ 0. GALLERY ════════════ -->
   <section id="view-gallery" class="block">
@@ -342,7 +342,7 @@
 
     <div class="grid grid-cols-12 gap-4">
       <!-- LEFT: DATA PANEL -->
-      <div class="col-span-2 glass-light rounded-lg p-3 space-y-3" style="max-height: 660px; overflow-y: auto;">
+      <div class="col-span-2 glass-light rounded-lg p-3 space-y-3" style="max-height: clamp(660px, calc(100vh - 220px), 1180px); overflow-y: auto;">
         <div>
           <div class="text-[10px] mono text-gray-400 mb-2">5종 카테고리</div>
           <div class="space-y-2 mono text-[10px]">
@@ -442,7 +442,7 @@
         </div>
 
         <!-- Map -->
-        <div id="map" class="rounded-lg" style="height: 580px; position: relative;"></div>
+        <div id="map" class="rounded-lg" style="height: clamp(580px, calc(100vh - 300px), 1100px); position: relative;"></div>
 
         <!-- Time slider -->
         <div class="flex items-center gap-3">
