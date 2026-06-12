@@ -683,22 +683,33 @@ function makeMap(containerId) {
     style: {
       version: 8,
       sources: {
+        // dark_nolabels: 라벨 없는 다크 베이스 (영문 구운 라벨 제거 → 한글 라벨 별도 추가)
         'carto-dark': {
           type:'raster',
           tiles:[
-            'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-            'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-            'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-            'https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+            'https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png',
+            'https://b.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png',
+            'https://c.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png',
+            'https://d.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png',
           ],
           tileSize: 256,
           attribution: '© OSM © CARTO',
         },
+        // 한국 주요 시군구 한글 라벨 (영문 라벨 대체)
+        'kr-labels': { type:'geojson', data: window.KR_CITY_LABELS || {type:'FeatureCollection',features:[]} },
       },
       layers: [
         { id:'bg', type:'background', paint:{'background-color':'#07101F'} },
-        { id:'carto-dark', type:'raster', source:'carto-dark', paint:{'raster-opacity':0.95,'raster-saturation':-0.1} },
+        // 시인성 향상: opacity 1.0 + brightness/contrast 상향
+        { id:'carto-dark', type:'raster', source:'carto-dark',
+          paint:{'raster-opacity':1.0,'raster-brightness-min':0.08,'raster-brightness-max':1.0,'raster-contrast':0.15} },
+        // 한글 시군구 라벨
+        { id:'kr-labels', type:'symbol', source:'kr-labels',
+          layout:{ 'text-field':['get','name'], 'text-size':['interpolate',['linear'],['zoom'],8,11,11,15],
+                   'text-font':['Open Sans Regular'], 'text-allow-overlap':false, 'text-padding':4 },
+          paint:{ 'text-color':'#A4B0C0', 'text-halo-color':'#07101F', 'text-halo-width':1.4 } },
       ],
+      glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
     },
     center: [127.0, 37.55], zoom: 9.8, pitch: 45, bearing: -12,
     attributionControl:{compact:true},

@@ -18,6 +18,7 @@
 <link href="css/sidebar.css" rel="stylesheet">
 <script src="components/icons.js"></script>
 <script src="utils/url-context.js"></script>
+<script src="utils/kr-city-labels.js"></script>
 <script src="viz/plugins/pharmacy-scorer.js"></script>
 <script src="viz/plugins/pharmacy-hazard.js"></script>
 <script src="viz/plugins/npl-buy-scorer.js"></script>
@@ -348,34 +349,34 @@
           <div class="space-y-2 mono text-[10px]">
             <div class="text-gray-400">▾ 위치 / 접근성</div>
             <div class="ml-2 space-y-1">
-              <div class="data-pill">⊞ transit_score</div>
-              <div class="data-pill">⊞ walkability</div>
-              <div class="data-pill">⊞ subway_distance_m</div>
-              <div class="data-pill">⊞ bus_stop_density</div>
+              <div class="data-pill">⊞ transit_score (대중교통 점수)</div>
+              <div class="data-pill">⊞ walkability (보행 접근성)</div>
+              <div class="data-pill">⊞ subway_distance_m (지하철 거리)</div>
+              <div class="data-pill">⊞ bus_stop_density (버스정류장 밀도)</div>
             </div>
             <div class="text-gray-400 mt-2">▾ 공시지가 / 임대</div>
             <div class="ml-2 space-y-1">
-              <div class="data-pill measure">Σ land_price</div>
-              <div class="data-pill measure">Σ rent_price</div>
+              <div class="data-pill measure">Σ land_price (공시지가)</div>
+              <div class="data-pill measure">Σ rent_price (임대가)</div>
             </div>
             <div class="text-gray-400 mt-2">▾ 부동산 거래</div>
             <div class="ml-2 space-y-1">
-              <div class="data-pill measure">Σ tx_volume</div>
-              <div class="data-pill measure">Σ tx_apt_count</div>
+              <div class="data-pill measure">Σ tx_volume (거래량)</div>
+              <div class="data-pill measure">Σ tx_apt_count (아파트 거래건수)</div>
             </div>
             <div class="text-gray-400 mt-2">▾ 이용객</div>
             <div class="ml-2 space-y-1">
-              <div class="data-pill measure">Σ visitors_total</div>
-              <div class="data-pill measure">Σ visitors_20s</div>
-              <div class="data-pill measure">Σ visitors_30s</div>
-              <div class="data-pill measure">Σ visitors_inflow</div>
+              <div class="data-pill measure">Σ visitors_total (유동인구)</div>
+              <div class="data-pill measure">Σ visitors_20s (20대 유동인구)</div>
+              <div class="data-pill measure">Σ visitors_30s (30대 유동인구)</div>
+              <div class="data-pill measure">Σ visitors_inflow (유입인구)</div>
             </div>
             <div class="text-gray-400 mt-2">▾ 소상공인</div>
             <div class="ml-2 space-y-1">
-              <div class="data-pill measure">Σ biz_count</div>
-              <div class="data-pill measure">Σ biz_cafe</div>
-              <div class="data-pill measure">Σ biz_new</div>
-              <div class="data-pill measure">Σ biz_closed</div>
+              <div class="data-pill measure">Σ biz_count (사업체 수)</div>
+              <div class="data-pill measure">Σ biz_cafe (카페 수)</div>
+              <div class="data-pill measure">Σ biz_new (신규 창업)</div>
+              <div class="data-pill measure">Σ biz_closed (폐업)</div>
             </div>
           </div>
         </div>
@@ -389,13 +390,13 @@
             <div class="text-[9px] mono text-gray-400 mb-1">높이 (Y)</div>
             <div class="mapping-slot has-value">
               <select id="m-height" class="bg-transparent outline-none text-[11px] text-white w-full mono">
-                <option value="visitors_total">visitors_total</option>
-                <option value="land_price">land_price</option>
-                <option value="biz_count">biz_count</option>
-                <option value="biz_cafe">biz_cafe</option>
-                <option value="tx_volume">tx_volume</option>
-                <option value="visitors_20s">visitors_20s</option>
-                <option value="biz_new">biz_new</option>
+                <option value="visitors_total">visitors_total (유동인구)</option>
+                <option value="land_price">land_price (공시지가)</option>
+                <option value="biz_count">biz_count (사업체 수)</option>
+                <option value="biz_cafe">biz_cafe (카페 수)</option>
+                <option value="tx_volume">tx_volume (거래량)</option>
+                <option value="visitors_20s">visitors_20s (20대 유동인구)</option>
+                <option value="biz_new">biz_new (신규 창업)</option>
               </select>
             </div>
           </div>
@@ -403,12 +404,12 @@
             <div class="text-[9px] mono text-gray-400 mb-1">색상</div>
             <div class="mapping-slot has-value">
               <select id="m-color" class="bg-transparent outline-none text-[11px] text-white w-full mono">
-                <option value="biz_cafe">biz_cafe</option>
-                <option value="visitors_20s">visitors_20s</option>
-                <option value="biz_new">biz_new</option>
-                <option value="biz_closed">biz_closed</option>
-                <option value="land_price">land_price</option>
-                <option value="tx_volume">tx_volume</option>
+                <option value="biz_cafe">biz_cafe (카페 수)</option>
+                <option value="visitors_20s">visitors_20s (20대 유동인구)</option>
+                <option value="biz_new">biz_new (신규 창업)</option>
+                <option value="biz_closed">biz_closed (폐업)</option>
+                <option value="land_price">land_price (공시지가)</option>
+                <option value="tx_volume">tx_volume (거래량)</option>
               </select>
             </div>
           </div>
