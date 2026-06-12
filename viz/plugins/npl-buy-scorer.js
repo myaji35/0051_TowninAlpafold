@@ -46,20 +46,25 @@
     const appraisal = num(inp.appraisal);
     // V1: 지역×담보유형 동적 낙찰가율
     const rate = getAuctionRate(inp);
-    // 권리관계 차감 합 (회수액에서 우선 변제되는 금액)
-    const deduction = num(inp.senior) + num(inp.tax) + num(inp.deposit);
+    // V4: 정밀 권리분석 (소액임차 최우선변제 + 조세 + 배당순위). 미연동 시 단순 합산 fallback.
+    let deduction, rights = null;
+    if (window.NplRights && (inp.region_code || inp.deposit || inp.senior)) {
+      rights = window.NplRights.analyzeRights(inp);
+      deduction = rights.total_deduction;
+    } else {
+      deduction = num(inp.senior) + num(inp.tax) + num(inp.deposit);
+    }
     const gross = {
       p10: appraisal * rate.p10,
       p50: appraisal * rate.p50,
       p90: appraisal * rate.p90,
     };
-    // 순회수액 = 처분액 − 선순위/세금/보증금 (음수 방지)
     const net = {
       p10: Math.max(0, gross.p10 - deduction),
       p50: Math.max(0, gross.p50 - deduction),
       p90: Math.max(0, gross.p90 - deduction),
     };
-    return { gross: gross, net: net, deduction: deduction };
+    return { gross: gross, net: net, deduction: deduction, rights: rights };
   }
 
   /**
@@ -142,8 +147,9 @@
     // 감정가 미입력 시 청구액의 1.2배로 추정 (보수적 fallback)
     if (num(inp.appraisal) <= 0) inp = Object.assign({}, inp, { appraisal: num(inp.claim) * 1.2 });
 
-    const months = num(inp.recovery_months) || DEFAULT_RECOVERY_MONTHS;
     const cone = recoveryCone(inp);
+    // V4: 권리분석이 회수기간을 보정(명도 지연 등). fallback은 기본값.
+    const months = (cone.rights && cone.rights.recovery_months_adj) || num(inp.recovery_months) || DEFAULT_RECOVERY_MONTHS;
     const base = num(inp.buy_price);
 
     // 3시나리오: 보수(×0.85) / 기본(×1.00) / 공격(×1.15) — UX line 89
@@ -173,7 +179,8 @@
       top_risks: topRisks(inp, cone),
       scenarios: scenarios,
       seniority_warning: seniorityWarning,
-      source: 'npl-buy-scorer.js (manual 입력 모드 — ETL_NPL_DATA-001 DEFERRED fallback)',
+      rights: cone.rights,   // V4: 배당 우선순위 breakdown + flags + 회수기간 보정
+      source: 'npl-buy-scorer.js (V1 동적낙찰가율 + V4 정밀권리분석)',
       confidence: 0.60,
       _internal: { cone: cone, months: months, inputs: inp },
     };

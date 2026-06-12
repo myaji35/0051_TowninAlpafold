@@ -11829,7 +11829,7 @@
     {
       "id": "NPL_VALUATION_V4-001",
       "type": "GENERATE_CODE",
-      "status": "PARKED",
+      "status": "DONE",
       "priority": "P2",
       "title": "[NPL 전문평가 V4] 소액임차·조세채권 정밀 권리관계",
       "payload": {
@@ -11839,7 +11839,17 @@
         "blocker": "없음(자체 구현 가능)",
         "logic": "소액임차 최우선변제 지역별 한도 + 조세 최우선 + 가압류시 recovery_months↑"
       },
-      "created_at": "2026-06-12T15:47:00Z"
+      "created_at": "2026-06-12T15:47:00Z",
+      "result": {
+        "files": [
+          "backend/npl_rights.py",
+          "utils/npl-rights.js"
+        ],
+        "verified": "소액임차 최우선변제+배당순위+대항력. 대항력 OFF→ON IRR 2.6%→-15.6% 차등, JS=Python 일치"
+      },
+      "history": [
+        "2026-06-12 V4 정밀 권리분석 구현+검증"
+      ]
     },
     {
       "id": "NPL_VALUATION_V5-001",

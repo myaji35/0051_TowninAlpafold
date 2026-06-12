@@ -227,3 +227,14 @@
 .npl-detail-report { padding: 9px 16px; background: #00529B; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
 .npl-detail-report:hover { background: #003e75; }
 .npl-dash-toolbar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+
+/* ── V4 권리관계 (체크박스 + 배당순위) ── */
+.npl-chk { display: flex; align-items: center; gap: 8px; margin: 8px 0; font-size: 12px; color: #4b5563; cursor: pointer; }
+.npl-chk input { width: 15px; height: 15px; cursor: pointer; }
+.npl-rights-head { font-size: 12px; font-weight: 700; color: #6b7280; margin: 12px 0 6px; }
+.npl-rights-list { list-style: none; padding: 0; margin: 0; }
+.npl-rights-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid #f3f4f6; font-size: 12px; }
+.npl-rights-rank { flex: 0 0 44px; font-weight: 700; color: #00529B; font-size: 11px; }
+.npl-rights-name { flex: 1; color: #374151; }
+.npl-rights-amt { font-weight: 700; color: #1a1a1a; }
+.npl-rights-flag { font-size: 11px; color: #92400e; background: #fffbeb; border-radius: 5px; padding: 4px 8px; margin: 4px 0; }

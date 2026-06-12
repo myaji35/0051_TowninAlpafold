@@ -117,6 +117,8 @@ def gen_asset(idx: int) -> dict:
             "senior": senior,
             "tax": round(appraisal * random.uniform(0, 0.02)) if random.random() < 0.5 else 0,
             "deposit": round(appraisal * random.uniform(0, 0.1)) if random.random() < 0.3 else 0,
+            "has_opposing_power": random.random() < 0.5,
+            "has_seizure": random.random() < 0.15,
         })
     else:
         book_value = appraisal

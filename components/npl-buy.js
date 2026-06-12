@@ -29,9 +29,11 @@
       +       fld('후보 매수가 (만원)', 'buy_price', 'number', '필수', true)
       +       fld('감정가 (만원)', 'appraisal', 'number', '미입력 시 청구액×1.2 추정', false)
       +       '<fieldset class="npl-fieldset"><legend>권리관계 (선택)</legend>'
-      +         fld('선순위 채권 (만원)', 'senior', 'number', '0', false)
-      +         fld('세금/공과금 (만원)', 'tax', 'number', '0', false)
+      +         fld('선순위 근저당 (만원)', 'senior', 'number', '0', false)
+      +         fld('조세/당해세 (만원)', 'tax', 'number', '0', false)
       +         fld('임차 보증금 (만원)', 'deposit', 'number', '0', false)
+      +         chkFld('임차인 대항력 있음 (보증금 인수 위험)', 'has_opposing_power')
+      +         chkFld('가압류/가처분 등재 (회수 지연)', 'has_seizure')
       +       '</fieldset>'
       +       '<div class="npl-warn" data-region="seniority-warn" hidden></div>'
       +       '<button class="pd-cta" type="button" data-action="evaluate" disabled>평가 실행</button>'
@@ -60,12 +62,17 @@
       + '<select class="npl-input" data-field="' + key + '">' + o + '</select></label>';
   }
 
+  function chkFld(label, key) {
+    return '<label class="npl-chk"><input type="checkbox" data-field="' + key + '" /><span>' + label + '</span></label>';
+  }
+
   function bindEvents(container) {
     container.querySelectorAll('[data-field]').forEach(function(input) {
-      var evt = input.tagName === 'SELECT' ? 'change' : 'input';
+      var isChk = input.type === 'checkbox';
+      var evt = (input.tagName === 'SELECT' || isChk) ? 'change' : 'input';
       input.addEventListener(evt, function(e) {
         var k = e.target.dataset.field;
-        state.formData[k] = e.target.value;
+        state.formData[k] = isChk ? e.target.checked : e.target.value;
         updateState(container);
       });
     });
@@ -95,6 +102,8 @@
         senior: parseFloat(state.formData.senior) || 0,
         tax: parseFloat(state.formData.tax) || 0,
         deposit: parseFloat(state.formData.deposit) || 0,
+        has_opposing_power: state.formData.has_opposing_power === true,
+        has_seizure: state.formData.has_seizure === true,
       };
       var result = window.NplBuyScorer && window.NplBuyScorer.evaluate(inp);
       if (!result) {
@@ -143,6 +152,20 @@
       return '<li class="pd-driver pd-driver-neg"><span class="pd-driver-sign">' + d.sign + '</span>'
         + '<span class="pd-driver-text">' + esc(d.text) + '</span></li>';
     }).join('');
+    // V4: 권리관계 배당 순위 breakdown
+    var rightsHtml = '';
+    if (r.rights && r.rights.breakdown && r.rights.breakdown.length) {
+      var bd = r.rights.breakdown.map(function(b) {
+        return '<li class="npl-rights-row"><span class="npl-rights-rank">' + b.rank + '순위</span>'
+          + '<span class="npl-rights-name">' + esc(b.name) + '</span>'
+          + '<span class="npl-rights-amt">' + fmtMan(b.amount) + '</span></li>';
+      }).join('');
+      var flagsHtml = (r.rights.flags || []).map(function(f) {
+        return '<div class="npl-rights-flag">⚠ ' + esc(f) + '</div>';
+      }).join('');
+      rightsHtml = '<div class="npl-rights-head">권리관계 배당 순위 (V4)</div>'
+        + '<ul class="npl-rights-list">' + bd + '</ul>' + flagsHtml;
+    }
     el.innerHTML = ''
       + '<div class="npl-irr-card" style="border-left:4px solid ' + r.grade.color + ';">'
       +   '<div class="npl-irr-head">IRR 매수 검토</div>'
@@ -150,6 +173,7 @@
       +   '<div class="npl-irr-badge" style="background:' + r.grade.color + ';color:#fff;">' + r.grade.actionLabel + '</div>'
       +   '<div class="npl-irr-recovery">회수 p50 ' + fmtMan(r.recovery_cone.p50) + ' (차감 ' + fmtMan(r.recovery_cone.deduction) + ')</div>'
       +   (risksHtml ? '<div class="npl-risks-head">Top Risks</div><ul class="pd-drivers-list">' + risksHtml + '</ul>' : '')
+      +   rightsHtml
       +   '<button class="pd-deep-link" type="button" data-action="goto-decide">Decide에서 cone 보기</button>'
       + '</div>';
     var btn = el.querySelector('[data-action="goto-decide"]');
