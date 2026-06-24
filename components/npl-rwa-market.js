@@ -59,6 +59,22 @@
     return n.toLocaleString();
   }
   function fmtPct(v) { return ((+v || 0) * 100).toFixed(1) + '%'; }
+
+  // ── 투자자 net 수익률 (수수료 차감 후) ────────────────────────────────────────
+  // 화면의 expected_irr = 기초자산 회수 IRR(운용사 기준, 수수료 전).
+  // 투자자가 실제 받는 수익률은 운용보수 + 성과보수(carry)를 뺀 net.
+  // backend/npl_fund_report.py 의 fund_fees 공식을 연환산 단순화하여 재현(drift 주의).
+  var FEE = { mgmt_rate: 0.02, carry_rate: 0.20, hurdle_rate: 0.08 }; // 운용2% / 성과20% / hurdle8%
+  // 총 IRR → 투자자 net IRR (연환산 근사)
+  //   운용보수: 연 mgmt_rate 차감
+  //   성과보수: hurdle 초과 수익분의 carry_rate 차감
+  function investorNetIrr(grossIrr) {
+    var g = +grossIrr || 0;
+    var afterMgmt = g - FEE.mgmt_rate;                 // 운용보수 차감
+    var excess = Math.max(0, afterMgmt - FEE.hurdle_rate); // hurdle 초과분
+    var net = afterMgmt - excess * FEE.carry_rate;     // 초과분의 carry만큼 추가 차감
+    return net;
+  }
   function esc(s) {
     if (typeof window.escapeHtml === 'function') return window.escapeHtml(s);
     return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
@@ -362,7 +378,7 @@
       + '</div>'
       + '<div class="rwa-token-kpi-row">'
       +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">토큰 단가</div><div class="rwa-kpi-val">' + fmtKrw(tk.price_per_token) + '원</div></div>'
-      +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">예상 IRR</div><div class="rwa-kpi-val rwa-irr-val">' + fmtPct(tk.expected_irr) + '</div></div>'
+      +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">투자자 예상 수익률</div><div class="rwa-kpi-val rwa-irr-val">' + fmtPct(investorNetIrr(tk.expected_irr)) + '</div><div class="rwa-kpi-sub2">기초자산 IRR ' + fmtPct(tk.expected_irr) + ' (운용 전)</div></div>'
       +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">잔여 수량</div><div class="rwa-kpi-val">' + remaining.toLocaleString() + '개</div></div>'
       +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">만기</div><div class="rwa-kpi-val rwa-maturity">' + esc(tk.maturity_date || '-') + '</div></div>'
       + '</div>'
@@ -490,7 +506,7 @@
       +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">보유 수량</div><div class="rwa-kpi-val">' + h.qty.toLocaleString() + '개</div></div>'
       +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">투자 원금</div><div class="rwa-kpi-val">' + fmtMan(principal) + '</div></div>'
       +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">수취 분배금</div><div class="rwa-kpi-val">' + fmtMan(h.distributed_total || 0) + '</div></div>'
-      +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">예상 IRR</div><div class="rwa-kpi-val rwa-irr-val">' + fmtPct(h.expected_irr) + '</div></div>'
+      +   '<div class="rwa-kpi-item"><div class="rwa-kpi-label">투자자 예상 수익률</div><div class="rwa-kpi-val rwa-irr-val">' + fmtPct(investorNetIrr(h.expected_irr)) + '</div><div class="rwa-kpi-sub2">기초자산 IRR ' + fmtPct(h.expected_irr) + ' (운용 전)</div></div>'
       + '</div>'
       // 신뢰구간 공개 — "한 점 숫자 금지" 원칙 준수
       + '<div class="rwa-cone-section">'
@@ -539,6 +555,7 @@
       +       '<li><strong>유동성 제한</strong> — 본 토큰의 이차 유통은 현재 제한적이며, 청약 후 중도 환매가 불가능할 수 있습니다.</li>'
       +       '<li><strong>발행사 위험</strong> — SPC(특수목적법인) 운영 위험 및 관련 법령·규제 변경 위험이 존재합니다.</li>'
       +       '<li><strong>시장위험</strong> — 부동산 시장, 금리, 거시경제 변화에 따라 회수금액이 영향을 받을 수 있습니다.</li>'
+      +       '<li><strong>운용·성과보수 차감</strong> — 표시된 투자자 예상 수익률은 운용보수(연 2%)와 성과보수(기준수익 8% 초과분의 20%)를 차감한 금액입니다. 기초자산 IRR과 다릅니다.</li>'
       +       '<li><strong>세금</strong> — 분배 수익은 소득세 과세 대상입니다. 세부 사항은 세무사와 상담하십시오.</li>'
       +     '</ol>'
       +     '<label class="rwa-risk-agree">'
@@ -620,7 +637,7 @@
         + '<div class="rwa-kpi-item"><div class="rwa-kpi-label">토큰 단가</div><div class="rwa-kpi-val">' + fmtKrw(tk.price_per_token) + '원/개</div></div>'
         + '<div class="rwa-kpi-item"><div class="rwa-kpi-label">최소 청약</div><div class="rwa-kpi-val">' + tk.min_subscription.toLocaleString() + '개 (' + fmtMan(tk.min_subscription * tk.price_per_token) + ')</div></div>'
         + '<div class="rwa-kpi-item"><div class="rwa-kpi-label">잔여 수량</div><div class="rwa-kpi-val">' + remaining.toLocaleString() + '개</div></div>'
-        + '<div class="rwa-kpi-item"><div class="rwa-kpi-label">예상 IRR</div><div class="rwa-kpi-val rwa-irr-val">' + fmtPct(tk.expected_irr) + '</div></div>'
+        + '<div class="rwa-kpi-item"><div class="rwa-kpi-label">투자자 예상 수익률</div><div class="rwa-kpi-val rwa-irr-val">' + fmtPct(investorNetIrr(tk.expected_irr)) + '</div><div class="rwa-kpi-sub2">기초자산 IRR ' + fmtPct(tk.expected_irr) + ' (운용 전)</div></div>'
         + '</div>'
         + renderMiniCone(tk);
     }
@@ -640,7 +657,9 @@
     function updateCalc() {
       var qty = parseInt(qtyInput ? qtyInput.value : 0) || 0;
       var amount = qty * tk.price_per_token;
-      var expDist = amount * tk.expected_irr;
+      var grossDist = amount * tk.expected_irr;                 // 기초자산 IRR 기준 (운용 전)
+      var netDist = amount * investorNetIrr(tk.expected_irr);   // 수수료 차감 후 투자자 몫
+      var feeCut = grossDist - netDist;                          // 운용·성과보수 합
       // 내 지분 비율로 cone 계산
       var share = tk.total_tokens ? qty / tk.total_tokens : 0;
       var myP10 = (tk.pool_recovery_p10 || 0) * share;
@@ -649,10 +668,12 @@
 
       if (calc) calc.innerHTML = '<div class="rwa-calc-box">'
         + '<div class="rwa-calc-row"><span>청약금액</span><strong>' + fmtKrw(amount) + '원</strong></div>'
-        + '<div class="rwa-calc-row"><span>예상 분배수익 (p50 기준)</span><strong class="rwa-irr-val">' + fmtMan(expDist) + '</strong></div>'
+        + '<div class="rwa-calc-row rwa-calc-muted"><span>기초자산 예상수익 (운용 전, p50)</span><span>' + fmtMan(grossDist) + '</span></div>'
+        + '<div class="rwa-calc-row rwa-calc-muted"><span>− 운용·성과보수 (운용2%·성과20%)</span><span>− ' + fmtMan(feeCut) + '</span></div>'
+        + '<div class="rwa-calc-row"><span><strong>투자자 예상 분배수익 (수수료 차감 후)</strong></span><strong class="rwa-irr-val">' + fmtMan(netDist) + '</strong></div>'
         + '<div class="rwa-calc-row"><span>내 지분 회수 cone</span>'
         +   '<span>p10 ' + fmtMan(myP10) + ' · p50 ' + fmtMan(myP50) + ' · p90 ' + fmtMan(myP90) + '</span></div>'
-        + '<div class="rwa-calc-disclaimer">예상 수익은 통계적 추정치이며 확정이 아닙니다.</div>'
+        + '<div class="rwa-calc-disclaimer">예상 수익은 통계적 추정치이며 확정이 아닙니다. 수수료 차감 후 금액 기준.</div>'
         + '</div>';
 
       // 유효성 검증

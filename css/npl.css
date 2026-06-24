@@ -349,6 +349,7 @@
 .rwa-kpi-label { font-size: 10px; color: #9ca3af; font-weight: 600; }
 .rwa-kpi-val { font-size: 14px; font-weight: 800; color: #1a1a1a; }
 .rwa-irr-val { color: #00529B; }
+.rwa-kpi-sub2 { font-size: 9px; color: #9ca3af; font-weight: 500; margin-top: 1px; }
 .rwa-maturity { font-size: 12px; font-weight: 600; color: #374151; }
 
 /* cone 미니 */
@@ -589,6 +590,7 @@
 .rwa-calc-row:last-of-type { border-bottom: none; }
 .rwa-calc-row span { color: #6b7280; }
 .rwa-calc-row strong { font-weight: 800; color: #1a1a1a; }
+.rwa-calc-muted span { color: #9ca3af; font-size: 11px; }
 .rwa-calc-disclaimer { font-size: 10px; color: #9ca3af; margin-top: 8px; }
 .rwa-sub-validation { }
 
