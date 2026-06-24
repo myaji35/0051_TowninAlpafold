@@ -12698,7 +12698,7 @@
     {
       "id": "NPL_UPGRADE-001",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P0",
       "title": "[고도화] RWA 라우터 main.py 연결 + GET /tokens·/holdings (데모→실동작)",
       "payload": {
@@ -12715,14 +12715,28 @@
           "GET /tokens 목록(필터)",
           "GET /holdings?investor_id",
           "UI 데모→실데이터 전환 확인"
-        ]
+        ],
+        "files_changed": []
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지",
+      "result": {
+        "files": [
+          "backend/main.py(rwa_router+init)",
+          "backend/npl_rwa_token.py(GET /tokens,/holdings + status버그수정)"
+        ],
+        "verified": "7 RWA엔드포인트 등록, GET /tokens?status=open count정상, 청약후 remaining 실시간, _aggregate_pool p50 1.9억/IRR 0.2667 정확",
+        "bug_fixed": "create_token_issue가 status 무시하고 draft 하드코딩 → status 파라미터 추가(UI open 필터 작동)",
+        "unblocks": "NPL_UPGRADE-002(청약 실기록)"
+      }
     },
     {
       "id": "NPL_UPGRADE-002",
       "type": "GENERATE_CODE",
-      "status": "BLOCKED",
+      "status": "READY",
       "priority": "P0",
       "title": "[고도화] 청약→지분원장 실기록 + 잔여수량 실시간 반영",
       "payload": {
@@ -12779,7 +12793,11 @@
           "JS간이→백엔드호출 교체"
         ]
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"
     },
     {
       "id": "NPL_UPGRADE-005",
@@ -12817,7 +12835,11 @@
         "effort": "M",
         "t2": "경매완료 실적데이터 조달(법원경매/온비드)"
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"
     },
     {
       "id": "NPL_UPGRADE-007",
@@ -12857,7 +12879,11 @@
           "DELETE /tenants/{id}"
         ]
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"
     },
     {
       "id": "NPL_UPGRADE-009",

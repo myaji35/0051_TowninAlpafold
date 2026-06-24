@@ -161,6 +161,7 @@ def create_token_issue(
     security_type: str = "revenue_share",
     min_subscription: int = 1,
     maturity_date: str | None = None,
+    status: str = "draft",
 ) -> dict:
     """토큰 발행 생성.
 
@@ -195,7 +196,7 @@ def create_token_issue(
         (issue_id, spc_id, token_name, security_type, total_tokens, price_per_token,
          min_subscription, json.dumps(asset_ids), pool["total_claim"],
          pool["p50"], pool["p10"], pool["p90"], expected_irr,
-         maturity_date, "draft", now, now),
+         maturity_date, status, now, now),
     )
     db.commit()
 
@@ -207,8 +208,12 @@ def create_token_issue(
         "price_per_token": price_per_token,
         "total_issue_size": total_issue_size,
         "pool": pool,
+        "pool_recovery_p10": pool["p10"],
+        "pool_recovery_p50": pool["p50"],
+        "pool_recovery_p90": pool["p90"],
         "expected_irr": round(expected_irr, 4),
-        "status": "draft",
+        "maturity_date": maturity_date,
+        "status": status,
     }
 
 
@@ -368,6 +373,7 @@ class TokenIssueIn(BaseModel):
     min_subscription: int = Field(1, ge=1)
     asset_ids: list[str] = Field(default_factory=list)
     maturity_date: Optional[str] = None
+    status: str = Field("draft", pattern=r"^(draft|open|closed|redeemed)$")
 
 
 class HoldingIn(BaseModel):
@@ -417,9 +423,47 @@ def issue_token(payload: TokenIssueIn, db=Depends(get_db)):
             security_type=payload.security_type,
             min_subscription=payload.min_subscription,
             maturity_date=payload.maturity_date,
+            status=payload.status,
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
+
+
+@router.get("/tokens", summary="발행 토큰 목록 (마켓플레이스)")
+def list_tokens(status: str = None, db=Depends(get_db)):
+    """RWA 마켓플레이스 토큰 목록. status로 필터(open 등). 각 토큰에 청약/잔여 수량 집계 포함."""
+    sql = "SELECT * FROM token_issue"
+    params = ()
+    if status:
+        sql += " WHERE status=?"
+        params = (status,)
+    sql += " ORDER BY created_at DESC"
+    rows = db.execute(sql, params).fetchall()
+    items = []
+    for row in rows:
+        d = dict(row)
+        d["pool_asset_ids"] = json.loads(d.get("pool_asset_ids") or "[]")
+        d["asset_count"] = len(d["pool_asset_ids"])
+        subscribed = db.execute(
+            "SELECT COALESCE(SUM(qty),0) s FROM token_holding WHERE issue_id=?", (d["id"],)
+        ).fetchone()["s"]
+        d["subscribed_tokens"] = subscribed
+        d["remaining_tokens"] = d["total_tokens"] - subscribed
+        items.append(d)
+    return {"items": items, "total": len(items)}
+
+
+@router.get("/holdings", summary="투자자 보유 지분 목록")
+def list_holdings(investor_id: str, db=Depends(get_db)):
+    """투자자별 보유 토큰. investor_id로 격리(본인 지분만)."""
+    rows = db.execute(
+        "SELECT h.*, t.token_name, t.expected_irr, t.maturity_date, "
+        "t.pool_recovery_p10, t.pool_recovery_p50, t.pool_recovery_p90, t.total_tokens "
+        "FROM token_holding h JOIN token_issue t ON h.issue_id=t.id "
+        "WHERE h.investor_id=? ORDER BY h.subscribed_at DESC",
+        (investor_id,),
+    ).fetchall()
+    return {"items": [dict(r) for r in rows], "total": len(rows)}
 
 
 @router.get("/issues/{issue_id}", summary="발행 상세 조회")
