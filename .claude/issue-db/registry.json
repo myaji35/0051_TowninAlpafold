@@ -12736,7 +12736,7 @@
     {
       "id": "NPL_UPGRADE-002",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P0",
       "title": "[고도화] 청약→지분원장 실기록 + 잔여수량 실시간 반영",
       "payload": {
@@ -12748,14 +12748,32 @@
           "components/npl-rwa-market.js",
           "backend/npl_rwa_token.py"
         ],
-        "effort": "M"
+        "effort": "M",
+        "files_changed": []
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지",
+      "result": {
+        "files": [
+          "components/npl-rwa-market.js(doSubscribe 실연동)",
+          "css/npl.css(toast-error)"
+        ],
+        "verified": "백엔드 e2e 청약201→잔여 1000→850(150감소)+보유150기록. 프론트 데모폴백 630→530(100감소). 청약→원장→잔여 루프 완성",
+        "bugs_fixed": [
+          "JSON파싱실패(정적HTML응답)→content-type체크 폴백",
+          "데모폴백 state.tokens 동일참조 직접수정",
+          "renderScreen이 loadMarket으로 데모재생성→renderMainRegion만 호출"
+        ],
+        "unblocks": "NPL_UPGRADE-003(분배 대시보드)"
+      }
     },
     {
       "id": "NPL_UPGRADE-003",
       "type": "GENERATE_CODE",
-      "status": "BLOCKED",
+      "status": "READY",
       "priority": "P1",
       "title": "[고도화] 분배 실행 API + 투자자 수익 대시보드(분배이력 추적)",
       "payload": {
@@ -12795,6 +12813,7 @@
       },
       "created_at": "2026-06-24T04:00:00Z",
       "tags": [
+        "pingpong_blocked",
         "pingpong_blocked"
       ],
       "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"
@@ -12837,6 +12856,7 @@
       },
       "created_at": "2026-06-24T04:00:00Z",
       "tags": [
+        "pingpong_blocked",
         "pingpong_blocked"
       ],
       "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"
@@ -12881,6 +12901,7 @@
       },
       "created_at": "2026-06-24T04:00:00Z",
       "tags": [
+        "pingpong_blocked",
         "pingpong_blocked"
       ],
       "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"

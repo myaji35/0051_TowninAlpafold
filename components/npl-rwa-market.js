@@ -36,6 +36,7 @@
   var state = {
     tokens: [],            // 토큰 마켓 목록
     holdings: [],          // 내 보유 목록
+    investor_id: 'me',     // 투자자 식별자 (KYC 완료 후 실 DID/ID로 교체 — T2)
     filter: { collateral_type: '', region: '', irr_min: '', status: '' },
     tab: 'market',         // 'market' | 'portfolio'
     // 청약 모달
@@ -708,24 +709,72 @@
     };
   }
 
-  function doSubscribe(tk, qty, modal) {
-    var amount = qty * tk.price_per_token;
-    // 실제 API: POST /api/v1/rwa/tokens/:id/subscribe { investor_id, qty }
-    // 현재 데모 — 즉시 성공 처리
-    modal.style.display = 'none';
-
-    // 데모 성공 피드백
+  function showToast(msg, isError) {
     var toast = document.createElement('div');
-    toast.className = 'rwa-toast';
-    toast.textContent = '청약 완료: ' + tk.token_name + ' ' + qty.toLocaleString() + '개 (' + fmtKrw(amount) + '원)';
+    toast.className = 'rwa-toast' + (isError ? ' rwa-toast--error' : '');
+    toast.textContent = msg;
     document.body.appendChild(toast);
-    setTimeout(function() {
-      toast.classList.add('rwa-toast--show');
-    }, 10);
+    setTimeout(function() { toast.classList.add('rwa-toast--show'); }, 10);
     setTimeout(function() {
       toast.classList.remove('rwa-toast--show');
       setTimeout(function() { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
     }, 3500);
+  }
+
+  function doSubscribe(tk, qty, modal) {
+    var amount = qty * tk.price_per_token;
+    // 실제 청약 → 백엔드 지분 원장 기록. investor_id는 KYC 완료 후 실 식별자(현재 데모 'me').
+    // 백엔드 API 없으면(정적 호스팅) catch에서 데모 폴백.
+    var confirmBtn = document.getElementById('rwa-sub-confirm');
+    if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = '청약 처리 중...'; }
+
+    function demoFallback() {
+      // 백엔드 미연동(정적 호스팅) → 데모 처리 + 잔여수량 로컬 차감
+      // state.tokens 내 동일 토큰 객체를 직접 수정 (renderScreen이 state.tokens를 그림)
+      var target = null;
+      for (var i = 0; i < state.tokens.length; i++) {
+        if (state.tokens[i].id === tk.id) { target = state.tokens[i]; break; }
+      }
+      if (!target) target = tk;
+      target.subscribed_tokens = (target.subscribed_tokens || 0) + qty;
+      modal.style.display = 'none';
+      showToast('청약 완료(데모): ' + tk.token_name + ' ' + qty.toLocaleString() + '개');
+      // renderMainRegion만 호출 — renderScreen은 loadMarket으로 데모데이터를 재생성해 차감이 사라짐
+      var container = document.getElementById('view-npl-rwa-market');
+      if (container) renderMainRegion(container);
+    }
+
+    fetch('/api/v1/rwa/issues/' + encodeURIComponent(tk.id) + '/holdings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ investor_id: state.investor_id || 'me', qty: qty }),
+    })
+      .then(function(r) {
+        // 백엔드 없는 정적 호스팅은 index.html(HTML)을 반환 → 데모 폴백
+        var ct = r.headers.get('content-type') || '';
+        if (ct.indexOf('application/json') === -1) { demoFallback(); return null; }
+        if (!r.ok) return r.json().then(function(e) { throw new Error(e.detail || '청약 실패'); });
+        return r.json();
+      })
+      .then(function(result) {
+        if (result === null) return; // 데모 폴백 이미 처리됨
+        modal.style.display = 'none';
+        showToast('청약 완료: ' + tk.token_name + ' ' + qty.toLocaleString() + '개 (' + fmtKrw(amount) + '원)');
+        // 잔여수량 실시간 반영 — 서버 최신값 재로드 후 메인영역만 재렌더
+        var container = document.getElementById('view-npl-rwa-market');
+        Promise.all([loadMarket(), loadHoldings()]).then(function() {
+          if (container) renderMainRegion(container);
+        });
+      })
+      .catch(function(err) {
+        // 네트워크 실패도 데모 폴백, 그 외(검증 실패 등)는 에러 표시
+        if (/Failed to fetch|NetworkError/.test(String(err))) {
+          demoFallback();
+        } else {
+          showToast(String(err.message || err), true);
+          if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = '청약 확정'; }
+        }
+      });
   }
 
   // ── 공개 API ─────────────────────────────────────────────────────────────────
