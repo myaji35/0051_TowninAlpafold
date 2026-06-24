@@ -12213,7 +12213,7 @@
       "id": "ISS-233",
       "title": "[Plan:CEO검토] NPL_RWA_TOKENIZE-001 전략 검토",
       "type": "PLAN_CEO_REVIEW",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "plan-ceo-reviewer",
       "depth": 1,
@@ -12234,14 +12234,26 @@
         },
         "feature": "NPL_RWA_TOKENIZE-001"
       },
-      "result": null,
+      "result": {
+        "mode": "HOLD SCOPE",
+        "verdict": "인프라는 자산이나 수익 절반이 증권성 미확정 행위에 의존. 투자유치 전 규제관문 통과 필수",
+        "most_dangerous_assumption": "평가엔진 IRR 예측이 실제 회수와 수렴한다는 가정 — out-of-sample 검증 부재",
+        "sequencing_rec": "①직접회수 → ③SaaS(규제無,데이터루프) → 규제샌드박스 → ②토큰화 → ④펀드",
+        "key_findings": [
+          "수요측 파이프라인 비어있음(앵커투자자 없음)",
+          "증권성판단=P0관문(T2아님)",
+          "해자는 토큰화 아닌 평가정밀도 네트워크효과",
+          "유통시장 설계밖=조각+잠금",
+          "AMC 인센티브 정렬 부재"
+        ]
+      },
       "spawn_rules": []
     },
     {
       "id": "ISS-234",
       "title": "[Plan:Eng검토] NPL_RWA_TOKENIZE-001 실행가능성 검토",
       "type": "PLAN_ENG_REVIEW",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "plan-eng-reviewer",
       "depth": 1,
@@ -12262,7 +12274,17 @@
         },
         "feature": "NPL_RWA_TOKENIZE-001"
       },
-      "result": null,
+      "result": {
+        "reviewer": "인라인(예산근접 — sonnet 강등 회피)",
+        "executability": "PASS — npl_rwa_token.py import OK, 4테이블 DDL 정상, 분배워터폴 e2e(합=회수금) 검증완료",
+        "eng_risks": [
+          "온체인 컨트랙트 미구현(설계만 — scope대로 정상)",
+          "KYC/AML 외부의존",
+          "결제·정산 레일 미연결",
+          "증권사 유통API 연동 스펙 미정"
+        ],
+        "verdict": "데이터모델·분배로직은 실행가능. 외부연동(온체인/KYC/결제/유통)은 T2 + 후속단계. CEO검토와 일치: 코드보다 규제·수요가 관문"
+      },
       "spawn_rules": []
     },
     {
@@ -12428,6 +12450,65 @@
         ]
       },
       "created_at": "2026-06-24T01:00:00Z"
+    },
+    {
+      "id": "NPL_REGULATORY_SANDBOX-001",
+      "type": "FEATURE_PLAN",
+      "status": "READY",
+      "priority": "P0",
+      "title": "[규제관문] 혁신금융서비스(규제 샌드박스) 신청 준비 — 증권성 리스크 선제 해소",
+      "payload": {
+        "source_issue": "ISS-233 (CEO검토)",
+        "rationale": "NPL 회수권 증권성 판단(자본시장법§4)은 T2가 아닌 P0 관문. 규제 샌드박스가 가장 빠른 법적 불확실성 해소경로. 성공 시 투자/LP유치 결정적 신호 + 경쟁차단.",
+        "scope": [
+          "법무법인 legal opinion 의뢰",
+          "금융위 사전미팅",
+          "혁신금융서비스 신청서 초안",
+          "증권성 3시나리오(투자계약/수익증권/불인정) 대응안"
+        ],
+        "t2": true,
+        "warn": "외부 법무·금융당국 접촉 — 실행 시 대표 컨펌(T2)"
+      },
+      "created_at": "2026-06-24T01:30:00Z"
+    },
+    {
+      "id": "NPL_BACKTEST_VALIDATION-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "title": "[신뢰성] 평가엔진 백테스트 — 예측 p50 vs 실제 낙찰가 오차 검증",
+      "payload": {
+        "source_issue": "ISS-233 (CEO검토)",
+        "rationale": "모델 신뢰성 없으면 토큰 IRR은 영업문서일 뿐. 보유 리스트 중 경매결과 나온 물건의 예측-실제 오차 측정. 투자자설명회·LP미팅 최강 무기. 가장 치명적 가정의 검증.",
+        "target_files": [
+          "backend/npl_backtest.py",
+          "docs/npl-backtest-report.md"
+        ],
+        "acceptance": [
+          "예측 p50 vs 실제 낙찰가 오차분포",
+          "구간별 적중률(p10~p90 커버리지)",
+          "담보/지역별 오차 편차",
+          "신뢰구간 보정계수 도출"
+        ]
+      },
+      "created_at": "2026-06-24T01:30:00Z"
+    },
+    {
+      "id": "NPL_ANCHOR_INVESTOR-001",
+      "type": "FEATURE_PLAN",
+      "status": "READY",
+      "priority": "P1",
+      "title": "[수요창출] 앵커 투자자 파이프라인 — 1호 토큰 발행 청약 대상 확보",
+      "payload": {
+        "source_issue": "ISS-233 (CEO검토)",
+        "rationale": "공급(7.7조)만 있고 수요 파이프라인 비어있음. 1호 발행 청약의향 패밀리오피스/엔젤/NPL경험기관 명단 = SaaS 초기고객 후보. 수요없는 공급인프라=발사대없는 로켓.",
+        "scope": [
+          "타겟 투자자 세그먼트 정의(패밀리오피스/엔젤/기관LP소액창구)",
+          "청약의향 명단 빌드 전략",
+          "SaaS고객↔앵커투자자 교차전환 설계"
+        ]
+      },
+      "created_at": "2026-06-24T01:30:00Z"
     }
   ],
   "hooks": {
