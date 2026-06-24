@@ -12850,7 +12850,7 @@
     {
       "id": "NPL_UPGRADE-005",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "title": "[고도화] 물건간 지역·담보 상관행렬 몬테카를로 반영(독립→현실분포)",
       "payload": {
@@ -12862,9 +12862,18 @@
           "backend/npl_fund_report.py",
           "backend/npl_backtest.py"
         ],
-        "effort": "M"
+        "effort": "M",
+        "files_changed": []
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "result": {
+        "files": [
+          "backend/npl_fund_report.py(Cholesky 상관샘플링)"
+        ],
+        "verified": "순수python Cholesky(numpy없음), 하위호환 correlation=False 기존동일, 집중포트 std 1.9배확대(동반하락 정직반영), L·Lᵀ=원행렬 검증",
+        "correlation_model": "같은지역 0.5/담보 0.3/둘다 0.65 (정책값, 실데이터 보정 T2)",
+        "value": "집중투자 리스크 정직표현 — 샌드박스 심사 모델엄밀성"
+      }
     },
     {
       "id": "NPL_UPGRADE-006",
