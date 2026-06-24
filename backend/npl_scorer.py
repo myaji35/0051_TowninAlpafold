@@ -4,12 +4,87 @@ NPL 평가 로직 — JS scorer(viz/plugins/npl-buy-scorer.js, npl-sell-scorer.j
 5만 건 일괄 평가를 위해 서버에서 동일 로직 수행 → 결과를 npl_assets에 캐시.
 JS와 동일 가정(낙찰가율/할인율)을 유지 — 두 곳이 갈라지면 안 됨(drift 금지).
 가정 변경 시 양쪽(JS + 본 파일)을 함께 수정할 것.
+
+보정계수 (auction_correction.json):
+  실 경매결과 백테스트 완료 시 backend/data/auction_correction.json이 생성된다.
+  파일이 없으면 보정 없이 기존 동작(하위호환). 파일 있으면 rate에 보정 곱하기.
+  ⚠ 보정계수는 실데이터 백테스트로만 산출 — npl_backtest.run_real_backtest() 전용.
 """
 from __future__ import annotations
+
+import json
+import os
 
 from backend.npl_auction_rates import auction_rate
 from backend.npl_rights import analyze_rights
 from backend.npl_building_ledger import compute_confidence
+
+# ── 실데이터 보정계수 로드 헬퍼 (세션당 1회 캐시) ──────────────────────────────
+_CORRECTION_PATH = os.path.join(
+    os.path.dirname(__file__), "data", "auction_correction.json"
+)
+_correction_cache: dict | None = None  # None = 미확인, {} = 파일 없음
+_correction_loaded = False
+
+
+def _load_correction() -> dict | None:
+    """
+    backend/data/auction_correction.json 로드 (캐시).
+
+    ⚠ 실데이터 백테스트 보정계수 전용.
+      파일 없으면 None 반환 → 보정 미적용(기존 동작 유지).
+      파일 있어도 source != "real_backtest"이면 무시.
+
+    Returns:
+        보정계수 dict 또는 None (보정 없음)
+    """
+    global _correction_cache, _correction_loaded
+    if _correction_loaded:
+        return _correction_cache
+    _correction_loaded = True
+    if not os.path.exists(_CORRECTION_PATH):
+        _correction_cache = None
+        return None
+    try:
+        with open(_CORRECTION_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        if data.get("source") != "real_backtest":
+            _correction_cache = None  # 합성 보정계수 무시
+        else:
+            _correction_cache = data
+    except (json.JSONDecodeError, OSError):
+        _correction_cache = None
+    return _correction_cache
+
+
+def _correction_factor(region_code: str | None, collateral_type: str | None) -> float:
+    """
+    지역×담보유형 보정계수 반환. 세그먼트 우선, 없으면 전역, 없으면 1.0.
+
+    Args:
+        region_code:      시군구코드
+        collateral_type:  담보유형
+
+    Returns:
+        보정 곱하기 계수 (기본 1.0 = 보정 없음)
+    """
+    from backend.npl_auction_rates import region_tier
+    corr = _load_correction()
+    if not corr:
+        return 1.0
+
+    # 세그먼트: collateral_type 우선 (지역 세그먼트는 tier 단위)
+    by_ct = corr.get("by_collateral_type", {})
+    ct = collateral_type or "apt"
+    if ct in by_ct:
+        return float(by_ct[ct])
+
+    by_tier = corr.get("by_region_tier", {})
+    tier = region_tier(region_code)
+    if tier in by_tier:
+        return float(by_tier[tier])
+
+    return float(corr.get("global_correction", 1.0))
 
 # ── 매수 평가 가정 (npl-buy-scorer.js와 동일) ──
 # V1: 고정 낙찰가율 → 지역×유형 동적 행렬(npl_auction_rates). fallback만 상수 유지.
@@ -55,6 +130,9 @@ def evaluate_buy(inp: dict) -> dict | None:
 
     # V1: 지역×담보유형 동적 낙찰가율
     rate = auction_rate(inp.get("region_code"), inp.get("collateral_type"))
+    # ── 실데이터 보정계수 적용 (파일 없으면 1.0 = 보정 없음, 하위호환) ──────────
+    cf = _correction_factor(inp.get("region_code"), inp.get("collateral_type"))
+    rate = {k: rate[k] * cf for k in ("p10", "p50", "p90")}
     # V4: 정밀 권리분석 (소액임차 최우선변제 + 조세 + 배당순위 + 회수기간 보정)
     rights = analyze_rights(inp)
     deduction = rights["total_deduction"]
@@ -85,6 +163,9 @@ def evaluate_buy(inp: dict) -> dict | None:
         ),
         "seniority_warning": deduction >= claim * 0.9,
         "rights": rights,
+        # 보정 투명성: 실데이터 보정 적용 여부 + 계수
+        "correction_applied": cf != 1.0,
+        "correction_factor": round(cf, 4),
     }
 
 
