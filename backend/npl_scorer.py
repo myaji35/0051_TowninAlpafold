@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from backend.npl_auction_rates import auction_rate
 from backend.npl_rights import analyze_rights
+from backend.npl_building_ledger import compute_confidence
 
 # ── 매수 평가 가정 (npl-buy-scorer.js와 동일) ──
 # V1: 고정 낙찰가율 → 지역×유형 동적 행렬(npl_auction_rates). fallback만 상수 유지.
@@ -75,7 +76,13 @@ def evaluate_buy(inp: dict) -> dict | None:
         "recovery_p10": round(net["p10"]),
         "recovery_p50": round(net["p50"]),
         "recovery_p90": round(net["p90"]),
-        "confidence": 0.60,
+        "confidence": compute_confidence(
+            base=0.60,
+            has_building=bool(inp.get("has_building")),
+            has_realprice3=bool(inp.get("has_realprice3")),
+            has_registry=bool(inp.get("has_registry")),
+            has_defect=bool(inp.get("has_defect")),
+        ),
         "seniority_warning": deduction >= claim * 0.9,
         "rights": rights,
     }
@@ -125,7 +132,13 @@ def evaluate_sell(inp: dict) -> dict | None:
         "recovery_p10": cone[12]["p10"],
         "recovery_p50": cone[12]["p50"],
         "recovery_p90": cone[12]["p90"],
-        "confidence": 0.58,
+        "confidence": compute_confidence(
+            base=0.58,
+            has_building=bool(inp.get("has_building")),
+            has_realprice3=bool(inp.get("has_realprice3")),
+            has_registry=bool(inp.get("has_registry")),
+            has_defect=bool(inp.get("has_defect")),
+        ),
     }
 
 
