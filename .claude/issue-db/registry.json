@@ -12074,7 +12074,7 @@
     {
       "id": "NPL_INVESTOR_REPORT-001",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P2",
       "title": "[펀드/IR] 투자자·LP용 포트폴리오 IR 리포트 — 펀드보수 산정 포함",
       "payload": {
@@ -12090,9 +12090,25 @@
           "운용·성과보수 자동 산정",
           "몬테카를로 회수분포",
           "PDF 출력"
-        ]
+        ],
+        "files_changed": []
       },
-      "created_at": "2026-06-24T00:00:00Z"
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files": [
+          "backend/npl_fund_report.py(193줄)",
+          "components/npl-report.js(+fund 266줄)"
+        ],
+        "verified": "수수료폭포 LP순+보수+carry=총회수 정확일치, 몬테카를로 80건 분산효과 손실확률0%, JS↔Python drift없음, 리포트 5섹션 실렌더(8673자,0에러)",
+        "fee_formula": "운용보수=약정×rate×연수, carry=max(0,회수-hurdle복리-운용보수)×rate, LP순=회수-보수-carry",
+        "report_sections": "펀드개요+회수전망(cone+몬테카를로)+수수료구조+포트폴리오구성+리스크고지",
+        "todos": [
+          "catch-up조항",
+          "물건간상관",
+          "XIRR정밀",
+          "몬테카를로 백엔드10000회연동"
+        ]
+      }
     },
     {
       "id": "NPL_SAAS_API-001",
