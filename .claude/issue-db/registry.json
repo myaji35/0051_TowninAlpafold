@@ -12454,7 +12454,7 @@
     {
       "id": "NPL_REGULATORY_SANDBOX-001",
       "type": "FEATURE_PLAN",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P0",
       "title": "[규제관문] 혁신금융서비스(규제 샌드박스) 신청 준비 — 증권성 리스크 선제 해소",
       "payload": {
@@ -12467,9 +12467,17 @@
           "증권성 3시나리오(투자계약/수익증권/불인정) 대응안"
         ],
         "t2": true,
-        "warn": "외부 법무·금융당국 접촉 — 실행 시 대표 컨펌(T2)"
+        "warn": "외부 법무·금융당국 접촉 — 실행 시 대표 컨펌(T2)",
+        "files_changed": []
       },
-      "created_at": "2026-06-24T01:30:00Z"
+      "created_at": "2026-06-24T01:30:00Z",
+      "result": {
+        "file": "docs/npl-regulatory-sandbox.md (328줄)",
+        "scenarios": "A투자계약/B수익증권(1안)/C불인정 — 신탁 수익증권 권고+사모50인 파일럿 병행",
+        "sandbox_rationale": "법제화는 STO형식 허용했으나 NPL회수권 증권성 선례 부재 → 샌드박스로 선례·공모특례 선확보",
+        "completed": "내부 준비문서 초안 완료",
+        "t2_pending": "법무의뢰/금융위미팅/심사신청/법인설립 4개 = 대표 컨펌 후 실행"
+      }
     },
     {
       "id": "NPL_BACKTEST_VALIDATION-001",
