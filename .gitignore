@@ -64,3 +64,6 @@ worktrees/
 .harness-worktree-meta
 .claude/worktrees.json
 _site/
+
+# NPL 백테스트 보정계수 (런타임 산출물 — 실데이터 백테스트로 생성)
+backend/data/auction_correction.json
