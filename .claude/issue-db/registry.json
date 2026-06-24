@@ -12406,6 +12406,28 @@
       },
       "result": null,
       "spawn_rules": []
+    },
+    {
+      "id": "NPL_BATCH_REALDATA-001",
+      "type": "GENERATE_CODE",
+      "status": "DEFERRED",
+      "priority": "P2",
+      "title": "[배치 후속] 실데이터 로더 + 합성 파라미터 보정 (low 34% 편향)",
+      "payload": {
+        "source_issue": "NPL_PIPELINE_INGEST-001",
+        "rationale": "배치 파이프라인은 검증됐으나 합성데이터 buy_price 설정으로 low 34%·IRR p50 -20% 편향. 실 2.5만건 리스트 도착 시 --input CSV/JSON 로더 + 컬럼매핑 + 결측치 전처리 필요.",
+        "target_files": [
+          "backend/npl_batch_score.py"
+        ],
+        "acceptance": [
+          "--input CSV/JSON 로더",
+          "실컬럼→scorer 키 매핑",
+          "source=real_data",
+          "결측치 전처리",
+          "실데이터 등급분포 재검증"
+        ]
+      },
+      "created_at": "2026-06-24T01:00:00Z"
     }
   ],
   "hooks": {
