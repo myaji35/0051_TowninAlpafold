@@ -12482,7 +12482,7 @@
     {
       "id": "NPL_BACKTEST_VALIDATION-001",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "title": "[신뢰성] 평가엔진 백테스트 — 예측 p50 vs 실제 낙찰가 오차 검증",
       "payload": {
@@ -12497,9 +12497,25 @@
           "구간별 적중률(p10~p90 커버리지)",
           "담보/지역별 오차 편차",
           "신뢰구간 보정계수 도출"
-        ]
+        ],
+        "files_changed": []
       },
-      "created_at": "2026-06-24T01:30:00Z"
+      "created_at": "2026-06-24T01:30:00Z",
+      "result": {
+        "files": [
+          "backend/npl_backtest.py",
+          "docs/npl-backtest-report.md"
+        ],
+        "framework_verified": "sanity(노이즈0→MAE0,coverage100%), 편향주입0.8배→correction0.8000 정확감지, 정상 coverage84.4%",
+        "honesty": "합성≠실데이터 4곳 명시 + gt_source필드. 실데이터 백테스트는 경매완료분 입수 후",
+        "realdata_needs": [
+          "item_id",
+          "actual_auction_price",
+          "actual_recovery",
+          "actual_recovery_months"
+        ],
+        "note": "CEO지목 가장위험한가정 검증 프레임워크 — 실데이터 ground truth 부재로 합성검증 단계"
+      }
     },
     {
       "id": "NPL_ANCHOR_INVESTOR-001",
