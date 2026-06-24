@@ -12973,7 +12973,7 @@
     {
       "id": "NPL_UPGRADE-009",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P2",
       "title": "[고도화] 포트폴리오 집계 캐싱 레이어(5만건 대량조회 성능)",
       "payload": {
@@ -12984,9 +12984,18 @@
           "backend/npl_api.py",
           "backend/db.py"
         ],
-        "effort": "M"
+        "effort": "M",
+        "files_changed": []
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "result": {
+        "files": [
+          "backend/npl_api.py(인메모리 캐시 +54줄)"
+        ],
+        "verified": "miss19.6ms→hit3.8ms(5.2x), 결과일치, 자산추가시 자동무효화(total 2001/cache.hit=false)",
+        "design": "TTL 60초 + 자산버전(COUNT+MAX rowid) 2중 무효화. Surgical(집계SQL 무수정, 래퍼만)",
+        "caveat": "멀티워커시 프로세스별 독립캐시(TTL 수렴, 허용 stale)"
+      }
     },
     {
       "id": "NPL_UPGRADE-010",
