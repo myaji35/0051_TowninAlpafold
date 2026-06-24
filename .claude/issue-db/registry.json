@@ -12672,6 +12672,28 @@
         }
       },
       "created_at": "2026-06-24T02:00:00Z"
+    },
+    {
+      "id": "NPL_FRONTEND_DEPLOY-001",
+      "type": "DEPLOY_READY",
+      "status": "DONE",
+      "priority": "P2",
+      "title": "[배포] 프론트 재배포 — RWA 마켓 화면+사이드메뉴 공개URL 반영",
+      "payload": {
+        "source_issue": "대표님 요청(공개URL 사이드메뉴 완성)",
+        "target": "https://towninalpafold.158.247.235.31.nip.io"
+      },
+      "result": {
+        "deployed": {
+          "npl-rwa-market.js": "404→200",
+          "categories.json": "NPL 4→5개(RWA마켓 포함)",
+          "css/npl.css": ".rwa- 89규칙",
+          "index/app.js": "등록반영"
+        },
+        "live_verified": "공개URL Playwright: 사이드바 NPL(5) → RWA마켓 클릭 → mode=npl-rwa-market 화면전환 → 토큰카드8개 렌더",
+        "note": "RWA마켓은 백엔드API 미연동(데모데이터 폴백, 정상설계). 추후 /api/v1/rwa/* 연결시 실데이터"
+      },
+      "created_at": "2026-06-24T03:10:00Z"
     }
   ],
   "hooks": {
