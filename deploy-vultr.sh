@@ -2,10 +2,14 @@
 # TowninAlpafold — Vultr 정적 배포 (호스트 nginx + Certbot 패턴)
 # 서버 158.247.235.31는 호스트 nginx가 80/443 종단 + Certbot SSL.
 # 정적 사이트는 /var/www/towninalpafold 에 rsync, nginx 사이트로 서빙.
-# 사용:
+# 사용 (정적):
 #   ./deploy-vultr.sh stage     — _site/ 스테이징
 #   ./deploy-vultr.sh deploy    — rsync + 권한 + nginx reload
 #   ./deploy-vultr.sh setup     — nginx 사이트 + certbot SSL (1회)
+# 사용 (백엔드 FastAPI):
+#   ./deploy-vultr.sh setup-api — venv + systemd 서비스 + nginx 프록시 (1회)
+#   ./deploy-vultr.sh deploy-api— backend/ rsync + 의존성 + 서비스 재시작
+#   ./deploy-vultr.sh verify-api— /api/health 응답 확인
 # 참조: docs/deploy/vultr-nipio-plan.md
 set -euo pipefail
 
@@ -13,6 +17,7 @@ IP="${VULTR_IP:-158.247.235.31}"
 KEY="${VULTR_SSH_KEY:-$HOME/.ssh/id_rsa}"
 DOMAIN="towninalpafold.${IP}.nip.io"
 WEBROOT="/var/www/towninalpafold"
+APIROOT="/opt/towninalpafold"
 SSH="ssh -i $KEY -o StrictHostKeyChecking=no root@$IP"
 CMD="${1:-deploy}"
 
@@ -56,5 +61,37 @@ case "$CMD" in
     done
     ;;
 
-  *) echo "사용법: $0 {stage|deploy|setup|verify}" >&2; exit 1 ;;
+  # ─── 백엔드 FastAPI 배포 ───
+  setup-api)
+    # 1회: Python venv + systemd 서비스 + nginx 프록시 적용
+    $SSH "apt-get install -y python3-venv >/dev/null 2>&1 || true"
+    $SSH "mkdir -p $APIROOT/backend/data"
+    rsync -az -e "ssh -i $KEY -o StrictHostKeyChecking=no" backend/ "root@$IP:$APIROOT/backend/"
+    $SSH "cd $APIROOT && python3 -m venv venv && venv/bin/pip install -q -U pip && venv/bin/pip install -q -r backend/requirements.txt"
+    # .env 템플릿 (서버에서 대표님이 실토큰 기입)
+    $SSH "test -f $APIROOT/.env || printf 'API_TOKEN=change-me-%s\nSAAS_ADMIN_SECRET=change-me-%s\n# DATA_GO_KR_KEY=\n' \$(openssl rand -hex 8) \$(openssl rand -hex 8) > $APIROOT/.env"
+    scp -i "$KEY" -o StrictHostKeyChecking=no deploy/towninalpafold-api.service "root@$IP:/etc/systemd/system/towninalpafold-api.service"
+    $SSH "chown -R www-data:www-data $APIROOT && systemctl daemon-reload && systemctl enable --now towninalpafold-api"
+    scp -i "$KEY" -o StrictHostKeyChecking=no deploy/nginx-towninalpafold.conf "root@$IP:/etc/nginx/sites-available/towninalpafold"
+    $SSH "nginx -t && systemctl reload nginx"
+    echo "✓ 백엔드 셋업 완료 → https://$DOMAIN/api/health"
+    echo "  ⚠️ 서버 $APIROOT/.env 의 API_TOKEN/ADMIN_SECRET 을 실값으로 교체하세요."
+    ;;
+  deploy-api)
+    # 코드 갱신 (data/ DB 보존) + 의존성 + 서비스 재시작
+    rsync -az -e "ssh -i $KEY -o StrictHostKeyChecking=no" --exclude 'data/' --exclude '__pycache__/' backend/ "root@$IP:$APIROOT/backend/"
+    $SSH "cd $APIROOT && venv/bin/pip install -q -r backend/requirements.txt"
+    $SSH "chown -R www-data:www-data $APIROOT && systemctl restart towninalpafold-api"
+    sleep 2
+    code=$(curl -s -o /dev/null -w "%{http_code}" "https://$DOMAIN/api/health")
+    echo "✓ 백엔드 배포 완료 → /api/health = $code"
+    ;;
+  verify-api)
+    for p in /api/health /api/v1/npl/portfolio/summary /saas/v1/usage; do
+      code=$(curl -s -o /dev/null -w "%{http_code}" "https://$DOMAIN$p")
+      echo "  $code  $p"
+    done
+    ;;
+
+  *) echo "사용법: $0 {stage|deploy|setup|verify|setup-api|deploy-api|verify-api}" >&2; exit 1 ;;
 esac

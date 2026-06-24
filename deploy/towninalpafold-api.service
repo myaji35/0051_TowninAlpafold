@@ -1,0 +1,23 @@
+[Unit]
+# TowninAlpafold FastAPI 백엔드 (NPL 평가/RWA 토큰화/SaaS API)
+# 서버 적용 위치: /etc/systemd/system/towninalpafold-api.service
+# uvicorn을 127.0.0.1:8000 으로 데몬화 → nginx가 /api,/saas,/health 를 리버스 프록시.
+Description=TowninAlpafold FastAPI backend (uvicorn)
+After=network.target
+
+[Service]
+Type=simple
+# 배포 위치 (deploy-vultr.sh가 rsync하는 경로)
+WorkingDirectory=/opt/towninalpafold
+# 환경변수 파일 (API_TOKEN, DATA_GO_KR_KEY 등 — 서버에서 1회 작성, git 미포함)
+EnvironmentFile=-/opt/towninalpafold/.env
+# venv의 uvicorn으로 backend.main:app 기동 (localhost 바인딩 — 외부는 nginx 경유)
+ExecStart=/opt/towninalpafold/venv/bin/uvicorn backend.main:app --host 127.0.0.1 --port 8000 --workers 2
+Restart=on-failure
+RestartSec=3
+# SQLite 파일 쓰기 권한 (backend/data/)
+User=www-data
+Group=www-data
+
+[Install]
+WantedBy=multi-user.target
