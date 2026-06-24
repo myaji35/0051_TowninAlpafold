@@ -9,8 +9,10 @@ NPL 펀드 단위 IR 리포트 계산 엔진 — LP(출자자) 대상.
 ⚠ 단순화 가정 (LP에 명시 필요):
   - carry: 유럽식 수익 기준. catch-up 조항 미적용 (보수적 단순화).
     정밀 carry는 실제 LP계약서의 waterfall 조항에 따라 달라진다.
-  - 몬테카를로: 물건 간 독립 가정 (지역/담보 상관관계 미반영).
+  - 몬테카를로(correlation=False): 물건 간 독립 가정 (지역/담보 상관관계 미반영).
     실제 부동산 포트폴리오는 동일 지역 집중 시 상관이 높아진다.
+  - 몬테카를로(correlation=True): 지역·담보 기반 Cholesky 상관 샘플링.
+    rho 정책값 — 실데이터 백테스트로 보정 가능(T2).
   - 각 물건 회수는 삼각분포(p10, p50, p90)로 근사 샘플링.
     삼각분포 최솟값=p10×0.5, 최댓값=p90×1.3 으로 꼬리 반영.
   - IRR 추정: 간이 공식 (현금흐름 정밀 모델 아님).
@@ -111,27 +113,152 @@ def _triangular(rng: random.Random, lo: float, mode: float, hi: float) -> float:
         return hi - math.sqrt((1.0 - u) * (hi - lo) * (hi - mode))
 
 
+def _triangular_u(u: float, lo: float, mode: float, hi: float) -> float:
+    """삼각분포 역변환 — 외부 uniform u[0,1)를 받아 샘플 반환 (상관샘플링용)."""
+    if hi <= lo:
+        return mode
+    u = max(0.0, min(1.0 - 1e-15, u))  # 수치 안전 클램프
+    fc = (mode - lo) / (hi - lo)
+    if u < fc:
+        return lo + math.sqrt(u * (hi - lo) * (mode - lo))
+    else:
+        return hi - math.sqrt((1.0 - u) * (hi - lo) * (hi - mode))
+
+
+def _phi(z: float) -> float:
+    """표준정규 CDF Φ(z) — math.erf 기반 (numpy 없이)."""
+    return 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
+
+
+def cholesky(matrix: list[list[float]]) -> list[list[float]]:
+    """
+    순수 python Cholesky 분해 — L 반환 (L·Lᵀ = matrix).
+
+    행렬이 양정치(PD)가 아닌 경우:
+      1) 대각에 작은 jitter(1e-8)를 더해 재시도
+      2) 그래도 실패하면 단위행렬(독립) 폴백 + 경고 출력
+
+    Args:
+        matrix: N×N 실수 대칭 행렬 (리스트of리스트)
+
+    Returns:
+        L: 하한삼각 리스트of리스트. 폴백 시 단위행렬.
+    """
+    n = len(matrix)
+    # 작업 복사본
+    A = [row[:] for row in matrix]
+
+    def _try_chol(m: list[list[float]]) -> list[list[float]] | None:
+        L = [[0.0] * n for _ in range(n)]
+        for i in range(n):
+            for j in range(i + 1):
+                s = sum(L[i][k] * L[j][k] for k in range(j))
+                if i == j:
+                    val = m[i][i] - s
+                    if val < 0.0:
+                        return None
+                    L[i][j] = math.sqrt(val)
+                else:
+                    if L[j][j] == 0.0:
+                        return None
+                    L[i][j] = (m[i][j] - s) / L[j][j]
+        return L
+
+    L = _try_chol(A)
+    if L is not None:
+        return L
+
+    # jitter 추가 후 재시도
+    jitter = 1e-8
+    A_jit = [row[:] for row in matrix]
+    for i in range(n):
+        A_jit[i][i] += jitter
+    L = _try_chol(A_jit)
+    if L is not None:
+        return L
+
+    # 폴백: 단위행렬 (독립 가정)
+    print("[cholesky] ⚠ 비양정치 행렬 — 독립(단위행렬)으로 폴백")
+    return [[1.0 if i == j else 0.0 for j in range(n)] for i in range(n)]
+
+
+# 상관계수 정책값 — 실데이터 백테스트로 보정 가능(T2)
+_RHO_SAME_REGION = 0.50      # 같은 지역코드(region_code)만 동일
+_RHO_SAME_COLLATERAL = 0.30  # 같은 담보유형(collateral_type)만 동일
+_RHO_BOTH = 0.65             # 지역+담보 모두 동일
+
+
+def build_correlation(
+    items: list[dict],
+    same_region_rho: float = _RHO_SAME_REGION,
+    same_collateral_rho: float = _RHO_SAME_COLLATERAL,
+    both_rho: float = _RHO_BOTH,
+) -> list[list[float]]:
+    """
+    지역코드·담보유형 기반 N×N 상관행렬 생성.
+
+    rho 정책값 (실데이터 백테스트로 보정 가능 — T2):
+      same_region_rho    = 0.50  (같은 지역코드)
+      same_collateral_rho= 0.30  (같은 담보유형)
+      both_rho           = 0.65  (지역+담보 모두 동일)
+      무관               = 0.00
+      대각               = 1.00
+
+    Args:
+        items: region_code, collateral_type 포함 물건 리스트
+
+    Returns:
+        N×N 상관행렬 (대칭, 대각=1)
+    """
+    n = len(items)
+    mat = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                mat[i][j] = 1.0
+                continue
+            ri = str(items[i].get("region_code") or "")
+            rj = str(items[j].get("region_code") or "")
+            ci = str(items[i].get("collateral_type") or "")
+            cj = str(items[j].get("collateral_type") or "")
+            same_r = ri and ri == rj
+            same_c = ci and ci == cj
+            if same_r and same_c:
+                mat[i][j] = both_rho
+            elif same_r:
+                mat[i][j] = same_region_rho
+            elif same_c:
+                mat[i][j] = same_collateral_rho
+            # else: 0.0 (무관)
+    return mat
+
+
 def monte_carlo_recovery(
     items: list[dict],
     n_sims: int = 10000,
     seed: int = 42,
+    correlation: bool = False,
 ) -> dict:
     """
     몬테카를로 시뮬레이션 — 펀드 전체 회수 분포 추정.
 
     ⚠ 가정:
-      - 물건 간 독립 가정 (지역/담보유형 상관관계 미반영). 집중투자 시 실제 분산이 더 좁음.
+      - correlation=False(기본): 물건 간 독립 가정.
+      - correlation=True: 지역·담보 기반 Cholesky 상관 샘플링.
+        rho 정책값 — 실데이터 백테스트로 보정 가능(T2).
+        집중포트폴리오(같은 지역/담보)에서 독립 대비 분포 폭이 넓어진다.
       - 각 물건: 삼각분포(lo=p10×0.5, mode=p50, hi=p90×1.3) 샘플링.
       - 꼬리 확장(lo×0.5, hi×1.3)으로 극단 시나리오 반영.
 
     Args:
-        items  : recovery_p10/p50/p90 포함 물건 리스트
-        n_sims : 시뮬레이션 횟수 (기본 10,000)
-        seed   : 재현성 시드
+        items       : recovery_p10/p50/p90 포함 물건 리스트
+        n_sims      : 시뮬레이션 횟수 (기본 10,000)
+        seed        : 재현성 시드
+        correlation : True면 지역·담보 상관 반영 (기본 False — 기존 독립 동작)
 
     Returns:
         {n_items, n_sims, p5/p25/p50/p75/p95, loss_prob,
-         mean, std, assumptions}
+         mean, std, correlated, assumptions}
     """
     valid = [
         it for it in items
@@ -159,11 +286,38 @@ def monte_carlo_recovery(
     # 실제 사용 시 fundConfig.committed_capital로 대체 권장
 
     rng = random.Random(seed)
+    n_assets = len(params)
     sim_totals: list[float] = []
 
-    for _ in range(n_sims):
-        total = sum(_triangular(rng, lo, mode, hi) for lo, mode, hi in params)
-        sim_totals.append(total)
+    if correlation and n_assets > 1:
+        # ── 상관 샘플링 경로 ────────────────────────────────────────────────
+        # 1) N×N 상관행렬 → Cholesky 분해
+        corr_mat = build_correlation(valid)
+        L = cholesky(corr_mat)  # L·Lᵀ = corr_mat (폴백 시 단위행렬)
+
+        sqrt2 = math.sqrt(2.0)
+
+        for _ in range(n_sims):
+            # 2) iid 표준정규 N개 생성
+            z_ind = [rng.gauss(0.0, 1.0) for _ in range(n_assets)]
+
+            # 3) L 곱해 상관 정규 벡터 생성 (z_corr = L · z_ind)
+            z_corr = [
+                sum(L[i][k] * z_ind[k] for k in range(i + 1))
+                for i in range(n_assets)
+            ]
+
+            # 4) 정규 CDF로 [0,1) uniform 변환 → 삼각분포 역변환
+            total = 0.0
+            for i, (lo, mode, hi) in enumerate(params):
+                u = _phi(z_corr[i])
+                total += _triangular_u(u, lo, mode, hi)
+            sim_totals.append(total)
+    else:
+        # ── 독립 샘플링 경로 (기존 동작 그대로) ────────────────────────────
+        for _ in range(n_sims):
+            total = sum(_triangular(rng, lo, mode, hi) for lo, mode, hi in params)
+            sim_totals.append(total)
 
     sim_totals.sort()
     n = len(sim_totals)
@@ -177,6 +331,19 @@ def monte_carlo_recovery(
     variance = sum((v - mean) ** 2 for v in sim_totals) / n
     std = math.sqrt(variance)
 
+    if correlation and n_assets > 1:
+        assumptions = (
+            f"지역·담보 Cholesky 상관 샘플링. "
+            f"rho={_RHO_SAME_REGION}(같은지역)/{_RHO_SAME_COLLATERAL}(같은담보)/"
+            f"{_RHO_BOTH}(둘다) — 실데이터 백테스트로 보정 가능(T2). "
+            "삼각분포 근사(꼬리=p10×0.5~p90×1.3). 원금은 p50 합산의 75% 근사."
+        )
+    else:
+        assumptions = (
+            "물건간 독립 가정. 삼각분포 근사(꼬리=p10×0.5~p90×1.3). "
+            "원금은 p50 합산의 75% 근사. 실제 상관관계 반영 시 분포 폭 달라짐."
+        )
+
     return {
         "n_items": len(valid),
         "n_sims": n_sims,
@@ -189,10 +356,8 @@ def monte_carlo_recovery(
         "std": round(std),
         "loss_prob": round(loss_count / n, 4),
         "principal_proxy": round(principal),
-        "assumptions": (
-            "물건간 독립 가정. 삼각분포 근사(꼬리=p10×0.5~p90×1.3). "
-            "원금은 p50 합산의 75% 근사. 실제 상관관계 반영 시 분포 폭 달라짐."
-        ),
+        "correlated": correlation and n_assets > 1,
+        "assumptions": assumptions,
     }
 
 
@@ -300,12 +465,24 @@ try:
         items: list[dict] = Field(..., description="recovery_p10/p50/p90 포함 물건 리스트")
         n_sims: int = Field(10000, ge=1000, le=100000)
         seed: int = 42
+        correlation: bool = Field(
+            False,
+            description=(
+                "True면 지역·담보 Cholesky 상관 샘플링 (집중포트폴리오 리스크 현실화). "
+                "False(기본)면 물건간 독립 가정."
+            ),
+        )
 
     @router.post("/monte-carlo", summary="펀드 회수분포 몬테카를로 (정밀)")
     def fund_monte_carlo(payload: MonteCarloIn):
         """프론트 JS 간이판(5000회·물건간 독립)보다 정밀한 백엔드 시뮬레이션(10000회).
-        물건간 독립 가정은 동일하나 표본 수가 많아 분포 추정이 안정적."""
-        return monte_carlo_recovery(payload.items, n_sims=payload.n_sims, seed=payload.seed)
+        correlation=True 시 지역·담보 Cholesky 상관 반영 — 집중포트폴리오 리스크 현실화."""
+        return monte_carlo_recovery(
+            payload.items,
+            n_sims=payload.n_sims,
+            seed=payload.seed,
+            correlation=payload.correlation,
+        )
 except ImportError:
     router = None  # FastAPI 미설치 환경(순수 계산 테스트)에서는 라우터 생략
 
@@ -334,7 +511,8 @@ if __name__ == "__main__":
     print(f"성과보수   : {fees['carry']:>12,} 만원")
     print(f"LP 순수익  : {fees['lp_net']:>12,} 만원")
     check = fees["management_fee"] + fees["carry"] + fees["lp_net"]
-    print(f"합계검증   : 보수+carry+LP = {check:,} 만원 (총회수 {recovered:,}) → {'OK' if abs(check-recovered)<1 else 'FAIL'}")
+    verdict = "OK" if abs(check - recovered) < 1 else "FAIL"
+    print(f"합계검증   : 보수+carry+LP = {check:,} 만원 (총회수 {recovered:,}) → {verdict}")
     print(f"LP MoIC    : {fees['lp_moic']:.3f}배")
     print(f"LP IRR(간이): {fees['lp_net_irr_approx']*100:.2f}%")
     print(f"주의: {fees['formula_note']}")
