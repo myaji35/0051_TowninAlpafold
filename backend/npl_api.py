@@ -20,6 +20,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+import time
 import datetime as _dt
 import uuid
 from typing import Optional
@@ -30,6 +31,42 @@ from pydantic import BaseModel, Field
 
 from backend.db import get_db
 from backend import npl_scorer
+
+# ─── 인메모리 집계 캐시
+# {cache_key: {"data":..., "ts":float, "version":(cnt, maxrowid)}}
+# TTL 60초 + 자산 버전(COUNT+MAX rowid) 2중 무효화.
+# 멀티프로세스: workers>1 이면 프로세스별 독립 캐시(공유X).
+# 워커별 miss→fetch→store, TTL 내 수렴 — 허용된 stale.
+_CACHE: dict = {}
+_CACHE_TTL = 60  # 초
+
+
+def _asset_version(db) -> tuple[int, int]:
+    """(COUNT, MAX rowid) — 삽입/갱신 감지. 집계보다 저렴."""
+    row = db.execute(
+        "SELECT COUNT(*) cnt, COALESCE(MAX(rowid), 0) mxr "
+        "FROM npl_assets"
+    ).fetchone()
+    return (row["cnt"], row["mxr"])
+
+
+def _cache_get(key: str, db):
+    """hit → (data, True), miss → (None, False)."""
+    entry = _CACHE.get(key)
+    if entry is None:
+        return None, False
+    if time.time() - entry["ts"] > _CACHE_TTL:
+        return None, False
+    if _asset_version(db) != entry["version"]:
+        return None, False
+    return entry["data"], True
+
+
+def _cache_set(key: str, data, db):
+    _CACHE[key] = {
+        "data": data, "ts": time.time(),
+        "version": _asset_version(db),
+    }
 
 router = APIRouter(prefix="/api/v1/npl", tags=["npl"])
 
@@ -225,6 +262,11 @@ def comparable(asset_id: str, db=Depends(get_db)):
 
 @router.get("/portfolio/summary")
 def portfolio_summary(db=Depends(get_db), portfolio_id: Optional[str] = None):
+    cache_key = f"summary:{portfolio_id}"
+    cached, hit = _cache_get(cache_key, db)
+    if hit:
+        return {**cached, "_cache": {"hit": True, "ttl_sec": _CACHE_TTL}}
+
     where, params = (" WHERE portfolio_id=?", [portfolio_id]) if portfolio_id else ("", [])
     total = db.execute(f"SELECT COUNT(*) c FROM npl_assets{where}", params).fetchone()["c"]
     grades = {r["grade"]: r["c"] for r in db.execute(
@@ -233,33 +275,42 @@ def portfolio_summary(db=Depends(get_db), portfolio_id: Optional[str] = None):
         f"""SELECT AVG(confidence) conf, SUM(recovery_p10) p10,
                    SUM(recovery_p50) p50, SUM(recovery_p90) p90 FROM npl_assets{where}""",
         params).fetchone()
-    return {
+    result = {
         "total": total,
         "grade_distribution": {g: grades.get(g, 0) for g in ("very_high", "high", "medium", "low")},
         "total_recovery_cone": {"p10": agg["p10"] or 0, "p50": agg["p50"] or 0, "p90": agg["p90"] or 0},
         "avg_confidence": round(agg["conf"], 3) if agg["conf"] else None,
     }
+    _cache_set(cache_key, result, db)
+    return {**result, "_cache": {"hit": False, "ttl_sec": _CACHE_TTL}}
 
 
 @router.get("/portfolio/distribution")
 def portfolio_distribution(db=Depends(get_db), metric: str = "irr", bins: int = 20):
     """분포 히스토그램 — 백분위 시각화용. metric=irr|npv."""
+    cache_key = f"dist:{metric}:{bins}"
+    cached, hit = _cache_get(cache_key, db)
+    if hit:
+        return {**cached, "_cache": {"hit": True, "ttl_sec": _CACHE_TTL}}
+
     col = "score_irr" if metric == "irr" else "score_npv"
     rows = db.execute(f"SELECT {col} v FROM npl_assets WHERE {col} IS NOT NULL").fetchall()
     vals = [r["v"] for r in rows]
     if not vals:
-        return {"metric": metric, "bins": [], "count": 0}
+        return {"metric": metric, "bins": [], "count": 0, "_cache": {"hit": False, "ttl_sec": _CACHE_TTL}}
     lo, hi = min(vals), max(vals)
     span = (hi - lo) or 1
     hist = [0] * bins
     for v in vals:
         idx = min(bins - 1, int((v - lo) / span * bins))
         hist[idx] += 1
-    return {
+    result = {
         "metric": metric, "count": len(vals), "min": lo, "max": hi,
         "bins": [{"lo": lo + span * i / bins, "hi": lo + span * (i + 1) / bins, "count": hist[i]}
                  for i in range(bins)],
     }
+    _cache_set(cache_key, result, db)
+    return {**result, "_cache": {"hit": False, "ttl_sec": _CACHE_TTL}}
 
 
 @router.post("/assets/import/stream")
