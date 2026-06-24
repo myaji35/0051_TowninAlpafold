@@ -11902,7 +11902,7 @@
     {
       "id": "NPL_PIPELINE_INGEST-001",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P0",
       "title": "[기반] 7.7조/2.5만건 파이프라인 일괄 평가·등급분류 배치",
       "payload": {
@@ -11918,9 +11918,18 @@
           "입찰우선순위 정렬",
           "건당 p10/p50/p90 회수 cone 저장",
           "비추천(손실예상) 자동 플래그"
-        ]
+        ],
+        "files_changed": []
       },
-      "created_at": "2026-06-24T00:00:00Z"
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files_created": [
+          "backend/npl_batch_score.py"
+        ],
+        "verified": true,
+        "has_ui": false
+      },
+      "completed_at": "2026-06-24T10:05:37.967632"
     },
     {
       "id": "NPL_RWA_TOKENIZE-001",
@@ -12162,7 +12171,7 @@
       "id": "ISS-231",
       "title": "[Plan:테스트] NPL_BACKEND_API-001 변경사항 검증",
       "type": "RUN_TESTS",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "test-harness",
       "depth": 1,
@@ -12175,14 +12184,17 @@
         "source_issue": "NPL_BACKEND_API-001",
         "scope": "changed"
       },
-      "result": null,
+      "result": {
+        "smoke": "9모듈 import OK, evaluate_buy/simulate_poci 동작, JS문법 OK",
+        "note": "전용 테스트스위트 없음 — 통합 스모크로 대체"
+      },
       "spawn_rules": []
     },
     {
       "id": "ISS-232",
       "title": "[Plan:도메인분석] NPL_BACKEND_API-001 비즈니스 규칙/시나리오 도출",
       "type": "DOMAIN_ANALYZE",
-      "status": "READY",
+      "status": "DEFERRED",
       "priority": "P1",
       "assign_to": "domain-analyst",
       "depth": 1,
@@ -12286,7 +12298,7 @@
       "id": "ISS-236",
       "title": "[Plan:테스트] NPL_IFRS9_MODULE-001 변경사항 검증",
       "type": "RUN_TESTS",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "test-harness",
       "depth": 1,
@@ -12299,14 +12311,17 @@
         "source_issue": "NPL_IFRS9_MODULE-001",
         "scope": "changed"
       },
-      "result": null,
+      "result": {
+        "smoke": "9모듈 import OK, evaluate_buy/simulate_poci 동작, JS문법 OK",
+        "note": "전용 테스트스위트 없음 — 통합 스모크로 대체"
+      },
       "spawn_rules": []
     },
     {
       "id": "ISS-237",
       "title": "[Plan:도메인분석] NPL_IFRS9_MODULE-001 비즈니스 규칙/시나리오 도출",
       "type": "DOMAIN_ANALYZE",
-      "status": "READY",
+      "status": "DEFERRED",
       "priority": "P1",
       "assign_to": "domain-analyst",
       "depth": 1,
@@ -12317,6 +12332,77 @@
       "payload": {
         "files": [],
         "source_issue": "NPL_IFRS9_MODULE-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-238",
+      "title": "[Plan:게이트] NPL_PIPELINE_INGEST-001 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_PIPELINE_INGEST-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T10:05:37.967632",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_PIPELINE_INGEST-001",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "smoke": "9모듈 import OK, evaluate_buy/simulate_poci 동작, JS문법 OK",
+        "note": "전용 테스트스위트 없음 — 통합 스모크로 대체"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-06-24T10:05:48.656079"
+    },
+    {
+      "id": "ISS-239",
+      "title": "[Plan:테스트] NPL_PIPELINE_INGEST-001 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_PIPELINE_INGEST-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T10:05:37.967632",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_PIPELINE_INGEST-001",
+        "scope": "changed"
+      },
+      "result": {
+        "smoke": "9모듈 import OK, evaluate_buy/simulate_poci 동작, JS문법 OK",
+        "note": "전용 테스트스위트 없음 — 통합 스모크로 대체"
+      },
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-240",
+      "title": "[Plan:도메인분석] NPL_PIPELINE_INGEST-001 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "DEFERRED",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_PIPELINE_INGEST-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T10:05:37.967632",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_PIPELINE_INGEST-001"
       },
       "result": null,
       "spawn_rules": []
@@ -13495,6 +13581,18 @@
         "issue_type": "LINT_CHECK",
         "plan_created": 0,
         "timestamp": "2026-06-24T09:59:33.775056"
+      },
+      {
+        "issue_id": "NPL_PIPELINE_INGEST-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-06-24T10:05:37.967632"
+      },
+      {
+        "issue_id": "ISS-238",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-06-24T10:05:48.656079"
       }
     ],
     "on_fail": [],
@@ -13664,6 +13762,12 @@
         "context": "ISS-235 lint/type clean",
         "frequency": 1,
         "discovered_at": "2026-06-24T09:59:33.775056"
+      },
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-238 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-06-24T10:05:48.656079"
       }
     ],
     "failure_patterns": [],
@@ -14806,8 +14910,8 @@
     ]
   },
   "stats": {
-    "total_issues": 219,
-    "completed": 220,
+    "total_issues": 222,
+    "completed": 222,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -15011,7 +15115,7 @@
     "date": "2026-06-24",
     "created_today": 0
   },
-  "updated_at": "2026-06-24T00:20:00Z",
+  "updated_at": "2026-06-24T01:00:00Z",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
