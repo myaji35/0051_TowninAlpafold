@@ -12655,7 +12655,21 @@
         ],
         "structure": "호스트nginx /api,/saas → uvicorn 127.0.0.1:8000 (systemd www-data), SQLite /opt/towninalpafold/backend/data",
         "verified": "bash -n 문법OK, app 27라우트(npl9+saas4+health) 부팅OK, env변수명 SAAS_ADMIN_SECRET 정합",
-        "t2": "실제 SSH 배포실행은 대표님(EXTERNAL). ./deploy-vultr.sh setup-api 후 서버 .env 실값기입"
+        "t2": "실제 SSH 배포실행은 대표님(EXTERNAL). ./deploy-vultr.sh setup-api 후 서버 .env 실값기입",
+        "deployed": {
+          "url": "https://towninalpafold.158.247.235.31.nip.io",
+          "live": {
+            "GET /api/health": "200 {status:ok}",
+            "GET /api/v1/npl/portfolio/summary": "200 (80건 실데이터)",
+            "GET /saas/v1/usage": "401 (인증작동)",
+            "GET /": "200 (정적보존)"
+          },
+          "fixed_during_deploy": [
+            "python-multipart 누락→requirements 추가",
+            "utils/ 패키지 미배포→배포스크립트에 utils rsync 추가"
+          ],
+          "service": "systemd active, uvicorn 2workers :8000, nginx 프록시"
+        }
       },
       "created_at": "2026-06-24T02:00:00Z"
     }

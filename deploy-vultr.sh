@@ -67,6 +67,8 @@ case "$CMD" in
     $SSH "apt-get install -y python3-venv >/dev/null 2>&1 || true"
     $SSH "mkdir -p $APIROOT/backend/data"
     rsync -az -e "ssh -i $KEY -o StrictHostKeyChecking=no" backend/ "root@$IP:$APIROOT/backend/"
+    # main.py가 from utils.* 를 import → utils/ 패키지도 함께 배포
+    rsync -az -e "ssh -i $KEY -o StrictHostKeyChecking=no" utils/ "root@$IP:$APIROOT/utils/"
     $SSH "cd $APIROOT && python3 -m venv venv && venv/bin/pip install -q -U pip && venv/bin/pip install -q -r backend/requirements.txt"
     # .env 템플릿 (서버에서 대표님이 실토큰 기입)
     $SSH "test -f $APIROOT/.env || printf 'API_TOKEN=change-me-%s\nSAAS_ADMIN_SECRET=change-me-%s\n# DATA_GO_KR_KEY=\n' \$(openssl rand -hex 8) \$(openssl rand -hex 8) > $APIROOT/.env"
@@ -80,6 +82,7 @@ case "$CMD" in
   deploy-api)
     # 코드 갱신 (data/ DB 보존) + 의존성 + 서비스 재시작
     rsync -az -e "ssh -i $KEY -o StrictHostKeyChecking=no" --exclude 'data/' --exclude '__pycache__/' backend/ "root@$IP:$APIROOT/backend/"
+    rsync -az -e "ssh -i $KEY -o StrictHostKeyChecking=no" --exclude '__pycache__/' utils/ "root@$IP:$APIROOT/utils/"
     $SSH "cd $APIROOT && venv/bin/pip install -q -r backend/requirements.txt"
     $SSH "chown -R www-data:www-data $APIROOT && systemctl restart towninalpafold-api"
     sleep 2
