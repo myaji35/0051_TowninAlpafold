@@ -12934,7 +12934,7 @@
     {
       "id": "NPL_UPGRADE-008",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P2",
       "title": "[고도화] SaaS 키로테이션·revoke 엔드포인트(보안)",
       "payload": {
@@ -12948,7 +12948,8 @@
         "acceptance": [
           "POST /tenants/{id}/rotate-key",
           "DELETE /tenants/{id}"
-        ]
+        ],
+        "files_changed": []
       },
       "created_at": "2026-06-24T04:00:00Z",
       "tags": [
@@ -12956,7 +12957,18 @@
         "pingpong_blocked",
         "pingpong_blocked"
       ],
-      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지",
+      "result": {
+        "files": [
+          "backend/npl_saas_api.py(rotate-key + DELETE revoke)"
+        ],
+        "endpoints": [
+          "POST /tenants/{id}/rotate-key",
+          "DELETE /tenants/{id}"
+        ],
+        "verified": "키1발급→인증200, 로테이션→key1 401(무효화)+key2 200, revoke→key2 401(비활성). soft delete(usage원장 보존)",
+        "value": "멀티테넌트 SaaS 최소보안 — 키유출 대응+테넌트 차단. 외부파트너 온보딩 전 필수"
+      }
     },
     {
       "id": "NPL_UPGRADE-009",

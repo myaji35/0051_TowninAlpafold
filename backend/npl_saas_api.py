@@ -331,6 +331,50 @@ def create_tenant(
     }
 
 
+@router.post("/tenants/{tenant_id}/rotate-key", summary="API 키 재발급 (관리자)")
+def rotate_api_key(tenant_id: str, _=Depends(require_admin), db=Depends(get_db)):
+    """기존 키를 무효화하고 새 키 발급. 키 유출 시 대응.
+    반환: 새 api_key 평문 (1회만). 기존 키는 즉시 인증 실패.
+    """
+    _ensure_tables(db)
+    row = db.execute("SELECT id, name FROM saas_tenant WHERE id=?", (tenant_id,)).fetchone()
+    if not row:
+        raise HTTPException(404, f"테넌트 없음: {tenant_id}")
+    new_key = _gen_api_key()
+    new_hash = _hash_key(new_key)
+    now = _now()
+    db.execute(
+        "UPDATE saas_tenant SET api_key_hash=?, updated_at=? WHERE id=?",
+        (new_hash, now, tenant_id),
+    )
+    db.commit()
+    return {
+        "tenant_id": tenant_id,
+        "name": row["name"],
+        "api_key": new_key,  # ← 새 평문 1회 반환
+        "warning": "기존 키는 즉시 무효화됨. 새 키를 안전하게 보관하세요.",
+        "rotated_at": now,
+    }
+
+
+@router.delete("/tenants/{tenant_id}", summary="테넌트 비활성화/revoke (관리자)")
+def revoke_tenant(tenant_id: str, _=Depends(require_admin), db=Depends(get_db)):
+    """테넌트 비활성화 — 키 즉시 무효화(require_tenant가 status='active'만 통과).
+    soft delete: 사용량 원장(saas_usage) 보존, 상태만 revoked로 전환.
+    """
+    _ensure_tables(db)
+    row = db.execute("SELECT id FROM saas_tenant WHERE id=?", (tenant_id,)).fetchone()
+    if not row:
+        raise HTTPException(404, f"테넌트 없음: {tenant_id}")
+    now = _now()
+    db.execute(
+        "UPDATE saas_tenant SET status='revoked', updated_at=? WHERE id=?",
+        (now, tenant_id),
+    )
+    db.commit()
+    return {"tenant_id": tenant_id, "status": "revoked", "revoked_at": now}
+
+
 @router.post("/evaluate")
 def saas_evaluate(
     payload: EvaluateIn,
