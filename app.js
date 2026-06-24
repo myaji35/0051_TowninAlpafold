@@ -370,7 +370,7 @@ function switchMode(mode) {
   });
   // sidebar 동기화
   document.dispatchEvent(new CustomEvent('mode-changed', { detail: { mode } }));
-  ['gallery','explore','analyze','decide','datastudio','workflow','meongbun','pharmacy-develop','pharmacy-close','npl-buy','npl-sell','npl-portfolio','npl-dashboard'].forEach(m => {
+  ['gallery','explore','analyze','decide','datastudio','workflow','meongbun','pharmacy-develop','pharmacy-close','npl-buy','npl-sell','npl-portfolio','npl-dashboard','npl-rwa-market'].forEach(m => {
     const el = document.getElementById(`view-${m}`);
     if (el) {
       el.classList.toggle('hidden', m !== mode);
@@ -428,6 +428,10 @@ function switchMode(mode) {
     const view = document.getElementById('view-npl-dashboard');
     if (view && typeof window.renderNplDashboard === 'function') {
       window.renderNplDashboard(view);
+    }
+  } else if (mode === 'npl-rwa-market') {
+    if (typeof window.showNplRwaMarket === 'function') {
+      window.showNplRwaMarket();
     }
   }
 }

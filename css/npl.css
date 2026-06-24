@@ -238,3 +238,415 @@
 .npl-rights-name { flex: 1; color: #374151; }
 .npl-rights-amt { font-weight: 700; color: #1a1a1a; }
 .npl-rights-flag { font-size: 11px; color: #92400e; background: #fffbeb; border-radius: 5px; padding: 4px 8px; margin: 4px 0; }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   NPL → RWA 조각투자 마켓플레이스 (NPL_RWA_FRACTIONAL_UI-001)
+   prefix: .rwa-  (기존 .npl-* 셀렉터와 충돌 없음)
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* 위험 고지 컬러가드 오버라이드 */
+.rwa-guard {
+  background: #fff7ed;
+  border-left-color: #C9485B;
+  color: #7a2b38;
+}
+
+/* ── 탭 ── */
+.rwa-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 16px 0 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+.rwa-tab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+}
+.rwa-tab--active {
+  color: #00529B;
+  border-bottom-color: #00529B;
+}
+.rwa-tab:hover:not(.rwa-tab--active) { color: #374151; }
+
+/* ── 마켓플레이스 ── */
+.rwa-market-wrap { padding-bottom: 32px; }
+.rwa-filters { flex-wrap: wrap; }
+.rwa-market-count { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+
+.rwa-token-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) { .rwa-token-grid { grid-template-columns: 1fr; } }
+
+/* 토큰 카드 */
+.rwa-token-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.15s;
+}
+.rwa-token-card:hover { box-shadow: 0 4px 16px rgba(0,82,155,0.1); }
+
+.rwa-token-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rwa-status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.rwa-grade-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.rwa-token-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #16325C;
+  line-height: 1.3;
+}
+.rwa-token-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.rwa-token-meta span {
+  font-size: 11px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* KPI 행 */
+.rwa-token-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+@media (max-width: 600px) { .rwa-token-kpi-row { grid-template-columns: repeat(2, 1fr); } }
+.rwa-kpi-item { display: flex; flex-direction: column; }
+.rwa-kpi-label { font-size: 10px; color: #9ca3af; font-weight: 600; }
+.rwa-kpi-val { font-size: 14px; font-weight: 800; color: #1a1a1a; }
+.rwa-irr-val { color: #00529B; }
+.rwa-maturity { font-size: 12px; font-weight: 600; color: #374151; }
+
+/* cone 미니 */
+.rwa-cone-wrap { margin: 4px 0; }
+.rwa-cone-label {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.rwa-cone-bar { margin: 2px 0; }
+.rwa-cone-vals { font-size: 11px; }
+.rwa-conf-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* 청약 진행 바 */
+.rwa-sub-bar-wrap { margin: 4px 0 8px; }
+.rwa-sub-bar-track {
+  height: 6px;
+  background: #f3f4f6;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.rwa-sub-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5BC0EB, #00529B);
+  border-radius: 3px;
+  transition: width 0.4s;
+}
+.rwa-sub-bar-label { font-size: 10px; color: #9ca3af; }
+
+/* 청약 버튼 */
+.rwa-subscribe-btn {
+  width: 100%;
+  padding: 11px;
+  background: #00529B;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: auto;
+  transition: background 0.15s;
+}
+.rwa-subscribe-btn:hover:not(:disabled) { background: #003e75; }
+.rwa-subscribe-btn--disabled,
+.rwa-subscribe-btn:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ── 보유 포트폴리오 ── */
+.rwa-portfolio-wrap { padding-bottom: 32px; }
+.rwa-pf-kpi { margin-bottom: 16px; }
+.rwa-obj-note {
+  font-size: 12px;
+  color: #003e75;
+  background: #f0f7ff;
+  border-left: 3px solid #5BC0EB;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+}
+
+/* 보유 카드 */
+.rwa-holding-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rwa-holding-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rwa-holding-kpi {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+@media (max-width: 700px) { .rwa-holding-kpi { grid-template-columns: repeat(2, 1fr); } }
+
+/* 신뢰구간 cone 섹션 */
+.rwa-cone-section {
+  background: #fafbfc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+}
+.rwa-cone-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 8px;
+}
+.rwa-cone-disclaimer {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 6px;
+}
+
+/* 회수 진행률 */
+.rwa-recovery-prog { }
+.rwa-recovery-label {
+  font-size: 12px;
+  color: #374151;
+  margin-bottom: 4px;
+}
+.rwa-recovery-pct { font-weight: 800; color: #00529B; margin: 0 4px; }
+.rwa-recovery-sub { font-size: 10px; color: #9ca3af; }
+.rwa-recovery-fill { background: linear-gradient(90deg, #00A1E0, #00529B); }
+
+/* 보유 카드 footer */
+.rwa-holding-foot {
+  font-size: 11px;
+  color: #9ca3af;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 8px;
+}
+.rwa-mono { font-family: monospace; font-size: 11px; }
+
+/* ── 모달 공통 ── */
+.rwa-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7,16,31,0.6);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.rwa-modal-box {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.3);
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 100%;
+  animation: rwaModalIn 0.2s ease;
+}
+@keyframes rwaModalIn { from { transform: scale(0.95) translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.rwa-risk-box { max-width: 560px; }
+.rwa-subscribe-box { max-width: 480px; }
+
+.rwa-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+.rwa-modal-title { font-size: 16px; font-weight: 700; color: #16325C; }
+.rwa-modal-close { flex-shrink: 0; }
+
+/* 위험고지 본문 */
+.rwa-risk-body { padding: 16px 20px; }
+.rwa-risk-callout {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #7c2d12;
+  line-height: 1.6;
+}
+.rwa-risk-callout p { margin: 4px 0; }
+.rwa-risk-list {
+  padding-left: 18px;
+  margin: 0 0 16px;
+}
+.rwa-risk-list li {
+  font-size: 13px;
+  color: #374151;
+  margin: 8px 0;
+  line-height: 1.6;
+}
+.rwa-risk-list li strong { color: #1a1a1a; }
+.rwa-risk-agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #1a1a1a;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rwa-risk-agree input { flex-shrink: 0; width: 16px; height: 16px; margin-top: 1px; cursor: pointer; }
+
+/* 청약 폼 본문 */
+.rwa-sub-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+.rwa-sub-token-info { }
+.rwa-sub-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.rwa-calc-box {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.rwa-calc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 5px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.rwa-calc-row:last-of-type { border-bottom: none; }
+.rwa-calc-row span { color: #6b7280; }
+.rwa-calc-row strong { font-weight: 800; color: #1a1a1a; }
+.rwa-calc-disclaimer { font-size: 10px; color: #9ca3af; margin-top: 8px; }
+.rwa-sub-validation { }
+
+/* 모달 footer */
+.rwa-modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid #e5e7eb;
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+}
+.rwa-btn-cancel {
+  padding: 10px 20px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+}
+.rwa-btn-cancel:hover { background: #e5e7eb; }
+.rwa-btn-confirm {
+  padding: 10px 24px;
+  background: #00529B;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.rwa-btn-confirm:hover:not(:disabled) { background: #003e75; }
+.rwa-btn-confirm:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+
+/* ── 청약 완료 토스트 ── */
+.rwa-toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #16325C;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  z-index: 300;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.rwa-toast--show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
