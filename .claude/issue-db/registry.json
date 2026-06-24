@@ -12694,6 +12694,207 @@
         "note": "RWA마켓은 백엔드API 미연동(데모데이터 폴백, 정상설계). 추후 /api/v1/rwa/* 연결시 실데이터"
       },
       "created_at": "2026-06-24T03:10:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P0",
+      "title": "[고도화] RWA 라우터 main.py 연결 + GET /tokens·/holdings (데모→실동작)",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "기능완성도",
+        "rationale": "RWA 마켓 UI가 /api/v1/rwa/tokens 호출하나 백엔드에 라우터 미연결+목록GET 없음 → 항상 데모폴백. 실서비스 제1블로커.",
+        "target_files": [
+          "backend/main.py",
+          "backend/npl_rwa_token.py"
+        ],
+        "effort": "S",
+        "acceptance": [
+          "main.py rwa_router include",
+          "GET /tokens 목록(필터)",
+          "GET /holdings?investor_id",
+          "UI 데모→실데이터 전환 확인"
+        ]
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-002",
+      "type": "GENERATE_CODE",
+      "status": "BLOCKED",
+      "priority": "P0",
+      "title": "[고도화] 청약→지분원장 실기록 + 잔여수량 실시간 반영",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "기능완성도",
+        "rationale": "청약 버튼이 POST /holdings 미연결. 청약→원장기록→잔여수량 루프가 닫혀야 앵커투자자 라이브데모 가능.",
+        "blocked_by": "NPL_UPGRADE-001",
+        "target_files": [
+          "components/npl-rwa-market.js",
+          "backend/npl_rwa_token.py"
+        ],
+        "effort": "M"
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-003",
+      "type": "GENERATE_CODE",
+      "status": "BLOCKED",
+      "priority": "P1",
+      "title": "[고도화] 분배 실행 API + 투자자 수익 대시보드(분배이력 추적)",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "투자자경험",
+        "rationale": "분배 투명성=토큰화 핵심 해자. GET /holdings/{id}/distributions 이력조회 + UI 연결.",
+        "blocked_by": "NPL_UPGRADE-001,NPL_UPGRADE-002",
+        "target_files": [
+          "backend/npl_rwa_token.py",
+          "components/npl-rwa-market.js"
+        ],
+        "effort": "M"
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-004",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "title": "[고도화] LP 리포트 몬테카를로 백엔드 API 노출 + 프론트 연결",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "신뢰성",
+        "rationale": "monte_carlo_recovery() 구현완료지만 API 미노출. JS 간이판은 물건간 독립가정으로 부정확. CEO지목 IRR수렴 해자.",
+        "target_files": [
+          "backend/npl_fund_report.py",
+          "backend/main.py",
+          "components/npl-report.js"
+        ],
+        "effort": "M",
+        "acceptance": [
+          "POST /api/v1/fund/monte-carlo",
+          "fund_router include",
+          "JS간이→백엔드호출 교체"
+        ]
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-005",
+      "type": "GENERATE_CODE",
+      "status": "BLOCKED",
+      "priority": "P1",
+      "title": "[고도화] 물건간 지역·담보 상관행렬 몬테카를로 반영(독립→현실분포)",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "신뢰성",
+        "rationale": "독립가정은 집중포트폴리오 분산 과대추정. Cholesky 상관샘플로 교체. 샌드박스 심사 모델엄밀성.",
+        "blocked_by": "NPL_UPGRADE-004",
+        "target_files": [
+          "backend/npl_fund_report.py",
+          "backend/npl_backtest.py"
+        ],
+        "effort": "M"
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-006",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P1",
+      "title": "[고도화] 백테스트 실데이터 파이프라인 — 경매실적 CSV→보정계수 자동반영",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "신뢰성",
+        "rationale": "CEO 핵심해자 평가정밀도 네트워크효과. 합성ground truth만 존재. 실데이터 로더+보정주입.",
+        "target_files": [
+          "backend/npl_backtest.py",
+          "backend/npl_scorer.py"
+        ],
+        "effort": "M",
+        "t2": "경매완료 실적데이터 조달(법원경매/온비드)"
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-007",
+      "type": "FIX_BUG",
+      "status": "READY",
+      "priority": "P2",
+      "title": "[고도화] 실거래가 API 키 연동확인 엔드포인트 + .env 문서화",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "신뢰성",
+        "rationale": "DATA_GO_KR_KEY 없으면 V3 완전비활성(confidence_delta=0). 연동상태 즉시확인 필요.",
+        "target_files": [
+          "backend/main.py",
+          ".env.example"
+        ],
+        "effort": "S",
+        "t2": "data.go.kr 키 발급(무료)"
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-008",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "title": "[고도화] SaaS 키로테이션·revoke 엔드포인트(보안)",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "운영확장",
+        "rationale": "키 발급만 있고 만료/재발급 없음. 사고시 무효화 불가. 외부파트너 온보딩 전 필수.",
+        "target_files": [
+          "backend/npl_saas_api.py"
+        ],
+        "effort": "S",
+        "acceptance": [
+          "POST /tenants/{id}/rotate-key",
+          "DELETE /tenants/{id}"
+        ]
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-009",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "title": "[고도화] 포트폴리오 집계 캐싱 레이어(5만건 대량조회 성능)",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "운영확장",
+        "rationale": "캐시없음. 5만건 /portfolio/summary 매호출 전건재계산. SaaS 다테넌트 동시조회 부하.",
+        "target_files": [
+          "backend/npl_api.py",
+          "backend/db.py"
+        ],
+        "effort": "M"
+      },
+      "created_at": "2026-06-24T04:00:00Z"
+    },
+    {
+      "id": "NPL_UPGRADE-010",
+      "type": "FEATURE_PLAN",
+      "status": "DEFERRED",
+      "priority": "P3",
+      "title": "[고도화] 만기·분배 이벤트 알림 스케줄러(D-30/D-7)",
+      "payload": {
+        "source_issue": "opportunity-scout",
+        "lens": "투자자경험",
+        "rationale": "maturity_date 기록되나 알림없음. 재청약 전환율.",
+        "target_files": [
+          "backend/npl_rwa_token.py",
+          "backend/main.py"
+        ],
+        "effort": "M",
+        "t2": "이메일/SMS 외부발송 연동"
+      },
+      "created_at": "2026-06-24T04:00:00Z"
     }
   ],
   "hooks": {
@@ -15403,7 +15604,7 @@
     "date": "2026-06-24",
     "created_today": 0
   },
-  "updated_at": "2026-06-24T01:00:00Z",
+  "updated_at": "2026-06-24T04:00:00Z",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
