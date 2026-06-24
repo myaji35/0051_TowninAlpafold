@@ -11968,7 +11968,7 @@
     {
       "id": "NPL_RWA_FRACTIONAL_UI-001",
       "type": "UX_DESIGN",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P2",
       "title": "[RWA 2단계] 조각투자 유통 화면 — 토큰 마켓플레이스 + 투자자 포트폴리오",
       "payload": {
@@ -11984,9 +11984,27 @@
           "조각 매수 플로우",
           "투자자 보유 포트폴리오 + 신뢰구간 공개",
           "STO 투자위험 고지 UI"
-        ]
+        ],
+        "files_changed": []
       },
-      "created_at": "2026-06-24T00:00:00Z"
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files": [
+          "components/npl-rwa-market.js(721줄)",
+          "css/npl.css(.rwa- 85클래스 추가)",
+          "index.html",
+          "app.js"
+        ],
+        "verified": "Playwright 실렌더: 토큰카드8개+필터+회수cone, 위험고지 동의게이트 정상(disabled→체크시활성+이중가드), 0 에러",
+        "screens": "마켓플레이스+조각매수+보유포트폴리오+STO위험고지7항목",
+        "honesty": "하단 synthetic data 명시, 한점숫자금지(cone+신뢰도 병기)",
+        "surgical": "css 기존규칙 0줄삭제, index/app.js 추가만",
+        "todos": [
+          "백엔드 /api/v1/rwa/* 라우터 연결",
+          "KYC 게이트",
+          "사이드바 메뉴 등록"
+        ]
+      }
     },
     {
       "id": "NPL_IFRS9_MODULE-001",
