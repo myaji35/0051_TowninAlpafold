@@ -12850,7 +12850,7 @@
     {
       "id": "NPL_UPGRADE-005",
       "type": "GENERATE_CODE",
-      "status": "BLOCKED",
+      "status": "READY",
       "priority": "P1",
       "title": "[고도화] 물건간 지역·담보 상관행렬 몬테카를로 반영(독립→현실분포)",
       "payload": {
