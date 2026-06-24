@@ -156,6 +156,12 @@
               "mode": "npl-dashboard"
             },
             {
+              "id": "npl-rwa-market",
+              "ko": "RWA 마켓",
+              "icon": "grid",
+              "mode": "npl-rwa-market"
+            },
+            {
               "id": "npl-buy",
               "ko": "매수 평가",
               "icon": "trending-up",
