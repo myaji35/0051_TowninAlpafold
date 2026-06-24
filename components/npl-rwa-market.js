@@ -9,6 +9,8 @@
 //   - GET /api/v1/rwa/holdings?investor_id=me     → 내 보유 토큰 목록
 //
 // 기초자산 모델: backend/npl_rwa_token.py (token_issue / token_holding / distribution_event)
+//   - GET /api/v1/rwa/issues/:id/distributions          → 발행별 전체 분배 이벤트 이력
+//   - GET /api/v1/rwa/holdings/:id/distributions        → 보유자 지분별 분배 내역 (my_share 포함)
 
 (function() {
   'use strict';
@@ -175,6 +177,40 @@
         grade: 'high',
       },
     ];
+  }
+
+  function getDemoDistributions(holdingId, qty, purchasePrice) {
+    // 정적 호스팅 폴백용 데모 분배이력 (2건)
+    var base = qty * purchasePrice;
+    var pt1 = Math.round(base * 0.031) / qty;  // 1차: 원금의 약 3.1%
+    var pt2 = Math.round(base * 0.048) / qty;  // 2차: 원금의 약 4.8%
+    return {
+      holding_id: holdingId,
+      items: [
+        {
+          event_id: 'DST-DEMO02',
+          distributed_at: '2025-09-15T09:00:00Z',
+          recovered_amount: Math.round(base * 2.8),
+          principal_repaid: Math.round(base * 0.4),
+          yield_paid: Math.round(base * 2.4),
+          per_token_amount: pt2,
+          my_qty: qty,
+          my_share: Math.round(pt2 * qty),
+        },
+        {
+          event_id: 'DST-DEMO01',
+          distributed_at: '2025-03-20T09:00:00Z',
+          recovered_amount: Math.round(base * 1.5),
+          principal_repaid: Math.round(base * 0.8),
+          yield_paid: Math.round(base * 0.7),
+          per_token_amount: pt1,
+          my_qty: qty,
+          my_share: Math.round(pt1 * qty),
+        },
+      ],
+      total: 2,
+      my_total_received: Math.round((pt1 + pt2) * qty),
+    };
   }
 
   function getDemoHoldings() {
@@ -528,12 +564,101 @@
       +   '<div class="rwa-sub-bar-track"><div class="rwa-sub-bar-fill rwa-recovery-fill" style="width:' + recPct + '%"></div></div>'
       + '</div>'
       + '<div class="rwa-holding-foot">청약일: ' + esc(h.subscribed_at || '-') + ' · 토큰ID: <span class="rwa-mono">' + esc(h.issue_id) + '</span></div>'
+      + '<div class="rwa-dist-drill">'
+      +   '<button class="rwa-dist-toggle-btn" data-dist-holding-id="' + esc(h.id) + '" data-qty="' + h.qty + '" data-purchase-price="' + h.purchase_price + '">분배 내역 보기 ▾</button>'
+      +   '<div class="rwa-dist-panel" id="rwa-dist-panel-' + esc(h.id) + '" style="display:none"></div>'
+      + '</div>'
       + '</div>';
   }
 
+  function renderDistPanel(data) {
+    if (!data || !data.items || !data.items.length) {
+      return '<div class="rwa-dist-empty">분배 이력이 없습니다.</div>';
+    }
+    var rows = data.items.map(function(ev) {
+      var dateStr = (ev.distributed_at || '').slice(0, 10);
+      return '<tr>'
+        + '<td>' + esc(dateStr) + '</td>'
+        + '<td>' + fmtMan(ev.recovered_amount) + '</td>'
+        + '<td>' + fmtKrw(ev.per_token_amount) + '원</td>'
+        + '<td>' + ev.my_qty.toLocaleString() + '개</td>'
+        + '<td class="rwa-dist-myshare">' + fmtKrw(ev.my_share) + '원</td>'
+        + '</tr>';
+    }).join('');
+    return '<div class="rwa-dist-table-wrap">'
+      + '<table class="rwa-dist-table">'
+      +   '<thead><tr>'
+      +     '<th>날짜</th><th>전체 회수금</th><th>토큰당 분배</th><th>내 보유</th><th>내 몫</th>'
+      +   '</tr></thead>'
+      +   '<tbody>' + rows + '</tbody>'
+      + '</table>'
+      + '<div class="rwa-dist-total">누계 수령 <strong>' + fmtKrw(data.my_total_received) + '원</strong></div>'
+      + '</div>';
+  }
+
+  function loadHoldingDistributions(holdingId, qty, purchasePrice, panelEl, btn) {
+    btn.disabled = true;
+    btn.textContent = '로딩 중...';
+
+    function demoFallback() {
+      var data = getDemoDistributions(holdingId, qty, purchasePrice);
+      panelEl.innerHTML = renderDistPanel(data);
+      panelEl.style.display = 'block';
+      btn.textContent = '분배 내역 닫기 ▴';
+      btn.disabled = false;
+      btn.dataset.open = '1';
+    }
+
+    fetch('/api/v1/rwa/holdings/' + encodeURIComponent(holdingId) + '/distributions', {
+      cache: 'no-store',
+    })
+      .then(function(r) {
+        var ct = r.headers.get('content-type') || '';
+        if (ct.indexOf('application/json') === -1) { demoFallback(); return null; }
+        if (!r.ok) throw new Error('api');
+        return r.json();
+      })
+      .then(function(data) {
+        if (data === null) return;
+        panelEl.innerHTML = renderDistPanel(data);
+        panelEl.style.display = 'block';
+        btn.textContent = '분배 내역 닫기 ▴';
+        btn.disabled = false;
+        btn.dataset.open = '1';
+      })
+      .catch(function() {
+        demoFallback();
+      });
+  }
+
   function bindPortfolioEvents(container) {
-    // 포트폴리오는 현재 읽기 전용 — 추후 분배내역 드릴다운 연결 예정
-    // GET /api/v1/rwa/holdings/:id/distributions
+    container.querySelectorAll('[data-dist-holding-id]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var holdingId = btn.dataset.distHoldingId;
+        var qty = parseInt(btn.dataset.qty) || 0;
+        var purchasePrice = parseFloat(btn.dataset.purchasePrice) || 0;
+        var panel = document.getElementById('rwa-dist-panel-' + holdingId);
+        if (!panel) return;
+
+        // 토글: 열려있으면 닫기
+        if (btn.dataset.open === '1') {
+          panel.style.display = 'none';
+          btn.textContent = '분배 내역 보기 ▾';
+          btn.dataset.open = '';
+          return;
+        }
+
+        // 첫 클릭이거나 닫힌 상태 → 로드
+        if (!panel.dataset.loaded) {
+          loadHoldingDistributions(holdingId, qty, purchasePrice, panel, btn);
+          panel.dataset.loaded = '1';
+        } else {
+          panel.style.display = 'block';
+          btn.textContent = '분배 내역 닫기 ▴';
+          btn.dataset.open = '1';
+        }
+      });
+    });
   }
 
   // ── 영역 4: STO 투자위험 고지 모달 (청약 전 필수) ────────────────────────────

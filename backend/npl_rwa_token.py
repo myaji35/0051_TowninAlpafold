@@ -502,3 +502,80 @@ def distribute(issue_id: str, payload: DistributionIn, db=Depends(get_db)):
         return distribution_waterfall(db, issue_id, payload.recovered_amount)
     except ValueError as e:
         raise HTTPException(422, str(e))
+
+
+@router.get(
+    "/issues/{issue_id}/distributions",
+    summary="발행별 분배 이력 조회",
+)
+def list_issue_distributions(issue_id: str, db=Depends(get_db)):
+    """특정 토큰 발행의 전체 분배 이벤트 이력 (최신순).
+
+    투자자가 "이 토큰에서 언제, 얼마가 분배됐나"를 확인하는
+    투명성 엔드포인트.
+    """
+    issue = db.execute(
+        "SELECT id FROM token_issue WHERE id=?", (issue_id,)
+    ).fetchone()
+    if not issue:
+        raise HTTPException(404, "발행 없음")
+    rows = db.execute(
+        "SELECT * FROM distribution_event"
+        " WHERE issue_id=? ORDER BY distributed_at DESC",
+        (issue_id,),
+    ).fetchall()
+    return {
+        "issue_id": issue_id,
+        "items": [dict(r) for r in rows],
+        "total": len(rows),
+    }
+
+
+@router.get(
+    "/holdings/{holding_id}/distributions",
+    summary="보유자 지분별 분배 내역",
+)
+def list_holding_distributions(holding_id: str, db=Depends(get_db)):
+    """특정 보유 지분의 분배 내역 — 각 이벤트에서 투자자 실수령액 포함.
+
+    응답 항목: distributed_at, recovered_amount(전체 회수),
+    per_token_amount, my_qty(보유 수량),
+    my_share(= per_token_amount × my_qty).
+    """
+    holding = db.execute(
+        "SELECT * FROM token_holding WHERE id=?", (holding_id,)
+    ).fetchone()
+    if not holding:
+        raise HTTPException(404, "보유 없음")
+
+    events = db.execute(
+        "SELECT * FROM distribution_event"
+        " WHERE issue_id=? ORDER BY distributed_at DESC",
+        (holding["issue_id"],),
+    ).fetchall()
+
+    qty = holding["qty"]
+    items = []
+    for ev in events:
+        my_share = round(ev["per_token_amount"] * qty, 2)
+        items.append({
+            "event_id": ev["id"],
+            "distributed_at": ev["distributed_at"],
+            "recovered_amount": ev["recovered_amount"],
+            "principal_repaid": ev["principal_repaid"],
+            "yield_paid": ev["yield_paid"],
+            "per_token_amount": ev["per_token_amount"],
+            "my_qty": qty,
+            "my_share": my_share,
+        })
+
+    return {
+        "holding_id": holding_id,
+        "issue_id": holding["issue_id"],
+        "investor_id": holding["investor_id"],
+        "items": items,
+        "total": len(items),
+        "my_total_received": round(
+            sum(i["my_share"] for i in items), 2
+        ),
+    }
