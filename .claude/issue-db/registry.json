@@ -12113,7 +12113,7 @@
     {
       "id": "NPL_SAAS_API-001",
       "type": "FEATURE_PLAN",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P3",
       "title": "[SaaS 3단계] 평가엔진 외부 판매 — API 키·과금·테넌트 격리",
       "payload": {
@@ -12128,9 +12128,27 @@
           "건당 평가수수료·구독 과금 모델",
           "테넌트 데이터 격리",
           "외부 데이터 자사엔진 환류 설계"
-        ]
+        ],
+        "files_changed": []
       },
-      "created_at": "2026-06-24T00:00:00Z"
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files": [
+          "backend/npl_saas_api.py(258줄)",
+          "docs/npl-saas-design.md",
+          "backend/main.py(+2줄 마운트)"
+        ],
+        "verified": "11/11 e2e(발급/인증/격리/과금/한도/무제한), 키 SHA-256해시저장(평문미저장), 테넌트격리 교차0건, FastAPI 4엔드포인트 라이브",
+        "billing": "free(월100건)/pro(구독15만+건당500)/enterprise(200만+건당200)",
+        "data_reflux": "opt-in 기본off + region/collateral/eval만 SHA-256 익명화. 약관 T2",
+        "t2_items": [
+          "결제PG연동",
+          "환류약관 법무",
+          "외부SLA",
+          "키로테이션"
+        ],
+        "milestone": "사업계획서 코드구현 가능영역 100% 완결"
+      }
     },
     {
       "id": "NPL_VALUATION_V2-001-REVIVE",

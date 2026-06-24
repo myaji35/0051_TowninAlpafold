@@ -312,7 +312,8 @@ def create_tenant(
         raise HTTPException(409, f"이미 존재하는 테넌트명: {payload.name}")
 
     db.execute(
-        """INSERT INTO saas_tenant (id, name, api_key_hash, plan, status, opt_in_data_contribution, created_at, updated_at)
+        """INSERT INTO saas_tenant
+               (id, name, api_key_hash, plan, status, opt_in_data_contribution, created_at, updated_at)
            VALUES (?,?,?,?,?,?,?,?)""",
         (tid, payload.name, key_hash, payload.plan, "active",
          1 if payload.opt_in_data_contribution else 0, now, now),

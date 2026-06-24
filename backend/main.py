@@ -31,6 +31,7 @@ from backend.db import init_db, get_db
 from backend.batch_queue import get_queue, mock_evaluator
 from backend.whatif_api import router as whatif_router
 from backend.npl_api import router as npl_router
+from backend.npl_saas_api import router as saas_router
 from utils.manifest_repo import get_manifest_repo
 from utils.model_review_queue import list_queue
 
@@ -108,6 +109,7 @@ app = FastAPI(
 app.include_router(whatif_router)
 # FEATURE_NPL_PORTFOLIO-001: NPL 5만 건 포트폴리오 라우터
 app.include_router(npl_router)
+app.include_router(saas_router)
 
 # CORS — 정적 사이트(:3051) + Vultr 도메인 허용
 app.add_middleware(
