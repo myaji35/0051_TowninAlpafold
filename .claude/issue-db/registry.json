@@ -12905,7 +12905,7 @@
     {
       "id": "NPL_UPGRADE-007",
       "type": "FIX_BUG",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P2",
       "title": "[고도화] 실거래가 API 키 연동확인 엔드포인트 + .env 문서화",
       "payload": {
@@ -12917,9 +12917,19 @@
           ".env.example"
         ],
         "effort": "S",
-        "t2": "data.go.kr 키 발급(무료)"
+        "t2": "data.go.kr 키 발급(무료)",
+        "files_changed": []
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "result": {
+        "files": [
+          "backend/main.py(health data_go_kr)",
+          "backend/.env.example(키문서화)"
+        ],
+        "verified": "키없음→not_linked, 키있음→linked. /health에서 V2/V3 연동상태 확인",
+        "doc": ".env.example에 data.go.kr 발급절차(건축HUB+실거래 무료 활용신청) + SAAS_ADMIN_SECRET 추가",
+        "t2": "data.go.kr 키 발급은 대표님(무료, 즉시승인)"
+      }
     },
     {
       "id": "NPL_UPGRADE-008",

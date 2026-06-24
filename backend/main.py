@@ -167,6 +167,8 @@ class HealthOut(BaseModel):
     version: str
     db: str
     manifest_backend: str
+    # NPL 평가 V2(건축물대장)·V3(실거래가) 연동 상태. DATA_GO_KR_KEY 없으면 not_linked.
+    data_go_kr: str = "not_linked"
 
 
 class BatchJobIn(BaseModel):
@@ -192,6 +194,7 @@ def health():
         version=APP_VERSION,
         db="sqlite",
         manifest_backend=os.environ.get("MANIFEST_BACKEND", "json"),
+        data_go_kr=("linked" if os.environ.get("DATA_GO_KR_KEY") else "not_linked"),
     )
 
 
