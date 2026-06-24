@@ -11799,7 +11799,7 @@
     {
       "id": "NPL_VALUATION_V2-001",
       "type": "GENERATE_CODE",
-      "status": "PARKED",
+      "status": "DONE",
       "priority": "P1",
       "title": "[NPL 전문평가 V2] 건축물대장 연동 — 연식·구조·위반건축물 보정",
       "payload": {
@@ -11814,7 +11814,7 @@
     {
       "id": "NPL_VALUATION_V3-001",
       "type": "GENERATE_CODE",
-      "status": "PARKED",
+      "status": "DONE",
       "priority": "P1",
       "title": "[NPL 전문평가 V3] 실거래가 연동 — 감정가 신뢰도 보정",
       "payload": {
@@ -12135,7 +12135,7 @@
     {
       "id": "NPL_VALUATION_V2-001-REVIVE",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P2",
       "title": "[전문평가 V2 부활] 건축물대장 연동 — 평가 신뢰도 +0.15",
       "payload": {
@@ -12151,14 +12151,27 @@
           "연식·구조·위반건축물 가치보정 계수",
           "confidence +0.15 반영",
           "JS=Python 일치"
-        ]
+        ],
+        "files_changed": []
       },
-      "created_at": "2026-06-24T00:00:00Z"
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files": [
+          "backend/npl_building_ledger.py",
+          "utils/npl-building.js",
+          "backend/npl_real_price.py",
+          "utils/npl-real-price.js",
+          "backend/npl_scorer.py(3줄)"
+        ],
+        "verified": "JS=Python 20/20 동치, confidence 0.60→동적(교차검증0.90/풀세트1.00/위반0.40), 키없음 하위호환 0.60유지",
+        "key_injection": "DATA_GO_KR_KEY 주입시 건축HUB/국토부 실연동, 없으면 not_linked 폴백(가짜데이터 없음)",
+        "t2": "data.go.kr 건축HUB+실거래 활용신청 → DATA_GO_KR_KEY 설정 (대표님)"
+      }
     },
     {
       "id": "NPL_VALUATION_V3-001-REVIVE",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P2",
       "title": "[전문평가 V3 부활] 실거래가 연동 — 감정가 신뢰도 보정 +0.15",
       "payload": {
@@ -12176,7 +12189,19 @@
           "JS=Python 일치"
         ]
       },
-      "created_at": "2026-06-24T00:00:00Z"
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files": [
+          "backend/npl_building_ledger.py",
+          "utils/npl-building.js",
+          "backend/npl_real_price.py",
+          "utils/npl-real-price.js",
+          "backend/npl_scorer.py(3줄)"
+        ],
+        "verified": "JS=Python 20/20 동치, confidence 0.60→동적(교차검증0.90/풀세트1.00/위반0.40), 키없음 하위호환 0.60유지",
+        "key_injection": "DATA_GO_KR_KEY 주입시 건축HUB/국토부 실연동, 없으면 not_linked 폴백(가짜데이터 없음)",
+        "t2": "data.go.kr 건축HUB+실거래 활용신청 → DATA_GO_KR_KEY 설정 (대표님)"
+      }
     },
     {
       "id": "ISS-230",
