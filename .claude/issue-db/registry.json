@@ -11865,6 +11865,461 @@
         "logic": "등기부 권리관계 자동확인 + 온나라 토지/건물 통합열람"
       },
       "created_at": "2026-06-12T15:48:00Z"
+    },
+    {
+      "id": "NPL_BACKEND_API-001",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P0",
+      "title": "[기반] 백엔드 API + SQLite 5만건 DB — 12개 엔드포인트 + CSV 일괄임포트",
+      "payload": {
+        "source_issue": "사업계획서 §5,§8 (SOM 연3천억 취득 전제)",
+        "doc": "docs/npl-portfolio-architecture.md",
+        "rationale": "프론트 평가엔진(P2~P5)은 완성됐으나 5만건 모집단 백분위·포트폴리오 집계는 서버 의존. 7.7조 파이프라인 등록의 전제조건.",
+        "target_files": [
+          "backend/npl_api.py",
+          "backend/main.py",
+          "backend/batch_queue.py"
+        ],
+        "acceptance": [
+          "npl_assets 테이블 5만행 인덱스(grade/region/irr)",
+          "12개 엔드포인트 동작",
+          "CSV 표준템플릿 일괄임포트 + 진행률 스트림",
+          "모집단 백분위 SQL 검증"
+        ]
+      },
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files_created": [
+          "backend/npl_api.py"
+        ],
+        "endpoints": 10,
+        "verified": true,
+        "has_ui": false
+      },
+      "completed_at": "2026-06-24T09:47:18.418495"
+    },
+    {
+      "id": "NPL_PIPELINE_INGEST-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P0",
+      "title": "[기반] 7.7조/2.5만건 파이프라인 일괄 평가·등급분류 배치",
+      "payload": {
+        "source_issue": "NPL_BACKEND_API-001",
+        "rationale": "보유 2.5만건 리스트를 V1·V4 엔진에 투입해 등급분류·입찰우선순위·회수 cone(p10~p90)을 일괄 산출. 사업 첫날 가동의 핵심 자산화.",
+        "blocked_by": "NPL_BACKEND_API-001 (DB/임포트 선행)",
+        "target_files": [
+          "backend/npl_batch_score.py",
+          "data_raw/_npl/"
+        ],
+        "acceptance": [
+          "2.5만건 등급분포 산출",
+          "입찰우선순위 정렬",
+          "건당 p10/p50/p90 회수 cone 저장",
+          "비추천(손실예상) 자동 플래그"
+        ]
+      },
+      "created_at": "2026-06-24T00:00:00Z"
+    },
+    {
+      "id": "NPL_RWA_TOKENIZE-001",
+      "type": "FEATURE_PLAN",
+      "status": "DONE",
+      "priority": "P1",
+      "title": "[RWA 2단계] RWA 토큰화 설계 — SPC 기초자산 → STO 발행 데이터모델",
+      "payload": {
+        "source_issue": "사업계획서 §3.단계2, §4 (RWA 토큰화 메커니즘)",
+        "rationale": "2026.1 STO 법제화(분산원장=전자등록계좌부) 기반. 회수권을 토큰(수익증권/투자계약증권)으로 조각화하는 발행 구조 설계. 코드 직행 전 product 모드로 스토리 분해 필요(규제·법무 의존).",
+        "scope_note": "온체인 토큰 컨트랙트는 본 단계 범위 외(설계만). 발행원장 데이터모델 + 토큰-기초자산 매핑 + 투자자 지분 원장까지.",
+        "target_files": [
+          "docs/npl-rwa-tokenization.md",
+          "backend/npl_rwa_token.py"
+        ],
+        "acceptance": [
+          "토큰-SPC-기초채권 매핑 스키마",
+          "조각 단위·지분 원장 설계",
+          "STO 발행요건 체크리스트(법무 자문 항목 표기)",
+          "T2 컨펌 항목 식별"
+        ],
+        "files_changed": []
+      },
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files_created": [
+          "docs/npl-rwa-tokenization.md",
+          "backend/npl_rwa_token.py"
+        ],
+        "verified": true,
+        "t2_items": 8,
+        "has_ui": false
+      },
+      "completed_at": "2026-06-24T09:54:03.288252"
+    },
+    {
+      "id": "NPL_RWA_FRACTIONAL_UI-001",
+      "type": "UX_DESIGN",
+      "status": "READY",
+      "priority": "P2",
+      "title": "[RWA 2단계] 조각투자 유통 화면 — 토큰 마켓플레이스 + 투자자 포트폴리오",
+      "payload": {
+        "source_issue": "NPL_RWA_TOKENIZE-001",
+        "rationale": "기관 한정 시장을 일반·글로벌 투자자에 개방하는 조각투자 UI. 토큰 목록·매수·보유현황·회수 cone 공개. brand-dna 토큰 적용.",
+        "blocked_by": "NPL_RWA_TOKENIZE-001 (발행 데이터모델 선행)",
+        "target_files": [
+          "components/npl-rwa-market.js",
+          "css/npl.css"
+        ],
+        "acceptance": [
+          "토큰 마켓플레이스 목록+필터",
+          "조각 매수 플로우",
+          "투자자 보유 포트폴리오 + 신뢰구간 공개",
+          "STO 투자위험 고지 UI"
+        ]
+      },
+      "created_at": "2026-06-24T00:00:00Z"
+    },
+    {
+      "id": "NPL_IFRS9_MODULE-001",
+      "type": "GENERATE_CODE",
+      "status": "DONE",
+      "priority": "P1",
+      "title": "[절세/회계] IFRS9 POCI 손상모델 + Stage 전이 + 충당금 환입 계산",
+      "payload": {
+        "source_issue": "사업계획서 §6 (IFRS9 빠른 현금화)",
+        "rationale": "취득 NPL의 POCI 인식, 신용조정 유효이자율 회수이익, Stage3→2→1 전이에 따른 충당금 환입 타이밍을 평가엔진에 결합. ROE 회전율 계산 기반.",
+        "warn": "회계기준 적용은 외부 회계법인 검증 필요(T2). 코드는 계산 로직만, 실제 적용 전 자문.",
+        "target_files": [
+          "backend/npl_ifrs9.py",
+          "utils/npl-ifrs9.js"
+        ],
+        "acceptance": [
+          "POCI 유효이자율 회수이익 산출",
+          "Stage 전이 룰",
+          "충당금 환입 타이밍",
+          "자본 회전율(연 1.5~2회) 시뮬레이션"
+        ],
+        "files_changed": []
+      },
+      "created_at": "2026-06-24T00:00:00Z",
+      "result": {
+        "files_created": [
+          "backend/npl_ifrs9.py",
+          "utils/npl-ifrs9.js"
+        ],
+        "verified": true,
+        "has_ui": false
+      },
+      "completed_at": "2026-06-24T09:59:17.038789"
+    },
+    {
+      "id": "NPL_TAX_SPC_PLAN-001",
+      "type": "DOMAIN_ANALYZE",
+      "status": "READY",
+      "priority": "P2",
+      "title": "[절세] SPC 도관과세·사모펀드 과세이연·부가세 절세구조 규칙화",
+      "payload": {
+        "source_issue": "사업계획서 §7 (절세 플랜)",
+        "rationale": "자산유동화법 SPC 90% 배당 손금산입, 펀드 과세이연·손익통산, 채권양도 부가세 면세·대손세액공제 요건을 도메인 규칙으로 도출. biz-validator 검증 연계.",
+        "warn": "세무 구조는 외부 세무·법무 자문 후 확정(T2). 본 이슈는 규칙 도출·체크리스트까지.",
+        "target_files": [
+          "docs/npl-tax-structure.md"
+        ],
+        "acceptance": [
+          "SPC 도관과세 요건 체크리스트",
+          "펀드 과세이연·손익통산 규칙",
+          "부가세 면세/대손세액공제 적용요건",
+          "T2 자문 항목 명시"
+        ]
+      },
+      "created_at": "2026-06-24T00:00:00Z"
+    },
+    {
+      "id": "NPL_INVESTOR_REPORT-001",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "title": "[펀드/IR] 투자자·LP용 포트폴리오 IR 리포트 — 펀드보수 산정 포함",
+      "payload": {
+        "source_issue": "사업계획서 §3.단계4 (GP/펀드 운용)",
+        "rationale": "P5 리포트를 LP 대상 IR 수준으로 확장. 운용보수(1.5~2%)+성과보수(15~20%) 산정, 펀드 단위 회수 cone, 몬테카를로 분포 추정.",
+        "blocked_by": "NPL_BACKEND_API-001",
+        "target_files": [
+          "components/npl-report.js",
+          "backend/npl_fund_report.py"
+        ],
+        "acceptance": [
+          "LP IR 리포트(펀드 단위)",
+          "운용·성과보수 자동 산정",
+          "몬테카를로 회수분포",
+          "PDF 출력"
+        ]
+      },
+      "created_at": "2026-06-24T00:00:00Z"
+    },
+    {
+      "id": "NPL_SAAS_API-001",
+      "type": "FEATURE_PLAN",
+      "status": "READY",
+      "priority": "P3",
+      "title": "[SaaS 3단계] 평가엔진 외부 판매 — API 키·과금·테넌트 격리",
+      "payload": {
+        "source_issue": "사업계획서 §3.단계3 (평가 SaaS)",
+        "rationale": "V1·V4·P2~P5 엔진을 외부 NPL투자사·금융사·법무법인에 SaaS/API로 판매. 자본 없는 마진 수익 + 외부데이터 선순환. 멀티테넌트·과금 설계.",
+        "target_files": [
+          "docs/npl-saas-design.md",
+          "backend/npl_saas_api.py"
+        ],
+        "acceptance": [
+          "API 키 발급·인증",
+          "건당 평가수수료·구독 과금 모델",
+          "테넌트 데이터 격리",
+          "외부 데이터 자사엔진 환류 설계"
+        ]
+      },
+      "created_at": "2026-06-24T00:00:00Z"
+    },
+    {
+      "id": "NPL_VALUATION_V2-001-REVIVE",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "title": "[전문평가 V2 부활] 건축물대장 연동 — 평가 신뢰도 +0.15",
+      "payload": {
+        "source_issue": "NPL_VALUATION_V2-001 (PARKED 부활)",
+        "rationale": "사업계획서가 평가 정밀도를 차별화 핵심으로 명시. 건축HUB API로 연식·구조·위반건축물 보정 → confidence 동적 상승. PARKED였으나 사업계획 우선순위로 부활.",
+        "doc": "docs/npl-professional-valuation.md",
+        "target_files": [
+          "backend/npl_building_ledger.py",
+          "utils/npl-building.js"
+        ],
+        "acceptance": [
+          "건축HUB API 연동",
+          "연식·구조·위반건축물 가치보정 계수",
+          "confidence +0.15 반영",
+          "JS=Python 일치"
+        ]
+      },
+      "created_at": "2026-06-24T00:00:00Z"
+    },
+    {
+      "id": "NPL_VALUATION_V3-001-REVIVE",
+      "type": "GENERATE_CODE",
+      "status": "READY",
+      "priority": "P2",
+      "title": "[전문평가 V3 부활] 실거래가 연동 — 감정가 신뢰도 보정 +0.15",
+      "payload": {
+        "source_issue": "NPL_VALUATION_V3-001 (PARKED 부활)",
+        "rationale": "국토부 실거래가 API로 감정가 대비 시세 괴리 보정. V2와 함께 평가 신뢰도를 0.60→0.90 수준으로 견인. RWA 토큰 투자자 신뢰 직결.",
+        "doc": "docs/npl-professional-valuation.md",
+        "target_files": [
+          "backend/npl_real_price.py",
+          "utils/npl-real-price.js"
+        ],
+        "acceptance": [
+          "국토부 실거래 API 연동",
+          "감정가-시세 괴리 보정",
+          "confidence +0.15 반영",
+          "JS=Python 일치"
+        ]
+      },
+      "created_at": "2026-06-24T00:00:00Z"
+    },
+    {
+      "id": "ISS-230",
+      "title": "[Plan:게이트] NPL_BACKEND_API-001 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_BACKEND_API-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T09:47:18.418495",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_BACKEND_API-001",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE",
+        "files_changed": []
+      },
+      "result": {
+        "clean": true,
+        "errors": 0,
+        "fixed": [
+          "E501 x4"
+        ]
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-06-24T09:48:31.470117"
+    },
+    {
+      "id": "ISS-231",
+      "title": "[Plan:테스트] NPL_BACKEND_API-001 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_BACKEND_API-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T09:47:18.418495",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_BACKEND_API-001",
+        "scope": "changed"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-232",
+      "title": "[Plan:도메인분석] NPL_BACKEND_API-001 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_BACKEND_API-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T09:47:18.418495",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_BACKEND_API-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-233",
+      "title": "[Plan:CEO검토] NPL_RWA_TOKENIZE-001 전략 검토",
+      "type": "PLAN_CEO_REVIEW",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "plan-ceo-reviewer",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_RWA_TOKENIZE-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T09:54:03.288252",
+      "payload": {
+        "source_issue": "NPL_RWA_TOKENIZE-001",
+        "source_plan": {
+          "files_created": [
+            "docs/npl-rwa-tokenization.md",
+            "backend/npl_rwa_token.py"
+          ],
+          "verified": true,
+          "t2_items": 8,
+          "has_ui": false
+        },
+        "feature": "NPL_RWA_TOKENIZE-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-234",
+      "title": "[Plan:Eng검토] NPL_RWA_TOKENIZE-001 실행가능성 검토",
+      "type": "PLAN_ENG_REVIEW",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "plan-eng-reviewer",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_RWA_TOKENIZE-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T09:54:03.288252",
+      "payload": {
+        "source_issue": "NPL_RWA_TOKENIZE-001",
+        "source_plan": {
+          "files_created": [
+            "docs/npl-rwa-tokenization.md",
+            "backend/npl_rwa_token.py"
+          ],
+          "verified": true,
+          "t2_items": 8,
+          "has_ui": false
+        },
+        "feature": "NPL_RWA_TOKENIZE-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-235",
+      "title": "[Plan:게이트] NPL_IFRS9_MODULE-001 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_IFRS9_MODULE-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T09:59:17.038789",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_IFRS9_MODULE-001",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "clean": true,
+        "errors": 0
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-06-24T09:59:33.775056"
+    },
+    {
+      "id": "ISS-236",
+      "title": "[Plan:테스트] NPL_IFRS9_MODULE-001 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_IFRS9_MODULE-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T09:59:17.038789",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_IFRS9_MODULE-001",
+        "scope": "changed"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-237",
+      "title": "[Plan:도메인분석] NPL_IFRS9_MODULE-001 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "NPL_IFRS9_MODULE-001",
+      "depends_on": [],
+      "created_at": "2026-06-24T09:59:17.038789",
+      "payload": {
+        "files": [],
+        "source_issue": "NPL_IFRS9_MODULE-001"
+      },
+      "result": null,
+      "spawn_rules": []
     }
   ],
   "hooks": {
@@ -13010,6 +13465,36 @@
         "issue_type": "VERIFY",
         "plan_created": 0,
         "timestamp": "2026-05-11T12:59:03.154170"
+      },
+      {
+        "issue_id": "NPL_BACKEND_API-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-06-24T09:47:18.418495"
+      },
+      {
+        "issue_id": "ISS-230",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-06-24T09:48:31.470117"
+      },
+      {
+        "issue_id": "NPL_RWA_TOKENIZE-001",
+        "issue_type": "FEATURE_PLAN",
+        "plan_created": 2,
+        "timestamp": "2026-06-24T09:54:03.288252"
+      },
+      {
+        "issue_id": "NPL_IFRS9_MODULE-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-06-24T09:59:17.038789"
+      },
+      {
+        "issue_id": "ISS-235",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-06-24T09:59:33.775056"
       }
     ],
     "on_fail": [],
@@ -13167,6 +13652,18 @@
         "context": "ISS-210 lint/type clean",
         "frequency": 1,
         "discovered_at": "2026-05-11T11:44:46.509486"
+      },
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-230 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-06-24T09:48:31.470117"
+      },
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-235 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-06-24T09:59:33.775056"
       }
     ],
     "failure_patterns": [],
@@ -14309,8 +14806,8 @@
     ]
   },
   "stats": {
-    "total_issues": 211,
-    "completed": 215,
+    "total_issues": 219,
+    "completed": 220,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -14511,10 +15008,10 @@
     "count": 1
   },
   "issue_budget": {
-    "date": "2026-06-12",
+    "date": "2026-06-24",
     "created_today": 0
   },
-  "updated_at": "2026-05-11T03:59:15.950193+00:00",
+  "updated_at": "2026-06-24T00:20:00Z",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
