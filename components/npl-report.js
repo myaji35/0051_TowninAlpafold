@@ -209,6 +209,28 @@
     return hi - Math.sqrt((1 - u) * (hi - lo) * (hi - mode));
   }
 
+  // 백엔드 정밀 몬테카를로(10000회) 우선 — 실패 시 JS 간이판 폴백.
+  // 백엔드는 표본 수가 많아 분포 추정이 안정적(UPGRADE-004).
+  function calcMonteCarloBackend(items, nSims, seed) {
+    return fetch('/api/v1/fund/monte-carlo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: items, n_sims: 10000, seed: seed || 42 }),
+    }).then(function(r) {
+      var ct = r.headers.get('content-type') || '';
+      if (!r.ok || ct.indexOf('application/json') === -1) throw new Error('backend_unavailable');
+      return r.json();
+    }).then(function(d) {
+      if (d.error) throw new Error(d.error);
+      return { p5: d.p5, p25: d.p25, p50: d.p50, p75: d.p75, p95: d.p95,
+               mean: d.mean, lossProb: d.loss_prob, source: 'backend', nSims: d.n_sims };
+    }).catch(function() {
+      var mc = calcMonteCarlo(items, nSims, seed);
+      mc.source = 'js'; mc.nSims = nSims || 5000;
+      return mc;
+    });
+  }
+
   function calcMonteCarlo(items, nSims, seed) {
     nSims = nSims || 5000;
     // 간이 PRNG (mulberry32)
@@ -248,6 +270,7 @@
   }
 
   // ── 펀드(LP IR) 리포트 ──
+  // async: 백엔드 정밀 몬테카를로를 우선 시도하고, 결과를 받은 뒤 리포트를 연다.
   function fund(items, fundConfig) {
     var cfg = fundConfig || {};
     var committed = +(cfg.committed_capital || 0);
@@ -274,8 +297,9 @@
     var fees50 = calcFundFees(committed, cone.p50, fundYears, mgmtRate, carryRate, hurdleRate);
     var fees90 = calcFundFees(committed, cone.p90, fundYears, mgmtRate, carryRate, hurdleRate);
 
-    // 몬테카를로 (JS 간이판)
-    var mc = calcMonteCarlo(items, nSims, seed);
+    // 몬테카를로 — 백엔드 정밀값(10000회) 우선, 실패 시 JS 간이판 폴백.
+    // 결과를 받은 뒤 리포트를 연다(async).
+    calcMonteCarloBackend(items, nSims, seed).then(function(mc) {
 
     // 등급/담보 분산 (포트폴리오 리포트 재활용 로직)
     var total = items.length;
@@ -308,7 +332,7 @@
       +   '<div><div class="v" style="color:#00529B">' + fmtMan(cone.p50) + '</div><div class="l">p50 (중간 시나리오)</div></div>'
       +   '<div><div class="v">' + fmtMan(cone.p90) + '</div><div class="l">p90 (낙관 시나리오)</div></div>'
       + '</div>'
-      + '<h3 style="font-size:13px;color:#374151;margin:14px 0 6px">2-2. 몬테카를로 분포 (' + nSims.toLocaleString() + '회 시뮬레이션)</h3>'
+      + '<h3 style="font-size:13px;color:#374151;margin:14px 0 6px">2-2. 몬테카를로 분포 (' + (mc.nSims || nSims).toLocaleString() + '회 시뮬레이션)</h3>'
       + '<div class="rpt-cone">'
       +   '<div><div class="v" style="font-size:13px">' + fmtMan(mc.p5) + '</div><div class="l">p5</div></div>'
       +   '<div><div class="v" style="font-size:13px">' + fmtMan(mc.p25) + '</div><div class="l">p25</div></div>'
@@ -319,7 +343,9 @@
       + '<div class="rpt-pct">원금 손실 확률 (매입가 근사): <b>' + (mc.lossProb * 100).toFixed(1) + '%</b></div>'
       + '<div class="rpt-note">'
       +   '⚠ 몬테카를로 가정: 물건간 독립(상관관계 미반영) · 삼각분포 근사 · '
-      +   'JS 간이판(' + nSims.toLocaleString() + '회). 정밀값은 Python 백엔드 사용 권장.'
+      +   (mc.source === 'backend'
+            ? '백엔드 정밀 시뮬레이션(' + (mc.nSims || 10000).toLocaleString() + '회).'
+            : 'JS 간이판(' + nSims.toLocaleString() + '회, 백엔드 미연동). 정밀값은 백엔드 연동 시 자동 적용.')
       + '</div>';
 
     // ── 섹션3: 수수료 구조 (waterfall 표) ──
@@ -400,6 +426,8 @@
       + sec1 + sec2 + sec3 + sec4 + sec5;
 
     openReport('NPL 펀드 LP IR 리포트 — ' + fundName, body);
+
+    });  // calcMonteCarloBackend.then 종료
   }
 
   window.nplReport = { single: single, portfolio: portfolio, fund: fund };

@@ -289,6 +289,27 @@ def fund_summary(
     }
 
 
+# ── FastAPI 라우터 (몬테카를로 정밀값 — JS 간이판 대체) ────────────────────────
+try:
+    from fastapi import APIRouter
+    from pydantic import BaseModel, Field
+
+    router = APIRouter(prefix="/api/v1/fund", tags=["fund"])
+
+    class MonteCarloIn(BaseModel):
+        items: list[dict] = Field(..., description="recovery_p10/p50/p90 포함 물건 리스트")
+        n_sims: int = Field(10000, ge=1000, le=100000)
+        seed: int = 42
+
+    @router.post("/monte-carlo", summary="펀드 회수분포 몬테카를로 (정밀)")
+    def fund_monte_carlo(payload: MonteCarloIn):
+        """프론트 JS 간이판(5000회·물건간 독립)보다 정밀한 백엔드 시뮬레이션(10000회).
+        물건간 독립 가정은 동일하나 표본 수가 많아 분포 추정이 안정적."""
+        return monte_carlo_recovery(payload.items, n_sims=payload.n_sims, seed=payload.seed)
+except ImportError:
+    router = None  # FastAPI 미설치 환경(순수 계산 테스트)에서는 라우터 생략
+
+
 # ── 검증용 CLI ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     # sanity: 약정 100억(=1000000만원), 회수 130억, mgmt 2%, carry 20%, hurdle 8%, 3년

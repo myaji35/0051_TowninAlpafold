@@ -33,6 +33,7 @@ from backend.whatif_api import router as whatif_router
 from backend.npl_api import router as npl_router
 from backend.npl_saas_api import router as saas_router
 from backend.npl_rwa_token import router as rwa_router, init_rwa_db
+from backend.npl_fund_report import router as fund_router
 from utils.manifest_repo import get_manifest_repo
 from utils.model_review_queue import list_queue
 
@@ -113,6 +114,8 @@ app.include_router(whatif_router)
 app.include_router(npl_router)
 app.include_router(saas_router)
 app.include_router(rwa_router)
+if fund_router is not None:
+    app.include_router(fund_router)
 
 # CORS — 정적 사이트(:3051) + Vultr 도메인 허용
 app.add_middleware(

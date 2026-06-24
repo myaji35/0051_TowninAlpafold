@@ -12787,12 +12787,16 @@
         ],
         "effort": "M"
       },
-      "created_at": "2026-06-24T04:00:00Z"
+      "created_at": "2026-06-24T04:00:00Z",
+      "tags": [
+        "pingpong_blocked"
+      ],
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"
     },
     {
       "id": "NPL_UPGRADE-004",
       "type": "GENERATE_CODE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "title": "[고도화] LP 리포트 몬테카를로 백엔드 API 노출 + 프론트 연결",
       "payload": {
@@ -12809,14 +12813,25 @@
           "POST /api/v1/fund/monte-carlo",
           "fund_router include",
           "JS간이→백엔드호출 교체"
-        ]
+        ],
+        "files_changed": []
       },
       "created_at": "2026-06-24T04:00:00Z",
       "tags": [
         "pingpong_blocked",
+        "pingpong_blocked",
         "pingpong_blocked"
       ],
-      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지"
+      "blocked_reason": "pingpong_guard: (GENERATE_CODE, src=opportunity-scout) 5건 중복 감지",
+      "result": {
+        "files": [
+          "backend/npl_fund_report.py(APIRouter+monte-carlo)",
+          "backend/main.py(fund_router)",
+          "components/npl-report.js(백엔드우선+폴백)"
+        ],
+        "verified": "POST /api/v1/fund/monte-carlo 200, p5<p50<p95 순서정상, n_sims=10000. JS는 백엔드우선→실패시 간이판 폴백, source 표기 동적",
+        "note": "물건간 독립가정은 동일(UPGRADE-005에서 상관행렬 반영 예정). 표본수 5000→10000로 분포 안정"
+      }
     },
     {
       "id": "NPL_UPGRADE-005",
@@ -12856,6 +12871,7 @@
       },
       "created_at": "2026-06-24T04:00:00Z",
       "tags": [
+        "pingpong_blocked",
         "pingpong_blocked",
         "pingpong_blocked"
       ],
@@ -12901,6 +12917,7 @@
       },
       "created_at": "2026-06-24T04:00:00Z",
       "tags": [
+        "pingpong_blocked",
         "pingpong_blocked",
         "pingpong_blocked"
       ],
