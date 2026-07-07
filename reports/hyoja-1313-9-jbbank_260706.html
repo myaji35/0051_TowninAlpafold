@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+@page { size: A4; margin: 12mm 14mm; }
+*, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; box-sizing: border-box; }
+body { margin: 0; font-family: "Apple SD Gothic Neo", system-ui, sans-serif; line-height: 1.45; color: #1a1a1a; letter-spacing: 0.01em; word-spacing: 0.03em; }
+h1 { font-size: 22px; margin: 0 0 6px; color: #16325C; }
+h2 { font-size: 16px; margin: 15px 0 8px; color: #16325C; border-bottom: 2px solid #00A1E0; padding-bottom: 4px; }
+h3 { font-size: 13px; margin: 10px 0 5px; color: #16325C; }
+h4 { font-size: 11.5px; margin: 8px 0 4px; color: #00557A; }
+p, li { font-size: 11px; margin: 4px 0; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 10px; }
+th { background: #16325C; color: #fff; padding: 5px 6px; text-align: left; font-size: 10px; }
+td { padding: 5px 6px; border-bottom: 1px solid #ddd; vertical-align: top; }
+tr:nth-child(even) td { background: #F3F2F2; }
+ul { padding-left: 16px; margin: 4px 0; }
+ul.tight li { margin-bottom: 2px; }
+.cover { page-break-after: always; page-break-inside: avoid; background-color: #16325C !important; color: #fff !important; text-align: center; margin: -12mm -14mm 0 -14mm; padding: 78mm 40px 78mm 40px; min-height: 250mm; }
+.cover * { color: #fff !important; }
+.cover .tag { font-size: 13px; letter-spacing: 4px; opacity: 0.8; margin-bottom: 20px; }
+.cover .title { font-size: 30px; font-weight: 800; margin: 10px 0; }
+.cover .sub { font-size: 15px; opacity: 0.9; margin: 16px 0 36px; line-height:1.5; }
+.cover .meta { font-size: 12px; opacity: 0.7; }
+.cover .conf { margin-top: 36px; font-size: 11px; border:1px solid rgba(255,255,255,0.4); display:inline-block; padding:4px 14px; border-radius:4px; }
+.callout { padding: 7px 12px; margin: 8px 0; border-radius: 4px; font-size: 11px; }
+.callout-info { background: #E8F6FC; border-left: 4px solid #00A1E0; }
+.callout-success { background: #E9F9F1; border-left: 4px solid #10B981; }
+.callout-warn { background: #FEF6E7; border-left: 4px solid #F59E0B; }
+.callout-danger { background: #FDECEC; border-left: 4px solid #EF4444; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 9px; font-weight: 700; }
+.b-green { background: #D1FAE5; color: #065F46; }
+.b-yellow { background: #FEF3C7; color: #92400E; }
+.b-red { background: #FEE2E2; color: #991B1B; }
+.b-blue { background: #DBEAFE; color: #1E40AF; }
+.kpi-grid { display: flex; gap: 6px; margin: 8px 0; }
+.kpi-card { flex: 1; background: #F3F2F2; border-radius: 6px; padding: 8px; text-align: center; border-top: 3px solid #00A1E0; }
+.kpi-label { font-size: 9px; color: #555; }
+.kpi-value { font-size: 15px; font-weight: 800; color: #16325C; margin: 2px 0; }
+.kpi-sub { font-size: 8.5px; color: #777; }
+.pagebreak { page-break-before: always; }
+.lead { font-size: 12px; color: #333; margin: 6px 0 10px; }
+.free { color:#065F46; font-weight:700; }
+.paid { color:#991B1B; font-weight:700; }
+.formula { background:#16325C; color:#fff !important; padding:8px 12px; border-radius:4px; font-size:11px; margin:6px 0; }
+.formula * { color:#fff !important; }
+.formula b { color:#7FD7F7 !important; }
+.mapimg { width:100%; border:1px solid #ccc; border-radius:4px; }
+.col2 { display:flex; gap:10px; }
+.col2 > div { flex:1; }
+.col3 { display:flex; gap:8px; }
+.col3 > div { flex:1; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="tag">NPL VALUATION &middot; 물건지 상권분석</div>
+  <div class="title">상권분석 &amp; NPL 자산평가<br>보고서</div>
+  <div class="sub">대상지: 전주시 완산구 효자동2가 1313-9<br>1층 전북은행 입점 근린상가</div>
+  <div class="meta">2026. 07. 06 &middot; VWorld 무료 API 실측 기반</div>
+  <div class="conf">INTERNAL &middot; NPL 1차 스크리닝용 &middot; 대외비</div>
+</div>
+
+<h1>상권분석 &amp; NPL 자산평가 보고서</h1>
+<p class="lead">담보물건 <b>전주시 완산구 효자동2가 1313-9</b>(1층 전북은행 입점)를 대상으로, <b>공시지가→추정 감정가→(유료)실거래·경매가</b> 밸류에이션 체계와 상권평가 항목을 적용한 <b>NPL 1차 스크리닝</b> 자료입니다. 전 과정 VWorld 무료 API 실측 기반이며, 실거래·경매·정식 감정가는 유료/별도키 항목으로 명확히 구분했습니다.</p>
+
+<div class="callout-info callout">
+<b>물건 요지:</b> 전북특별자치도청 서측 <b>효자동 신시가지 행정타운</b> 내, 대규모 아파트단지(전주효자휴먼시아 등) 배후의 <b>근린상업 정형 대지(698.4㎡·약 211평)</b>. 1층에 <b>전북은행 지점</b>이 임차 운영 중으로, 안정적 임대수익형 담보물건에 해당.
+</div>
+
+<h2>1. 물건 개요 (무료 API 실측)</h2>
+<div class="col2">
+<div>
+<table>
+<tr><th>항목</th><th>내용</th><th>출처</th></tr>
+<tr><td>소재지</td><td>전북특별자치도 전주시 완산구 효자동2가 1313-9</td><td class="free">토지대장</td></tr>
+<tr><td>지목</td><td>대(垈)</td><td class="free">무료</td></tr>
+<tr><td>면적</td><td>698.4㎡ (약 211평)</td><td class="free">무료</td></tr>
+<tr><td>소유구분</td><td>개인</td><td class="free">무료</td></tr>
+<tr><td>PNU</td><td>5211114100113130009</td><td class="free">무료</td></tr>
+<tr><td>임차 현황</td><td>1층 <b>전북은행</b> 지점 (임대수익형)</td><td>현장/제시</td></tr>
+</table>
+<h4>용도지역·규제 (무료)</h4>
+<ul class="tight">
+<li><b>제2종일반주거지역</b> (저촉)</li>
+<li>제1종지구단위계획구역 (포함)</li>
+<li>택지개발지구 (포함) — 신시가지 계획지</li>
+<li>중로1류(20~25m)·소로1류(10~12m) 접함 — <b>양호한 접도</b></li>
+</ul>
+</div>
+<div>
+<h4>입지·규제 요약</h4>
+<div class="callout-success callout" style="margin-top:2px"><b>접도 우수:</b> 중로1류(20~25m)·중로3류(12~15m)·소로1류 복수 접함 — 코너 가시성·차량 접근성 양호. 은행 지점 입지로 적합.</div>
+<p style="font-size:10px;color:#555;margin-top:4px">제1종지구단위계획·택지개발지구 내 <b>계획적 신시가지 상업지</b>로, 배후 아파트 세대 밀집. 다만 용도지역이 <b>제2종일반주거</b>여서 상업지역 대비 용적률·업종에 제약 — 밸류에이션 시 반영.</p>
+</div>
+</div>
+
+<h4>물건지 위치도 — 원거리·중거리·클로즈업 (배경지도+지적도+마커 · 무료 API 합성)</h4>
+<div class="col3">
+<div>
+<img class="mapimg" src="img/hyoja-1313-9_1far.png" alt="원거리">
+<p style="font-size:8.5px;color:#777;margin-top:2px">▲ <b>원거리</b> — 전북도청·효자동 행정타운·아파트 밀집 광역 위치</p>
+</div>
+<div>
+<img class="mapimg" src="img/hyoja-1313-9_2mid.png" alt="중거리">
+<p style="font-size:8.5px;color:#777;margin-top:2px">▲ <b>중거리</b> — 근린상권·사이언스공원·휴먼시아단지 + <b style="color:#E61E1E">마커</b></p>
+</div>
+<div>
+<img class="mapimg" src="img/hyoja-1313-9_3close.png" alt="클로즈업">
+<p style="font-size:8.5px;color:#777;margin-top:2px">▲ <b>클로즈업</b> — 필지 형상·접도·인근 근생(약국·병원·마트)</p>
+</div>
+</div>
+
+<h2>2. 가격 밸류에이션 — 4단 검증 체계</h2>
+<div class="kpi-grid">
+  <div class="kpi-card"><div class="kpi-label">1. 공시지가(무료·실측)</div><div class="kpi-value" style="color:#065F46">123만/㎡</div><div class="kpi-sub">2026 기준 · 하한선</div></div>
+  <div class="kpi-card"><div class="kpi-label">2. 공시 총액</div><div class="kpi-value">약 8.6억</div><div class="kpi-sub">698.4㎡ 환산</div></div>
+  <div class="kpi-card"><div class="kpi-label">3. 추정 감정가</div><div class="kpi-value" style="color:#F59E0B">12.9~17.2억</div><div class="kpi-sub">현실화율 1.5~2.0배</div></div>
+  <div class="kpi-card"><div class="kpi-label">4. 실거래·경매</div><div class="kpi-value" style="color:#991B1B">유료</div><div class="kpi-sub">확정 시 보정</div></div>
+</div>
+<h4>공시지가 추이 (무료 시계열 실측)</h4>
+<table>
+<tr><th>연도</th><td>2023</td><td>2024</td><td>2025</td><td><b>2026</b></td></tr>
+<tr><th>원/㎡</th><td>1,228,000</td><td>1,231,000</td><td>1,269,000</td><td><b>1,229,000</b></td></tr>
+</table>
+<p style="font-size:9.5px;color:#666;margin-top:2px">※ 4년간 공시지가 <b>거의 보합</b>(2025 소폭 상승 후 2026 조정). 지방 도청권 행정타운의 안정적이나 저성장 시세 특성을 반영 — 서울 강남 대비 <b>가격 상승 모멘텀은 제한적</b>이나 배후수요 견고.</p>
+<div class="formula">
+<b>추정 감정가</b> = 공시지가 1,229천원/㎡ × <b>현실화율 1.5~2.0</b> × 698.4㎡ ≈ <b>12.9억 ~ 17.2억원</b>
+</div>
+<div class="callout-warn callout">
+<b>감정가 개념:</b> 위 추정치는 <b>1차 스크리닝용</b>(공시지가×현실화율 역산)이다. 확정 감정가는 ⓐ 경매 감정가(지지옥션 등 <span class="paid">유료</span>) 또는 ⓑ 감정평가법인 의뢰(<span class="paid">유료</span>)로 확보하며, ⓒ 인근 실거래가(<span class="paid">별도키 무료</span>)로 시세 교차검증한다. 특히 <b>1층 전북은행 임대수익형</b>이므로 <b>수익환원법</b> 병행 평가가 핵심.
+</div>
+
+<div class="pagebreak"></div>
+<h2>3. NPL 자산평가 기준 적용 (감정평가 3방식)</h2>
+<table>
+<tr><th>방식</th><th>본 물건 적용</th><th>필요 데이터</th><th>확보</th></tr>
+<tr><td><b>① 원가법</b></td><td>토지(대 698.4㎡) + 건물 재조달원가−감가. 상가건물 존재 시 건물비중 가산</td><td>공시지가·건축비</td><td><span class="badge b-green">무료</span></td></tr>
+<tr><td><b>② 거래사례비교</b></td><td>효자동 신시가지 인근 근린상가·대지 실거래·경매 비교보정</td><td>실거래·경매가</td><td><span class="badge b-yellow">별도키/유료</span></td></tr>
+<tr><td><b>③ 수익환원법</b> <span class="badge b-blue">핵심</span></td><td><b>1층 전북은행 임대료(NOI) ÷ Cap Rate.</b> 우량 임차인(은행)으로 공실위험 낮고 임대수익 안정 → 본 물건 <b>주 평가방식</b></td><td>임대료·Cap Rate</td><td><span class="badge b-yellow">상권/실사</span></td></tr>
+</table>
+<div class="formula">
+<b>NPL 회수가치(RV)</b> = 감정가 × 낙찰가율 − (선순위채권 + 명도·비용) &nbsp;→&nbsp; <b>매입적정가</b> = RV × (1 − 목표수익률)
+</div>
+<div class="callout-info callout">
+<b>임차인 프리미엄:</b> 1층에 <b>전북은행 지점</b>이 입점 — 지역 대표 금융기관으로 <b>장기 안정 임차·높은 신용</b>. 경매 진행 시에도 임대차 승계 여부에 따라 <b>수익형 매수 수요</b>가 형성되어 낙찰가율 방어에 유리. 다만 은행 지점 <b>철수·계약만료 리스크</b>는 별도 실사 필요(임대차계약서·잔여기간 확인).
+</div>
+
+<h2>4. 상권분석 평가항목 (본 물건 적용)</h2>
+<table>
+<tr><th>항목</th><th>본 물건 상태</th><th>소스</th><th>비용</th></tr>
+<tr><td>입지</td><td>전북도청 서측 효자 신시가지, 중로1류 접면 정형 211평</td><td>VWorld</td><td class="free">무료</td></tr>
+<tr><td>가격</td><td>공시 123만/㎡ (4년 보합, 지방 안정형)</td><td>VWorld</td><td class="free">무료</td></tr>
+<tr><td>배후수요</td><td>전주효자휴먼시아 등 <b>대규모 아파트단지</b> 밀집 (세대수 확인 필요)</td><td>상권정보 API</td><td class="paid">별도키</td></tr>
+<tr><td>업종·경쟁</td><td>약국·병원·마트·프랜차이즈 등 <b>근린 생활상권 형성</b> (인접 롯데프레시·약국 다수)</td><td>상권정보 API</td><td class="paid">별도키</td></tr>
+<tr><td>접근성</td><td>중로1류(20~25m)·소로1류 복수 접면, 코너 입지 (지오코딩 완료)</td><td>VWorld</td><td class="free">무료</td></tr>
+<tr><td>앵커테넌트</td><td><b>1층 전북은행</b> — 유동·집객 앵커, 상가가치 견인</td><td>제시/현장</td><td class="free">-</td></tr>
+</table>
+<div class="callout-success callout">
+<b>상권 총평:</b> 전북도청·행정기관 종사자 + 대단지 아파트 배후의 <b>안정적 근린 생활상권</b>. 유흥·유행 의존도가 낮아 경기 변동에 <b>방어적</b>. 1층 은행 앵커로 집객력 확보. 지방 특성상 <b>급격한 시세 상승보다 안정적 임대수익 회수</b>에 적합한 물건 유형.
+</div>
+
+<h2>5. 무료/유료 범위 — 데이터 경계</h2>
+<div class="col2">
+<div>
+<h4 class="free">■ 무료로 확보됨 (본 건 실측)</h4>
+<ul class="tight">
+<li>지번·지목·면적·소유구분·PNU</li>
+<li>공시지가 시계열(2023~2026)</li>
+<li>용도지역·규제(지구단위·택지개발지구 등)</li>
+<li>지적도 이미지 · 지오코딩 좌표 · 3단 위치도</li>
+<li>→ 공시기반 <b>1차 추정 감정가</b></li>
+</ul>
+</div>
+<div>
+<h4 class="paid">■ 유료/별도키 필요 (미확보)</h4>
+<ul class="tight">
+<li>실거래가 (공공데이터 <b>무료키</b> 발급 시)</li>
+<li>상권 유동인구·배후세대·업종 (<b>무료키</b>)</li>
+<li><b>1층 전북은행 임대료·계약잔여기간</b> (실사)</li>
+<li>경매 감정가·낙찰가율 (<b>유료</b>)</li>
+<li>정식 감정평가액 (<b>유료 외주</b>)</li>
+</ul>
+</div>
+</div>
+
+<h2>6. 리스크 &amp; 다음 단계</h2>
+<div class="callout-warn callout">
+<b>주요 리스크:</b> ① 용도지역이 <b>제2종일반주거</b>여서 상업지 대비 활용도 제약 · ② 지방 시세 <b>저성장</b>(자본이득 제한, 임대수익 중심 회수) · ③ <b>은행 임차 종료 시</b> 대체 임차 확보 난이도 · ④ 지오코딩 지번과 등기부 소재지 최종 대조 필요.
+</div>
+<ul class="tight">
+<li><b>즉시(무료):</b> 등기부 열람으로 지번·소유·선순위 근저당 확인 + 지적도 확정</li>
+<li><b>단기(무료키):</b> 공공데이터포털 키로 인근 근린상가 실거래·상권 배후세대 검증</li>
+<li><b>실사(핵심):</b> <b>1층 전북은행 임대차계약서</b>(보증금·월세·잔여기간) 확보 → 수익환원법 정밀 산정</li>
+<li><b>선별(유료):</b> 매입 검토 시 경매 감정가·낙찰가율 확보 → RV 확정</li>
+<li><b>확정(유료):</b> 최종 후보만 정식 감정평가 의뢰</li>
+</ul>
+<p style="font-size:9.5px; color:#888; margin-top:12px;">※ 본 보고서는 무료 VWorld API 실측 기반이며, 지번·소유·권리관계는 등기부로 최종 확인 필요. 추정 감정가는 스크리닝용으로 정식 감정평가를 대체하지 않습니다. 1층 전북은행 임차 조건은 실제 임대차계약서로 검증 전제. 매입 의사결정 시 권리분석(변호사)·감정평가(감정평가사)를 전제로 합니다. 대외비.</p>
+
+</body>
+</html>

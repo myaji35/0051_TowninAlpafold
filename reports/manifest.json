@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "title": "NPL 상권분석 · 감정평가 리포트",
+    "source": "shilla_medical/상권분석",
+    "updated_at": "2026-07-07",
+    "note": "실제 담보물건 상권분석 + NPL 감정평가 산출물. VWorld 기반 상권/공시지가/실거래 + 4단 밸류에이션."
+  },
+  "reports": [
+    {
+      "id": "hyoja-1313-9",
+      "title": "효자동2가 1313-9",
+      "subtitle": "전북은행 담보물건 · 상권분석 + NPL평가",
+      "region": "전주 완산구",
+      "bank": "전북은행",
+      "date": "2026-07-06",
+      "html": "hyoja-1313-9-jbbank_260706.html",
+      "pdf": "hyoja-1313-9-jbbank_260706.pdf",
+      "tag": "최신"
+    },
+    {
+      "id": "cheongdam-49-8",
+      "title": "청담동 49-8",
+      "subtitle": "상권분석 + NPL평가 (샘플)",
+      "region": "강남구 청담동",
+      "bank": null,
+      "date": "2026-07-01",
+      "html": null,
+      "pdf": "cheongdam-49-8_260701.pdf",
+      "tag": "샘플"
+    },
+    {
+      "id": "yeoksam-837-10",
+      "title": "역삼동 837-10 (해븐리치)",
+      "subtitle": "상권분석 + NPL평가",
+      "region": "강남구 역삼동",
+      "bank": null,
+      "date": "2026-07-01",
+      "html": null,
+      "pdf": "yeoksam-837-10-heavenrich_260701.pdf",
+      "tag": null
+    },
+    {
+      "id": "yeouido-48-1",
+      "title": "여의도동 48-1",
+      "subtitle": "상권분석 + NPL평가",
+      "region": "영등포구 여의도동",
+      "bank": null,
+      "date": "2026-07-01",
+      "html": null,
+      "pdf": "yeouido-48-1_260701.pdf",
+      "tag": null
+    },
+    {
+      "id": "sinwol-44-5",
+      "title": "신월동 44-5",
+      "subtitle": "상권분석 + NPL평가",
+      "region": "양천구 신월동",
+      "bank": null,
+      "date": "2026-07-01",
+      "html": null,
+      "pdf": "sinwol-44-5_260701.pdf",
+      "tag": null
+    },
+    {
+      "id": "npl-collateral-opinion",
+      "title": "NPL 담보물건 종합의견서",
+      "subtitle": "담보물건 종합 평가의견",
+      "region": "종합",
+      "bank": null,
+      "date": "2026-07-01",
+      "html": null,
+      "pdf": "npl-collateral-opinion_260701.pdf",
+      "tag": null
+    }
+  ]
+}

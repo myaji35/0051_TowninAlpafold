@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": 1,
+    "version": 2,
     "schema": "categories_v1",
-    "updated_at": "2026-05-05",
+    "updated_at": "2026-07-07",
     "policy": "단일 진실 원본 — 사이드바/카탈로그/검색 자동 생성"
   },
   "groups": [
@@ -143,6 +143,13 @@
           "icon": "trending-up",
           "status": "active",
           "items": [
+            {
+              "id": "npl-reports",
+              "ko": "리포트",
+              "icon": "book-open",
+              "mode": "npl-reports",
+              "accent": true
+            },
             {
               "id": "npl-portfolio",
               "ko": "포트폴리오",
