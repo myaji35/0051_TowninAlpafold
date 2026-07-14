@@ -4471,6 +4471,7 @@ function renderMeongbunLayout(dongName) {
     renderDecisionOnePager(dongName);
     renderFactSection(dongName);
     renderInterpretation(dongName);
+    renderScenarios(dongName);
     mountWidgetCafeTimeseries('#meongbun-sec-2 .meongbun-widget-slot', dongName);
     mountWidgetTopCausal('#meongbun-sec-4 .meongbun-widget-slot', dongName);
     mountWidgetVibeTree('#meongbun-sec-6 .meongbun-widget-slot-tree', dongName);
@@ -4960,6 +4961,173 @@ function renderInterpretation(dongName) {
       body.innerHTML = cache[method];
     });
   });
+}
+
+// ─────────────────────────────────────────────
+// SECTION ❺: Scenarios A/B/C — 3옵션 cone 비교 (UI_SCENARIOS_3OPTION-001)
+// 명분 사슬 [4] 시나리오: "만약 이렇게 바꾼다면?" 반사실(PSM) 결과.
+// 데이터 계약은 reports/build_meongbun_report.py:build_scenarios()와 동일:
+//   { id, name, risk, surv(=p50%), ci:[lo,hi], notes[], recommended }
+// + 웹 확장: cone(12M p10/p50/p90) · roi_pct · matched_n · balance_score(PSM).
+// ─────────────────────────────────────────────
+
+// 기준 12M 생존율(p50%)과 CI 반폭으로 12개월 cone(p10~p90)을 결정론적으로 합성.
+// build_meongbun_report.py 는 단일 12M 점만 산출 → 웹은 월별 곡선으로 이식(선형 접근 + CI 폭 유지).
+function buildScenarioCone(survP50, ciLo, ciHi) {
+  const start = 99;                  // 0개월 = 전부 생존(99% — 상단 여백)
+  const half = Math.max((ciHi - ciLo) / 2, 6);
+  const pts = [];
+  for (let m = 0; m <= 12; m++) {
+    const t = m / 12;
+    const p50 = start + (survP50 - start) * t;         // 99% → survP50 선형 감쇠
+    const spread = half * Math.sqrt(t);                // 불확실성은 시간에 따라 벌어짐
+    pts.push({
+      t: m,
+      p50: p50,
+      p10: Math.max(2, p50 - spread),                  // p10 ≤ p50 보장
+      p90: Math.min(99, Math.max(p50, p50 + spread)),  // p50 ≤ p90 보장 (클램프 후에도)
+    });
+  }
+  return pts;
+}
+
+function getScenariosData(dongName) {
+  // 데모 동 표본 — build_meongbun_report.py 의 3 시나리오 구조를 그대로 반영.
+  const samples = {
+    '의정부시 금오동': {
+      matched_n: 41, balance_score: 0.93,
+      options: [
+        { id: 'A', name: '동일 위치 재창업', risk: 'high', surv: 58, ci: [45, 71], roi_pct: 6,
+          notes: ['카페 밀도 변화 없음', '이전 폐업의 negative spillover 가능'] },
+        { id: 'B', name: '이격 + 차별 업종(베이커리)', risk: 'low', surv: 73, ci: [61, 85], roi_pct: 21,
+          notes: ['밀도 회피 + 희소 카테고리 프리미엄', '주거 비율 높은 골목 지점 추천'], recommended: true },
+        { id: 'C', name: '인접 동 이전 + 동일 업종', risk: 'mid', surv: 62, ci: [49, 75], roi_pct: 11,
+          notes: ['지역 친숙도 손실 패널티', '단순 이전 효과 제한적'] },
+      ],
+    },
+    '성수1가1동': {
+      matched_n: 38, balance_score: 0.90,
+      options: [
+        { id: 'A', name: '동일 위치 재창업', risk: 'mid', surv: 74, ci: [63, 85], roi_pct: 18,
+          notes: ['활성 상권 유지', '임대료 상승 마진 압박'] },
+        { id: 'B', name: '이격 + 차별 업종(베이커리)', risk: 'low', surv: 81, ci: [71, 91], roi_pct: 27,
+          notes: ['카페 포화 회피', '20대 유동 프리미엄 활용'], recommended: true },
+        { id: 'C', name: '인접 동 이전 + 동일 업종', risk: 'high', surv: 66, ci: [53, 79], roi_pct: 9,
+          notes: ['핵심 상권 이탈 리스크', '유동 손실'] },
+      ],
+    },
+  };
+  return samples[dongName] || null;
+}
+
+const SCEN_RISK = {
+  low:  { tag: '저위험·권장', color: '#00529B' },   // plddt_high
+  mid:  { tag: '중위험',      color: '#FED766' },   // plddt_low
+  high: { tag: '고위험',      color: '#C9485B' },   // plddt_poor
+};
+
+// 단일 옵션의 12M cone(p10~p90) SVG — km-curve.js 밴드+라인 스타일 이식.
+function renderScenarioConeSvg(cone, color, recommended) {
+  const W = 260, H = 120, padL = 30, padR = 10, padT = 12, padB = 20;
+  const maxT = 12;
+  const xC = t => padL + (t / maxT) * (W - padL - padR);
+  const yC = v => padT + (1 - v / 100) * (H - padT - padB);
+
+  let s = `<rect width="${W}" height="${H}" fill="rgba(0,0,0,0.18)" rx="4"/>`;
+  // Y 그리드 0/50/100%
+  [0, 50, 100].forEach(g => {
+    const y = yC(g);
+    s += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.10)" stroke-width="0.5"/>`;
+    s += `<text x="${padL - 4}" y="${y + 3}" text-anchor="end" fill="#6B7280" font-size="8">${g}%</text>`;
+  });
+  // X 눈금 0/6/12M
+  [0, 6, 12].forEach(m => {
+    s += `<text x="${xC(m)}" y="${H - padB + 12}" text-anchor="middle" fill="#6B7280" font-size="8">${m}M</text>`;
+  });
+
+  // CI 밴드 (p90 정방향 + p10 역방향) — 반투명 폴리곤
+  let band = `M${xC(cone[0].t)} ${yC(cone[0].p90)}`;
+  cone.forEach(p => { band += ` L${xC(p.t)} ${yC(p.p90)}`; });
+  for (let k = cone.length - 1; k >= 0; k--) { band += ` L${xC(cone[k].t)} ${yC(cone[k].p10)}`; }
+  band += ' Z';
+  s += `<path d="${band}" fill="${color}" fill-opacity="0.16" stroke="none"/>`;
+
+  // p50 중앙선
+  let mid = `M${xC(cone[0].t)} ${yC(cone[0].p50)}`;
+  cone.forEach(p => { mid += ` L${xC(p.t)} ${yC(p.p50)}`; });
+  s += `<path d="${mid}" fill="none" stroke="${color}" stroke-width="${recommended ? 2.4 : 1.6}"/>`;
+
+  // 12M 종점 마커
+  const last = cone[cone.length - 1];
+  s += `<circle cx="${xC(last.t)}" cy="${yC(last.p50)}" r="3" fill="${color}"/>`;
+
+  return `<svg class="scenario-cone" viewBox="0 0 ${W} ${H}" width="100%" role="img" `
+    + `aria-label="12개월 생존율 cone (p10~p90)">${s}</svg>`;
+}
+
+function renderScenarios(dongName) {
+  const sec = document.getElementById('meongbun-sec-5');
+  if (!sec) return;
+  const ph = sec.querySelector('.meongbun-placeholder');
+  if (ph) ph.style.display = 'none';
+
+  const old = sec.querySelector('.scenario-block');
+  if (old) old.remove();
+
+  const data = getScenariosData(dongName);
+  if (!data) {
+    const empty = document.createElement('div');
+    empty.className = 'scenario-block scenario-empty';
+    empty.textContent = `${dongName || '동'} — 시연 시나리오 데이터 미정의. 데모 동(의정부시 금오동 / 성수1가1동)을 선택하세요.`;
+    sec.appendChild(empty);
+    return;
+  }
+
+  const cardsHtml = data.options.map(o => {
+    const r = SCEN_RISK[o.risk] || SCEN_RISK.mid;
+    const cone = buildScenarioCone(o.surv, o.ci[0], o.ci[1]);
+    const notes = o.notes.map(n => `<li>${escapeHtml(n)}</li>`).join('');
+    const recBadge = o.recommended
+      ? '<span class="scenario-rec-badge">╲ 권고</span>' : '';
+    return `
+      <article class="scenario-card${o.recommended ? ' recommended' : ''}"
+               style="border-top-color:${r.color}"${o.recommended ? ` data-plddt-high="true"` : ''}>
+        <div class="scenario-head">
+          <span class="scenario-id">${escapeHtml(o.id)}</span>
+          <span class="scenario-name">${escapeHtml(o.name)}</span>
+          ${recBadge}
+        </div>
+        <div class="scenario-tag" style="background:${r.color};color:${o.risk === 'mid' ? '#07101F' : '#fff'}">${r.tag}</div>
+        ${renderScenarioConeSvg(cone, r.color, o.recommended)}
+        <div class="scenario-metrics">
+          <div class="scenario-metric">
+            <div class="scenario-metric-lbl">12M 생존율</div>
+            <div class="scenario-metric-val" style="color:${r.color}">${o.surv}%</div>
+            <div class="scenario-metric-ci">CI [${o.ci[0]}–${o.ci[1]}%]</div>
+          </div>
+          <div class="scenario-metric">
+            <div class="scenario-metric-lbl">기대 ROI</div>
+            <div class="scenario-metric-val">${o.roi_pct > 0 ? '+' : ''}${o.roi_pct}%</div>
+          </div>
+          <div class="scenario-metric">
+            <div class="scenario-metric-lbl">매칭 동 N</div>
+            <div class="scenario-metric-val">${data.matched_n}</div>
+          </div>
+        </div>
+        <ul class="scenario-notes">${notes}</ul>
+      </article>`;
+  }).join('');
+
+  const block = document.createElement('div');
+  block.className = 'scenario-block';
+  block.innerHTML = `
+    <div class="scenario-grid">${cardsHtml}</div>
+    <div class="scenario-prov">
+      방법: Propensity Score Matching(반사실) + KM 생존 · cone은 p10~p90 신뢰밴드 ·
+      <b>공변량 균형(balance) ${data.balance_score.toFixed(2)}</b> (1.0=완전 균형, ≥0.8 양호) ·
+      매칭 표본 ${data.matched_n}개 동. 출처: reports/build_meongbun_report.py · 결정론적.
+    </div>`;
+  sec.appendChild(block);
 }
 
 // ─────────────────────────────────────────────────────────────

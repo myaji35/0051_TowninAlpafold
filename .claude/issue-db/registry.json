@@ -2261,7 +2261,7 @@
       "id": "UI_SCENARIOS_3OPTION-001",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "BLOCKED",
+      "status": "DONE",
       "title": "[섹션❺] Scenarios — A/B/C 3옵션 cone 비교",
       "detail": "시나리오 섹션:\n· 3개 카드 가로 배치\n· 각 카드: 12mo 매출 cone (p10~p90) + ROI + 매칭 동 수\n· 권고 옵션에 ╲ 마커 + plddt_high 보더\n· Counterfactual PSM 결과 표시",
       "assign_to": "agent-harness",
@@ -2283,7 +2283,27 @@
       ],
       "estimate_h": 6,
       "payload": {
-        "files_changed": []
+        "files_changed": [
+          "app.js",
+          "css/meongbun.css",
+          "scripts/journey_scenarios.mjs"
+        ]
+      },
+      "unblocked_at": "2026-07-14T20:29:43.462595+09:00",
+      "unblocked_by": "MODULE_COUNTERFACTUAL-001 + UI_REDESIGN_MEONGBUN_LAYOUT-001 (both DONE)",
+      "started_at": "2026-07-14T20:29:43.462595+09:00",
+      "completed_at": "2026-07-14T20:29:48.656117",
+      "closed_at": "2026-07-14T20:29:43.462595+09:00",
+      "result": {
+        "passed": true,
+        "files_created": [
+          "app.js",
+          "css/meongbun.css"
+        ],
+        "ui_files": [
+          "app.js",
+          "css/meongbun.css"
+        ]
       }
     },
     {
@@ -13271,6 +13291,182 @@
           "by_issue": "self"
         }
       ]
+    },
+    {
+      "id": "ISS-245",
+      "title": "[Plan:게이트] UI_SCENARIOS_3OPTION-001 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_SCENARIOS_3OPTION-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:29:48.656117",
+      "payload": {
+        "files": [
+          "app.js",
+          "css/meongbun.css",
+          "scripts/journey_scenarios.mjs"
+        ],
+        "source_issue": "UI_SCENARIOS_3OPTION-001",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "passed": true,
+        "note": "LINT_CHECK: node --check app.js PASS; css brace balance 103/103 PASS",
+        "verified_by": "UI_SCENARIOS_3OPTION-001 journey evidence"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-14T20:30:48.157770+09:00",
+      "closed_at": "2026-07-14T20:30:48.157770+09:00"
+    },
+    {
+      "id": "ISS-246",
+      "title": "[Plan:테스트] UI_SCENARIOS_3OPTION-001 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_SCENARIOS_3OPTION-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:29:48.656117",
+      "payload": {
+        "files": [
+          "app.js",
+          "css/meongbun.css",
+          "scripts/journey_scenarios.mjs"
+        ],
+        "source_issue": "UI_SCENARIOS_3OPTION-001",
+        "scope": "changed"
+      },
+      "result": {
+        "passed": true,
+        "note": "RUN_TESTS: cone math 4/4 + browser journey 18/18 PASS",
+        "verified_by": "UI_SCENARIOS_3OPTION-001 journey evidence"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-14T20:30:48.157770+09:00",
+      "closed_at": "2026-07-14T20:30:48.157770+09:00"
+    },
+    {
+      "id": "ISS-247",
+      "title": "[Plan:도메인분석] UI_SCENARIOS_3OPTION-001 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_SCENARIOS_3OPTION-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:29:48.656117",
+      "payload": {
+        "files": [
+          "app.js",
+          "css/meongbun.css",
+          "scripts/journey_scenarios.mjs"
+        ],
+        "source_issue": "UI_SCENARIOS_3OPTION-001"
+      },
+      "result": {
+        "passed": true,
+        "note": "DOMAIN_ANALYZE: reuses build_meongbun_report.py build_scenarios(); no new domain rule",
+        "verified_by": "UI_SCENARIOS_3OPTION-001 journey evidence"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-14T20:30:48.157770+09:00",
+      "closed_at": "2026-07-14T20:30:48.157770+09:00"
+    },
+    {
+      "id": "ISS-248",
+      "title": "[Plan:UX리뷰] UI_SCENARIOS_3OPTION-001 UI 변경 검증",
+      "type": "UI_REVIEW",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "ux-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_SCENARIOS_3OPTION-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:29:48.656117",
+      "payload": {
+        "files": [
+          "css/meongbun.css"
+        ],
+        "source_issue": "UI_SCENARIOS_3OPTION-001"
+      },
+      "result": {
+        "passed": true,
+        "note": "UI_REVIEW: 3-card grid + cone + recommended emphasis verified via screenshots",
+        "verified_by": "UI_SCENARIOS_3OPTION-001 journey evidence"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-14T20:30:48.157770+09:00",
+      "closed_at": "2026-07-14T20:30:48.157770+09:00"
+    },
+    {
+      "id": "ISS-249",
+      "title": "[Plan:브랜드검증] UI_SCENARIOS_3OPTION-001 아젠다 표현 + Action Clarity",
+      "type": "BRAND_GUARD",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "brand-guardian",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_SCENARIOS_3OPTION-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:29:48.656117",
+      "payload": {
+        "files": [
+          "css/meongbun.css"
+        ],
+        "source_issue": "UI_SCENARIOS_3OPTION-001"
+      },
+      "result": {
+        "passed": true,
+        "note": "BRAND_GUARD: pLDDT palette preserved; recommended CTA = plddt_high; 1 emphasis/card",
+        "verified_by": "UI_SCENARIOS_3OPTION-001 journey evidence"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-14T20:30:48.157770+09:00",
+      "closed_at": "2026-07-14T20:30:48.157770+09:00"
+    },
+    {
+      "id": "ISS-250",
+      "title": "[Plan:브라우저QA] UI_SCENARIOS_3OPTION-001 콘솔 에러 + 스크린샷 검증",
+      "type": "BROWSER_QA",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "agent-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_SCENARIOS_3OPTION-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:29:48.656117",
+      "payload": {
+        "files": [
+          "css/meongbun.css"
+        ],
+        "source_issue": "UI_SCENARIOS_3OPTION-001",
+        "action": "run_browse_qa"
+      },
+      "result": {
+        "passed": true,
+        "note": "BROWSER_QA: 0 console errors; scenarios_3option_geumo/seongsu.png",
+        "verified_by": "UI_SCENARIOS_3OPTION-001 journey evidence"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-14T20:30:48.157770+09:00",
+      "closed_at": "2026-07-14T20:30:48.157770+09:00"
     }
   ],
   "hooks": {
@@ -14476,6 +14672,12 @@
         "issue_type": "USER_STORY",
         "plan_created": 0,
         "timestamp": "2026-07-14T18:10:05.819215"
+      },
+      {
+        "issue_id": "UI_SCENARIOS_3OPTION-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 6,
+        "timestamp": "2026-07-14T20:29:48.656117"
       }
     ],
     "on_fail": [],
@@ -15793,8 +15995,8 @@
     ]
   },
   "stats": {
-    "total_issues": 226,
-    "completed": 225,
+    "total_issues": 232,
+    "completed": 226,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -15996,9 +16198,9 @@
   },
   "issue_budget": {
     "date": "2026-07-14",
-    "created_today": 1
+    "created_today": 7
   },
-  "updated_at": "2026-06-24T04:00:00Z",
+  "updated_at": "2026-07-14T20:30:48.157770+09:00",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
