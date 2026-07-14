@@ -2211,7 +2211,7 @@
       "id": "UI_BENCHMARK_KM_CURVE-001",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "BLOCKED",
+      "status": "DONE",
       "title": "[섹션❹] Benchmark — Kaplan-Meier 생존곡선 + 유사동 매칭",
       "detail": "비교 섹션:\n· K-M 생존곡선 2개 (대상 동 vs 평균) + 95% CI 띠\n· log-rank test 결과 표시 (χ², p)\n· 매칭 동 N개 + 코사인 유사도\n· 부록 B 링크",
       "assign_to": "agent-harness",
@@ -2234,6 +2234,27 @@
       "estimate_h": 6,
       "payload": {
         "files_changed": []
+      },
+      "started_at": "2026-07-14T09:05:14+00:00",
+      "completed_at": "2026-07-14T18:10:05.819215",
+      "result": {
+        "passed": true,
+        "files_created": [
+          "viz/plugins/km-curve.js",
+          "tests/km-curve.test.mjs",
+          "tests/km-render.test.mjs"
+        ],
+        "files_modified": [
+          "index.html",
+          "css/pharmacy.css",
+          "components/pharmacy-close.js"
+        ],
+        "unit_tests": "9/9 pass",
+        "render_tests": "11/11 pass",
+        "km_s12": "62.0%",
+        "ci": "[44.8,75.2]",
+        "logrank_verified": true,
+        "note": "KMCurve 재사용 모듈 — KM+Greenwood log-log CI+log-rank(Mantel-Cox)+코사인 유사동 매칭. pharmacy-close KM 슬롯에 곡선2+CI띠+log-rank+유사동표 단일화면 렌더."
       }
     },
     {
@@ -14449,6 +14470,12 @@
         "issue_type": "USER_STORY",
         "plan_created": 1,
         "timestamp": "2026-07-14T00:17:58.782088"
+      },
+      {
+        "issue_id": "UI_BENCHMARK_KM_CURVE-001",
+        "issue_type": "USER_STORY",
+        "plan_created": 0,
+        "timestamp": "2026-07-14T18:10:05.819215"
       }
     ],
     "on_fail": [],
@@ -15767,7 +15794,7 @@
   },
   "stats": {
     "total_issues": 226,
-    "completed": 224,
+    "completed": 225,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"

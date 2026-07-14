@@ -963,3 +963,21 @@
   opacity: 0; transition: opacity .15s;
   z-index: 10;
 }
+
+/* ── Kaplan-Meier 생존곡선 (viz/plugins/km-curve.js · UI_BENCHMARK_KM_CURVE-001) ── */
+.km-curve-block { display: flex; flex-direction: column; gap: 12px; }
+.km-svg { display: block; width: 100%; height: auto; background: #0F1419; border-radius: 6px; }
+.km-empty { padding: 30px; text-align: center; color: #9ca3af; background: #f9fafb; border-radius: 6px; font-size: 13px; }
+.km-logrank {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  font-size: 12px; padding: 8px 12px; background: #f0f7ff;
+  border-left: 3px solid #00529B; border-radius: 4px;
+}
+.km-lr-label { font-weight: 600; color: #00529B; }
+.km-lr-stat { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #1a1a1a; }
+.km-lr-note { color: #374151; }
+.km-peers-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.km-peers-table th, .km-peers-table td { padding: 6px 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+.km-peers-table th { color: #6b7280; font-weight: 600; background: #f9fafb; }
+.km-peers-table td { color: #1a1a1a; }
+.km-provenance { font-size: 10px; color: #9ca3af; padding-top: 4px; }

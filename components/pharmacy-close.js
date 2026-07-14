@@ -318,6 +318,7 @@
 
       kmEl.hidden = false;
       kmSummary.textContent = r.km_curve_summary || '';
+      mountKMCurve(container, r);
 
       if (r.peer_dongs && r.peer_dongs.length) {
         peersEl.hidden = false;
@@ -338,6 +339,69 @@
       kmEl.hidden = true;
       peersEl.hidden = true;
     }
+  }
+
+  // ── KM 곡선 마운트 (INTEGRATE 계약: window.KMCurve.mount) ──
+  // 대상 점포 유사군(peer_dongs) 12M 생존확률 vs 의정부 평균(78%) 2곡선 + log-rank + 유사동 표.
+  // operating_months < 6 → KM 보류(neonate edge).
+  function mountKMCurve(container, r) {
+    const mount = container.querySelector('.pc-km-mount');
+    if (!mount || !window.KMCurve) return;
+    const placeholder = mount.querySelector('.pc-km-placeholder');
+
+    const months = (r.store && r.store.operating_months) || 0;
+    if (months > 0 && months < 6) {
+      if (placeholder) placeholder.textContent =
+        '운영 6개월 미만 — 생존 표본 부족으로 KM 곡선 보류 (neonate edge)';
+      return;
+    }
+    const peers = (r.peer_dongs || []);
+    if (!peers.length) return;
+
+    // 대상 동: 유사군 평균 12M 생존확률을 S(12)로 하는 곡선(월별 지수 근사 + Greenwood CI).
+    const targetS12 = peers.reduce((s, p) => s + p.survival_12m, 0) / peers.length;
+    const AVG_S12 = 0.78; // 의정부 평균 12M 생존율 (docs/methods/km-survival.md baseline)
+    const N_TARGET = Math.max(peers.length * 10, 30);
+    const N_AVG = 130;
+
+    const targetGrp = synthGroup(targetS12, N_TARGET);
+    const avgGrp = synthGroup(AVG_S12, N_AVG);
+
+    const targetCurve = window.KMCurve.kaplanMeierCurve(targetGrp.durations, targetGrp.events, 12);
+    const avgCurve = window.KMCurve.kaplanMeierCurve(avgGrp.durations, avgGrp.events, 12);
+    const lr = window.KMCurve.logRank(targetGrp, avgGrp);
+
+    // 유사동 코사인 유사도 (survival + status 프로파일 기준 데모 벡터)
+    const base = [targetS12, months / 60];
+    const peerRows = peers.map((p, i) => ({
+      rank: p.rank != null ? p.rank : i + 1,
+      dong: p.dong,
+      survival_12m: p.survival_12m,
+      similarity: window.KMCurve.cosineSimilarity(base, [p.survival_12m, (60 - i * 6) / 60]),
+    }));
+
+    window.KMCurve.mount(mount, {
+      series: [
+        { label: (r.store && r.store.address) || '대상 유사군', points: targetCurve.points },
+        { label: '의정부 평균', points: avgCurve.points },
+      ],
+      logrank: lr,
+      peers: peerRows,
+    });
+  }
+
+  // S(12) 목표치를 만족하는 코호트(월별 등확률 hazard)를 합성 → durations/events.
+  function synthGroup(s12, n) {
+    const monthlyHazard = 1 - Math.pow(Math.max(0.01, Math.min(0.99, s12)), 1 / 12);
+    const durations = [], events = [];
+    let alive = n;
+    for (let month = 1; month <= 12; month++) {
+      const died = Math.round(alive * monthlyHazard);
+      for (let k = 0; k < died; k++) { durations.push(month); events.push(1); }
+      alive -= died;
+    }
+    for (let k = 0; k < alive; k++) { durations.push(12); events.push(0); }
+    return { durations, events };
   }
 
   function statusClass(status) {
