@@ -4472,10 +4472,9 @@ function renderMeongbunLayout(dongName) {
     renderFactSection(dongName);
     renderInterpretation(dongName);
     renderScenarios(dongName);
+    renderRecommendationTrace(dongName);
     mountWidgetCafeTimeseries('#meongbun-sec-2 .meongbun-widget-slot', dongName);
     mountWidgetTopCausal('#meongbun-sec-4 .meongbun-widget-slot', dongName);
-    mountWidgetVibeTree('#meongbun-sec-6 .meongbun-widget-slot-tree', dongName);
-    mountWidgetFeatureImportance('#meongbun-sec-6 .meongbun-widget-slot-shap', dongName);
   }
 
   // 점프 네비 active 상태 초기화
@@ -5128,6 +5127,222 @@ function renderScenarios(dongName) {
       매칭 표본 ${data.matched_n}개 동. 출처: reports/build_meongbun_report.py · 결정론적.
     </div>`;
   sec.appendChild(block);
+}
+
+// ─────────────────────────────────────────────
+// SECTION ❻: Recommendation Trace — SHAP + Decision Tree (UI_RECOMMENDATION_TRACE-001)
+// "권고가 어떤 사실·해석으로부터 도출되었는지 역추적"
+//   ① SHAP 변수별 기여도 horizontal bar (top 5 + 기타) — 데모 표본(동별)
+//   ② Decision Tree 분기 경로 (펼치기) — 실제 TREE_MODEL + _classifyDong 로 vibe 분류 재현
+// 기존 Vibe 트리(mountWidgetVibeTree) + Feature Importance(mountWidgetFeatureImportance) 를 흡수.
+// ─────────────────────────────────────────────
+
+function getRecommendationTraceData(dongName) {
+  // SHAP top-N 기여도 데모 표본 — 시나리오/해석 섹션과 동일한 동별 표본 구조.
+  // contrib: 부호 있는 기여도(%p). +는 권고를 밀어올린 변수, -는 끌어내린 변수.
+  const samples = {
+    '의정부시 금오동': {
+      recommendation: '신중한 진입 — 6개월 관찰 후 재평가',
+      base_rate: 64,       // 유사동 평균 생존율(기준선)
+      shap: [
+        { feature: '카페_추세',   contrib: -9.5, note: '인근 카페 폐업률 +18% → 위험 가중' },
+        { feature: '유동_평균',   contrib: -6.2, note: '20대 유동 YoY -7% 감소' },
+        { feature: '지가_추세',   contrib: -3.4, note: '지가 +6.2% → 임대 마진 압박' },
+        { feature: '소상공_평균', contrib: +2.1, note: '소상공인 매출 기반 유지' },
+        { feature: '카페_평균',   contrib: +1.3, note: '카페 밀도 아직 낮음(포화 여유)' },
+      ],
+      other_contrib: -0.7, other_count: 4,
+    },
+    '성수1가1동': {
+      recommendation: '적극 진입 — 카페 신규 창업 적합',
+      base_rate: 81,
+      shap: [
+        { feature: '카페_추세',   contrib: +11.4, note: '카페 신규 진입 +24% (상위 5%)' },
+        { feature: '유동_평균',   contrib: +7.8,  note: '20대 유동 YoY +15% (활성 상권)' },
+        { feature: '소상공_추세', contrib: +4.6,  note: '소상공인 매출 상승 추세' },
+        { feature: '지가_추세',   contrib: -5.1,  note: '지가 +22% → 임대료 급등 위험' },
+        { feature: '카페_평균',   contrib: -2.3,  note: '카페 포화(밀도 높음) 소폭 감점' },
+      ],
+      other_contrib: +1.2, other_count: 4,
+    },
+  };
+  return samples[dongName] || null;
+}
+
+// 실제 학습 트리(TREE_MODEL)에 selectedDong 을 통과시켜 분기 경로를 구조화.
+// _classifyDong 이 반환하는 node id 배열을 브랜치 스텝으로 변환.
+function buildTraceBranchPath(dongName) {
+  if (typeof TREE_MODEL === 'undefined' || !TREE_MODEL) return null;
+  const dong = (typeof selectedDong !== 'undefined' && selectedDong && selectedDong.name === dongName)
+    ? selectedDong
+    : (typeof DATA !== 'undefined' && DATA && DATA.dongs
+        ? DATA.dongs.find(d => d.name === dongName) : null);
+  if (!dong || !dong.layers) return null;
+
+  const layout = _treeLayout(TREE_MODEL);
+  const path = _classifyDong(TREE_MODEL, layout, dong);   // node id 배열 (root→leaf)
+  if (!path.length) return null;
+
+  const steps = [];
+  for (let i = 0; i < path.length; i++) {
+    const n = layout[path[i]];
+    if (!n) continue;
+    if (n.leaf) {
+      steps.push({
+        kind: 'leaf',
+        vibe: n.class,
+        vibe_ko: (typeof VIBE_LABEL !== 'undefined' && VIBE_LABEL[n.class]) || n.class,
+        color: (VIBE_COLOR && VIBE_COLOR[n.class]) || '#9CA3AF',
+        samples: n.samples,
+      });
+    } else {
+      const nextId = path[i + 1];
+      const wentLeft = nextId === n.left;   // val ≤ threshold → 좌
+      const fh = (typeof FEATURE_HUMAN !== 'undefined' && FEATURE_HUMAN[n.feature_name]) || null;
+      const thr = (Math.abs(n.threshold) >= 100) ? n.threshold.toFixed(0) : n.threshold.toFixed(2);
+      steps.push({
+        kind: 'branch',
+        feature: n.feature_name,
+        feature_ko: (fh && fh.ko) || n.feature_name,
+        threshold: thr,
+        went_left: wentLeft,
+        cmp: wentLeft ? '≤' : '>',
+        samples: n.samples,
+      });
+    }
+  }
+  return steps;
+}
+
+function renderRecommendationTrace(dongName) {
+  const sec = document.getElementById('meongbun-sec-6');
+  if (!sec) return;
+  const ph = sec.querySelector('.meongbun-placeholder');
+  if (ph) ph.style.display = 'none';
+
+  // idempotent — 기존 카드 제거
+  const old = sec.querySelector('.trace-block');
+  if (old) old.remove();
+
+  const data = getRecommendationTraceData(dongName);
+  const branchSteps = buildTraceBranchPath(dongName);
+
+  if (!data && !branchSteps) {
+    const empty = document.createElement('div');
+    empty.className = 'trace-block trace-empty';
+    empty.textContent = `${dongName || '동'} — 시연 추적 데이터 미정의. 데모 동(의정부시 금오동 / 성수1가1동)을 선택하세요.`;
+    sec.appendChild(empty);
+    return;
+  }
+
+  const block = document.createElement('div');
+  block.className = 'trace-block';
+  block.innerHTML = `
+    ${data ? renderTraceShapHtml(data) : ''}
+    ${branchSteps ? renderTraceTreeHtml(branchSteps) : ''}
+    <div class="trace-prov">
+      방법: SHAP(변수별 기여도, 부호=방향) + Decision Tree(vibe 분류 경로) ·
+      SHAP 기여도는 데모 표본이며, 분기 경로는 <b>실제 학습 트리 tree_model.json</b>에 동 특성을 통과시킨 결과 ·
+      합성 데이터 학습 → 실데이터 도입(ISS-018) 시 값 변동 가능.
+    </div>`;
+  sec.appendChild(block);
+
+  // 트리 경로 펼치기 토글
+  const toggle = block.querySelector('.trace-tree-toggle');
+  const treeBody = block.querySelector('.trace-tree-body');
+  if (toggle && treeBody) {
+    toggle.addEventListener('click', () => {
+      const open = !treeBody.hidden;
+      treeBody.hidden = open;
+      toggle.setAttribute('aria-expanded', String(!open));
+      const arrow = toggle.querySelector('.trace-tree-arrow');
+      if (arrow) arrow.textContent = open ? '▼' : '▲';
+    });
+  }
+}
+
+// ① SHAP horizontal bar — top 5 + 기타. 부호별 좌우 발산 막대(waterfall 느낌).
+function renderTraceShapHtml(data) {
+  const rows = data.shap.slice(0, 5);
+  const maxAbs = Math.max(...rows.map(r => Math.abs(r.contrib)), Math.abs(data.other_contrib), 0.1);
+  const POS = '#00529B', NEG = '#C9485B';   // pLDDT high / poor
+  const barHtml = rows.map(r => {
+    const fh = (typeof FEATURE_HUMAN !== 'undefined' && FEATURE_HUMAN[r.feature]) || null;
+    const label = (fh && fh.ko) || r.feature;
+    const pos = r.contrib >= 0;
+    const w = (Math.abs(r.contrib) / maxAbs) * 50;   // 최대 반폭 50%
+    const color = pos ? POS : NEG;
+    return `
+      <div class="trace-shap-row">
+        <div class="trace-shap-label" title="${escapeHtml((fh && fh.desc) || '')}">${escapeHtml(label)}</div>
+        <div class="trace-shap-track">
+          <div class="trace-shap-axis"></div>
+          <div class="trace-shap-bar ${pos ? 'pos' : 'neg'}"
+               style="${pos ? 'left:50%' : 'right:50%'};width:${w}%;background:${color}"></div>
+          <div class="trace-shap-val" style="color:${color}">${pos ? '+' : ''}${r.contrib.toFixed(1)}%p</div>
+        </div>
+        <div class="trace-shap-note">${escapeHtml(r.note)}</div>
+      </div>`;
+  }).join('');
+
+  const otherPos = data.other_contrib >= 0;
+  return `
+    <div class="trace-shap">
+      <div class="trace-sub-head">
+        <span class="trace-sub-title">① 변수별 기여도 (SHAP)</span>
+        <span class="trace-sub-meta">기준 생존율 ${data.base_rate}% 대비 · <b class="trace-pos">+</b> 상향 / <b class="trace-neg">−</b> 하향</span>
+      </div>
+      <div class="trace-shap-list">${barHtml}</div>
+      <div class="trace-shap-other">
+        기타 변수 ${data.other_count}개 합산 기여도
+        <b style="color:${otherPos ? '#00529B' : '#C9485B'}">${otherPos ? '+' : ''}${data.other_contrib.toFixed(1)}%p</b>
+      </div>
+    </div>`;
+}
+
+// ② Decision Tree 분기 경로 — 펼치기. 실제 트리 통과 결과.
+function renderTraceTreeHtml(steps) {
+  const branches = steps.filter(s => s.kind === 'branch');
+  const leaf = steps.find(s => s.kind === 'leaf');
+  const nBranch = branches.length;
+
+  const stepHtml = steps.map((s, i) => {
+    if (s.kind === 'leaf') {
+      return `
+        <li class="trace-step trace-step-leaf">
+          <span class="trace-step-dot" style="background:${s.color}"></span>
+          <div class="trace-step-body">
+            <div class="trace-step-main">
+              최종 분류 → <span class="trace-leaf-tag" style="background:${s.color}">${escapeHtml(s.vibe_ko)}</span>
+            </div>
+            <div class="trace-step-sub">학습 데이터 ${s.samples}개 동이 이 분류에 속함</div>
+          </div>
+        </li>`;
+    }
+    return `
+      <li class="trace-step">
+        <span class="trace-step-idx">${i + 1}</span>
+        <div class="trace-step-body">
+          <div class="trace-step-main">
+            <span class="trace-feat">${escapeHtml(s.feature_ko)}</span>
+            <span class="trace-cmp">${s.cmp}</span>
+            <span class="trace-thr">${escapeHtml(s.threshold)}</span>
+            <span class="trace-dir ${s.went_left ? 'left' : 'right'}">${s.went_left ? '충족 → 좌측' : '초과 → 우측'}</span>
+          </div>
+          <div class="trace-step-sub">이 노드에서 ${s.samples}개 동이 분기</div>
+        </div>
+      </li>`;
+  }).join('');
+
+  return `
+    <div class="trace-tree">
+      <button class="trace-tree-toggle" type="button" aria-expanded="false">
+        <span class="trace-sub-title">② 분류 경로 (Decision Tree)</span>
+        <span class="trace-tree-summary">권고까지 ${nBranch}회 분기${leaf ? ` → ${escapeHtml(leaf.vibe_ko)}` : ''}</span>
+        <span class="trace-tree-arrow">▼</span>
+      </button>
+      <ol class="trace-tree-body" hidden>${stepHtml}</ol>
+    </div>`;
 }
 
 // ─────────────────────────────────────────────────────────────

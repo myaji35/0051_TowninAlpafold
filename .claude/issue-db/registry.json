@@ -2310,7 +2310,7 @@
       "id": "UI_RECOMMENDATION_TRACE-001",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "BLOCKED",
+      "status": "DONE",
       "title": "[섹션❻] Recommendation Trace — SHAP + Decision Tree 통합",
       "detail": "권고 추적 섹션:\n· SHAP 변수별 기여도 horizontal bar (top 5 + 기타)\n· Decision Tree 분기 경로 (펼치기) — 권고까지 N회 분기\n· 기존 Vibe 트리 + Feature Importance 위젯 통합",
       "assign_to": "agent-harness",
@@ -2333,6 +2333,16 @@
       "estimate_h": 6,
       "payload": {
         "files_changed": []
+      },
+      "completed_at": "2026-07-14T20:38:46.595489",
+      "result": {
+        "files_changed": [
+          "app.js",
+          "css/meongbun.css",
+          "verify_recommendation_trace.mjs"
+        ],
+        "journey": "5/5 PASS",
+        "ui": true
       }
     },
     {
@@ -13467,6 +13477,105 @@
       "spawn_rules": [],
       "completed_at": "2026-07-14T20:30:48.157770+09:00",
       "closed_at": "2026-07-14T20:30:48.157770+09:00"
+    },
+    {
+      "id": "ISS-251",
+      "title": "[Plan:게이트] UI_RECOMMENDATION_TRACE-001 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "DONE",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_RECOMMENDATION_TRACE-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:38:46.595489",
+      "payload": {
+        "files": [],
+        "source_issue": "UI_RECOMMENDATION_TRACE-001",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": {
+        "clean": true,
+        "type_errors": 0,
+        "lint_errors": 0,
+        "note": "node --check pass on app.js + verify_recommendation_trace.mjs"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-14T20:39:08.732086"
+    },
+    {
+      "id": "ISS-252",
+      "title": "[Plan:테스트] UI_RECOMMENDATION_TRACE-001 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "DONE",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_RECOMMENDATION_TRACE-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:38:46.595489",
+      "payload": {
+        "files": [],
+        "source_issue": "UI_RECOMMENDATION_TRACE-001",
+        "scope": "changed"
+      },
+      "result": {
+        "passed": true,
+        "total": 5,
+        "failed_count": 0,
+        "note": "섹션❻ 캐릭터 저니 5/5 PASS (verify_recommendation_trace.mjs)"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-14T20:39:09.144427"
+    },
+    {
+      "id": "ISS-253",
+      "title": "[Plan:도메인분석] UI_RECOMMENDATION_TRACE-001 비즈니스 규칙/시나리오 도출",
+      "type": "DOMAIN_ANALYZE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "domain-analyst",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "UI_RECOMMENDATION_TRACE-001",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:38:46.595489",
+      "payload": {
+        "files": [],
+        "source_issue": "UI_RECOMMENDATION_TRACE-001"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-254",
+      "title": "[Plan:품질평가] ISS-252 품질 점수 산출",
+      "type": "SCORE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "eval-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-252",
+      "depends_on": [],
+      "created_at": "2026-07-14T20:39:09.144427",
+      "payload": {
+        "test_result": {
+          "passed": true,
+          "total": 5,
+          "coverage": null
+        },
+        "source_issue": "ISS-252"
+      },
+      "result": null,
+      "spawn_rules": []
     }
   ],
   "hooks": {
@@ -14678,6 +14787,24 @@
         "issue_type": "GENERATE_CODE",
         "plan_created": 6,
         "timestamp": "2026-07-14T20:29:48.656117"
+      },
+      {
+        "issue_id": "UI_RECOMMENDATION_TRACE-001",
+        "issue_type": "GENERATE_CODE",
+        "plan_created": 3,
+        "timestamp": "2026-07-14T20:38:46.595489"
+      },
+      {
+        "issue_id": "ISS-251",
+        "issue_type": "LINT_CHECK",
+        "plan_created": 0,
+        "timestamp": "2026-07-14T20:39:08.732086"
+      },
+      {
+        "issue_id": "ISS-252",
+        "issue_type": "RUN_TESTS",
+        "plan_created": 1,
+        "timestamp": "2026-07-14T20:39:09.144427"
       }
     ],
     "on_fail": [],
@@ -14853,6 +14980,12 @@
         "context": "ISS-238 lint/type clean",
         "frequency": 1,
         "discovered_at": "2026-06-24T10:05:48.656079"
+      },
+      {
+        "pattern": "sensor_clean",
+        "context": "ISS-251 lint/type clean",
+        "frequency": 1,
+        "discovered_at": "2026-07-14T20:39:08.732086"
       }
     ],
     "failure_patterns": [],
@@ -15995,8 +16128,8 @@
     ]
   },
   "stats": {
-    "total_issues": 232,
-    "completed": 226,
+    "total_issues": 236,
+    "completed": 229,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -16176,6 +16309,15 @@
         "total": 4,
         "coverage": null
       }
+    },
+    {
+      "source_issue": "ISS-252",
+      "source_type": "RUN_TESTS",
+      "result": {
+        "passed": true,
+        "total": 5,
+        "coverage": null
+      }
     }
   ],
   "learned_patterns": [
@@ -16198,7 +16340,7 @@
   },
   "issue_budget": {
     "date": "2026-07-14",
-    "created_today": 7
+    "created_today": 11
   },
   "updated_at": "2026-07-14T20:30:48.157770+09:00",
   "hermes_state": {

@@ -648,3 +648,234 @@
   border: 1px dashed rgba(255, 255, 255, 0.10);
   border-radius: 6px;
 }
+
+/* ─────────────────────────────────────────────
+   SECTION ❻ Recommendation Trace — SHAP + Decision Tree (UI_RECOMMENDATION_TRACE-001)
+   pLDDT 색상: +기여=high #00529B, -기여=poor #C9485B
+───────────────────────────────────────────── */
+.trace-block { margin-top: 16px; }
+.trace-sub-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.trace-sub-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #E8EDF3;
+}
+.trace-sub-meta {
+  font-size: 10.5px;
+  color: #6B7280;
+  font-family: 'JetBrains Mono', monospace;
+}
+.trace-sub-meta b { font-weight: 700; }
+.trace-pos { color: #00529B; }
+.trace-neg { color: #C9485B; }
+
+/* ① SHAP 발산 막대 */
+.trace-shap {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px 16px 12px;
+}
+.trace-shap-list { display: flex; flex-direction: column; gap: 8px; }
+.trace-shap-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  grid-template-areas: "label track" "note note";
+  align-items: center;
+  gap: 4px 12px;
+}
+.trace-shap-label {
+  grid-area: label;
+  font-size: 12px;
+  color: #E8EDF3;
+  font-weight: 600;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.trace-shap-track {
+  grid-area: track;
+  position: relative;
+  height: 20px;
+}
+.trace-shap-axis {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.14);
+}
+.trace-shap-bar {
+  position: absolute;
+  top: 3px;
+  height: 14px;
+  border-radius: 3px;
+  min-width: 2px;
+}
+.trace-shap-bar.pos { border-radius: 0 3px 3px 0; }
+.trace-shap-bar.neg { border-radius: 3px 0 0 3px; }
+.trace-shap-val {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.trace-shap-note {
+  grid-area: note;
+  font-size: 10.5px;
+  color: #9CA3AF;
+  line-height: 1.45;
+  padding-left: 142px;
+}
+@media (max-width: 720px) {
+  .trace-shap-row { grid-template-columns: 92px 1fr; }
+  .trace-shap-note { padding-left: 0; }
+}
+.trace-shap-other {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 11px;
+  color: #6B7280;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ② Decision Tree 분기 경로 (펼치기) */
+.trace-tree {
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.trace-tree-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+}
+.trace-tree-toggle:hover { background: rgba(255, 255, 255, 0.04); }
+.trace-tree-summary {
+  font-size: 11px;
+  color: #9CA3AF;
+  font-family: 'JetBrains Mono', monospace;
+}
+.trace-tree-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: #6B7280;
+}
+.trace-tree-body {
+  list-style: none;
+  margin: 0;
+  padding: 4px 16px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.trace-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  position: relative;
+}
+.trace-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 26px;
+  bottom: -3px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.10);
+}
+.trace-step-idx {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 82, 155, 0.85);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.trace-step-dot {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+}
+.trace-step-body { flex: 1; min-width: 0; }
+.trace-step-main {
+  font-size: 12.5px;
+  color: #E8EDF3;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.trace-feat { font-weight: 600; }
+.trace-cmp, .trace-thr {
+  font-family: 'JetBrains Mono', monospace;
+  color: #9CA3AF;
+}
+.trace-dir {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.trace-dir.left  { background: rgba(0, 82, 155, 0.18); color: #5BC0EB; }
+.trace-dir.right { background: rgba(254, 215, 102, 0.16); color: #FED766; }
+.trace-leaf-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0F1419;
+  border-radius: 4px;
+  padding: 2px 10px;
+}
+.trace-step-sub {
+  font-size: 10px;
+  color: #6B7280;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+.trace-prov {
+  margin-top: 14px;
+  font-size: 10px;
+  color: #6B7280;
+  line-height: 1.55;
+  font-family: 'JetBrains Mono', monospace;
+}
+.trace-prov b { color: #9CA3AF; }
+.trace-empty {
+  margin-top: 16px;
+  padding: 24px;
+  text-align: center;
+  color: #6B7280;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  border: 1px dashed rgba(255, 255, 255, 0.10);
+  border-radius: 6px;
+}
