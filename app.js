@@ -1560,6 +1560,12 @@ function _classifyDong(model, layout, dong) {
     } else {
       const [ko, kind] = fname.split('_');
       const layer = ko2en[ko];
+      if (!layer) {
+        // 미매핑 feature를 val=0으로 분기하면 항상 좌측으로 가는 오분류 경로가
+        // "실제 트리 통과 결과"로 표시된다. 경로를 포기해 무근거 렌더를 막는다.
+        console.warn(`[trace] 미매핑 트리 feature: ${fname} — 분기 경로를 생성하지 않습니다.`);
+        return [];
+      }
       const arr = dong.layers[layer] || [];
       if (kind === '평균') {
         val = (arr.reduce((s,v)=>s+v,0) / Math.max(1,arr.length)) / 1e6;

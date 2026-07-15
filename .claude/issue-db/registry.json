@@ -13619,7 +13619,7 @@
       "id": "ISS-253",
       "title": "[Plan:도메인분석] UI_RECOMMENDATION_TRACE-001 비즈니스 규칙/시나리오 도출",
       "type": "DOMAIN_ANALYZE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "domain-analyst",
       "depth": 1,
@@ -13629,10 +13629,50 @@
       "created_at": "2026-07-14T20:38:46.595489",
       "payload": {
         "files": [],
+        "source_issue": "UI_RECOMMENDATION_TRACE-001",
+        "files_changed": []
+      },
+      "result": {
+        "rules": [
+          "R-1",
+          "R-2",
+          "R-3",
+          "R-4",
+          "R-5",
+          "R-6",
+          "R-7",
+          "R-8",
+          "R-9",
+          "R-10",
+          "R-11",
+          "R-12",
+          "R-13",
+          "R-14",
+          "R-15",
+          "R-16",
+          "R-17",
+          "R-18",
+          "R-19",
+          "R-20"
+        ],
+        "scenarios": [
+          "S-1",
+          "S-2",
+          "S-3",
+          "S-4",
+          "S-5",
+          "S-6",
+          "S-7",
+          "S-8",
+          "S-9",
+          "S-10",
+          "S-11",
+          "S-12"
+        ],
         "source_issue": "UI_RECOMMENDATION_TRACE-001"
       },
-      "result": null,
-      "spawn_rules": []
+      "spawn_rules": [],
+      "completed_at": "2026-07-15T13:20:35.522582"
     },
     {
       "id": "ISS-254",
@@ -14121,6 +14161,146 @@
       },
       "spawn_rules": [],
       "updated_at": "2026-07-15T03:39:44.272069+00:00"
+    },
+    {
+      "id": "ISS-261",
+      "title": "[지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 [약국·점포개발]",
+      "type": "FIX_BUG",
+      "status": "CLOSED_DUPLICATE",
+      "priority": "P0",
+      "assign_to": "agent-harness",
+      "depth": 0,
+      "created_at": "2026-07-15T13:02:09.630159",
+      "updated_at": "2026-07-15T13:02:09.630159",
+      "payload": {
+        "origin": "intent-gate",
+        "raw_prompt": "ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 [약국·점포개발] 의원수 0일 때 약점  이슈를 처리하고 registry에서 완료 처리하라\n\n[임무 규칙] 완료 시 수행한 작업을 한국어로 간결히 요약 보고하라."
+      },
+      "result": {
+        "duplicate_of": "ISS-256",
+        "note": "BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 AC-5 3중 재입력(ISS-256 원본 → ISS-257 → ISS-261). 실작업은 ISS-256에서 완료(commit df3b78e).",
+        "reverification": {
+          "ac": "AC-5",
+          "checks_total": 6,
+          "checks_passed": 6,
+          "unit_tests": "1/1 pass",
+          "method": "playwright verify_ac5_clinic_zero.mjs @ localhost:8766"
+        }
+      }
+    },
+    {
+      "id": "ISS-262",
+      "title": "[Plan:비즈니스검증] unknown 규칙 20개 정적 검증",
+      "type": "BIZ_VALIDATE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "biz-validator",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-253",
+      "depends_on": [],
+      "created_at": "2026-07-15T13:20:35.522582",
+      "payload": {
+        "rules": [
+          "R-1",
+          "R-2",
+          "R-3",
+          "R-4",
+          "R-5",
+          "R-6",
+          "R-7",
+          "R-8",
+          "R-9",
+          "R-10",
+          "R-11",
+          "R-12",
+          "R-13",
+          "R-14",
+          "R-15",
+          "R-16",
+          "R-17",
+          "R-18",
+          "R-19",
+          "R-20"
+        ],
+        "scenarios": [
+          "S-1",
+          "S-2",
+          "S-3",
+          "S-4",
+          "S-5",
+          "S-6",
+          "S-7",
+          "S-8",
+          "S-9",
+          "S-10",
+          "S-11",
+          "S-12"
+        ],
+        "domain": "unknown",
+        "source_issue": "ISS-253"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-263",
+      "title": "[Plan:시나리오실행] unknown 시나리오 12개 E2E 실행",
+      "type": "SCENARIO_PLAY",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "scenario-player",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "ISS-253",
+      "depends_on": [],
+      "created_at": "2026-07-15T13:20:35.522582",
+      "payload": {
+        "scenarios": [
+          "S-1",
+          "S-2",
+          "S-3",
+          "S-4",
+          "S-5",
+          "S-6",
+          "S-7",
+          "S-8",
+          "S-9",
+          "S-10",
+          "S-11",
+          "S-12"
+        ],
+        "domain": "unknown",
+        "source_issue": "ISS-253"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "FIX_TREE_FEATURE_UNMAPPED-001",
+      "type": "FIX_BUG",
+      "priority": "P0",
+      "status": "IN_PROGRESS",
+      "title": "[분류경로] tree feature 미매핑 시 val=0 좌측 고정 분기 — 오분류 경로가 \"실제 트리 결과\"로 표시",
+      "payload": {
+        "source_issue": "ISS-253",
+        "files": [
+          "app.js"
+        ],
+        "scope_dir": ".",
+        "evidence": "app.js:1554 ko2en 5키만 매핑 / 1562-1563 layer=undefined → arr=[] / 1565 val=0 / 1578 val<=threshold면 좌측 고정",
+        "risk": "CRITICAL",
+        "why": "tree_model.json이 재학습되어 ko2en에 없는 feature를 쓰면 해당 분기가 조용히 val=0으로 계산되어 항상 좌측으로 간다. 사용자에게는 이 잘못된 경로가 \"실제 학습 트리 통과 결과\"(app.js:5244-5248 고지)로 표시되므로, 근거 신뢰성을 정면으로 깨뜨린다.",
+        "ac": [
+          "AC-1: ko2en에 없는 feature_name을 만나면 val=0 fallback으로 분기하지 않는다",
+          "AC-2: 미매핑 발생 시 경로 계산을 중단하고 콘솔에 경고를 남긴다",
+          "AC-3: 미매핑으로 경로를 못 그리면 UI에 분기 경로를 \"실제 트리 결과\"로 표시하지 않는다",
+          "AC-4: 기존 5개 매핑 feature는 동작이 100% 동일하다 (회귀 없음)",
+          "AC-5: verify_recommendation_trace.mjs 5/5 PASS 유지"
+        ],
+        "files_changed": []
+      },
+      "result": null
     }
   ],
   "hooks": {
@@ -15362,6 +15542,12 @@
         "issue_type": "FIX_BUG",
         "plan_created": 3,
         "timestamp": "2026-07-15T12:37:05.088475"
+      },
+      {
+        "issue_id": "ISS-253",
+        "issue_type": "DOMAIN_ANALYZE",
+        "plan_created": 2,
+        "timestamp": "2026-07-15T13:20:35.522582"
       }
     ],
     "on_fail": [],
@@ -16685,8 +16871,8 @@
     ]
   },
   "stats": {
-    "total_issues": 242,
-    "completed": 231,
+    "total_issues": 245,
+    "completed": 232,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -16897,7 +17083,7 @@
   },
   "issue_budget": {
     "date": "2026-07-15",
-    "created_today": 3
+    "created_today": 5
   },
   "updated_at": "2026-07-14T20:30:48.157770+09:00",
   "hermes_state": {
