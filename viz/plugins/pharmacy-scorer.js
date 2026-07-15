@@ -46,7 +46,8 @@
       return clamp01(1.0 - deviation / 5.0);
     },
     // 임대가 — 동 평균 대비 비율 (1.0 = 평균, 2배까지 분포)
-    rent_ratio: (v) => clamp01(v == null ? 0 : v / 2.0),
+    // 미입력(null) = 중립(동 평균 취급). 0으로 두면 "임대료 최저"가 되어 만점 가산된다.
+    rent_ratio: (v) => (v == null ? 0.5 : clamp01(v / 2.0)),
     // 유동인구 — 백만명/월 만점
     visitors_total: (v) => clamp01(v / 1_000_000),
   };
@@ -294,6 +295,49 @@
   };
 
   /**
+   * 매물 카드용 근거 — 동 baseline 대비 "이 매물"의 가감 요인만 추출.
+   * FIX_BUG_PHARMACY_DEVELOP_DRIVERS-001: 동 공통 요인은 매물 간 변별력이 0이므로 제외한다.
+   * @param {object} prop - 매물 (rent_man / area_pyeong / floor)
+   * @param {object} dongContribs - 동 baseline 기여도
+   * @param {object} propContribs - 이 매물 기여도
+   * @returns {Array<{sign, text}>} 변동 요인 (없으면 '동 평균 수준' 1건)
+   */
+  function propertyDeltaDrivers(prop, dongContribs, propContribs) {
+    const drivers = [];
+    // 1) 점수에 실제 반영되는 delta (현재 모델에서 매물별로 달라지는 것은 rent_ratio 뿐)
+    Object.keys(propContribs).forEach(function(factor) {
+      const delta = propContribs[factor] - dongContribs[factor];
+      if (Math.abs(delta) < 0.001) return;   // 동과 동일 → 변별 정보 없음
+      const isRent = factor === 'rent_ratio';
+      const text = isRent
+        ? '임대료 ' + prop.rent_man + '만원 (동 평균 대비 ' + (prop.rent_man / 100).toFixed(1) + '배)'
+        : FACTOR_LABEL_MAP[factor] || factor;
+      // sign = 동 baseline 대비 이 매물의 점수 증감 방향.
+      // 동 baseline은 rent_ratio 0.40배 가정이라 실제 매물(0.9~2.2배)은 모두 '-'가 정상이다.
+      drivers.push({ sign: delta >= 0 ? '+' : '-', text: text, _abs: Math.abs(delta) });
+    });
+    // 2) 점수 외 매물 속성 — 사용자 의사결정에 필요한 정성 근거
+    if (prop.floor === 1) drivers.push({ sign: '+', text: '1층 — 접근성 우수', _abs: 0 });
+    else if (prop.floor >= 2) drivers.push({ sign: '-', text: prop.floor + '층 — 처방원 동선 확인 필요', _abs: 0 });
+    if (prop.area_pyeong >= 25) drivers.push({ sign: '+', text: prop.area_pyeong + '평 — 조제실 여유', _abs: 0 });
+    else if (prop.area_pyeong < 18) drivers.push({ sign: '-', text: prop.area_pyeong + '평 — 협소', _abs: 0 });
+
+    drivers.sort(function(a, b) { return b._abs - a._abs; });
+    const out = drivers.slice(0, 3).map(function(d) { return { sign: d.sign, text: d.text }; });
+    return out.length ? out : [{ sign: '+', text: '동 평균 수준 매물' }];
+  }
+
+  const FACTOR_LABEL_MAP = {
+    population_density:                  '인구 밀도',
+    elderly_ratio:                       '60대 인구 비중',
+    clinics_within_500m:                 '인근 의원수 (반경 500m)',
+    competitor_pharmacies_within_500m:  '경쟁 약국수 (반경 500m)',
+    income_quantile:                     '평균 소득 분위',
+    rent_ratio:                         '임대가 (동 평균 대비)',
+    visitors_total:                      '유동인구',
+  };
+
+  /**
    * 동 입력 → 그 동의 매물별 평가 결과 N개를 적합도순으로 반환.
    * 동 baseline score를 기반으로 매물별 임대가 보정 (rent_ratio 차등) 적용.
    * @param {string} dongName - '의정부시 금오동' 등 (읍면동까지)
@@ -313,9 +357,12 @@
       const propFeatures = Object.assign({}, baseFeatures, { rent_ratio: prop.rent_man / dongAvgRent });
       const propResult = computeScore(propFeatures);
       const propGrade = scoreToGradeLabel(propResult.score);
-      const propDrivers = topDrivers(propResult.contributions, 3).map(function(d) {
-        return { sign: d.sign, text: d.label };
-      });
+      // FIX_BUG_PHARMACY_DEVELOP_DRIVERS-001:
+      //   동 공통 요인 기여도(0.140~0.192) > rent 최대 기여도(0.120)라 topDrivers를 그대로 쓰면
+      //   같은 동의 매물이 전부 동일한 근거를 갖는다(점수는 다른데 이유가 같아짐).
+      //   → 매물 카드는 "동 대비 이 매물의 가감 요인(delta)"만 노출한다.
+      //     동 공통 근거는 dong_drivers로 요약 카드에 1회만 표시.
+      const propDrivers = propertyDeltaDrivers(prop, dongResult.contributions, propResult.contributions);
       // 매물 카드용 fit_reason — 1줄 요약
       const fitParts = [];
       if (prop.rent_man <= dongAvgRent * 0.9) fitParts.push('임대료 합리적');
@@ -343,6 +390,11 @@
       dong: dongName,
       dong_score: dongResult.score,
       dong_grade: { label: dongGrade, color: PLDDT_COLOR[dongGrade], actionLabel: ACTION_LABEL[dongGrade] },
+      // FIX_BUG_PHARMACY_DEVELOP_DRIVERS-001: 동 공통 근거는 요약 카드에 1회만 노출
+      // (매물 카드에는 동 대비 delta 근거만 → 카드 간 변별력 확보)
+      dong_drivers: topDrivers(dongResult.contributions, 3).map(function(d) {
+        return { sign: d.sign, text: d.label };
+      }),
       properties: properties,
       property_count: properties.length,
       source: 'pharmacy-scorer.js evaluateByDong (매물 mock + ETL_PHARMACY_DATA 후속에서 실 매물 API 연동)',

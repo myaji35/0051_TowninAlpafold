@@ -86,7 +86,7 @@
 | `clinics_within_500m` | `clamp01(v / 50)` | 50개 | 강남 역삼1동(48개) 같은 초고밀 의원지구를 만점으로 — 외곽동 변별력 + 초밀집지 상한 동시 확보 |
 | `competitor_pharmacies_within_500m` | `clamp01(v / 25)` | 25개 | 강남 역삼1동(24개) 같은 초포화지를 감점 만점으로 — 비례 분모 (clinics 50 / comp 25 = 2:1, "의원 2개당 약국 1개" 도메인 균형) |
 | `income_quantile` | `1 - |v - 7.5| / 5` | 7.5분위 최적 (역U) | 너무 부유하면 OTC 약 적음, 너무 빈곤하면 마진 ↓ |
-| `rent_ratio` | `clamp01(v / 2)` | 2.0배 | 동 평균의 2배까지 수용 |
+| `rent_ratio` | `v == null ? 0.5 : clamp01(v / 2)` | 2.0배 | 동 평균의 2배까지 수용. **미입력(null) = 0.5(동 평균) 중립** — 0으로 두면 "임대료 최저"로 해석되어 만점 가산되는 버그 (`BIZ_FIX_PHARMACY_SCORER_RENT_NULL-001`) |
 | `visitors_total` | `clamp01(v / 1_000_000)` | 100만명/월 | 도심 평균 |
 
 > **분모 변경 시 룰**: `viz/plugins/pharmacy-scorer.js`의 `NORMALIZERS`와 본 표를 **반드시 동시에** 갱신. 한쪽만 바꾸면 코드↔명세 drift 발생.
