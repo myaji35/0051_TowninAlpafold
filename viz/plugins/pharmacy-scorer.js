@@ -34,8 +34,11 @@
     population_density: (v) => clamp01(v / 50.0),   // 50천명/km² 만점
     // 60대+ 비중 (0~1)
     elderly_ratio: (v) => clamp01(v / 0.30),        // 30% 이상 만점
-    // 반경 500m 의원수 — 50개 만점 (역삼1동 48개 기준, 변별력 확보)
-    clinics_within_500m: (v) => clamp01(v / 50.0),
+    // 반경 500m 의원수 — centered: 기준선(BASE=10) 대비 편차 → -1~+1
+    // BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001: clamp01은 기여도 도메인이 0~+0.20이라
+    //   의원 0개(처방원 부재 = 약국 입지 최대 리스크)를 음수 기여도로 표현할 수 없었다(AC-5 위반).
+    //   0개 → -1 (최대 약점), BASE(10, 평균 입지) → 0 (중립), CAP(50, 역삼1동 48개급) → +1.
+    clinics_within_500m: (v) => centered(v, CLINIC_BASE, CLINIC_CAP),
     // 경쟁약국 수 — 25개 만점 감점 (역삼1동 24개 기준)
     competitor_pharmacies_within_500m: (v) => clamp01(v / 25.0),
     // 평균 소득 분위 (1~10) — 7~8 분위 최적, 양 끝 감점 (역U)
@@ -57,6 +60,18 @@
     return Math.max(0, Math.min(1, x));
   }
 
+  // 의원수 기준선 — BASE = "평균적인 입지"로 보는 반경 500m 의원 수.
+  // BASE 미만은 음수(약점), 초과는 양수(강점). CAP에서 +1 포화.
+  const CLINIC_BASE = 10;
+  const CLINIC_CAP = 50;
+
+  // 기준선 대비 편차를 -1~+1로 정규화. 결측/비정상 입력은 -1(의원 없음)로 취급한다.
+  function centered(v, base, cap) {
+    if (typeof v !== 'number' || isNaN(v)) return -1;
+    if (v >= base) return Math.min(1, (v - base) / (cap - base));
+    return Math.max(-1, (v - base) / base);
+  }
+
   /**
    * 점수 계산.
    * @param {object} features - 7개 요인 (정규화 전 raw 값). null/undefined 허용 (0으로 처리).
@@ -75,10 +90,12 @@
       if (weight > 0) posSum += weight;
       else negSum += Math.abs(weight);
     }
-    // raw 범위: [-negSum, +posSum] = [-0.48, +0.70]
+    // raw 범위: [-(negSum + clinics 음수분), +posSum] = [-0.50, +0.70]
+    // BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001: clinics는 centered 정규화라 -1까지 내려간다.
+    //   min 경계에 반영하지 않으면 의원 0개 동의 점수가 하한 밖으로 나가 clamp에 잘린다.
     // → [0, 100] min-max
-    const minPossible = -negSum;  // -0.48
-    const maxPossible = posSum;   // +0.70
+    const minPossible = -(negSum + Math.abs(WEIGHTS.clinics_within_500m));  // -0.50
+    const maxPossible = posSum;                                             // +0.70
     const normalized = (raw - minPossible) / (maxPossible - minPossible);
     const score = Math.round(clamp01(normalized) * 100);
     return { score, contributions, raw };

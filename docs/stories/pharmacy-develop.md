@@ -37,8 +37,8 @@
 | # | Given | When | Then |
 |---|---|---|---|
 | AC-1 | 후보 주소 (예: "의정부시 금오동")가 입력 폼에 채워지고 필수 검증 통과 | "평가 실행" CTA 클릭 | 3초 이내 결과 카드에 `score`(정수), `grade`(plddt 4단계 라벨), `top_drivers[3]`, `comparable_dongs[≤5]`, `cone_link` URL이 렌더된다. |
-| AC-2 | `score >= 90` (`grade = high`) | 결과 카드 렌더 | 좌측 보더와 등급 배지가 brand-dna `plddt_high = #00529B`로 표시되고, 등급 라벨은 "적극 추천 (high)"으로 노출. |
-| AC-3 | `50 <= score < 70` (`grade = low`) | 결과 카드 렌더 | 좌측 보더 `#FED766`, 등급 라벨 "신중 검토 (low)", 상단 인라인 안내 "근거 검토를 권장합니다" 1줄. |
+| AC-2 | `score >= 90` (`grade = very_high`) | 결과 카드 렌더 | 좌측 보더와 등급 배지가 brand-dna `plddt_high = #00529B`로 표시되고, 등급 라벨은 "적극 추천"으로 노출. |
+| AC-3 | `50 <= score < 70` (`grade = medium`) | 결과 카드 렌더 | 좌측 보더 `#FED766`, 등급 라벨 "신중 검토", 상단 인라인 안내 "근거 검토를 권장합니다" 1줄. ⚠️ **인라인 안내 미구현** (`DOC_PHARMACY_DEVELOP_AC_DRIFT-001` 확인 — 보더/라벨만 구현됨). |
 | AC-4 | 입력 주소를 geocoding으로 매칭 실패 (`real_adm_cd` null) | "평가 실행" 클릭 | 폼 하단에 inline 에러 "주소를 찾을 수 없습니다. 동/구/시 단위로 다시 입력해 주세요" 표시 + CTA 비활성 해제(재시도 가능). 결과 카드 영역은 변경 없음. |
 | AC-5 | 후보지 반경 500m 의원수 = 0 (처방원 부재) | 평가 실행 → 결과 카드 렌더 | `top_drivers`에 `{feature:"반경 500m 의원수", contribution:<0, direction:"negative"}`가 반드시 포함되고, "약점" 섹션 최상단에 표시. |
 | AC-6 | 결과 카드 노출 상태 | 카드 우측 보조 버튼 "Decide에서 보기" 클릭 | `switchMode('decide')` 호출되며 URL이 `?mode=decide&ctx=pharmacy.develop&address=<encoded>` 로 갱신된다. Decide 모드 도착 시 해당 동이 자동 선택되고, 상단 헤더에 "← 약국 점포개발 평가로 돌아가기" 복귀 링크가 노출된다. |
@@ -65,7 +65,7 @@
 |---|---:|---|---|
 | 인구 밀도 | 0.18 | (동 인구 / 동 면적 km²) → 분위 0~100 점수 | `simula_data_real.json` |
 | 60대 이상 인구 비중 | 0.15 | 노인 비중 ↑ → 점수 ↑ (병원 처방 수요 ∝ 노인) | `simula_data_real.json` |
-| 반경 500m 의원수 | 0.20 | 의원 ≥ 5 → 만점, 0 → 0점 (선형) | TBD: `ETL_PHARMACY_DATA-001` 결과에 따름 (HIRA 의원 분포). 미완성 시 동 단위 `biz_count` 기반 더미. |
+| 반경 500m 의원수 | 0.20 | 기준선 10개 = 중립. 50개 이상 → 만점(+), **0개 → 최대 감점(−)** (D-1 centered 정규화) | TBD: `ETL_PHARMACY_DATA-001` 결과에 따름 (HIRA 의원 분포). 미완성 시 동 단위 `biz_count` 기반 더미. |
 | 반경 500m 경쟁 약국수 | -0.18 | 경쟁 ↑ → 감점 (역가중) | TBD: `ETL_PHARMACY_DATA-001` (HIRA 약국 분포). 미완성 시 0 가정. |
 | 평균 소득 분위 | 0.10 | 중상 분위(7~9분위) 최대점, 양 극단 감점 | `simula_data_real.json` |
 | 임대료 (입력값) | -0.12 | 동 평균 임대료 대비 ratio (1.0 기준 ±) | 입력 `rent_monthly_krw` 미입력 시 중립 0점 |
@@ -83,7 +83,7 @@
 |---|---|---|---|
 | `population_density` | `clamp01(v / 50)` | 50천명/km² | 서울 평균 ~25천명/km² 대비 2배 = 만점 |
 | `elderly_ratio` | `clamp01(v / 0.30)` | 30% | 처방 수요 포화 분위 |
-| `clinics_within_500m` | `clamp01(v / 50)` | 50개 | 강남 역삼1동(48개) 같은 초고밀 의원지구를 만점으로 — 외곽동 변별력 + 초밀집지 상한 동시 확보 |
+| `clinics_within_500m` | `centered(v, BASE=10, CAP=50)` → **-1 ~ +1** | 50개 (+1 포화) / **10개 = 중립 0** / 0개 = -1 | **유일한 centered 정규화 요인.** 처방원 부재는 약국 입지의 최대 리스크이므로 *음수 기여도*로 표현되어야 한다(AC-5). `clamp01`은 기여도 도메인이 0~+0.20이라 "의원 0개"를 약점으로 표시할 수 없었음 (`BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001`). BASE=10 = 반경 500m 평균 입지, CAP=50 = 역삼1동(48개)급 초고밀 의원지구 |
 | `competitor_pharmacies_within_500m` | `clamp01(v / 25)` | 25개 | 강남 역삼1동(24개) 같은 초포화지를 감점 만점으로 — 비례 분모 (clinics 50 / comp 25 = 2:1, "의원 2개당 약국 1개" 도메인 균형) |
 | `income_quantile` | `1 - |v - 7.5| / 5` | 7.5분위 최적 (역U) | 너무 부유하면 OTC 약 적음, 너무 빈곤하면 마진 ↓ |
 | `rent_ratio` | `v == null ? 0.5 : clamp01(v / 2)` | 2.0배 | 동 평균의 2배까지 수용. **미입력(null) = 0.5(동 평균) 중립** — 0으로 두면 "임대료 최저"로 해석되어 만점 가산되는 버그 (`BIZ_FIX_PHARMACY_SCORER_RENT_NULL-001`) |
@@ -91,15 +91,15 @@
 
 > **분모 변경 시 룰**: `viz/plugins/pharmacy-scorer.js`의 `NORMALIZERS`와 본 표를 **반드시 동시에** 갱신. 한쪽만 바꾸면 코드↔명세 drift 발생.
 
-### D-2. 도메인 해석 — 왜 의정부 금오 (91) > 강남 역삼 (53)?
+### D-2. 도메인 해석 — 왜 의정부 금오 (92) > 강남 역삼 (61)?
 
 본 모델은 **단순 시장 크기**가 아닌 **신규 진입자 관점의 유효 시장 점유율 + 마진 가능성**을 측정한다:
 
 | 측면 | 강남 역삼1동 | 의정부 금오동 |
 |---|---|---|
-| 의원 수 (수요) | 48개 (큰 시장) | 8개 (작은 시장) |
+| 의원 수 (수요) | 48개 | 48개 |
 | 경쟁 약국 (공급) | 24개 | 2개 |
-| 의원/약국 비율 | 2.0 (포화 직전) | 4.0 (저경쟁) |
+| 의원/약국 비율 | 2.0 (포화 직전) | 24.0 (극저경쟁) |
 | 임대료 (마진 압박) | 2.20배 | 0.40배 (5.5× 차이) |
 | 60대 비중 (처방 수요 깊이) | 9% | 28% |
 
@@ -111,14 +111,16 @@
 
 ## E. pLDDT 등급 매핑 (`brand-dna.json` 인용)
 
-| score 구간 | grade | brand 토큰 | hex | 의미 라벨 |
+| score 구간 | grade (코드 반환값) | brand 토큰 | hex | 의미 라벨 |
 |---|---|---|---|---|
-| ≥ 90 | `high` | `plddt_high` | `#00529B` | 적극 추천 |
-| 70 ~ 89 | `mid` | `plddt_mid` | `#5BC0EB` | 추천 |
-| 50 ~ 69 | `low` | `plddt_low` | `#FED766` | 신중 검토 |
-| < 50 | `poor` | `plddt_poor` | `#C9485B` | 비추천 |
+| ≥ 90 | `very_high` | `plddt_high` | `#00529B` | 적극 추천 |
+| 70 ~ 89 | `high` | `plddt_mid` | `#5BC0EB` | 추천 |
+| 50 ~ 69 | `medium` | `plddt_low` | `#FED766` | 신중 검토 |
+| < 50 | `low` | `plddt_poor` | `#C9485B` | 비추천 |
 
 > brand-dna `anti_patterns`: "AlphaFold pLDDT 색상 체계 임의 변경" — 위 4색 외 다른 색 금지.
+>
+> **grade 라벨 ↔ brand 토큰명은 서로 다르다** (`DOC_PHARMACY_DEVELOP_AC_DRIFT-001`). grade 컬럼은 `scoreToGradeLabel()`이 실제로 반환하는 값이고, 토큰명은 brand-dna.json의 pLDDT 색상 키다. 특히 `high`는 **grade에서는 70~89(2등급)**, **토큰명 `plddt_high`에서는 ≥90(최상)**을 가리키므로 혼동 주의. 색상 4종은 양쪽이 동일하다.
 
 ---
 
