@@ -13678,7 +13678,7 @@
       "id": "ISS-254",
       "title": "[Plan:품질평가] ISS-252 품질 점수 산출",
       "type": "SCORE",
-      "status": "READY",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "eval-harness",
       "depth": 2,
@@ -13694,8 +13694,19 @@
         },
         "source_issue": "ISS-252"
       },
-      "result": null,
-      "spawn_rules": []
+      "result": {
+        "score": 76,
+        "prev_score": null,
+        "breakdown": {
+          "passed": 100,
+          "coverage": 55,
+          "robustness": 60,
+          "docs": 90
+        },
+        "source_issue": "ISS-252"
+      },
+      "spawn_rules": [],
+      "completed_at": "2026-07-15T13:29:02.305803"
     },
     {
       "id": "ISS-255",
@@ -14190,9 +14201,9 @@
     },
     {
       "id": "ISS-262",
-      "title": "[Plan:비즈니스검증] unknown 규칙 20개 정적 검증",
+      "title": "[Plan:비즈니스검증] Recommendation Trace 규칙 20개 정적 검증",
       "type": "BIZ_VALIDATE",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "priority": "P1",
       "assign_to": "biz-validator",
       "depth": 2,
@@ -14237,17 +14248,20 @@
           "S-11",
           "S-12"
         ],
-        "domain": "unknown",
-        "source_issue": "ISS-253"
+        "domain": "recommendation-trace (섹션❻ SHAP + Decision Tree)",
+        "source_issue": "ISS-253",
+        "spec_file": "docs/domain/recommendation-trace-rules.json",
+        "note": "규칙/시나리오 본문은 spec_file에 있다. ID만 보고 내용을 추측하지 말고 spec_file을 읽어라. CRITICAL(트리 feature 미매핑)은 이미 FIX_TREE_FEATURE_UNMAPPED-001(commit 73ea81d)로 수정 완료 — 재보고 불필요.",
+        "files_changed": []
       },
       "result": null,
       "spawn_rules": []
     },
     {
       "id": "ISS-263",
-      "title": "[Plan:시나리오실행] unknown 시나리오 12개 E2E 실행",
+      "title": "[Plan:시나리오실행] Recommendation Trace 시나리오 12개 E2E 실행",
       "type": "SCENARIO_PLAY",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "priority": "P1",
       "assign_to": "scenario-player",
       "depth": 2,
@@ -14270,8 +14284,10 @@
           "S-11",
           "S-12"
         ],
-        "domain": "unknown",
-        "source_issue": "ISS-253"
+        "domain": "recommendation-trace (섹션❻ SHAP + Decision Tree)",
+        "source_issue": "ISS-253",
+        "spec_file": "docs/domain/recommendation-trace-rules.json",
+        "note": "규칙/시나리오 본문은 spec_file에 있다. ID만 보고 내용을 추측하지 말고 spec_file을 읽어라. CRITICAL(트리 feature 미매핑)은 이미 FIX_TREE_FEATURE_UNMAPPED-001(commit 73ea81d)로 수정 완료 — 재보고 불필요."
       },
       "result": null,
       "spawn_rules": []
@@ -14280,7 +14296,7 @@
       "id": "FIX_TREE_FEATURE_UNMAPPED-001",
       "type": "FIX_BUG",
       "priority": "P0",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "[분류경로] tree feature 미매핑 시 val=0 좌측 고정 분기 — 오분류 경로가 \"실제 트리 결과\"로 표시",
       "payload": {
         "source_issue": "ISS-253",
@@ -14300,7 +14316,47 @@
         ],
         "files_changed": []
       },
-      "result": null
+      "result": {
+        "passed": true,
+        "files_modified": [
+          "app.js",
+          "verify_tree_feature_unmapped.mjs"
+        ],
+        "commit": "73ea81d",
+        "ac": "5/5",
+        "verification": {
+          "verify_tree_feature_unmapped.mjs": "4/4 PASS (수정 전 1/4 — 버그 재현 확인됨)",
+          "verify_recommendation_trace.mjs": "5/5 PASS (회귀 없음)",
+          "tests/pharmacy-scorer.test.mjs": "1/1 PASS"
+        },
+        "summary": "ko2en 미매핑 feature 감지 시 console.warn 후 빈 경로 반환 → buildTraceBranchPath null → 분기 경로 미렌더. val=0 좌측 고정 오분류가 \"실제 트리 결과\"로 표시되던 문제 해소.",
+        "source_issue": "ISS-253"
+      }
+    },
+    {
+      "id": "ISS-264",
+      "title": "[Plan:배포] 품질 76점 — 배포 준비",
+      "type": "DEPLOY_READY",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "cicd-harness",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ISS-254",
+      "depends_on": [],
+      "created_at": "2026-07-15T13:29:02.305803",
+      "payload": {
+        "score": 76,
+        "breakdown": {
+          "passed": 100,
+          "coverage": 55,
+          "robustness": 60,
+          "docs": 90
+        },
+        "source_issue": "ISS-254"
+      },
+      "result": null,
+      "spawn_rules": []
     }
   ],
   "hooks": {
@@ -15548,6 +15604,12 @@
         "issue_type": "DOMAIN_ANALYZE",
         "plan_created": 2,
         "timestamp": "2026-07-15T13:20:35.522582"
+      },
+      {
+        "issue_id": "ISS-254",
+        "issue_type": "SCORE",
+        "plan_created": 1,
+        "timestamp": "2026-07-15T13:29:02.305803"
       }
     ],
     "on_fail": [],
@@ -16871,8 +16933,8 @@
     ]
   },
   "stats": {
-    "total_issues": 245,
-    "completed": 232,
+    "total_issues": 246,
+    "completed": 233,
     "failed": 0,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
@@ -17083,7 +17145,7 @@
   },
   "issue_budget": {
     "date": "2026-07-15",
-    "created_today": 5
+    "created_today": 6
   },
   "updated_at": "2026-07-14T20:30:48.157770+09:00",
   "hermes_state": {
