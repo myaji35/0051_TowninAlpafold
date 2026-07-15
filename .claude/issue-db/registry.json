@@ -13681,7 +13681,7 @@
       "id": "FIX_BUG_PHARMACY_DEVELOP_DEEPLINK-001",
       "type": "FIX_BUG",
       "priority": "P1",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "[약국·점포개발] Decide deep-link URL 파라미터 누락 — AC-6 위반",
       "detail": "RUN_TESTS_PHARMACY_DEVELOP-001 저니 스텝5에서 발견. components/pharmacy-develop.js renderDongSummary()의 goto-decide 핸들러가 window.switchMode('decide')만 호출 → URL이 '?mode=decide'로만 갱신되고 명세 AC-6이 요구하는 '&ctx=pharmacy.develop&address=<encoded>'가 누락. 결과: (1) Decide 도착 시 해당 동 자동 선택 불가 (2) '← 약국 점포개발 평가로 돌아가기' 복귀 링크 미노출 (3) 링크 공유/북마크 시 컨텍스트 소실. 수정: switchMode 호출 시 history.replaceState로 ctx/address 파라미터 추가 + Decide 진입 시 address로 동 자동 선택 + 복귀 링크 렌더.",
       "assign_to": "agent-harness",
@@ -13701,15 +13701,31 @@
         "actual_url": "?mode=decide",
         "found_by": "RUN_TESTS_PHARMACY_DEVELOP-001 (verify_pharmacy_develop.mjs step5)",
         "verify_cmd": "node verify_pharmacy_develop.mjs",
-        "files_changed": [],
+        "files_changed": [
+          "app.js",
+          "components/pharmacy-develop.js",
+          "css/pharmacy.css",
+          "verify_pharmacy_develop.mjs",
+          "verify_ac6_deeplink.mjs"
+        ],
         "verification_2026_07_15": "[타 이슈 검증 중 발견 — 2026-07-15, BIZ_VALIDATE 후속] AC-6 3개 요구 중 2개는 통과하나 (2) 동 자동 선택은 미동작. 실브라우저(Playwright)로 확인:\n  PASS (1) URL: ?mode=decide&ctx=pharmacy.develop&address=의정부시+금오동\n  FAIL (2) 동 자동 선택: window.selectedDong === undefined\n  PASS (3) 복귀 링크 노출 + 클릭 시 점포개발 복귀·직전 동 재평가\n\n근본 원인: components/pharmacy-develop.js selectDongInDecide()가 window.DATA.dongs에서 동을 찾는데, 런타임에 window.DATA 자체가 undefined이고 window.renderDecide도 함수가 아니다(실측). 함수 첫 줄 가드 if (!window.DATA || !Array.isArray(window.DATA.dongs)) return; 에서 조용히 빠져나가고 호출부 gotoDecideWithContext()는 실패를 삼킨 채 정상 종료 → 사용자는 Decide에 도착하지만 동은 선택되지 않음.\n\n즉 AC-6의 자동 선택은 구현된 적이 없으며, 잘못된 전역 API(window.DATA/renderDecide)를 전제로 작성됨. 수정하려면 Decide 모드의 실제 동 선택 API를 먼저 규명해야 함(app.js 확인 필요). 저니 스크립트 verify_pharmacy_develop.mjs 스텝5는 URL만 검증해 이 갭을 놓쳤음 — 저니 보강도 함께 필요.",
         "ac6_status": "2/3 — URL·복귀링크 PASS, 동 자동선택 FAIL",
         "root_cause": "window.DATA / window.renderDecide 미존재 (실측). selectDongInDecide 가드에서 silent return.",
         "next_step": "app.js에서 Decide 모드의 실제 동 선택 전역 API 규명 후 selectDongInDecide 재작성 + 저니 스텝5에 자동선택 단언 추가"
       },
-      "result": null,
+      "result": {
+        "passed": true,
+        "commit": "3f55ae9",
+        "ac6_status": "3/3 — URL · 동 자동선택 · 복귀링크 모두 PASS",
+        "root_cause": "selectDongInDecide()가 window.DATA/window.selectedDong을 전제했으나 두 전역 모두 미존재(app.js 모듈 스코프). 가드에서 silent return -> 자동선택이 한 번도 동작한 적 없음. (참고: 이슈 노트는 window.renderDecide도 미존재라 했으나 실측 결과 renderDecide는 존재함 — 진짜 원인은 DATA/selectedDong.)",
+        "fix": "app.js에 selectDongByName(name)/getSelectedDongName() 공개 API 추가(실패 시 false 반환). 컴포넌트는 공개 API 경유로 재작성.",
+        "gap_surfaced": "Decide 데이터셋(simula_data_real.json 131개 동)에 약국 데모 6개 동 중 2개(금오동/성수1가1동)만 실재. 미보유 동은 \"데모 전용 동\" 안내 노출로 전환 — 기존엔 조용히 실패.",
+        "tests": "AC-6 실브라우저 10/10 (verify_ac6_deeplink.mjs) · 저니 10/10 · 단위 20/20 · AC-5 6/6 회귀 없음",
+        "journey_hardening": "verify_pharmacy_develop.mjs 스텝5가 URL만 단언해 갭을 놓쳤음 -> 자동선택 단언 추가. fault injection으로 검출력 확인(무력화 시 FAIL).",
+        "evidence": "screenshots/ac6_deeplink_decide.png"
+      },
       "spawn_rules": [],
-      "updated_at": "2026-07-15T02:18:02.545772+00:00"
+      "updated_at": "2026-07-15T04:00:33.834537+00:00"
     },
     {
       "id": "FIX_BUG_PHARMACY_DEVELOP_DRIVERS-001",
