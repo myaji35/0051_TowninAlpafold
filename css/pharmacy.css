@@ -412,6 +412,17 @@
 .pd-drivers-compact { margin-top: 6px; }
 .pd-drivers-compact .pd-driver { padding: 3px 0; font-size: 12px; border-bottom: none; }
 
+/* 근거 2단 분리 라벨 — 동 공통 근거 vs 매물별 delta 근거
+   (FIX_BUG_PHARMACY_DEVELOP_DRIVERS-001) */
+.pd-dong-drivers-label,
+.pd-property-drivers-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  letter-spacing: 0.02em;
+  margin-top: 8px;
+}
+
 /* ─── VIBE_DETAIL Modal (Decision Tree 노드 클릭) ─── */
 .vibe-detail-modal {
   position: fixed;
@@ -981,3 +992,27 @@
 .km-peers-table th { color: #6b7280; font-weight: 600; background: #f9fafb; }
 .km-peers-table td { color: #1a1a1a; }
 .km-provenance { font-size: 10px; color: #9ca3af; padding-top: 4px; }
+
+/* FIX_BUG_PHARMACY_DEVELOP_DEEPLINK-001 (AC-6) — Decide deep-link 복귀 링크 + 동 미선택 안내 */
+.pd-back-link {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid #00529B;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #00529B;
+  cursor: pointer;
+}
+.pd-back-link:hover { background: #f0f7ff; }
+.pd-dong-notice {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  background: #fffbeb;
+  border-left: 3px solid #FED766;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #854d0e;
+}

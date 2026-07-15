@@ -169,6 +169,15 @@
   }
 
   function renderDongSummary(el, r) {
+    // 동 공통 근거는 여기 1회만 — 매물 카드에는 동 대비 delta 근거만 노출된다.
+    // (FIX_BUG_PHARMACY_DEVELOP_DRIVERS-001)
+    var dongDriversHtml = (r.dong_drivers || []).map(function(d) {
+      return '<li class="pd-driver pd-driver-' + (d.sign === '+' ? 'pos' : 'neg') + '">'
+        + '<span class="pd-driver-sign">' + d.sign + '</span>'
+        + '<span class="pd-driver-text">' + escapeHtml(d.text) + '</span>'
+        + '</li>';
+    }).join('');
+
     el.innerHTML = ''
       + '<div class="pd-dong-card" style="border-left: 4px solid ' + r.dong_grade.color + ';">'
       +   '<div class="pd-dong-header">'
@@ -179,11 +188,15 @@
       +     '</div>'
       +   '</div>'
       +   '<div class="pd-dong-summary-text">매물 ' + r.property_count + '건 — 적합도순 (임대료 합리성 + 면적 + 층수 동 baseline 보정)</div>'
+      +   (dongDriversHtml
+          ? '<div class="pd-dong-drivers-label">이 동의 공통 근거</div>'
+            + '<ul class="pd-drivers-list pd-drivers-compact">' + dongDriversHtml + '</ul>'
+          : '')
       +   '<button class="pd-deep-link" type="button" data-action="goto-decide">Decide 모드에서 동 cone 보기</button>'
       + '</div>';
     var btn = el.querySelector('[data-action="goto-decide"]');
     if (btn) btn.addEventListener('click', function() {
-      if (typeof window.switchMode === 'function') window.switchMode('decide');
+      gotoDecideWithContext(r.dong);
     });
   }
 
@@ -218,13 +231,86 @@
         +       '<span class="pd-meta-chip pd-meta-chip-soft">' + escapeHtml(p.listing_source) + '</span>'
         +     '</div>'
         +     '<div class="pd-property-fit">' + escapeHtml(p.fit_reason) + '</div>'
-        +     (driversHtml ? '<ul class="pd-drivers-list pd-drivers-compact">' + driversHtml + '</ul>' : '')
+        +     (driversHtml
+              ? '<div class="pd-property-drivers-label">동 대비 이 매물</div>'
+                + '<ul class="pd-drivers-list pd-drivers-compact">' + driversHtml + '</ul>'
+              : '')
         +   '</div>'
         + '</article>';
     }).join('');
 
     el.innerHTML = cardsHtml
       + '<div class="pd-source">출처: ' + escapeHtml(r.source) + ' · 신뢰도 ' + Math.round(r.confidence * 100) + '%</div>';
+  }
+
+  // ── Decide deep-link (AC-6) — FIX_BUG_PHARMACY_DEVELOP_DEEPLINK-001 ──
+  // switchMode('decide')만 호출하면 app.js가 UrlContext.build({mode})로 URL을 덮어써
+  // ctx/address가 유실된다. → 전환 후 전체 컨텍스트로 URL을 다시 쓰고, 동 자동 선택 + 복귀 링크를 붙인다.
+  function gotoDecideWithContext(dongName) {
+    if (typeof window.switchMode !== 'function') return;
+    window.switchMode('decide');
+
+    var ctx = { mode: 'decide', ctx: 'pharmacy.develop', address: dongName };
+    if (window.UrlContext && typeof window.UrlContext.build === 'function' && typeof history !== 'undefined') {
+      try {
+        history.replaceState(ctx, '', window.UrlContext.build(ctx));
+      } catch (e) { /* 무시 — URL 갱신 실패가 모드 전환을 막지 않도록 */ }
+    }
+    var selected = selectDongInDecide(dongName);
+    renderBackLink(dongName);
+    renderDongSelectNotice(dongName, selected);
+  }
+
+  // Decide 모드에서 해당 동 자동 선택 (AC-6)
+  // app.js의 공개 API 경유 — DATA/selectedDong은 모듈 스코프라 직접 접근 불가.
+  // @returns {boolean} 선택 성공 여부 (실패 = 해당 동이 Decide 데이터셋에 없음)
+  function selectDongInDecide(dongName) {
+    if (typeof window.selectDongByName !== 'function') return false;
+    return window.selectDongByName(dongName) === true;
+  }
+
+  // 자동 선택 실패 시 사용자에게 이유를 알린다 (AC-6).
+  // 약국 데모 동 6개 중 Decide 데이터셋(simula_data_real.json)에 있는 것은 일부뿐이라
+  // 조용히 넘어가면 "Decide에 왔는데 왜 이 동이 아니지?" 상태가 된다.
+  function renderDongSelectNotice(dongName, selected) {
+    var host = document.getElementById('view-decide');
+    if (!host) return;
+    var existing = document.getElementById('pd-dong-notice');
+    if (existing) existing.remove();
+    if (selected) return;
+    var note = document.createElement('div');
+    note.id = 'pd-dong-notice';
+    note.className = 'pd-dong-notice';
+    note.textContent = '“' + dongName + '”은 Decide 데이터셋에 없는 데모 전용 동입니다 — '
+      + '전국 평균 기준으로 표시됩니다.';
+    host.prepend(note);
+  }
+
+  // "← 약국 점포개발 평가로 돌아가기" 복귀 링크 (AC-6)
+  function renderBackLink(dongName) {
+    var host = document.getElementById('view-decide');
+    if (!host) return;
+    var existing = document.getElementById('pd-back-link');
+    if (existing) existing.remove();
+    var link = document.createElement('button');
+    link.id = 'pd-back-link';
+    link.className = 'pd-back-link';
+    link.type = 'button';
+    link.textContent = '← 약국 점포개발 평가로 돌아가기';
+    link.addEventListener('click', function() {
+      link.remove();
+      if (typeof window.switchMode === 'function') window.switchMode('pharmacy-develop');
+      // 복귀 후 직전 동으로 재평가 — 평가 결과를 다시 만들어 준다
+      setTimeout(function() {
+        var input = document.querySelector('.pd-input[data-field="dong"]');
+        if (!input) return;
+        input.value = dongName;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        var cta = document.querySelector('[data-action="evaluate"]');
+        if (cta) cta.click();
+      }, 60);
+    });
+    host.insertBefore(link, host.firstChild);
   }
 
   function escapeHtml(s) {

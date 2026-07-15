@@ -174,10 +174,11 @@ await step('4b. AC-7 결정성 — 동일 주소 재평가 시 매물 점수 ±0
 });
 
 // ── 스텝 5: Decide deep-link (AC-6) ──
-// KNOWN FAIL → FIX_BUG_PHARMACY_DEVELOP_DEEPLINK-001
-//   현재 구현은 switchMode('decide')만 호출 → URL에 ctx/address 파라미터 누락.
-//   본 스텝은 AC-6 전문을 검사하므로 수정 전까지 FAIL이 정상이다 (테스트를 명세에 맞춘다).
-await step('5. [Decide 모드에서 동 cone 보기] 클릭 → decide 도달 + ctx/address 파라미터 (AC-6)', async () => {
+// FIX_BUG_PHARMACY_DEVELOP_DEEPLINK-001 수정 완료 (2026-07-15).
+//   이 스텝은 원래 URL만 단언해 AC-6의 "동 자동 선택"이 한 번도 동작한 적 없다는 사실을 놓쳤다
+//   (selectDongInDecide가 window.DATA/selectedDong — 존재하지 않는 전역 — 을 보고 silent return).
+//   → 자동 선택 단언을 추가해 같은 갭이 다시 새어나가지 않게 한다.
+await step('5. [Decide 모드에서 동 cone 보기] 클릭 → decide 도달 + ctx/address + 동 자동선택 (AC-6)', async () => {
   await page.locator('[data-action="goto-decide"]').click();            // 실제 클릭
   await page.waitForTimeout(800);
   const arrived = await page.evaluate(() => {
@@ -199,7 +200,14 @@ await step('5. [Decide 모드에서 동 cone 보기] 클릭 → decide 도달 + 
     throw new Error(`AC-6 URL 파라미터 누락 [${missing.join(', ')}] — 실제 URL='${arrived.url}' `
       + '(→ FIX_BUG_PHARMACY_DEVELOP_DEEPLINK-001)');
   }
-  console.log(`   → decide 도달 · URL='${arrived.url}'`);
+  // AC-6 (2): Decide 도착 시 해당 동 자동 선택 — URL만 보면 놓치는 요구사항
+  const addr = q.get('address');
+  const selected = await page.evaluate(() =>
+    (typeof window.getSelectedDongName === 'function' ? window.getSelectedDongName() : undefined));
+  if (selected !== addr) {
+    throw new Error(`AC-6 동 자동선택 실패 — address='${addr}' 인데 selectedDong='${selected}'`);
+  }
+  console.log(`   → decide 도달 · URL='${arrived.url}' · 자동선택='${selected}'`);
   return true;
 });
 
@@ -232,16 +240,31 @@ await step('E2. AC-5 — 의원 희소 동(저밀도 외곽동)에서 매물 카
   const st = await page.evaluate(() => {
     const card = document.querySelector('.pd-property-card');
     if (!card) return null;
+    // BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001: AC-5의 의원수 driver는 동 공통 근거에 실린다.
+    //   매물 카드 driver는 동 대비 delta(임대료 등)라 clinics가 원리상 등장하지 않는다.
+    const dongList = document.querySelector('.pd-dong-drivers-label + .pd-drivers-list');
+    const dongDrivers = [...(dongList?.querySelectorAll('.pd-driver') || [])].map((li) => ({
+      neg: li.classList.contains('pd-driver-neg'),
+      text: li.querySelector('.pd-driver-text')?.textContent || '',
+    }));
     return {
       score: parseInt(card.querySelector('.pd-property-score')?.textContent || '0', 10),
       badge: card.querySelector('.pd-property-grade-badge')?.textContent || '',
       negDrivers: [...card.querySelectorAll('.pd-driver-neg .pd-driver-text')].map((e) => e.textContent),
       posDrivers: [...card.querySelectorAll('.pd-driver-pos .pd-driver-text')].map((e) => e.textContent),
+      dongDrivers,
     };
   });
   if (!st) throw new Error('저밀도 외곽동 매물 카드 미렌더');
   if (st.score >= 50) throw new Error(`의료 인프라 부족 동인데 score=${st.score} (low 기대)`);
-  console.log(`   → score ${st.score}(${st.badge.trim()}) · 강점 [${st.posDrivers}] · 약점 [${st.negDrivers}]`);
+  // AC-5 본체: 의원수가 음수 방향(약점)으로, 동 공통 근거 최상단에 노출되어야 한다.
+  const clinicTop = st.dongDrivers[0];
+  if (!clinicTop || !/의원수/.test(clinicTop.text)) {
+    throw new Error(`AC-5 위반: 동 근거 최상단이 의원수가 아님 (실제: ${st.dongDrivers.map((d) => d.text)})`);
+  }
+  if (!clinicTop.neg) throw new Error('AC-5 위반: 의원수 driver가 약점(negative)으로 표시되지 않음');
+  await page.screenshot({ path: `${SCREENS}/journey-pharmacy-develop-ac5-clinic-weakness.png`, fullPage: true });
+  console.log(`   → score ${st.score}(${st.badge.trim()}) · AC-5 약점 최상단 "${clinicTop.text}" · 매물 약점 [${st.negDrivers}]`);
   return true;
 });
 

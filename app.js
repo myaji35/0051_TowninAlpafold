@@ -6153,6 +6153,23 @@ window.updateAnalyzeContext = updateAnalyzeContext;
 window.updateDecideContext = updateDecideContext;
 window.updateExploreContext = updateExploreContext;
 
+// 동 선택 공개 API — FIX_BUG_PHARMACY_DEVELOP_DEEPLINK-001 (AC-6)
+// DATA/selectedDong은 모듈 스코프라 외부 컴포넌트가 접근할 수 없다. deep-link 진입 시
+// 동을 선택하려면 이 API를 경유한다. 못 찾으면 false를 반환해 호출부가 갭을 알 수 있게 한다
+// (조용히 무시하면 "도착했지만 동은 미선택" 상태가 사용자에게 보이지 않는다).
+function selectDongByName(dongName) {
+  if (!DATA || !Array.isArray(DATA.dongs) || !dongName) return false;
+  const target = DATA.dongs.find(d => d.name === dongName)
+    || DATA.dongs.find(d => d.name.includes(dongName));
+  if (!target) return false;
+  selectedDong = target;
+  if (currentMode === 'decide') renderDecide();
+  updateDecideContext();
+  return true;
+}
+window.selectDongByName = selectDongByName;
+window.getSelectedDongName = () => (selectedDong ? selectedDong.name : null);
+
 // 자동 갱신 — 모드 전환 / 슬롯 변경 / 동 선택 시
 (function autoUpdateScreenContext() {
   function tick() {
