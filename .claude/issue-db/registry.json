@@ -2349,7 +2349,7 @@
       "id": "UI_LIMITATION_FALSIFY-001",
       "type": "USER_STORY",
       "priority": "P1",
-      "status": "BLOCKED",
+      "status": "DONE",
       "title": "[섹션❼] Limitations + Falsifiability + 부록",
       "detail": "한계 + 반증 + 부록:\n· 한계 7항목 (펼치기 기본)\n· 반증 기준 3~4개 (timeline 시각화)\n· 부록 링크: Method Cards / Provenance / 재현 코드",
       "assign_to": "agent-harness",
@@ -2371,6 +2371,17 @@
       "estimate_h": 4,
       "payload": {
         "files_changed": []
+      },
+      "completed_at": "2026-07-15T00:54:25.319269",
+      "result": {
+        "files_changed": [
+          "app.js",
+          "css/meongbun.css",
+          "verify_limitation_falsify.mjs",
+          "package.json"
+        ],
+        "journey": "6/6 PASS",
+        "ui": true
       }
     },
     {
@@ -16339,8 +16350,8 @@
     "count": 1
   },
   "issue_budget": {
-    "date": "2026-07-14",
-    "created_today": 11
+    "date": "2026-07-15",
+    "created_today": 0
   },
   "updated_at": "2026-07-14T20:30:48.157770+09:00",
   "hermes_state": {

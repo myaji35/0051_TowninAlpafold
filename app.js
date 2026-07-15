@@ -4473,6 +4473,7 @@ function renderMeongbunLayout(dongName) {
     renderInterpretation(dongName);
     renderScenarios(dongName);
     renderRecommendationTrace(dongName);
+    renderLimitationFalsify(dongName);
     mountWidgetCafeTimeseries('#meongbun-sec-2 .meongbun-widget-slot', dongName);
     mountWidgetTopCausal('#meongbun-sec-4 .meongbun-widget-slot', dongName);
   }
@@ -5259,6 +5260,169 @@ function renderRecommendationTrace(dongName) {
       if (arrow) arrow.textContent = open ? '▼' : '▲';
     });
   }
+}
+
+// ─────────────────────────────────────────────────────────────
+// SECTION ❼ — 한계(Limitation) + 반증(Falsifiability) + 부록
+// SIL_INTEGRATION-001의 §7 (reports/build_meongbun_report.py) 을 웹 UI로 미러.
+// 한계 7항목(펼치기 기본) + 반증 4조건(6mo/12mo timeline) + 부록 3종 링크.
+// ─────────────────────────────────────────────────────────────
+
+// 한계 7항목 — SIL §7.1 데이터 한계 + 방법 proxy + 시연 범위.
+const MEONGBUN_LIMITATIONS = [
+  { tag: 'DATA',   title: 'PHASE2 실API 미확정',
+    body: 'developing 시계열은 등급 S 스키마를 충족하나 실API 확정 수집본이 아님. 키 확보 후 <code>etl_uijeongbu.py</code> 재수집으로 대체된다.' },
+  { tag: 'PROXY',  title: '거래량(tx_volume) 대리지표',
+    body: '직접 거래량 출처 부재로 <b>biz_count 변화율</b>을 proxy로 사용. 실거래 API 확보 시 직접 지표로 교체.' },
+  { tag: 'PROXY',  title: '생존율 baseline hazard 근사',
+    body: '인허가(개업/폐업일) 미보유 구간에서 <b>카페 업종 baseline 폐업률(연 18%, 공개 통계 가정) + biz_cafe 월별 순감소</b>를 합산한 proxy hazard로 근사. 집계 재고는 gross churn을 숨기므로 실측 대비 과대추정 소지 — 인허가 실데이터 확보 시 실측 hazard로 대체.' },
+  { tag: 'MODEL',  title: '합성 데이터 학습',
+    body: '권고 분류 트리·SHAP은 합성 코호트(<code>simula_data_real.json</code>)로 학습. 실데이터 도입(ISS-018) 시 기여도·분기 임계값이 변동될 수 있다.' },
+  { tag: 'MODEL',  title: 'SHAP 기여도는 데모 표본',
+    body: '변수별 기여도(%p)는 시연용 표본이며 절대값이 아님. 분기 경로만 실제 학습 트리 <code>tree_model.json</code> 통과 결과다.' },
+  { tag: 'SCOPE',  title: '시연 범위 = 데모 동 2곳',
+    body: '1차 시연 데이터는 <b>의정부시 금오동 / 성수1가1동</b> 2개 동에만 적용. 그 외 동은 코호트 백분위·생존율만 근사 표시된다.' },
+  { tag: 'CAUSAL', title: '인과 추론의 통계적 한계',
+    body: 'Top 인과쌍은 Pearson 상관 + Granger 선후행 기반이라 <b>교란변수·역인과를 완전히 배제하지 못한다</b>. RCT가 아닌 관측 데이터의 구조적 한계.' },
+];
+
+// 반증 4조건 — SIL FALSIFY. 검증 시점(관측 창)으로 6mo/12mo 배치.
+const MEONGBUN_FALSIFY = [
+  { window: 6,  title: '카페 비중 코호트 수렴',
+    body: '금오동 카페 비중이 코호트 중앙값 ±2%p 이내로 수렴 → 희소성 프리미엄 전제 붕괴.' },
+  { window: 6,  title: '베이커리 신규 입점 급증',
+    body: '인접 베이커리 신규 입점이 급증해 대체재 경쟁으로 희소성 프리미엄이 소실.' },
+  { window: 12, title: '타겟 고객층 축소',
+    body: '30·40대 유동 비중이 유의하게 하락 → 권고가 겨냥한 고객 코호트가 사라짐.' },
+  { window: 12, title: '비용 가정 붕괴',
+    body: '주변 임대료가 급등해 시나리오 S2의 비용 가정이 무너짐.' },
+];
+
+// 부록 3종 — SIL Appendix A/B/C. 실제 산출 문서로 연결.
+const MEONGBUN_APPENDIX = [
+  { icon: '📐', title: 'Method Cards', sub: '분석 방법 카드 · 부록 A',
+    href: 'docs/methods/km-survival.md', note: 'KM 생존 / 인과 추출 / wedge 검증' },
+  { icon: '🔖', title: 'Provenance', sub: '출처 인덱스 · 부록 B',
+    href: 'docs/methods/wedge-validation.md', note: '행안부·KOSIS·MOLIT·TAGO 출처+라이선스' },
+  { icon: '⚙️', title: '재현 코드', sub: '1줄 명령 재현 · 부록 C',
+    href: 'reports/build_meongbun_report.py', note: 'python3 reports/build_meongbun_report.py --dong <코드>' },
+];
+
+function renderLimitationFalsify(dongName) {
+  const sec = document.getElementById('meongbun-sec-7');
+  if (!sec) return;
+  const ph = sec.querySelector('.meongbun-placeholder');
+  if (ph) ph.style.display = 'none';
+
+  // idempotent — 기존 블록 제거
+  const old = sec.querySelector('.limit-block');
+  if (old) old.remove();
+
+  const block = document.createElement('div');
+  block.className = 'limit-block';
+  block.innerHTML = `
+    ${renderLimitationHtml()}
+    ${renderFalsifyTimelineHtml()}
+    ${renderAppendixHtml()}
+    <div class="limit-prov">
+      출처: SIL 5장치(Provenance / Method / CI / Limitation / Falsifiability) ·
+      본 섹션은 <b>reports/build_meongbun_report.py §7</b>의 웹 미러 ·
+      한계·반증 조건은 PDF 보고서와 동일 소스에서 파생.
+    </div>`;
+  sec.appendChild(block);
+
+  // 한계 목록 펼치기 토글 (기본 펼침)
+  const toggle = block.querySelector('.limit-toggle');
+  const body = block.querySelector('.limit-list');
+  if (toggle && body) {
+    toggle.addEventListener('click', () => {
+      const open = !body.hidden;
+      body.hidden = open;
+      toggle.setAttribute('aria-expanded', String(!open));
+      const arrow = toggle.querySelector('.limit-arrow');
+      if (arrow) arrow.textContent = open ? '▼' : '▲';
+    });
+  }
+}
+
+// ① 한계 7항목 — 펼치기 기본(hidden=false).
+function renderLimitationHtml() {
+  const TAG_COLOR = {
+    DATA: '#C9485B', PROXY: '#E8A13C', MODEL: '#00529B', SCOPE: '#6B7280', CAUSAL: '#7A5BC0',
+  };
+  const items = MEONGBUN_LIMITATIONS.map((l, i) => {
+    const c = TAG_COLOR[l.tag] || '#6B7280';
+    return `
+      <li class="limit-item">
+        <span class="limit-item-idx">${i + 1}</span>
+        <div class="limit-item-body">
+          <div class="limit-item-head">
+            <span class="limit-tag" style="background:${c}">${l.tag}</span>
+            <span class="limit-item-title">${escapeHtml(l.title)}</span>
+          </div>
+          <div class="limit-item-desc">${l.body}</div>
+        </div>
+      </li>`;
+  }).join('');
+
+  return `
+    <div class="limit-section">
+      <button class="limit-toggle" type="button" aria-expanded="true">
+        <span class="trace-sub-title">① 한계 (Limitation) — 이 분석의 가정·불확실성</span>
+        <span class="limit-toggle-summary">${MEONGBUN_LIMITATIONS.length}개 항목</span>
+        <span class="limit-arrow">▲</span>
+      </button>
+      <ul class="limit-list">${items}</ul>
+    </div>`;
+}
+
+// ② 반증 기준 — 6mo / 12mo timeline 시각화.
+function renderFalsifyTimelineHtml() {
+  const at = (w) => MEONGBUN_FALSIFY
+    .filter(f => f.window === w)
+    .map(f => `
+      <div class="falsify-card">
+        <div class="falsify-card-title">${escapeHtml(f.title)}</div>
+        <div class="falsify-card-body">${escapeHtml(f.body)}</div>
+      </div>`).join('');
+
+  return `
+    <div class="falsify-section">
+      <div class="trace-sub-head">
+        <span class="trace-sub-title">② 반증 기준 (Falsifiability)</span>
+        <span class="trace-sub-meta">다음이 확인되면 <b class="trace-neg">본 권고를 폐기</b>하고 재실행</span>
+      </div>
+      <div class="falsify-timeline">
+        <div class="falsify-milestone">
+          <div class="falsify-node"><span class="falsify-node-dot"></span><span class="falsify-node-label">6개월 후</span></div>
+          <div class="falsify-cards">${at(6)}</div>
+        </div>
+        <div class="falsify-track" aria-hidden="true"></div>
+        <div class="falsify-milestone">
+          <div class="falsify-node"><span class="falsify-node-dot late"></span><span class="falsify-node-label">12개월 후</span></div>
+          <div class="falsify-cards">${at(12)}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ③ 부록 3종 링크.
+function renderAppendixHtml() {
+  const cards = MEONGBUN_APPENDIX.map(a => `
+    <a class="appendix-card" href="${escapeHtml(a.href)}" target="_blank" rel="noopener">
+      <span class="appendix-icon">${a.icon}</span>
+      <span class="appendix-title">${escapeHtml(a.title)}</span>
+      <span class="appendix-sub">${escapeHtml(a.sub)}</span>
+      <span class="appendix-note">${escapeHtml(a.note)}</span>
+    </a>`).join('');
+
+  return `
+    <div class="appendix-section">
+      <div class="trace-sub-head">
+        <span class="trace-sub-title">③ 부록 (Appendix) — 방법·출처·재현</span>
+      </div>
+      <div class="appendix-grid">${cards}</div>
+    </div>`;
 }
 
 // ① SHAP horizontal bar — top 5 + 기타. 부호별 좌우 발산 막대(waterfall 느낌).

@@ -14,6 +14,7 @@
     "verify:workflow": "node verify_workflow.mjs",
     "verify:decision_tree": "node verify_decision_tree.mjs",
     "verify:viz_pack": "node verify_viz_pack.mjs",
+    "verify:limitation_falsify": "node verify_limitation_falsify.mjs",
     "train:tree": ".venv/bin/python decision_tree_train.py",
     "auto:detect": "bash .claude/hooks/auto-detect.sh",
     "verify:all": "node verify_all.mjs",

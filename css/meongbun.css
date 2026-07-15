@@ -879,3 +879,185 @@
   border: 1px dashed rgba(255, 255, 255, 0.10);
   border-radius: 6px;
 }
+
+/* ── SECTION ❼ 한계 + 반증 + 부록 ── */
+.limit-block { margin-top: 16px; }
+
+/* ① 한계 목록 */
+.limit-section { margin-bottom: 24px; }
+.limit-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+.limit-toggle:hover { background: rgba(255, 255, 255, 0.05); }
+.limit-toggle-summary {
+  margin-left: auto;
+  font-size: 11px;
+  color: #9CA3AF;
+  font-family: 'JetBrains Mono', monospace;
+}
+.limit-arrow { font-size: 10px; color: #6B7280; }
+.limit-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.limit-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(15, 25, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+}
+.limit-item-idx {
+  flex: 0 0 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: #9CA3AF;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.limit-item-body { flex: 1; min-width: 0; }
+.limit-item-head { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.limit-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.limit-item-title { font-size: 13px; font-weight: 600; color: #E8EDF3; }
+.limit-item-desc { font-size: 12px; color: #B3BCC9; line-height: 1.5; }
+.limit-item-desc code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: rgba(0, 82, 155, 0.18);
+  color: #5BC0EB;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.limit-item-desc b { color: #E8EDF3; }
+
+/* ② 반증 timeline */
+.falsify-section { margin-bottom: 24px; }
+.falsify-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  margin-top: 12px;
+  padding-left: 4px;
+}
+.falsify-milestone { position: relative; padding-left: 20px; }
+.falsify-track {
+  position: absolute;
+  left: 9px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: linear-gradient(#00529B, #C9485B);
+}
+.falsify-node { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-left: -20px; }
+.falsify-node-dot {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #00529B;
+  border: 2px solid rgba(15, 25, 42, 0.9);
+  box-shadow: 0 0 0 2px rgba(0, 82, 155, 0.3);
+  z-index: 1;
+}
+.falsify-node-dot.late { background: #C9485B; box-shadow: 0 0 0 2px rgba(201, 72, 91, 0.3); }
+.falsify-node-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #E8EDF3;
+  font-family: 'JetBrains Mono', monospace;
+}
+.falsify-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.falsify-card {
+  padding: 10px 12px;
+  background: rgba(201, 72, 91, 0.06);
+  border: 1px solid rgba(201, 72, 91, 0.18);
+  border-left: 3px solid #C9485B;
+  border-radius: 0 6px 6px 0;
+}
+.falsify-card-title { font-size: 12px; font-weight: 600; color: #E8EDF3; margin-bottom: 3px; }
+.falsify-card-body { font-size: 11px; color: #B3BCC9; line-height: 1.5; }
+
+/* ③ 부록 카드 */
+.appendix-section { margin-bottom: 8px; }
+.appendix-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.appendix-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 14px 12px;
+  background: rgba(15, 25, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.appendix-card:hover {
+  border-color: #00A1E0;
+  transform: translateY(-2px);
+}
+.appendix-icon { font-size: 20px; margin-bottom: 4px; }
+.appendix-title { font-size: 13px; font-weight: 700; color: #E8EDF3; }
+.appendix-sub {
+  font-size: 10px;
+  color: #9CA3AF;
+  font-family: 'JetBrains Mono', monospace;
+}
+.appendix-note {
+  font-size: 10px;
+  color: #6B7280;
+  line-height: 1.4;
+  margin-top: 4px;
+  word-break: break-all;
+}
+
+.limit-prov {
+  margin-top: 14px;
+  font-size: 10px;
+  color: #6B7280;
+  line-height: 1.55;
+  font-family: 'JetBrains Mono', monospace;
+}
+.limit-prov b { color: #9CA3AF; }
+
+@media (max-width: 720px) {
+  .falsify-cards { grid-template-columns: 1fr; }
+  .appendix-grid { grid-template-columns: 1fr; }
+}
