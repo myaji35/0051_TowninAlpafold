@@ -14272,11 +14272,11 @@
       "id": "ISS-263",
       "title": "[Plan:시나리오실행] Recommendation Trace 시나리오 12개 E2E 실행",
       "type": "SCENARIO_PLAY",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "scenario-player",
       "depth": 2,
-      "retry_count": 2,
+      "retry_count": 3,
       "parent_id": "ISS-253",
       "depends_on": [],
       "created_at": "2026-07-15T13:20:35.522582",
@@ -14305,9 +14305,37 @@
         "evidence_required": true,
         "note_append": "1차 실행(2026-07-20)은 스크린샷 6개 전부 부재로 PASS 기각. S-11만 CLI 실증. 재실행 시 evidence[] 필수 + ls 자가확인 후 보고."
       },
-      "result": null,
+      "result": {
+        "total": 12,
+        "passed": 11,
+        "failed": 1,
+        "skipped": 0,
+        "verified_by": "opus-independent-evidence-check",
+        "evidence": [
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S1_shap.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S2_tree_toggle.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S3_labels.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S4_dong_switch.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S5_no_demo.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S6_hover_tooltip.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S7_S8_limitations.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S9_tree404.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S10_tree_meta.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S12_tree_not_loaded.png",
+          "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/screenshots/section6_recommendation_trace.png"
+        ],
+        "results": [
+          {
+            "id": "S-9",
+            "verdict": "FAIL",
+            "expected": "콘솔 에러 없이 SHAP만 렌더",
+            "actual": "SHAP 5행·분기생략은 정상이나 404 리소스 로드 실패가 콘솔 error 1건"
+          }
+        ]
+      },
       "spawn_rules": [],
-      "last_dispatched_at": "2026-07-20T17:55:41"
+      "last_dispatched_at": "2026-07-20T17:55:41",
+      "completed_at": "2026-07-20T18:18:37.180587"
     },
     {
       "id": "FIX_TREE_FEATURE_UNMAPPED-001",
@@ -14354,7 +14382,7 @@
       "id": "ISS-264",
       "title": "[Plan:배포] 품질 76점 — 배포 준비",
       "type": "DEPLOY_READY",
-      "status": "BLOCKED",
+      "status": "READY",
       "priority": "P1",
       "assign_to": "cicd-harness",
       "depth": 3,
@@ -14577,7 +14605,7 @@
       },
       "result": null,
       "spawn_rules": [],
-      "last_dispatched_at": "2026-07-20T18:02:05"
+      "last_dispatched_at": "2026-07-20T18:18:12"
     },
     {
       "id": "ISS-273",
@@ -14698,6 +14726,49 @@
       },
       "result": null,
       "spawn_rules": []
+    },
+    {
+      "id": "ISS-280",
+      "title": "[에스컬레이션] [Plan:시나리오실행] Recommendation Trace 시나리오 12개 E2E 실행 반복 실패",
+      "type": "SYSTEMIC_ISSUE",
+      "status": "READY",
+      "priority": "P0",
+      "assign_to": "meta-agent",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ISS-263",
+      "depends_on": [],
+      "created_at": "2026-07-20T18:09:08.518156",
+      "payload": {
+        "original_issue": "ISS-263",
+        "error": "agent stopped without completion (stall > 30min)"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-281",
+      "title": "[SCENARIO_FIX] S-9 tree_model.json 404 시 콘솔 error 1건 — 명세 '콘솔 에러 없이' 미충족",
+      "type": "SCENARIO_FIX",
+      "priority": "P2",
+      "status": "READY",
+      "owner_agent": "agent-harness",
+      "created_at": "2026-07-20T18:25:00+09:00",
+      "payload": {
+        "source_issue": "ISS-263",
+        "scenario": "S-9",
+        "evidence": "/Volumes/E_SSD/02_GitHub.nosync/0051_TowninAlpafold/.playwright-mcp/rerun_S9_tree404.png",
+        "detail": "tree_model.json을 404로 강제하면 SHAP 5행 렌더·분기블록 생략은 정상이나, 브라우저 네트워크 레벨 404가 콘솔 error로 1건 남는다. rules.json S-9 명세는 '콘솔 에러 없이'를 요구.",
+        "note": "애플리케이션 버그가 아니라 fetch 실패의 표준 브라우저 로그일 수 있음. 두 방향 중 택1: (a) 사전 존재확인(HEAD) 후 fetch하여 404 자체를 회피 (b) rules.json S-9 명세를 '앱 레벨 콘솔 에러 없이'로 정정. edge_cases 미등재 신규 발견.",
+        "options": [
+          "(a) 코드 수정: fetch 전 존재확인",
+          "(b) 명세 정정: 앱 레벨 에러로 한정"
+        ]
+      },
+      "ac": [
+        "AC-1: 선택한 방향 적용 후 S-9 재실행 시 verdict=PASS",
+        "AC-2: 정상 경로(tree_model.json 존재) 회귀 없음"
+      ]
     }
   ],
   "hooks": {
@@ -16035,6 +16106,12 @@
         "issue_type": "SYSTEMIC_ISSUE",
         "plan_created": 0,
         "timestamp": "2026-07-20T18:07:13.176181"
+      },
+      {
+        "issue_id": "ISS-263",
+        "issue_type": "SCENARIO_PLAY",
+        "plan_created": 0,
+        "timestamp": "2026-07-20T18:18:37.180587"
       }
     ],
     "on_fail": [
@@ -16057,6 +16134,11 @@
         "issue_id": "ISS-263",
         "retry_count": 2,
         "timestamp": "2026-07-20T17:39:37.883659"
+      },
+      {
+        "issue_id": "ISS-263",
+        "retry_count": 3,
+        "timestamp": "2026-07-20T18:09:08.518188"
       }
     ],
     "on_learn": []
@@ -17385,9 +17467,9 @@
     ]
   },
   "stats": {
-    "total_issues": 260,
-    "completed": 244,
-    "failed": 4,
+    "total_issues": 261,
+    "completed": 245,
+    "failed": 5,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
   },
@@ -17622,6 +17704,6 @@
   },
   "rewake_state": {
     "DOC_PHARMACY_DEVELOP_AC_DRIFT-001:READY": 1,
-    "ISS-272:READY": 1
+    "ISS-272:READY": 2
   }
 }
