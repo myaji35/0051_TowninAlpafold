@@ -6490,7 +6490,8 @@
       },
       "result": {
         "passed": true,
-        "closed_reason": "cascade_no_value"
+        "closed_reason": "cascade_no_value",
+        "retro_note": "소급표기(2026-07-20): 동일 오탐 패턴. on_complete.sh coverage 키 부재→0% 오해석으로 생성된 허위 SYSTEMIC_ISSUE. 근본수정 ISS-269. 이력보존 위해 status는 DONE 유지."
       },
       "spawn_rules": [],
       "started_at": "2026-05-04T06:34:30.075084Z",
@@ -13940,7 +13941,8 @@
         "files_changed": []
       },
       "result": null,
-      "spawn_rules": []
+      "spawn_rules": [],
+      "last_dispatched_at": "2026-07-20T17:39:37"
     },
     {
       "id": "BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001",
@@ -14203,11 +14205,11 @@
       "id": "ISS-262",
       "title": "[Plan:비즈니스검증] Recommendation Trace 규칙 20개 정적 검증",
       "type": "BIZ_VALIDATE",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "priority": "P1",
       "assign_to": "biz-validator",
       "depth": 2,
-      "retry_count": 0,
+      "retry_count": 2,
       "parent_id": "ISS-253",
       "depends_on": [],
       "created_at": "2026-07-15T13:20:35.522582",
@@ -14254,8 +14256,17 @@
         "note": "규칙/시나리오 본문은 spec_file에 있다. ID만 보고 내용을 추측하지 말고 spec_file을 읽어라. CRITICAL(트리 feature 미매핑)은 이미 FIX_TREE_FEATURE_UNMAPPED-001(commit 73ea81d)로 수정 완료 — 재보고 불필요.",
         "files_changed": []
       },
-      "result": null,
-      "spawn_rules": []
+      "result": {
+        "coverage_pct": 100,
+        "total_rules": 20,
+        "violations": [],
+        "critical_count": 0,
+        "verified_by": "opus-independent-run",
+        "verify_script": "5/5 PASS"
+      },
+      "spawn_rules": [],
+      "last_dispatched_at": "2026-07-20T17:38:01",
+      "completed_at": "2026-07-20T17:41:57.144475"
     },
     {
       "id": "ISS-263",
@@ -14265,7 +14276,7 @@
       "priority": "P1",
       "assign_to": "scenario-player",
       "depth": 2,
-      "retry_count": 0,
+      "retry_count": 2,
       "parent_id": "ISS-253",
       "depends_on": [],
       "created_at": "2026-07-15T13:20:35.522582",
@@ -14287,10 +14298,16 @@
         "domain": "recommendation-trace (섹션❻ SHAP + Decision Tree)",
         "source_issue": "ISS-253",
         "spec_file": "docs/domain/recommendation-trace-rules.json",
-        "note": "규칙/시나리오 본문은 spec_file에 있다. ID만 보고 내용을 추측하지 말고 spec_file을 읽어라. CRITICAL(트리 feature 미매핑)은 이미 FIX_TREE_FEATURE_UNMAPPED-001(commit 73ea81d)로 수정 완료 — 재보고 불필요."
+        "note": "규칙/시나리오 본문은 spec_file에 있다. ID만 보고 내용을 추측하지 말고 spec_file을 읽어라. CRITICAL(트리 feature 미매핑)은 이미 FIX_TREE_FEATURE_UNMAPPED-001(commit 73ea81d)로 수정 완료 — 재보고 불필요.",
+        "blocked_by": [
+          "ISS-270"
+        ],
+        "evidence_required": true,
+        "note_append": "1차 실행(2026-07-20)은 스크린샷 6개 전부 부재로 PASS 기각. S-11만 CLI 실증. 재실행 시 evidence[] 필수 + ls 자가확인 후 보고."
       },
       "result": null,
-      "spawn_rules": []
+      "spawn_rules": [],
+      "last_dispatched_at": "2026-07-20T17:55:41"
     },
     {
       "id": "FIX_TREE_FEATURE_UNMAPPED-001",
@@ -14337,7 +14354,7 @@
       "id": "ISS-264",
       "title": "[Plan:배포] 품질 76점 — 배포 준비",
       "type": "DEPLOY_READY",
-      "status": "READY",
+      "status": "BLOCKED",
       "priority": "P1",
       "assign_to": "cicd-harness",
       "depth": 3,
@@ -14353,7 +14370,331 @@
           "robustness": 60,
           "docs": 90
         },
-        "source_issue": "ISS-254"
+        "source_issue": "ISS-254",
+        "blocked_by": [
+          "ISS-263"
+        ],
+        "block_reason": "ISS-263 시나리오 E2E가 1/12만 실증(11/12 미검증). 배포 게이트 통과 근거 부족."
+      },
+      "result": null,
+      "spawn_rules": [],
+      "last_dispatched_at": "2026-07-20T17:38:02"
+    },
+    {
+      "id": "ISS-265",
+      "title": "[Plan:설계검토] 비즈니스 시나리오 커버리지 0%",
+      "type": "SYSTEMIC_ISSUE",
+      "status": "CLOSED_INVALID",
+      "priority": "P1",
+      "assign_to": "meta-agent",
+      "depth": 3,
+      "retry_count": 0,
+      "parent_id": "ISS-262",
+      "depends_on": [],
+      "created_at": "2026-07-20T17:41:57.144475",
+      "payload": {
+        "biz_coverage": 0,
+        "source_issue": "ISS-262"
+      },
+      "result": {
+        "closed_reason": "false_positive: on_complete.sh:616이 coverage 키 부재를 0%로 오해석해 자동 생성됨. 실측 커버리지는 100%(20/20 무위반, ISS-262). 근본수정은 ISS-269."
+      },
+      "spawn_rules": [],
+      "last_dispatched_at": "2026-07-20T17:41:57"
+    },
+    {
+      "id": "ISS-266",
+      "title": "[아이디어] fable 착수대상 다시 검토해서 이슈등록시키고 opus 통해서 구현하자.",
+      "type": "IDEA",
+      "status": "BACKLOG",
+      "priority": "P3",
+      "assign_to": "product-manager",
+      "depth": 0,
+      "created_at": "2026-07-20T17:51:19.763304",
+      "updated_at": "2026-07-20T17:51:19.763304",
+      "payload": {
+        "origin": "intent-gate:idea",
+        "raw_prompt": "fable 착수대상 다시 검토해서 이슈등록시키고 opus 통해서 구현하자.",
+        "note": "대표님 제안형 발화 자동 포착. BACKLOG라 자동 착수 안 함 — 검토 후 READY로 올려야 실행된다."
+      }
+    },
+    {
+      "id": "ISS-267",
+      "title": "[지시] fable 착수대상 다시 검토해서 이슈등록시키고 opus 통해서 구현하자.",
+      "type": "FEATURE_PLAN",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "product-manager",
+      "depth": 0,
+      "created_at": "2026-07-20T17:51:19.798183",
+      "updated_at": "2026-07-20T17:51:19.798183",
+      "payload": {
+        "origin": "intent-gate",
+        "raw_prompt": "fable 착수대상 다시 검토해서 이슈등록시키고 opus 통해서 구현하자."
+      }
+    },
+    {
+      "id": "ISS-268",
+      "title": "[FIX_BUG] harness-core registry 락 커버리지 완성 — on_complete.sh 무락 저장 + lib 배포 누락",
+      "type": "FIX_BUG",
+      "priority": "P0",
+      "status": "DONE",
+      "owner_agent": "agent-harness",
+      "created_at": "2026-07-20T17:50:00+09:00",
+      "payload": {
+        "root_cause": "on_complete.sh:963-964 plain json.dump (registry_txn 0건, grep 확인). lib/ 디렉터리가 install.sh 심볼릭 배포 목록에 없어 이 프로젝트에 누락됐었음(응급 ln -s 완료).",
+        "files": [
+          "~/.claude/harness-core/hooks/on_complete.sh",
+          "/Volumes/E_SSD/02_GitHub.nosync/GH_Harness/install.sh"
+        ],
+        "scope_note": "harness-core 심볼릭 소스 = 전 프로젝트 파급. GH_Harness 소스에서 수정 후 install.sh 전파",
+        "blocked_by": [],
+        "ac": [
+          "AC-1: grep -c registry_txn on_complete.sh >= 1, import 실패 시 stderr 경고 후 폴백",
+          "AC-2: on_complete.sh 2개 동시 실행 후 json.load exit 0 및 파일 크기 > 0",
+          "AC-3: 전 프로젝트 .claude/hooks/lib 존재 점검 출력 MISSING 0건",
+          "AC-4: install.sh가 lib 심볼릭 생성"
+        ]
+      },
+      "completed_at": "2026-07-20T18:02:04.996200",
+      "result": {
+        "passed": true,
+        "ac_passed": 4,
+        "ac_total": 4,
+        "verified_by": "opus-independent",
+        "detail": "AC-1 registry_txn 적용+문법OK, AC-2 4중 동시실행 truncate없음(379건 파싱), AC-3 29개 프로젝트 lib 배포 MISSING 0, AC-4 install.sh -f→-e 수정으로 디렉터리 배포"
+      }
+    },
+    {
+      "id": "ISS-269",
+      "title": "[FIX_BUG] on_complete.sh BIZ_VALIDATE coverage 키 부재를 0%로 오해석 — SYSTEMIC_ISSUE 오탐 (재현: ISS-124, ISS-265)",
+      "type": "FIX_BUG",
+      "priority": "P1",
+      "status": "DONE",
+      "owner_agent": "agent-harness",
+      "created_at": "2026-07-20T17:50:00+09:00",
+      "payload": {
+        "root_cause": "on_complete.sh:616 result.get('coverage_rate', 0) — 키 부재/이형키(coverage_pct)를 0으로 간주 → 644행 <70 분기 오탐. 공식 규격은 coverage_rate(biz-validator.md:77) 확인됨. '규격이 coverage_pct'라는 이전 Opus 진단은 오진으로 폐기.",
+        "files": [
+          "~/.claude/harness-core/hooks/on_complete.sh:616-650"
+        ],
+        "blocked_by": [],
+        "ac": [
+          "AC-1: result={\"coverage_pct\":100} 일 때 SYSTEMIC_ISSUE 신규 생성 0건",
+          "AC-2: coverage 키 전무 시 생성 0건 + stderr '[warn] coverage 키 부재'",
+          "AC-3: {\"coverage_rate\":50} 일 때는 기존대로 1건 생성(회귀방지)"
+        ]
+      },
+      "completed_at": "2026-07-20T18:03:58.375785",
+      "result": {
+        "passed": true,
+        "ac_passed": 3,
+        "ac_total": 3,
+        "verified_by": "opus-independent",
+        "detail": "AC-1 coverage_pct:100 오탐0건, AC-2 키부재 0건+stderr경고, AC-3 coverage_rate:50 정상1건(회귀없음)"
+      }
+    },
+    {
+      "id": "ISS-270",
+      "title": "[SYSTEMIC_ISSUE] on_complete 증거 실재 게이트 — screenshot/evidence 경로 존재·크기·mtime 미검사",
+      "type": "SYSTEMIC_ISSUE",
+      "priority": "P1",
+      "status": "DONE",
+      "owner_agent": "meta-agent",
+      "created_at": "2026-07-20T17:50:00+09:00",
+      "payload": {
+        "root_cause": "on_complete.sh에 os.path.exists 0건. ISS-263에서 스크린샷 6개 전부 부재인데 12/12 PASS 보고가 수용될 뻔함.",
+        "design": "SCENARIO_PLAY/E2E_VERIFY/UI_REVIEW/JOURNEY_VALIDATE 완료 시 result.evidence[] 각 경로에 존재+크기>0+mtime>착수시각 검사. 실패 시 DONE 거부 + EVIDENCE_MISSING P0 파생.",
+        "files": [
+          "~/.claude/harness-core/hooks/on_complete.sh"
+        ],
+        "blocked_by": [
+          "ISS-268"
+        ],
+        "ac": [
+          "AC-1: 미존재 경로 evidence로 SCENARIO_PLAY 완료 시 DONE 전환 안 됨",
+          "AC-2: 0바이트 evidence도 거부",
+          "AC-3: 실재 evidence는 정상 DONE(회귀방지)",
+          "AC-4: 거부 시 EVIDENCE_MISSING P0 파생 생성"
+        ]
+      },
+      "result": {
+        "passed": true,
+        "ac_passed": 4,
+        "ac_total": 4,
+        "verified_by": "opus-independent",
+        "detail": "AC-1 미존재경로 EVIDENCE_REJECTED, AC-2 0바이트 거부, AC-3 실재증거 정상DONE(회귀없음), AC-4 EVIDENCE_MISSING P0 파생. 추가: ISS-263 실제 사고 payload 재현 투입→차단 확인, 증거0개 하위호환 DONE 유지"
+      },
+      "completed_at": "2026-07-20T18:07:13.176181"
+    },
+    {
+      "id": "ISS-271",
+      "title": "[REFACTOR] registry 위생 — ISS-265 오탐 기각 + ISS-124 소급 표기 + ISS-264 배포 게이트 의존",
+      "type": "REFACTOR",
+      "priority": "P2",
+      "status": "DONE",
+      "owner_agent": "hook-router",
+      "created_at": "2026-07-20T17:50:00+09:00",
+      "payload": {
+        "actions": [
+          "ISS-265 → CLOSED_INVALID (false_positive)",
+          "ISS-124 result에 retro_note 소급 표기(status DONE 유지)",
+          "ISS-264 → BLOCKED, blocked_by=[ISS-263]"
+        ],
+        "blocked_by": [],
+        "ac": [
+          "AC-1: ISS-265.status == CLOSED_INVALID",
+          "AC-2: ISS-264.status == BLOCKED and ISS-263 in blocked_by",
+          "AC-3: registry.json 파싱 exit 0"
+        ]
+      },
+      "completed_at": "2026-07-20T18:01:10.460934",
+      "result": {
+        "concurrency_test": 3
+      }
+    },
+    {
+      "id": "ISS-272",
+      "title": "[Plan:게이트] ISS-271 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "READY",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "ISS-271",
+      "depends_on": [],
+      "created_at": "2026-07-20T18:01:10.460934",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-271",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": null,
+      "spawn_rules": [],
+      "last_dispatched_at": "2026-07-20T18:02:05"
+    },
+    {
+      "id": "ISS-273",
+      "title": "[Plan:테스트] ISS-271 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "ISS-271",
+      "depends_on": [],
+      "created_at": "2026-07-20T18:01:10.460934",
+      "payload": {
+        "files": [],
+        "source_issue": "ISS-271",
+        "scope": "changed"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-274",
+      "title": "[Plan:게이트] ISS-268 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "READY",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "ISS-268",
+      "depends_on": [],
+      "created_at": "2026-07-20T18:02:04.996200",
+      "payload": {
+        "files": [
+          "/Volumes/E_SSD/02_GitHub.nosync/GH_Harness/install.sh",
+          "~/.claude/harness-core/hooks/on_complete.sh"
+        ],
+        "source_issue": "ISS-268",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-275",
+      "title": "[Plan:테스트] ISS-268 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "ISS-268",
+      "depends_on": [],
+      "created_at": "2026-07-20T18:02:04.996200",
+      "payload": {
+        "files": [
+          "/Volumes/E_SSD/02_GitHub.nosync/GH_Harness/install.sh",
+          "~/.claude/harness-core/hooks/on_complete.sh"
+        ],
+        "source_issue": "ISS-268",
+        "scope": "changed"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-278",
+      "title": "[Plan:게이트] ISS-269 계산적 센서 검증 (lint/type-check)",
+      "type": "LINT_CHECK",
+      "status": "READY",
+      "priority": "P0",
+      "assign_to": "code-quality",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "ISS-269",
+      "depends_on": [],
+      "created_at": "2026-07-20T18:03:47.943386",
+      "payload": {
+        "files": [
+          "~/.claude/harness-core/hooks/on_complete.sh:616-650"
+        ],
+        "source_issue": "ISS-269",
+        "gate": true,
+        "gate_blocks": [
+          "SCORE",
+          "DEPLOY_READY"
+        ],
+        "bypass_env": "HARNESS_BYPASS_GATE"
+      },
+      "result": null,
+      "spawn_rules": []
+    },
+    {
+      "id": "ISS-279",
+      "title": "[Plan:테스트] ISS-269 변경사항 검증",
+      "type": "RUN_TESTS",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "test-harness",
+      "depth": 1,
+      "retry_count": 0,
+      "parent_id": "ISS-269",
+      "depends_on": [],
+      "created_at": "2026-07-20T18:03:47.943386",
+      "payload": {
+        "files": [
+          "~/.claude/harness-core/hooks/on_complete.sh:616-650"
+        ],
+        "source_issue": "ISS-269",
+        "scope": "changed"
       },
       "result": null,
       "spawn_rules": []
@@ -15610,9 +15951,114 @@
         "issue_type": "SCORE",
         "plan_created": 1,
         "timestamp": "2026-07-15T13:29:02.305803"
+      },
+      {
+        "issue_id": "ISS-262",
+        "issue_type": "BIZ_VALIDATE",
+        "plan_created": 1,
+        "timestamp": "2026-07-20T17:41:57.144475"
+      },
+      {
+        "issue_id": "ISS-271",
+        "issue_type": "REFACTOR",
+        "plan_created": 2,
+        "timestamp": "2026-07-20T18:01:10.460934"
+      },
+      {
+        "issue_id": "ISS-268",
+        "issue_type": "FIX_BUG",
+        "plan_created": 2,
+        "timestamp": "2026-07-20T18:02:04.996200"
+      },
+      {
+        "issue_id": "TESTAC1",
+        "issue_type": "BIZ_VALIDATE",
+        "plan_created": 1,
+        "timestamp": "2026-07-20T18:03:33.827635"
+      },
+      {
+        "issue_id": "TESTAC2",
+        "issue_type": "BIZ_VALIDATE",
+        "plan_created": 0,
+        "timestamp": "2026-07-20T18:03:34.935637"
+      },
+      {
+        "issue_id": "TESTAC3",
+        "issue_type": "BIZ_VALIDATE",
+        "plan_created": 1,
+        "timestamp": "2026-07-20T18:03:36.016638"
+      },
+      {
+        "issue_id": "ISS-269",
+        "issue_type": "FIX_BUG",
+        "plan_created": 2,
+        "timestamp": "2026-07-20T18:03:47.943386"
+      },
+      {
+        "issue_id": "ISS-269",
+        "issue_type": "FIX_BUG",
+        "plan_created": 0,
+        "timestamp": "2026-07-20T18:03:58.375785"
+      },
+      {
+        "issue_id": "TESTEV1",
+        "issue_type": "SCENARIO_PLAY",
+        "plan_created": 1,
+        "timestamp": "2026-07-20T18:06:33.522885"
+      },
+      {
+        "issue_id": "TESTEV2",
+        "issue_type": "SCENARIO_PLAY",
+        "plan_created": 1,
+        "timestamp": "2026-07-20T18:06:35.063035"
+      },
+      {
+        "issue_id": "TESTEV3",
+        "issue_type": "SCENARIO_PLAY",
+        "plan_created": 0,
+        "timestamp": "2026-07-20T18:06:36.470605"
+      },
+      {
+        "issue_id": "TESTEV4",
+        "issue_type": "SCENARIO_PLAY",
+        "plan_created": 0,
+        "timestamp": "2026-07-20T18:06:38.147917"
+      },
+      {
+        "issue_id": "TESTREPRO",
+        "issue_type": "SCENARIO_PLAY",
+        "plan_created": 1,
+        "timestamp": "2026-07-20T18:06:55.861421"
+      },
+      {
+        "issue_id": "ISS-270",
+        "issue_type": "SYSTEMIC_ISSUE",
+        "plan_created": 0,
+        "timestamp": "2026-07-20T18:07:13.176181"
       }
     ],
-    "on_fail": [],
+    "on_fail": [
+      {
+        "issue_id": "ISS-262",
+        "retry_count": 1,
+        "timestamp": "2026-07-20T17:38:01.557201"
+      },
+      {
+        "issue_id": "ISS-263",
+        "retry_count": 1,
+        "timestamp": "2026-07-20T17:38:02.106434"
+      },
+      {
+        "issue_id": "ISS-262",
+        "retry_count": 2,
+        "timestamp": "2026-07-20T17:39:37.140019"
+      },
+      {
+        "issue_id": "ISS-263",
+        "retry_count": 2,
+        "timestamp": "2026-07-20T17:39:37.883659"
+      }
+    ],
     "on_learn": []
   },
   "knowledge": {
@@ -15791,6 +16237,12 @@
         "context": "ISS-251 lint/type clean",
         "frequency": 1,
         "discovered_at": "2026-07-14T20:39:08.732086"
+      },
+      {
+        "pattern": "biz_coverage_100",
+        "context": "TESTAC1 full scenario coverage",
+        "frequency": 1,
+        "discovered_at": "2026-07-20T18:03:33.827635"
       }
     ],
     "failure_patterns": [],
@@ -16933,9 +17385,9 @@
     ]
   },
   "stats": {
-    "total_issues": 246,
-    "completed": 233,
-    "failed": 0,
+    "total_issues": 260,
+    "completed": 244,
+    "failed": 4,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
   },
@@ -17123,6 +17575,13 @@
         "total": 5,
         "coverage": null
       }
+    },
+    {
+      "source_issue": "TESTAC1",
+      "source_type": "BIZ_VALIDATE",
+      "result": {
+        "biz_coverage": 100
+      }
     }
   ],
   "learned_patterns": [
@@ -17144,8 +17603,8 @@
     "count": 1
   },
   "issue_budget": {
-    "date": "2026-07-15",
-    "created_today": 6
+    "date": "2026-07-20",
+    "created_today": 12
   },
   "updated_at": "2026-07-14T20:30:48.157770+09:00",
   "hermes_state": {
@@ -17160,5 +17619,9 @@
   "background_state": {
     "active": 0,
     "issues": []
+  },
+  "rewake_state": {
+    "DOC_PHARMACY_DEVELOP_AC_DRIFT-001:READY": 1,
+    "ISS-272:READY": 1
   }
 }
