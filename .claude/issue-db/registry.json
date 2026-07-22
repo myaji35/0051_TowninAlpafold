@@ -15152,7 +15152,7 @@
       "id": "ISS-289",
       "title": "[지시] ISS-287 [지시] ISS-283 [지시] ISS-261 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PH",
       "type": "FIX_BUG",
-      "status": "CLOSED_DUPLICATE",
+      "status": "DONE",
       "priority": "P0",
       "assign_to": "agent-harness",
       "depth": 0,
@@ -15167,7 +15167,8 @@
         "reason": "게이트 자동생성 중복 메타이슈. 참조 대상(ISS-287/283/261/257/256, BIZ_FIX_PHARMACY_SCORER 계열) 전부 종결. pharmacy-scorer 20/20 PASS(AC-5=8b PASS) Opus 직접 재검증.",
         "closed_by": "opus-direct",
         "verified": true
-      }
+      },
+      "completed_at": "2026-07-22T03:01:20.654Z"
     },
     {
       "id": "ISS-290",
