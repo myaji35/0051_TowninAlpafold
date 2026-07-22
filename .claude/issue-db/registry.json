@@ -15132,7 +15132,7 @@
       "id": "ISS-288",
       "title": "[지시] ISS-284 [지시] ISS-282 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER",
       "type": "FIX_BUG",
-      "status": "CLOSED_DUPLICATE",
+      "status": "DONE",
       "priority": "P0",
       "assign_to": "agent-harness",
       "depth": 0,
@@ -15145,7 +15145,8 @@
       "result": {
         "reason": "intent-gate 자동생성 메타이슈. 대상 ISS-284(CLOSED_DUPLICATE)/282/257/256 모두 이미 종결. 실작업 AC-5는 원본 ISS-256/df3b78e 완료 + ISS-287 Opus 재검증 PASS.",
         "duplicate_of": "ISS-256"
-      }
+      },
+      "completed_at": "2026-07-22T02:57:20.559Z"
     },
     {
       "id": "ISS-289",
@@ -15242,6 +15243,27 @@
         "reason": "ISS-290은 files=[] 빈 스코프 중복 종결 — 실코드 변경 없음. lint 게이트 통과 갈음. pharmacy-scorer 20/20 PASS (직접 실행)."
       },
       "spawn_rules": []
+    },
+    {
+      "id": "ISS-293",
+      "title": "[지시] ISS-289 [지시] ISS-287 [지시] ISS-283 [지시] ISS-261 [지시] ISS-257 [지시] ISS-256 [지",
+      "type": "FIX_BUG",
+      "status": "CLOSED_DUPLICATE",
+      "priority": "P0",
+      "assign_to": "agent-harness",
+      "depth": 0,
+      "created_at": "2026-07-22T11:57:37.939585",
+      "updated_at": "2026-07-22T11:59:25.781105",
+      "payload": {
+        "origin": "intent-gate",
+        "raw_prompt": "ISS-289 [지시] ISS-287 [지시] ISS-283 [지시] ISS-261 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PH 이슈를 처리하고 registry에서 완료 처리하라\n\n[임무 규칙] 완료 시 수행한 작업을 한국어로 간결히 요약 보고하라."
+      },
+      "result": {
+        "reason": "게이트 자동생성 중복 메타이슈(ISS-289/288/287과 동일 패턴). 참조 대상 ISS-289/287/283/261/257/256 및 BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO 계열 전부 종결 확인. pharmacy-scorer 테스트 20/20 PASS Opus 직접 재실행 검증(2026-07-22).",
+        "closed_by": "opus-direct",
+        "verified": true,
+        "duplicate_of": "ISS-289"
+      }
     }
   ],
   "hooks": {
@@ -17986,7 +18008,7 @@
     ]
   },
   "stats": {
-    "total_issues": 272,
+    "total_issues": 273,
     "completed": 249,
     "failed": 7,
     "evolved": 65,
