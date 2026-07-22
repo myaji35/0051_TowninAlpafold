@@ -14881,7 +14881,7 @@
       "id": "ISS-282",
       "title": "[지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 [약국·점포개발]",
       "type": "FIX_BUG",
-      "status": "CLOSED_DUPLICATE",
+      "status": "DONE",
       "priority": "P0",
       "assign_to": "agent-harness",
       "depth": 0,
@@ -14899,7 +14899,8 @@
           "normalizer": "centered BASE=10 CAP=50 (clamp01 대체)",
           "method": "git show + 소스 직접 확인"
         }
-      }
+      },
+      "completed_at": "2026-07-22T02:30:35.431Z"
     },
     {
       "id": "TEST_RECO_TRACE_REGRESSION-001",
@@ -15082,6 +15083,47 @@
       "spawn_rules": [],
       "last_dispatched_at": "2026-07-22T11:28:41",
       "completed_at": "2026-07-22T11:28:49.633887"
+    },
+    {
+      "id": "ISS-287",
+      "title": "[지시] ISS-283 [지시] ISS-261 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER",
+      "type": "FIX_BUG",
+      "status": "CLOSED_DUPLICATE",
+      "priority": "P0",
+      "assign_to": "agent-harness",
+      "depth": 0,
+      "created_at": "2026-07-22T11:30:50.936689",
+      "updated_at": "2026-07-22T11:30:50.936689",
+      "payload": {
+        "origin": "intent-gate",
+        "raw_prompt": "ISS-283 [지시] ISS-261 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO- 이슈를 처리하고 registry에서 완료 처리하라\n\n[임무 규칙] 완료 시 수행한 작업을 한국어로 간결히 요약 보고하라."
+      },
+      "result": {
+        "duplicate_of": "ISS-256",
+        "chain": [
+          "ISS-256(DONE)",
+          "ISS-257(DONE·중복)",
+          "ISS-261(DONE·중복)",
+          "ISS-283(CLOSED_DUPLICATE)",
+          "ISS-287(본건)"
+        ],
+        "note": "동일 원본(BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 AC-5) 반복 입력으로 intent-gate가 중복 생성. 실작업은 commit df3b78e(ISS-256)에서 완료.",
+        "reverification_2026_07_22": {
+          "method": "Opus 직접 node 실행 (구현자 자기보고 미인용)",
+          "clinics_0": {
+            "contribution": -0.2,
+            "top1": "-인근 의원수 (반경 500m)"
+          },
+          "clinics_10": {
+            "contribution": 0
+          },
+          "clinics_50": {
+            "contribution": 0.2,
+            "top1": "+인근 의원수 (반경 500m)"
+          },
+          "verdict": "PASS — AC-5(의원 0개=음수 기여도+약점 최상단) 소스 실존 및 동작 재확인"
+        }
+      }
     }
   ],
   "hooks": {
@@ -17820,7 +17862,7 @@
     ]
   },
   "stats": {
-    "total_issues": 266,
+    "total_issues": 267,
     "completed": 248,
     "failed": 7,
     "evolved": 65,
@@ -17862,7 +17904,7 @@
     "date": "2026-07-22",
     "created_today": 2
   },
-  "updated_at": "2026-07-14T20:30:48.157770+09:00",
+  "updated_at": "2026-07-22T02:32:16.558Z",
   "hermes_state": {
     "invocations_by_issue": {},
     "daily_log": [],
