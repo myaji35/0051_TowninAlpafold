@@ -52,6 +52,12 @@
             "command": "bash .claude/hooks/session-resume.sh",
             "timeout": 10,
             "statusMessage": "Restoring harness state..."
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/fleet-scan.sh",
+            "timeout": 10,
+            "statusMessage": "Scanning fleet for orphaned issues..."
           }
         ]
       }
@@ -76,6 +82,18 @@
             "command": "bash .claude/hooks/sandbox-enforce.sh",
             "timeout": 5,
             "statusMessage": "Sandbox policy check..."
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/secret-guard.sh",
+            "timeout": 8,
+            "statusMessage": "Scanning for leaked secrets..."
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/rtk-guard.sh",
+            "timeout": 5,
+            "statusMessage": "RTK token-optimizing..."
           }
         ]
       }
@@ -89,6 +107,12 @@
             "command": "bash .claude/hooks/post-code-change.sh",
             "timeout": 10,
             "statusMessage": "Tracking code change..."
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/secret-guard.sh",
+            "timeout": 8,
+            "statusMessage": "Checking for hardcoded secrets..."
           }
         ]
       }
@@ -108,13 +132,6 @@
             "command": "bash .claude/hooks/meta-review.sh",
             "timeout": 30,
             "statusMessage": "Meta Agent reviewing...",
-            "asyncRewake": true
-          },
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/auto-detect.sh",
-            "timeout": 20,
-            "statusMessage": "Auto-detecting new issues...",
             "asyncRewake": true
           }
         ]
@@ -136,6 +153,34 @@
             "timeout": 30,
             "statusMessage": "Meta Agent reviewing...",
             "asyncRewake": true
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-end-dream.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/user-input-mark.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/intent-gate.sh",
+            "timeout": 8,
+            "statusMessage": "Classifying intent..."
           }
         ]
       }

@@ -1,0 +1,10 @@
+{
+  "recorded_at": "2026-06-10",
+  "project": "0051_TowninAlpafold",
+  "baseline": {
+    "avg_tokens_per_issue": null,
+    "avg_files_read_per_issue": null,
+    "blindspot_incidents_30d": null,
+    "qa_pass_rate": null
+  }
+}

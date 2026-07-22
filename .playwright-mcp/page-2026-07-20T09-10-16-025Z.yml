@@ -1,0 +1,165 @@
+- generic [active] [ref=f4e1]:
+  - complementary [ref=f4e2]:
+    - button "사이드바 고정 (펼친 상태 유지)" [ref=f4e4] [cursor=pointer]
+    - generic [ref=f4e6]:
+      - generic [ref=f4e7]:
+        - button [ref=f4e12] [cursor=pointer]
+        - button [ref=f4e18] [cursor=pointer]
+        - button [ref=f4e22] [cursor=pointer]
+        - button [ref=f4e24] [cursor=pointer]
+        - button [ref=f4e29] [cursor=pointer]
+        - button [ref=f4e34] [cursor=pointer]
+        - button [ref=f4e39] [cursor=pointer]
+      - generic [ref=f4e43]:
+        - generic [ref=f4e48]:
+          - button [ref=f4e49] [cursor=pointer]
+          - button [ref=f4e56] [cursor=pointer]
+          - button [ref=f4e61] [cursor=pointer]
+        - button [ref=f4e65] [cursor=pointer]
+        - button [ref=f4e75] [cursor=pointer]
+        - button [ref=f4e85] [cursor=pointer]
+        - button [ref=f4e95] [cursor=pointer]
+        - button [ref=f4e107] [cursor=pointer]
+      - generic [ref=f4e109]:
+        - button [ref=f4e114] [cursor=pointer]
+        - button [ref=f4e121] [cursor=pointer]
+        - button [ref=f4e130] [cursor=pointer]
+        - button [ref=f4e138] [cursor=pointer]
+      - generic [ref=f4e140]:
+        - button [ref=f4e145] [cursor=pointer]
+        - button [ref=f4e157] [cursor=pointer]
+        - button [ref=f4e165] [cursor=pointer]
+      - generic [ref=f4e167]:
+        - button [ref=f4e173] [cursor=pointer]
+        - button [ref=f4e182] [cursor=pointer]
+        - button [ref=f4e190] [cursor=pointer]
+  - banner [ref=f4e193]:
+    - generic [ref=f4e194]:
+      - generic [ref=f4e201]:
+        - heading "TowninGraph · Master Console" [level=1] [ref=f4e202]
+        - paragraph [ref=f4e203]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=f4e204]:
+        - link "매뉴얼" [ref=f4e205] [cursor=pointer]:
+          - /url: manual.html
+        - generic [ref=f4e209]: REAL POLY · 131 dongs · 60mo · 40 layers
+  - main [ref=f4e210]:
+    - generic [ref=f4e211]:
+      - generic [ref=f4e213]:
+        - generic [ref=f4e214]:
+          - generic [ref=f4e215]:
+            - generic [ref=f4e216]:
+              - generic [ref=f4e217]: 전국 130개 동
+              - generic [ref=f4e218]: ·
+              - generic [ref=f4e219]: 신뢰도(pLDDT) + 이상 패턴 자동 탐지
+              - generic [ref=f4e220]: ·
+              - generic [ref=f4e221]: 2024-12
+            - generic [ref=f4e222]: 전국 130개 동의 신뢰도와 이상 패턴을 한 화면에서 보기
+          - heading "Explore — 자동 인사이트 (알파폴드 시그니처 + 패턴 자동 탐지 — 마스터의 첫 진입점)" [level=2] [ref=f4e223]:
+            - text: Explore — 자동 인사이트
+            - generic [ref=f4e227]: (알파폴드 시그니처 + 패턴 자동 탐지 — 마스터의 첫 진입점)
+        - generic [ref=f4e228]:
+          - generic [ref=f4e229]: 현재 시점
+          - generic [ref=f4e230]: 2024-12
+      - generic [ref=f4e231]:
+        - generic [ref=f4e232]:
+          - generic [ref=f4e233]:
+            - generic [ref=f4e234]: 이상 탐지 (Top 5)
+            - generic [ref=f4e237]:
+              - generic [ref=f4e238] [cursor=pointer]:
+                - generic [ref=f4e239]: 부산_전포2동
+                - generic [ref=f4e240]: 최근 폐업 765% (vs 평균)
+              - generic [ref=f4e241] [cursor=pointer]:
+                - generic [ref=f4e242]: 성북구 C4동
+                - generic [ref=f4e243]: 최근 폐업 724% (vs 평균)
+              - generic [ref=f4e244] [cursor=pointer]:
+                - generic [ref=f4e245]: 성수2가3동
+                - generic [ref=f4e246]: 최근 폐업 681% (vs 평균)
+              - generic [ref=f4e247] [cursor=pointer]:
+                - generic [ref=f4e248]: 성수1가2동
+                - generic [ref=f4e249]: 최근 폐업 658% (vs 평균)
+              - generic [ref=f4e250] [cursor=pointer]:
+                - generic [ref=f4e251]: 영등포구 B5동
+                - generic [ref=f4e252]: 최근 폐업 617% (vs 평균)
+          - generic [ref=f4e253]:
+            - generic [ref=f4e254]: 급상승 동 (Top 5)
+            - generic [ref=f4e258]:
+              - generic [ref=f4e259] [cursor=pointer]:
+                - generic [ref=f4e260]: 성수1가1동
+                - generic [ref=f4e261]: 5년 유동 +3402.4%
+              - generic [ref=f4e262] [cursor=pointer]:
+                - generic [ref=f4e263]: 성북구 C2동
+                - generic [ref=f4e264]: 5년 유동 +3174.2%
+              - generic [ref=f4e265] [cursor=pointer]:
+                - generic [ref=f4e266]: 성북구 C5동
+                - generic [ref=f4e267]: 5년 유동 +2979.3%
+              - generic [ref=f4e268] [cursor=pointer]:
+                - generic [ref=f4e269]: 영등포구 B3동
+                - generic [ref=f4e270]: 5년 유동 +2715.3%
+              - generic [ref=f4e271] [cursor=pointer]:
+                - generic [ref=f4e272]: 성북구 C4동
+                - generic [ref=f4e273]: 5년 유동 +2669.6%
+        - generic [ref=f4e274]:
+          - generic [ref=f4e275]:
+            - region "Map" [ref=f4e276]
+            - group [ref=f4e277]:
+              - generic "Toggle attribution" [ref=f4e278] [cursor=pointer]
+              - generic [ref=f4e279]: © OSM © CARTO
+          - generic [ref=f4e280]:
+            - button [ref=f4e281] [cursor=pointer]
+            - slider [ref=f4e284]: "59"
+            - generic [ref=f4e285]: 2024-12
+        - generic [ref=f4e286]:
+          - generic [ref=f4e287]:
+            - generic [ref=f4e288]: 선택 동
+            - generic [ref=f4e289]: 성수1가1동
+            - generic [ref=f4e290]: 성수형 급상승
+            - generic [ref=f4e292]:
+              - generic [ref=f4e293]:
+                - generic [ref=f4e294]: 유동인구
+                - generic [ref=f4e295]: 814,071
+              - generic [ref=f4e296]:
+                - generic [ref=f4e297]: 공시지가
+                - generic [ref=f4e298]: ₩9509만
+              - generic [ref=f4e299]:
+                - generic [ref=f4e300]: 카페
+                - generic [ref=f4e301]: "6749"
+              - generic [ref=f4e302]:
+                - generic [ref=f4e303]: pLDDT
+                - generic [ref=f4e304]: "81.7"
+          - generic [ref=f4e305]:
+            - generic [ref=f4e306]:
+              - generic [ref=f4e307]: 단백질 호흡
+              - generic [ref=f4e308]: ▶ Prophet 12mo
+            - img [ref=f4e309]:
+              - generic [ref=f4e326]: 20-01
+              - generic [ref=f4e327]: 21-01
+              - generic [ref=f4e328]: 22-01
+              - generic [ref=f4e329]: 23-01
+              - generic [ref=f4e330]: 24-01
+              - generic [ref=f4e331]: 24-12
+              - generic [ref=f4e332]: +12mo
+            - generic [ref=f4e333]: ▶ 예측 cone (p10~p90) — 2025-01 이후
+            - generic [ref=f4e334]:
+              - generic [ref=f4e335]: ━ 지가
+              - generic [ref=f4e336]: ━ 거래
+              - generic [ref=f4e337]: ━ 유동
+              - generic [ref=f4e338]: ━ 소상공
+              - generic [ref=f4e339]: ━ 카페
+          - generic [ref=f4e340]:
+            - generic [ref=f4e341]: 자동 코멘트
+            - generic [ref=f4e342]:
+              - generic [ref=f4e343]:
+                - generic [ref=f4e344]: 급상승 · 유동인구 5년 +3402.4%
+                - generic [ref=f4e345]: 카페 수 +5091.5% · 폐업 증가 추세
+                - generic [ref=f4e346]: 현재 pLDDT 81.7
+              - generic [ref=f4e347]:
+                - generic [ref=f4e348]: 인과 사슬 (Granger)
+                - generic [ref=f4e349]: 유동 → 4mo → 지가 p=0
+                - generic [ref=f4e350]: 유동 → 4mo → 소상공 p=0
+                - generic [ref=f4e351]: 유동 → 5mo → 카페 p=0
+              - generic [ref=f4e352]:
+                - generic [ref=f4e353]: ↔ 강한 상관 (Pearson)
+                - generic [ref=f4e354]: 소상공 ↔ 카페 r=0.999
+                - generic [ref=f4e355]: 유동 ↔ 소상공 r=0.998
+    - text: →
+    - generic [ref=f4e356]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

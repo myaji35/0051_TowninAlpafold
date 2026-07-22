@@ -1,0 +1,128 @@
+- generic [active] [ref=e1]:
+  - complementary [ref=e2]:
+    - button "사이드바 고정 (펼친 상태 유지)" [ref=e4] [cursor=pointer]:
+      - img [ref=e5]
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img [ref=e9]
+        - button [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - button [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+        - button [ref=e22] [cursor=pointer]:
+          - img [ref=e23]
+        - button [ref=e24] [cursor=pointer]:
+          - img [ref=e25]
+        - button [ref=e29] [cursor=pointer]:
+          - img [ref=e30]
+        - button [ref=e34] [cursor=pointer]:
+          - img [ref=e35]
+        - button [ref=e39] [cursor=pointer]:
+          - img [ref=e40]
+      - generic [ref=e43]:
+        - img [ref=e45]
+        - generic [ref=e48]:
+          - button [ref=e49] [cursor=pointer]:
+            - img [ref=e50]
+            - img [ref=e52]
+          - button [ref=e56] [cursor=pointer]:
+            - img [ref=e57]
+          - button [ref=e61] [cursor=pointer]:
+            - img [ref=e62]
+        - button [ref=e65] [cursor=pointer]:
+          - img [ref=e66]
+          - img [ref=e68]
+          - img [ref=e71]
+        - button [ref=e75] [cursor=pointer]:
+          - img [ref=e76]
+          - img [ref=e78]
+          - img [ref=e81]
+        - button [ref=e85] [cursor=pointer]:
+          - img [ref=e86]
+          - img [ref=e88]
+          - img [ref=e91]
+        - button [ref=e95] [cursor=pointer]:
+          - img [ref=e96]
+          - img [ref=e98]
+          - img [ref=e104]
+        - button [ref=e107] [cursor=pointer]:
+          - img [ref=e108]
+      - generic [ref=e109]:
+        - img [ref=e111]
+        - button [ref=e114] [cursor=pointer]:
+          - img [ref=e115]
+          - img [ref=e117]
+        - button [ref=e121] [cursor=pointer]:
+          - img [ref=e122]
+          - img [ref=e124]
+          - img [ref=e126]
+        - button [ref=e130] [cursor=pointer]:
+          - img [ref=e131]
+          - img [ref=e133]
+          - img [ref=e135]
+        - button [ref=e138] [cursor=pointer]:
+          - img [ref=e139]
+      - generic [ref=e140]:
+        - img [ref=e142]
+        - button [ref=e145] [cursor=pointer]:
+          - img [ref=e146]
+          - img [ref=e148]
+          - img [ref=e153]
+        - button [ref=e157] [cursor=pointer]:
+          - img [ref=e158]
+          - img [ref=e160]
+          - img [ref=e162]
+        - button [ref=e165] [cursor=pointer]:
+          - img [ref=e166]
+      - generic [ref=e167]:
+        - img [ref=e169]
+        - button [ref=e173] [cursor=pointer]:
+          - img [ref=e174]
+          - img [ref=e176]
+          - img [ref=e178]
+        - button [ref=e182] [cursor=pointer]:
+          - img [ref=e183]
+          - img [ref=e185]
+          - img [ref=e187]
+        - button [ref=e190] [cursor=pointer]:
+          - img [ref=e191]
+  - banner [ref=e193]:
+    - generic [ref=e194]:
+      - generic [ref=e195]:
+        - img [ref=e197]
+        - generic [ref=e201]:
+          - heading "TowninGraph · Master Console" [level=1] [ref=e202]
+          - paragraph [ref=e203]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=e204]:
+        - link "매뉴얼" [ref=e205] [cursor=pointer]:
+          - /url: manual.html
+          - img [ref=e206]
+          - text: 매뉴얼
+        - generic [ref=e209]: SIMULA · loading…
+  - main [ref=e210]:
+    - generic [ref=e211]:
+      - generic [ref=e212]:
+        - heading "주제 갤러리" [level=2] [ref=e213]:
+          - img [ref=e214]
+          - text: 주제 갤러리
+        - paragraph [ref=e219]: 자주 보는 12개 분석 주제. 카드를 클릭하면 즉시 해당 모드로 진입합니다.
+      - generic [ref=e220]:
+        - img [ref=e221]
+        - 'textbox "주제 검색 (예: 성수, 코로나, 카페)" [ref=e224]'
+        - generic [ref=e225]: ⌘K
+      - generic [ref=e226]:
+        - button "전체 (12)" [ref=e227] [cursor=pointer]
+        - button "트렌드 (4)" [ref=e228] [cursor=pointer]:
+          - img [ref=e229]
+          - text: 트렌드 (4)
+        - button "이상 탐지 (3)" [ref=e232] [cursor=pointer]:
+          - img [ref=e233]
+          - text: 이상 탐지 (3)
+        - button "파트너/매출 (3)" [ref=e235] [cursor=pointer]:
+          - img [ref=e236]
+          - text: 파트너/매출 (3)
+        - button "비교 분석 (2)" [ref=e240] [cursor=pointer]:
+          - img [ref=e241]
+          - text: 비교 분석 (2)
+    - text: →
+    - generic [ref=e244]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

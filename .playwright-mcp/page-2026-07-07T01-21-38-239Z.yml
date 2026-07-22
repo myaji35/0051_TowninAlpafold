@@ -1,0 +1,455 @@
+- generic [active] [ref=f12e1]:
+  - complementary [ref=f12e2]:
+    - generic [ref=f12e773]:
+      - button "사이드바 고정 (펼친 상태 유지)" [ref=f12e774] [cursor=pointer]:
+        - img [ref=f12e775]
+      - generic [ref=f12e776]: 카테고리
+    - generic [ref=f12e777]:
+      - generic [ref=f12e778]:
+        - generic [ref=f12e779]:
+          - img [ref=f12e780]
+          - generic [ref=f12e783]: 분석 콘솔
+        - button "갤러리" [ref=f12e784] [cursor=pointer]:
+          - img [ref=f12e785]
+          - generic [ref=f12e790]: 갤러리
+        - button "Explore" [ref=f12e791] [cursor=pointer]:
+          - img [ref=f12e792]
+          - generic [ref=f12e795]: Explore
+        - button "Analyze" [ref=f12e796] [cursor=pointer]:
+          - img [ref=f12e797]
+          - generic [ref=f12e798]: Analyze
+        - button "Decide" [ref=f12e799] [cursor=pointer]:
+          - img [ref=f12e800]
+          - generic [ref=f12e804]: Decide
+        - button "Data Studio" [ref=f12e805] [cursor=pointer]:
+          - img [ref=f12e806]
+          - generic [ref=f12e810]: Data Studio
+        - button "Workflow" [ref=f12e811] [cursor=pointer]:
+          - img [ref=f12e812]
+          - generic [ref=f12e816]: Workflow
+        - button "명분 사슬" [ref=f12e817] [cursor=pointer]:
+          - img [ref=f12e818]
+          - generic [ref=f12e821]: 명분 사슬
+      - generic [ref=f12e822]:
+        - generic [ref=f12e823]:
+          - img [ref=f12e824]
+          - generic [ref=f12e827]: 업종 SaaS
+        - generic [ref=f12e828]:
+          - button "약국 (2)" [ref=f12e829] [cursor=pointer]:
+            - img [ref=f12e830]
+            - img [ref=f12e832]
+            - generic [ref=f12e836]: 약국
+            - generic [ref=f12e837]: (2)
+          - button "점포개발" [ref=f12e838] [cursor=pointer]:
+            - img [ref=f12e839]
+            - generic [ref=f12e843]: 점포개발
+          - button "폐업평가" [ref=f12e844] [cursor=pointer]:
+            - img [ref=f12e845]
+            - generic [ref=f12e847]: 폐업평가
+        - button "카페 (0)" [ref=f12e849] [cursor=pointer]:
+          - img [ref=f12e850]
+          - img [ref=f12e852]
+          - generic [ref=f12e855]: 카페
+          - generic [ref=f12e856]: (0)
+          - img [ref=f12e857]
+        - button "편의점 (0)" [ref=f12e861] [cursor=pointer]:
+          - img [ref=f12e862]
+          - img [ref=f12e864]
+          - generic [ref=f12e867]: 편의점
+          - generic [ref=f12e868]: (0)
+          - img [ref=f12e869]
+        - button "학원 (0)" [ref=f12e873] [cursor=pointer]:
+          - img [ref=f12e874]
+          - img [ref=f12e876]
+          - generic [ref=f12e879]: 학원
+          - generic [ref=f12e880]: (0)
+          - img [ref=f12e881]
+        - button "미용실 (0)" [ref=f12e885] [cursor=pointer]:
+          - img [ref=f12e886]
+          - img [ref=f12e888]
+          - generic [ref=f12e894]: 미용실
+          - generic [ref=f12e895]: (0)
+          - img [ref=f12e896]
+        - button "+ 새 업종" [ref=f12e899] [cursor=pointer]:
+          - img [ref=f12e900]
+          - generic [ref=f12e901]: + 새 업종
+      - generic [ref=f12e902]:
+        - generic [ref=f12e903]:
+          - img [ref=f12e904]
+          - generic [ref=f12e906]: 자산 / 부동산
+        - generic [ref=f12e907]:
+          - button "NPL (6)" [ref=f12e908] [cursor=pointer]:
+            - img [ref=f12e909]
+            - img [ref=f12e911]
+            - generic [ref=f12e914]: NPL
+            - generic [ref=f12e915]: (6)
+          - button "리포트" [ref=f12e916] [cursor=pointer]:
+            - img [ref=f12e917]
+            - generic [ref=f12e920]: 리포트
+          - button "포트폴리오" [ref=f12e921] [cursor=pointer]:
+            - img [ref=f12e922]
+            - generic [ref=f12e925]: 포트폴리오
+          - button "분석 대시보드" [ref=f12e926] [cursor=pointer]:
+            - img [ref=f12e927]
+            - generic [ref=f12e928]: 분석 대시보드
+          - button "RWA 마켓" [ref=f12e929] [cursor=pointer]:
+            - img [ref=f12e930]
+            - generic [ref=f12e935]: RWA 마켓
+          - button "매수 평가" [ref=f12e936] [cursor=pointer]:
+            - img [ref=f12e937]
+            - generic [ref=f12e940]: 매수 평가
+          - button "매도 평가" [ref=f12e941] [cursor=pointer]:
+            - img [ref=f12e942]
+            - generic [ref=f12e945]: 매도 평가
+        - button "상가 임대 (0)" [ref=f12e947] [cursor=pointer]:
+          - img [ref=f12e948]
+          - img [ref=f12e950]
+          - generic [ref=f12e952]: 상가 임대
+          - generic [ref=f12e953]: (0)
+          - img [ref=f12e954]
+        - button "토지 개발 (0)" [ref=f12e958] [cursor=pointer]:
+          - img [ref=f12e959]
+          - img [ref=f12e961]
+          - generic [ref=f12e963]: 토지 개발
+          - generic [ref=f12e964]: (0)
+          - img [ref=f12e965]
+        - button "+ 새 자산 유형" [ref=f12e968] [cursor=pointer]:
+          - img [ref=f12e969]
+          - generic [ref=f12e970]: + 새 자산 유형
+      - generic [ref=f12e971]:
+        - generic [ref=f12e972]:
+          - img [ref=f12e973]
+          - generic [ref=f12e975]: 공공 / 정책
+        - button "인구 위기 (0)" [ref=f12e977] [cursor=pointer]:
+          - img [ref=f12e978]
+          - img [ref=f12e980]
+          - generic [ref=f12e985]: 인구 위기
+          - generic [ref=f12e986]: (0)
+          - img [ref=f12e987]
+        - button "빈집 활용 (0)" [ref=f12e991] [cursor=pointer]:
+          - img [ref=f12e992]
+          - img [ref=f12e994]
+          - generic [ref=f12e996]: 빈집 활용
+          - generic [ref=f12e997]: (0)
+          - img [ref=f12e998]
+        - button "+ 새 정책 영역" [ref=f12e1001] [cursor=pointer]:
+          - img [ref=f12e1002]
+          - generic [ref=f12e1003]: + 새 정책 영역
+      - generic [ref=f12e1004]:
+        - generic [ref=f12e1005]:
+          - img [ref=f12e1006]
+          - generic [ref=f12e1009]: 개인 의사결정
+        - button "이사 적합 동 (0)" [ref=f12e1011] [cursor=pointer]:
+          - img [ref=f12e1012]
+          - img [ref=f12e1014]
+          - generic [ref=f12e1016]: 이사 적합 동
+          - generic [ref=f12e1017]: (0)
+          - img [ref=f12e1018]
+        - button "학교 주변 (0)" [ref=f12e1022] [cursor=pointer]:
+          - img [ref=f12e1023]
+          - img [ref=f12e1025]
+          - generic [ref=f12e1027]: 학교 주변
+          - generic [ref=f12e1028]: (0)
+          - img [ref=f12e1029]
+        - button "+ 새 라이프 영역" [ref=f12e1032] [cursor=pointer]:
+          - img [ref=f12e1033]
+          - generic [ref=f12e1034]: + 새 라이프 영역
+    - generic [ref=f12e1035]: categories v2
+  - banner [ref=f12e3]:
+    - generic [ref=f12e4]:
+      - generic [ref=f12e5]:
+        - img [ref=f12e7]
+        - generic [ref=f12e11]:
+          - heading "TowninGraph · Master Console" [level=1] [ref=f12e12]
+          - paragraph [ref=f12e13]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=f12e14]:
+        - link "매뉴얼" [ref=f12e15] [cursor=pointer]:
+          - /url: manual.html
+          - img [ref=f12e16]
+          - text: 매뉴얼
+        - generic [ref=f12e19]: REAL POLY · 130 dongs · 60mo · 40 layers
+  - main [ref=f12e20]:
+    - text: →
+    - generic [ref=f12e1037]:
+      - navigation "breadcrumb" [ref=f12e1038]:
+        - button "홈" [ref=f12e1039] [cursor=pointer]
+        - generic [ref=f12e1040]: ›
+        - button "NPL" [ref=f12e1041] [cursor=pointer]
+        - generic [ref=f12e1042]: ›
+        - generic [ref=f12e1043]: 리포트
+      - generic [ref=f12e1044]:
+        - heading "NPL 상권분석 · 감정평가 리포트" [level=2] [ref=f12e1045]
+        - paragraph [ref=f12e1046]: 실제 담보물건 상권분석 + NPL 감정평가 산출물. VWorld 기반 상권/공시지가/실거래 + 4단 밸류에이션.
+      - generic [ref=f12e1047]:
+        - generic [ref=f12e1048]:
+          - button "효자동2가 1313-9 최신 전북은행 담보물건 · 상권분석 + NPL평가 전주 완산구 전북은행 2026-07-06 HTML PDF" [ref=f12e1049] [cursor=pointer]:
+            - img [ref=f12e1051]
+            - generic [ref=f12e1054]:
+              - generic [ref=f12e1055]:
+                - generic [ref=f12e1056]: 효자동2가 1313-9
+                - generic [ref=f12e1057]: 최신
+              - generic [ref=f12e1058]: 전북은행 담보물건 · 상권분석 + NPL평가
+              - generic [ref=f12e1059]:
+                - generic [ref=f12e1060]: 전주 완산구
+                - generic [ref=f12e1061]: 전북은행
+                - generic [ref=f12e1062]: 2026-07-06
+            - generic [ref=f12e1063]:
+              - generic [ref=f12e1064]: HTML
+              - generic [ref=f12e1065]: PDF
+          - button "청담동 49-8 샘플 상권분석 + NPL평가 (샘플) 강남구 청담동 2026-07-01 PDF" [ref=f12e1066] [cursor=pointer]:
+            - img [ref=f12e1068]
+            - generic [ref=f12e1071]:
+              - generic [ref=f12e1072]:
+                - generic [ref=f12e1073]: 청담동 49-8
+                - generic [ref=f12e1074]: 샘플
+              - generic [ref=f12e1075]: 상권분석 + NPL평가 (샘플)
+              - generic [ref=f12e1076]:
+                - generic [ref=f12e1077]: 강남구 청담동
+                - generic [ref=f12e1078]: 2026-07-01
+            - generic [ref=f12e1080]: PDF
+          - button "역삼동 837-10 (해븐리치) 상권분석 + NPL평가 강남구 역삼동 2026-07-01 PDF" [ref=f12e1081] [cursor=pointer]:
+            - img [ref=f12e1083]
+            - generic [ref=f12e1086]:
+              - generic [ref=f12e1088]: 역삼동 837-10 (해븐리치)
+              - generic [ref=f12e1089]: 상권분석 + NPL평가
+              - generic [ref=f12e1090]:
+                - generic [ref=f12e1091]: 강남구 역삼동
+                - generic [ref=f12e1092]: 2026-07-01
+            - generic [ref=f12e1094]: PDF
+          - button "여의도동 48-1 상권분석 + NPL평가 영등포구 여의도동 2026-07-01 PDF" [ref=f12e1095] [cursor=pointer]:
+            - img [ref=f12e1097]
+            - generic [ref=f12e1100]:
+              - generic [ref=f12e1102]: 여의도동 48-1
+              - generic [ref=f12e1103]: 상권분석 + NPL평가
+              - generic [ref=f12e1104]:
+                - generic [ref=f12e1105]: 영등포구 여의도동
+                - generic [ref=f12e1106]: 2026-07-01
+            - generic [ref=f12e1108]: PDF
+          - button "신월동 44-5 상권분석 + NPL평가 양천구 신월동 2026-07-01 PDF" [ref=f12e1109] [cursor=pointer]:
+            - img [ref=f12e1111]
+            - generic [ref=f12e1114]:
+              - generic [ref=f12e1116]: 신월동 44-5
+              - generic [ref=f12e1117]: 상권분석 + NPL평가
+              - generic [ref=f12e1118]:
+                - generic [ref=f12e1119]: 양천구 신월동
+                - generic [ref=f12e1120]: 2026-07-01
+            - generic [ref=f12e1122]: PDF
+          - button "NPL 담보물건 종합의견서 담보물건 종합 평가의견 종합 2026-07-01 PDF" [ref=f12e1123] [cursor=pointer]:
+            - img [ref=f12e1125]
+            - generic [ref=f12e1128]:
+              - generic [ref=f12e1130]: NPL 담보물건 종합의견서
+              - generic [ref=f12e1131]: 담보물건 종합 평가의견
+              - generic [ref=f12e1132]:
+                - generic [ref=f12e1133]: 종합
+                - generic [ref=f12e1134]: 2026-07-01
+            - generic [ref=f12e1136]: PDF
+        - generic [ref=f12e1137]:
+          - generic [ref=f12e1138]:
+            - generic [ref=f12e1139]: 효자동2가 1313-9 — 전북은행 담보물건 · 상권분석 + NPL평가
+            - generic [ref=f12e1140]:
+              - link "PDF 새 탭 ↗" [ref=f12e1141] [cursor=pointer]:
+                - /url: /reports/hyoja-1313-9-jbbank_260706.pdf
+              - link "다운로드 ↓" [ref=f12e1142] [cursor=pointer]:
+                - /url: /reports/hyoja-1313-9-jbbank_260706.pdf
+          - iframe [ref=f12e1143]:
+            - generic [active] [ref=f13e1]:
+              - generic [ref=f13e2]:
+                - generic [ref=f13e3]: NPL VALUATION · 물건지 상권분석
+                - generic [ref=f13e4]:
+                  - text: 상권분석 & NPL 자산평가
+                  - text: 보고서
+                - generic [ref=f13e5]:
+                  - text: "대상지: 전주시 완산구 효자동2가 1313-9"
+                  - text: 1층 전북은행 입점 근린상가
+                - generic [ref=f13e6]: 2026. 07. 06 · VWorld 무료 API 실측 기반
+                - generic [ref=f13e7]: INTERNAL · NPL 1차 스크리닝용 · 대외비
+              - heading "상권분석 & NPL 자산평가 보고서" [level=1] [ref=f13e8]
+              - paragraph [ref=f13e9]: 담보물건 전주시 완산구 효자동2가 1313-9(1층 전북은행 입점)를 대상으로, 공시지가→추정 감정가→(유료)실거래·경매가 밸류에이션 체계와 상권평가 항목을 적용한 NPL 1차 스크리닝 자료입니다. 전 과정 VWorld 무료 API 실측 기반이며, 실거래·경매·정식 감정가는 유료/별도키 항목으로 명확히 구분했습니다.
+              - generic [ref=f13e10]: "물건 요지: 전북특별자치도청 서측 효자동 신시가지 행정타운 내, 대규모 아파트단지(전주효자휴먼시아 등) 배후의 근린상업 정형 대지(698.4㎡·약 211평). 1층에 전북은행 지점이 임차 운영 중으로, 안정적 임대수익형 담보물건에 해당."
+              - heading "1. 물건 개요 (무료 API 실측)" [level=2] [ref=f13e11]
+              - generic [ref=f13e12]:
+                - generic [ref=f13e13]:
+                  - table [ref=f13e14]:
+                    - rowgroup [ref=f13e15]:
+                      - row "항목 내용 출처" [ref=f13e16]:
+                        - columnheader "항목" [ref=f13e17]
+                        - columnheader "내용" [ref=f13e18]
+                        - columnheader "출처" [ref=f13e19]
+                      - row "소재지 전북특별자치도 전주시 완산구 효자동2가 1313-9 토지대장" [ref=f13e20]:
+                        - cell "소재지" [ref=f13e21]
+                        - cell "전북특별자치도 전주시 완산구 효자동2가 1313-9" [ref=f13e22]
+                        - cell "토지대장" [ref=f13e23]
+                      - row "지목 대(垈) 무료" [ref=f13e24]:
+                        - cell "지목" [ref=f13e25]
+                        - cell "대(垈)" [ref=f13e26]
+                        - cell "무료" [ref=f13e27]
+                      - row "면적 698.4㎡ (약 211평) 무료" [ref=f13e28]:
+                        - cell "면적" [ref=f13e29]
+                        - cell "698.4㎡ (약 211평)" [ref=f13e30]
+                        - cell "무료" [ref=f13e31]
+                      - row "소유구분 개인 무료" [ref=f13e32]:
+                        - cell "소유구분" [ref=f13e33]
+                        - cell "개인" [ref=f13e34]
+                        - cell "무료" [ref=f13e35]
+                      - row "PNU 5211114100113130009 무료" [ref=f13e36]:
+                        - cell "PNU" [ref=f13e37]
+                        - cell "5211114100113130009" [ref=f13e38]
+                        - cell "무료" [ref=f13e39]
+                      - row "임차 현황 1층 전북은행 지점 (임대수익형) 현장/제시" [ref=f13e40]:
+                        - cell "임차 현황" [ref=f13e41]
+                        - cell "1층 전북은행 지점 (임대수익형)" [ref=f13e42]
+                        - cell "현장/제시" [ref=f13e43]
+                  - heading "용도지역·규제 (무료)" [level=4] [ref=f13e44]
+                  - list [ref=f13e45]:
+                    - listitem [ref=f13e46]: 제2종일반주거지역 (저촉)
+                    - listitem [ref=f13e47]: 제1종지구단위계획구역 (포함)
+                    - listitem [ref=f13e48]: 택지개발지구 (포함) — 신시가지 계획지
+                    - listitem [ref=f13e49]: 중로1류(20~25m)·소로1류(10~12m) 접함 — 양호한 접도
+                - generic [ref=f13e50]:
+                  - heading "입지·규제 요약" [level=4] [ref=f13e51]
+                  - generic [ref=f13e52]: "접도 우수: 중로1류(20~25m)·중로3류(12~15m)·소로1류 복수 접함 — 코너 가시성·차량 접근성 양호. 은행 지점 입지로 적합."
+                  - paragraph [ref=f13e53]: 제1종지구단위계획·택지개발지구 내 계획적 신시가지 상업지로, 배후 아파트 세대 밀집. 다만 용도지역이 제2종일반주거여서 상업지역 대비 용적률·업종에 제약 — 밸류에이션 시 반영.
+              - heading "물건지 위치도 — 원거리·중거리·클로즈업 (배경지도+지적도+마커 · 무료 API 합성)" [level=4] [ref=f13e54]
+              - generic [ref=f13e55]:
+                - generic [ref=f13e56]:
+                  - img "원거리" [ref=f13e57]
+                  - paragraph [ref=f13e58]: ▲ 원거리 — 전북도청·효자동 행정타운·아파트 밀집 광역 위치
+                - generic [ref=f13e59]:
+                  - img "중거리" [ref=f13e60]
+                  - paragraph [ref=f13e61]: ▲ 중거리 — 근린상권·사이언스공원·휴먼시아단지 + 마커
+                - generic [ref=f13e62]:
+                  - img "클로즈업" [ref=f13e63]
+                  - paragraph [ref=f13e64]: ▲ 클로즈업 — 필지 형상·접도·인근 근생(약국·병원·마트)
+              - heading "2. 가격 밸류에이션 — 4단 검증 체계" [level=2] [ref=f13e65]
+              - generic [ref=f13e66]:
+                - generic [ref=f13e67]:
+                  - generic [ref=f13e68]: 1. 공시지가(무료·실측)
+                  - generic [ref=f13e69]: 123만/㎡
+                  - generic [ref=f13e70]: 2026 기준 · 하한선
+                - generic [ref=f13e71]:
+                  - generic [ref=f13e72]: 2. 공시 총액
+                  - generic [ref=f13e73]: 약 8.6억
+                  - generic [ref=f13e74]: 698.4㎡ 환산
+                - generic [ref=f13e75]:
+                  - generic [ref=f13e76]: 3. 추정 감정가
+                  - generic [ref=f13e77]: 12.9~17.2억
+                  - generic [ref=f13e78]: 현실화율 1.5~2.0배
+                - generic [ref=f13e79]:
+                  - generic [ref=f13e80]: 4. 실거래·경매
+                  - generic [ref=f13e81]: 유료
+                  - generic [ref=f13e82]: 확정 시 보정
+              - heading "공시지가 추이 (무료 시계열 실측)" [level=4] [ref=f13e83]
+              - table [ref=f13e84]:
+                - rowgroup [ref=f13e85]:
+                  - row "연도 2023 2024 2025 2026" [ref=f13e86]:
+                    - rowheader "연도" [ref=f13e87]
+                    - cell "2023" [ref=f13e88]
+                    - cell "2024" [ref=f13e89]
+                    - cell "2025" [ref=f13e90]
+                    - cell "2026" [ref=f13e91]
+                  - row "원/㎡ 1,228,000 1,231,000 1,269,000 1,229,000" [ref=f13e92]:
+                    - rowheader "원/㎡" [ref=f13e93]
+                    - cell "1,228,000" [ref=f13e94]
+                    - cell "1,231,000" [ref=f13e95]
+                    - cell "1,269,000" [ref=f13e96]
+                    - cell "1,229,000" [ref=f13e97]
+              - paragraph [ref=f13e98]: ※ 4년간 공시지가 거의 보합(2025 소폭 상승 후 2026 조정). 지방 도청권 행정타운의 안정적이나 저성장 시세 특성을 반영 — 서울 강남 대비 가격 상승 모멘텀은 제한적이나 배후수요 견고.
+              - generic [ref=f13e99]: 추정 감정가 = 공시지가 1,229천원/㎡ × 현실화율 1.5~2.0 × 698.4㎡ ≈ 12.9억 ~ 17.2억원
+              - generic [ref=f13e100]: "감정가 개념: 위 추정치는 1차 스크리닝용(공시지가×현실화율 역산)이다. 확정 감정가는 ⓐ 경매 감정가(지지옥션 등 유료) 또는 ⓑ 감정평가법인 의뢰(유료)로 확보하며, ⓒ 인근 실거래가(별도키 무료)로 시세 교차검증한다. 특히 1층 전북은행 임대수익형이므로 수익환원법 병행 평가가 핵심."
+              - heading "3. NPL 자산평가 기준 적용 (감정평가 3방식)" [level=2] [ref=f13e101]
+              - table [ref=f13e102]:
+                - rowgroup [ref=f13e103]:
+                  - row "방식 본 물건 적용 필요 데이터 확보" [ref=f13e104]:
+                    - columnheader "방식" [ref=f13e105]
+                    - columnheader "본 물건 적용" [ref=f13e106]
+                    - columnheader "필요 데이터" [ref=f13e107]
+                    - columnheader "확보" [ref=f13e108]
+                  - row "① 원가법 토지(대 698.4㎡) + 건물 재조달원가−감가. 상가건물 존재 시 건물비중 가산 공시지가·건축비 무료" [ref=f13e109]:
+                    - cell "① 원가법" [ref=f13e110]
+                    - cell "토지(대 698.4㎡) + 건물 재조달원가−감가. 상가건물 존재 시 건물비중 가산" [ref=f13e111]
+                    - cell "공시지가·건축비" [ref=f13e112]
+                    - cell "무료" [ref=f13e113]:
+                      - generic [ref=f13e114]: 무료
+                  - row "② 거래사례비교 효자동 신시가지 인근 근린상가·대지 실거래·경매 비교보정 실거래·경매가 별도키/유료" [ref=f13e115]:
+                    - cell "② 거래사례비교" [ref=f13e116]
+                    - cell "효자동 신시가지 인근 근린상가·대지 실거래·경매 비교보정" [ref=f13e117]
+                    - cell "실거래·경매가" [ref=f13e118]
+                    - cell "별도키/유료" [ref=f13e119]:
+                      - generic [ref=f13e120]: 별도키/유료
+                  - row "③ 수익환원법 핵심 1층 전북은행 임대료(NOI) ÷ Cap Rate. 우량 임차인(은행)으로 공실위험 낮고 임대수익 안정 → 본 물건 주 평가방식 임대료·Cap Rate 상권/실사" [ref=f13e121]:
+                    - cell "③ 수익환원법 핵심" [ref=f13e122]:
+                      - text: ③ 수익환원법
+                      - generic [ref=f13e123]: 핵심
+                    - cell "1층 전북은행 임대료(NOI) ÷ Cap Rate. 우량 임차인(은행)으로 공실위험 낮고 임대수익 안정 → 본 물건 주 평가방식" [ref=f13e124]
+                    - cell "임대료·Cap Rate" [ref=f13e125]
+                    - cell "상권/실사" [ref=f13e126]:
+                      - generic [ref=f13e127]: 상권/실사
+              - generic [ref=f13e128]: NPL 회수가치(RV) = 감정가 × 낙찰가율 − (선순위채권 + 명도·비용) → 매입적정가 = RV × (1 − 목표수익률)
+              - generic [ref=f13e129]: "임차인 프리미엄: 1층에 전북은행 지점이 입점 — 지역 대표 금융기관으로 장기 안정 임차·높은 신용. 경매 진행 시에도 임대차 승계 여부에 따라 수익형 매수 수요가 형성되어 낙찰가율 방어에 유리. 다만 은행 지점 철수·계약만료 리스크는 별도 실사 필요(임대차계약서·잔여기간 확인)."
+              - heading "4. 상권분석 평가항목 (본 물건 적용)" [level=2] [ref=f13e130]
+              - table [ref=f13e131]:
+                - rowgroup [ref=f13e132]:
+                  - row "항목 본 물건 상태 소스 비용" [ref=f13e133]:
+                    - columnheader "항목" [ref=f13e134]
+                    - columnheader "본 물건 상태" [ref=f13e135]
+                    - columnheader "소스" [ref=f13e136]
+                    - columnheader "비용" [ref=f13e137]
+                  - row "입지 전북도청 서측 효자 신시가지, 중로1류 접면 정형 211평 VWorld 무료" [ref=f13e138]:
+                    - cell "입지" [ref=f13e139]
+                    - cell "전북도청 서측 효자 신시가지, 중로1류 접면 정형 211평" [ref=f13e140]
+                    - cell "VWorld" [ref=f13e141]
+                    - cell "무료" [ref=f13e142]
+                  - row "가격 공시 123만/㎡ (4년 보합, 지방 안정형) VWorld 무료" [ref=f13e143]:
+                    - cell "가격" [ref=f13e144]
+                    - cell "공시 123만/㎡ (4년 보합, 지방 안정형)" [ref=f13e145]
+                    - cell "VWorld" [ref=f13e146]
+                    - cell "무료" [ref=f13e147]
+                  - row "배후수요 전주효자휴먼시아 등 대규모 아파트단지 밀집 (세대수 확인 필요) 상권정보 API 별도키" [ref=f13e148]:
+                    - cell "배후수요" [ref=f13e149]
+                    - cell "전주효자휴먼시아 등 대규모 아파트단지 밀집 (세대수 확인 필요)" [ref=f13e150]
+                    - cell "상권정보 API" [ref=f13e151]
+                    - cell "별도키" [ref=f13e152]
+                  - row "업종·경쟁 약국·병원·마트·프랜차이즈 등 근린 생활상권 형성 (인접 롯데프레시·약국 다수) 상권정보 API 별도키" [ref=f13e153]:
+                    - cell "업종·경쟁" [ref=f13e154]
+                    - cell "약국·병원·마트·프랜차이즈 등 근린 생활상권 형성 (인접 롯데프레시·약국 다수)" [ref=f13e155]
+                    - cell "상권정보 API" [ref=f13e156]
+                    - cell "별도키" [ref=f13e157]
+                  - row "접근성 중로1류(20~25m)·소로1류 복수 접면, 코너 입지 (지오코딩 완료) VWorld 무료" [ref=f13e158]:
+                    - cell "접근성" [ref=f13e159]
+                    - cell "중로1류(20~25m)·소로1류 복수 접면, 코너 입지 (지오코딩 완료)" [ref=f13e160]
+                    - cell "VWorld" [ref=f13e161]
+                    - cell "무료" [ref=f13e162]
+                  - row "앵커테넌트 1층 전북은행 — 유동·집객 앵커, 상가가치 견인 제시/현장 -" [ref=f13e163]:
+                    - cell "앵커테넌트" [ref=f13e164]
+                    - cell "1층 전북은행 — 유동·집객 앵커, 상가가치 견인" [ref=f13e165]
+                    - cell "제시/현장" [ref=f13e166]
+                    - cell "-" [ref=f13e167]
+              - generic [ref=f13e168]: "상권 총평: 전북도청·행정기관 종사자 + 대단지 아파트 배후의 안정적 근린 생활상권. 유흥·유행 의존도가 낮아 경기 변동에 방어적. 1층 은행 앵커로 집객력 확보. 지방 특성상 급격한 시세 상승보다 안정적 임대수익 회수에 적합한 물건 유형."
+              - heading "5. 무료/유료 범위 — 데이터 경계" [level=2] [ref=f13e169]
+              - generic [ref=f13e170]:
+                - generic [ref=f13e171]:
+                  - heading "■ 무료로 확보됨 (본 건 실측)" [level=4] [ref=f13e172]
+                  - list [ref=f13e173]:
+                    - listitem [ref=f13e174]: 지번·지목·면적·소유구분·PNU
+                    - listitem [ref=f13e175]: 공시지가 시계열(2023~2026)
+                    - listitem [ref=f13e176]: 용도지역·규제(지구단위·택지개발지구 등)
+                    - listitem [ref=f13e177]: 지적도 이미지 · 지오코딩 좌표 · 3단 위치도
+                    - listitem [ref=f13e178]: → 공시기반 1차 추정 감정가
+                - generic [ref=f13e179]:
+                  - heading "■ 유료/별도키 필요 (미확보)" [level=4] [ref=f13e180]
+                  - list [ref=f13e181]:
+                    - listitem [ref=f13e182]: 실거래가 (공공데이터 무료키 발급 시)
+                    - listitem [ref=f13e183]: 상권 유동인구·배후세대·업종 (무료키)
+                    - listitem [ref=f13e184]: 1층 전북은행 임대료·계약잔여기간 (실사)
+                    - listitem [ref=f13e185]: 경매 감정가·낙찰가율 (유료)
+                    - listitem [ref=f13e186]: 정식 감정평가액 (유료 외주)
+              - heading "6. 리스크 & 다음 단계" [level=2] [ref=f13e187]
+              - generic [ref=f13e188]: "주요 리스크: ① 용도지역이 제2종일반주거여서 상업지 대비 활용도 제약 · ② 지방 시세 저성장(자본이득 제한, 임대수익 중심 회수) · ③ 은행 임차 종료 시 대체 임차 확보 난이도 · ④ 지오코딩 지번과 등기부 소재지 최종 대조 필요."
+              - list [ref=f13e189]:
+                - listitem [ref=f13e190]: "즉시(무료): 등기부 열람으로 지번·소유·선순위 근저당 확인 + 지적도 확정"
+                - listitem [ref=f13e191]: "단기(무료키): 공공데이터포털 키로 인근 근린상가 실거래·상권 배후세대 검증"
+                - listitem [ref=f13e192]: "실사(핵심): 1층 전북은행 임대차계약서(보증금·월세·잔여기간) 확보 → 수익환원법 정밀 산정"
+                - listitem [ref=f13e193]: "선별(유료): 매입 검토 시 경매 감정가·낙찰가율 확보 → RV 확정"
+                - listitem [ref=f13e194]: "확정(유료): 최종 후보만 정식 감정평가 의뢰"
+              - paragraph [ref=f13e195]: ※ 본 보고서는 무료 VWorld API 실측 기반이며, 지번·소유·권리관계는 등기부로 최종 확인 필요. 추정 감정가는 스크리닝용으로 정식 감정평가를 대체하지 않습니다. 1층 전북은행 임차 조건은 실제 임대차계약서로 검증 전제. 매입 의사결정 시 권리분석(변호사)·감정평가(감정평가사)를 전제로 합니다. 대외비.
+    - generic [ref=f12e54]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

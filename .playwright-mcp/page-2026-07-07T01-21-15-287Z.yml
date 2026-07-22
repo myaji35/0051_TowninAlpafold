@@ -1,0 +1,42 @@
+- generic [active] [ref=f12e1]:
+  - complementary [ref=f12e2]
+  - banner [ref=f12e3]:
+    - generic [ref=f12e4]:
+      - generic [ref=f12e5]:
+        - img [ref=f12e7]
+        - generic [ref=f12e11]:
+          - heading "TowninGraph · Master Console" [level=1] [ref=f12e12]
+          - paragraph [ref=f12e13]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=f12e14]:
+        - link "매뉴얼" [ref=f12e15] [cursor=pointer]:
+          - /url: manual.html
+          - img [ref=f12e16]
+          - text: 매뉴얼
+        - generic [ref=f12e19]: SIMULA · loading…
+  - main [ref=f12e20]:
+    - generic [ref=f12e21]:
+      - generic [ref=f12e22]:
+        - heading "주제 갤러리" [level=2] [ref=f12e23]:
+          - img [ref=f12e24]
+          - text: 주제 갤러리
+        - paragraph [ref=f12e29]: 자주 보는 12개 분석 주제. 카드를 클릭하면 즉시 해당 모드로 진입합니다.
+      - generic [ref=f12e30]:
+        - img [ref=f12e31]
+        - 'textbox "주제 검색 (예: 성수, 코로나, 카페)" [ref=f12e34]'
+        - generic [ref=f12e35]: ⌘K
+      - generic [ref=f12e36]:
+        - button "전체 (12)" [ref=f12e37] [cursor=pointer]
+        - button "트렌드 (4)" [ref=f12e38] [cursor=pointer]:
+          - img [ref=f12e39]
+          - text: 트렌드 (4)
+        - button "이상 탐지 (3)" [ref=f12e42] [cursor=pointer]:
+          - img [ref=f12e43]
+          - text: 이상 탐지 (3)
+        - button "파트너/매출 (3)" [ref=f12e45] [cursor=pointer]:
+          - img [ref=f12e46]
+          - text: 파트너/매출 (3)
+        - button "비교 분석 (2)" [ref=f12e50] [cursor=pointer]:
+          - img [ref=f12e51]
+          - text: 비교 분석 (2)
+    - text: →
+    - generic [ref=f12e54]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

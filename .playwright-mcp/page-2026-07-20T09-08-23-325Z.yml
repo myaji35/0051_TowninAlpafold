@@ -1,0 +1,146 @@
+- generic [active] [ref=f3e1]:
+  - complementary [ref=f3e2]:
+    - button "사이드바 고정 (펼친 상태 유지)" [ref=f3e4] [cursor=pointer]
+    - generic [ref=f3e6]:
+      - generic [ref=f3e7]:
+        - button [ref=f3e12] [cursor=pointer]
+        - button [ref=f3e18] [cursor=pointer]
+        - button [ref=f3e22] [cursor=pointer]
+        - button [ref=f3e24] [cursor=pointer]
+        - button [ref=f3e29] [cursor=pointer]
+        - button [ref=f3e34] [cursor=pointer]
+        - button [ref=f3e39] [cursor=pointer]
+      - generic [ref=f3e43]:
+        - generic [ref=f3e48]:
+          - button [ref=f3e49] [cursor=pointer]
+          - button [ref=f3e56] [cursor=pointer]
+          - button [ref=f3e61] [cursor=pointer]
+        - button [ref=f3e65] [cursor=pointer]
+        - button [ref=f3e75] [cursor=pointer]
+        - button [ref=f3e85] [cursor=pointer]
+        - button [ref=f3e95] [cursor=pointer]
+        - button [ref=f3e107] [cursor=pointer]
+      - generic [ref=f3e109]:
+        - button [ref=f3e114] [cursor=pointer]
+        - button [ref=f3e121] [cursor=pointer]
+        - button [ref=f3e130] [cursor=pointer]
+        - button [ref=f3e138] [cursor=pointer]
+      - generic [ref=f3e140]:
+        - button [ref=f3e145] [cursor=pointer]
+        - button [ref=f3e157] [cursor=pointer]
+        - button [ref=f3e165] [cursor=pointer]
+      - generic [ref=f3e167]:
+        - button [ref=f3e173] [cursor=pointer]
+        - button [ref=f3e182] [cursor=pointer]
+        - button [ref=f3e190] [cursor=pointer]
+  - banner [ref=f3e193]:
+    - generic [ref=f3e194]:
+      - generic [ref=f3e201]:
+        - heading "TowninGraph · Master Console" [level=1] [ref=f3e202]
+        - paragraph [ref=f3e203]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=f3e204]:
+        - link "매뉴얼" [ref=f3e205] [cursor=pointer]:
+          - /url: manual.html
+        - generic [ref=f3e209]: REAL POLY · 131 dongs · 60mo · 40 layers
+  - main [ref=f3e210]:
+    - generic [ref=f3e211]:
+      - generic [ref=f3e212]:
+        - heading "주제 갤러리" [level=2] [ref=f3e213]
+        - paragraph [ref=f3e219]: 자주 보는 12개 분석 주제. 카드를 클릭하면 즉시 해당 모드로 진입합니다.
+      - generic [ref=f3e220]:
+        - 'textbox "주제 검색 (예: 성수, 코로나, 카페)" [ref=f3e224]'
+        - generic [ref=f3e225]: ⌘K
+      - generic [ref=f3e226]:
+        - button "전체 (12)" [ref=f3e227] [cursor=pointer]
+        - button "트렌드 (4)" [ref=f3e228] [cursor=pointer]
+        - button "이상 탐지 (3)" [ref=f3e232] [cursor=pointer]
+        - button "파트너/매출 (3)" [ref=f3e235] [cursor=pointer]
+        - button "비교 분석 (2)" [ref=f3e240] [cursor=pointer]
+      - generic [ref=f3e244]:
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f3e245]':
+          - generic [ref=f3e246]: 트렌드
+          - heading "성수동 부상 스토리" [level=3] [ref=f3e253]
+          - paragraph [ref=f3e254]: 2024년 트렌드 시프트 시점에 어떻게 솟아올랐나
+          - generic [ref=f3e264]:
+            - generic [ref=f3e265]: Analyze
+            - generic [ref=f3e266]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f3e267]':
+          - generic [ref=f3e268]: 트렌드
+          - heading "코로나 충격 분석" [level=3] [ref=f3e275]
+          - paragraph [ref=f3e276]: 2020-04 시점에 모든 단백질이 동시에 짧아지는 모습
+          - generic [ref=f3e286]:
+            - generic [ref=f3e287]: Analyze
+            - generic [ref=f3e288]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f3e289]':
+          - generic [ref=f3e290]: 트렌드
+          - heading "카페 폭증 핫스팟" [level=3] [ref=f3e297]
+          - paragraph [ref=f3e298]: 어디에서 카페가 가장 빠르게 늘어났나
+          - generic [ref=f3e308]:
+            - generic [ref=f3e309]: Analyze
+            - generic [ref=f3e310]: → 열기
+        - generic [ref=f3e311]:
+          - generic [ref=f3e312]: 트렌드
+          - heading "20대 청년 유입" [level=3] [ref=f3e321]
+          - paragraph [ref=f3e322]: 20대 유동인구가 집중되는 동
+          - generic [ref=f3e332]:
+            - generic [ref=f3e333]: Analyze
+            - generic [ref=f3e334]: → 열기
+        - generic "실 데이터 미축적" [ref=f3e335]:
+          - generic: DEMO
+          - generic [ref=f3e336]: 이상탐지
+          - heading "폐업 급증 동" [level=3] [ref=f3e342]
+          - paragraph [ref=f3e343]: 폐업률이 급격히 오르는 동 자동 탐지
+          - generic [ref=f3e353]:
+            - generic [ref=f3e354]: Explore
+            - generic [ref=f3e355]: → 열기
+        - generic [ref=f3e356]:
+          - generic [ref=f3e357]: 이상탐지
+          - heading "pLDDT 하락 경고" [level=3] [ref=f3e363]
+          - paragraph [ref=f3e364]: 예측 신뢰도가 떨어지는 불안정 지역
+          - generic [ref=f3e374]:
+            - generic [ref=f3e375]: Explore
+            - generic [ref=f3e376]: → 열기
+        - generic [ref=f3e377]:
+          - generic [ref=f3e378]: 이상탐지
+          - heading "유동 이탈 동" [level=3] [ref=f3e383]
+          - paragraph [ref=f3e384]: 유동인구 6개월 연속 하락한 동
+          - generic [ref=f3e394]:
+            - generic [ref=f3e395]: Explore
+            - generic [ref=f3e396]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f3e397]':
+          - generic [ref=f3e398]: 파트너
+          - heading "파트너 모집 후보지" [level=3] [ref=f3e406]
+          - paragraph [ref=f3e407]: 카페 부족 vs 20대 유동 풍부한 동
+          - generic [ref=f3e417]:
+            - generic [ref=f3e418]: Analyze
+            - generic [ref=f3e419]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f3e420]':
+          - generic [ref=f3e421]: 파트너
+          - heading "소상공인 매출 위험" [level=3] [ref=f3e427]
+          - paragraph [ref=f3e428]: 거래량/유동 대비 폐업 늘어나는 동
+          - generic [ref=f3e438]:
+            - generic [ref=f3e439]: Analyze
+            - generic [ref=f3e440]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f3e441]':
+          - generic [ref=f3e442]: 파트너
+          - heading "광고 집중 후보" [level=3] [ref=f3e450]
+          - paragraph [ref=f3e451]: 잠재 수요 높고 경쟁 적은 동
+          - generic [ref=f3e461]:
+            - generic [ref=f3e462]: Analyze
+            - generic [ref=f3e463]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz, vworld_geojson" [ref=f3e464]':
+          - generic [ref=f3e465]: 비교
+          - heading "성수 ↔ 부산 전포 Twin" [level=3] [ref=f3e472]
+          - paragraph [ref=f3e473]: 서울 성수와 부산 전포의 구조적 유사도
+          - generic [ref=f3e483]:
+            - generic [ref=f3e484]: Analyze
+            - generic [ref=f3e485]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz, molit_landprice, vworld_geojson" [ref=f3e486]':
+          - generic [ref=f3e487]: 비교
+          - heading "강남 vs 성수 vs 마포" [level=3] [ref=f3e495]
+          - paragraph [ref=f3e496]: 세 지역의 27 레이어 프로필 비교
+          - generic [ref=f3e506]:
+            - generic [ref=f3e507]: Analyze
+            - generic [ref=f3e508]: → 열기
+    - text: →
+    - generic [ref=f3e509]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

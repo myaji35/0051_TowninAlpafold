@@ -1,0 +1,341 @@
+- generic [active] [ref=f12e1]:
+  - complementary [ref=f12e2]:
+    - generic [ref=f12e510]:
+      - button "사이드바 고정 (펼친 상태 유지)" [ref=f12e511] [cursor=pointer]:
+        - img [ref=f12e512]
+      - generic [ref=f12e513]: 카테고리
+    - generic [ref=f12e514]:
+      - generic [ref=f12e515]:
+        - generic [ref=f12e516]:
+          - img [ref=f12e517]
+          - generic [ref=f12e520]: 분석 콘솔
+        - button "갤러리" [ref=f12e521] [cursor=pointer]:
+          - img [ref=f12e522]
+          - generic [ref=f12e527]: 갤러리
+        - button "Explore" [ref=f12e528] [cursor=pointer]:
+          - img [ref=f12e529]
+          - generic [ref=f12e532]: Explore
+        - button "Analyze" [ref=f12e533] [cursor=pointer]:
+          - img [ref=f12e534]
+          - generic [ref=f12e535]: Analyze
+        - button "Decide" [ref=f12e536] [cursor=pointer]:
+          - img [ref=f12e537]
+          - generic [ref=f12e541]: Decide
+        - button "Data Studio" [ref=f12e542] [cursor=pointer]:
+          - img [ref=f12e543]
+          - generic [ref=f12e547]: Data Studio
+        - button "Workflow" [ref=f12e548] [cursor=pointer]:
+          - img [ref=f12e549]
+          - generic [ref=f12e553]: Workflow
+        - button "명분 사슬" [ref=f12e554] [cursor=pointer]:
+          - img [ref=f12e555]
+          - generic [ref=f12e558]: 명분 사슬
+      - generic [ref=f12e559]:
+        - generic [ref=f12e560]:
+          - img [ref=f12e561]
+          - generic [ref=f12e564]: 업종 SaaS
+        - generic [ref=f12e565]:
+          - button "약국 (2)" [ref=f12e566] [cursor=pointer]:
+            - img [ref=f12e567]
+            - img [ref=f12e569]
+            - generic [ref=f12e573]: 약국
+            - generic [ref=f12e574]: (2)
+          - button "점포개발" [ref=f12e575] [cursor=pointer]:
+            - img [ref=f12e576]
+            - generic [ref=f12e580]: 점포개발
+          - button "폐업평가" [ref=f12e581] [cursor=pointer]:
+            - img [ref=f12e582]
+            - generic [ref=f12e584]: 폐업평가
+        - button "카페 (0)" [ref=f12e586] [cursor=pointer]:
+          - img [ref=f12e587]
+          - img [ref=f12e589]
+          - generic [ref=f12e592]: 카페
+          - generic [ref=f12e593]: (0)
+          - img [ref=f12e594]
+        - button "편의점 (0)" [ref=f12e598] [cursor=pointer]:
+          - img [ref=f12e599]
+          - img [ref=f12e601]
+          - generic [ref=f12e604]: 편의점
+          - generic [ref=f12e605]: (0)
+          - img [ref=f12e606]
+        - button "학원 (0)" [ref=f12e610] [cursor=pointer]:
+          - img [ref=f12e611]
+          - img [ref=f12e613]
+          - generic [ref=f12e616]: 학원
+          - generic [ref=f12e617]: (0)
+          - img [ref=f12e618]
+        - button "미용실 (0)" [ref=f12e622] [cursor=pointer]:
+          - img [ref=f12e623]
+          - img [ref=f12e625]
+          - generic [ref=f12e631]: 미용실
+          - generic [ref=f12e632]: (0)
+          - img [ref=f12e633]
+        - button "+ 새 업종" [ref=f12e636] [cursor=pointer]:
+          - img [ref=f12e637]
+          - generic [ref=f12e638]: + 새 업종
+      - generic [ref=f12e639]:
+        - generic [ref=f12e640]:
+          - img [ref=f12e641]
+          - generic [ref=f12e643]: 자산 / 부동산
+        - generic [ref=f12e644]:
+          - button "NPL (6)" [ref=f12e645] [cursor=pointer]:
+            - img [ref=f12e646]
+            - img [ref=f12e648]
+            - generic [ref=f12e651]: NPL
+            - generic [ref=f12e652]: (6)
+          - button "리포트" [ref=f12e653] [cursor=pointer]:
+            - img [ref=f12e654]
+            - generic [ref=f12e657]: 리포트
+          - button "포트폴리오" [ref=f12e658] [cursor=pointer]:
+            - img [ref=f12e659]
+            - generic [ref=f12e662]: 포트폴리오
+          - button "분석 대시보드" [ref=f12e663] [cursor=pointer]:
+            - img [ref=f12e664]
+            - generic [ref=f12e665]: 분석 대시보드
+          - button "RWA 마켓" [ref=f12e666] [cursor=pointer]:
+            - img [ref=f12e667]
+            - generic [ref=f12e672]: RWA 마켓
+          - button "매수 평가" [ref=f12e673] [cursor=pointer]:
+            - img [ref=f12e674]
+            - generic [ref=f12e677]: 매수 평가
+          - button "매도 평가" [ref=f12e678] [cursor=pointer]:
+            - img [ref=f12e679]
+            - generic [ref=f12e682]: 매도 평가
+        - button "상가 임대 (0)" [ref=f12e684] [cursor=pointer]:
+          - img [ref=f12e685]
+          - img [ref=f12e687]
+          - generic [ref=f12e689]: 상가 임대
+          - generic [ref=f12e690]: (0)
+          - img [ref=f12e691]
+        - button "토지 개발 (0)" [ref=f12e695] [cursor=pointer]:
+          - img [ref=f12e696]
+          - img [ref=f12e698]
+          - generic [ref=f12e700]: 토지 개발
+          - generic [ref=f12e701]: (0)
+          - img [ref=f12e702]
+        - button "+ 새 자산 유형" [ref=f12e705] [cursor=pointer]:
+          - img [ref=f12e706]
+          - generic [ref=f12e707]: + 새 자산 유형
+      - generic [ref=f12e708]:
+        - generic [ref=f12e709]:
+          - img [ref=f12e710]
+          - generic [ref=f12e712]: 공공 / 정책
+        - button "인구 위기 (0)" [ref=f12e714] [cursor=pointer]:
+          - img [ref=f12e715]
+          - img [ref=f12e717]
+          - generic [ref=f12e722]: 인구 위기
+          - generic [ref=f12e723]: (0)
+          - img [ref=f12e724]
+        - button "빈집 활용 (0)" [ref=f12e728] [cursor=pointer]:
+          - img [ref=f12e729]
+          - img [ref=f12e731]
+          - generic [ref=f12e733]: 빈집 활용
+          - generic [ref=f12e734]: (0)
+          - img [ref=f12e735]
+        - button "+ 새 정책 영역" [ref=f12e738] [cursor=pointer]:
+          - img [ref=f12e739]
+          - generic [ref=f12e740]: + 새 정책 영역
+      - generic [ref=f12e741]:
+        - generic [ref=f12e742]:
+          - img [ref=f12e743]
+          - generic [ref=f12e746]: 개인 의사결정
+        - button "이사 적합 동 (0)" [ref=f12e748] [cursor=pointer]:
+          - img [ref=f12e749]
+          - img [ref=f12e751]
+          - generic [ref=f12e753]: 이사 적합 동
+          - generic [ref=f12e754]: (0)
+          - img [ref=f12e755]
+        - button "학교 주변 (0)" [ref=f12e759] [cursor=pointer]:
+          - img [ref=f12e760]
+          - img [ref=f12e762]
+          - generic [ref=f12e764]: 학교 주변
+          - generic [ref=f12e765]: (0)
+          - img [ref=f12e766]
+        - button "+ 새 라이프 영역" [ref=f12e769] [cursor=pointer]:
+          - img [ref=f12e770]
+          - generic [ref=f12e771]: + 새 라이프 영역
+    - generic [ref=f12e772]: categories v2
+  - banner [ref=f12e3]:
+    - generic [ref=f12e4]:
+      - generic [ref=f12e5]:
+        - img [ref=f12e7]
+        - generic [ref=f12e11]:
+          - heading "TowninGraph · Master Console" [level=1] [ref=f12e12]
+          - paragraph [ref=f12e13]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=f12e14]:
+        - link "매뉴얼" [ref=f12e15] [cursor=pointer]:
+          - /url: manual.html
+          - img [ref=f12e16]
+          - text: 매뉴얼
+        - generic [ref=f12e19]: REAL POLY · 130 dongs · 60mo · 40 layers
+  - main [ref=f12e20]:
+    - generic [ref=f12e21]:
+      - generic [ref=f12e22]:
+        - heading "주제 갤러리" [level=2] [ref=f12e23]:
+          - img [ref=f12e24]
+          - text: 주제 갤러리
+        - paragraph [ref=f12e29]: 자주 보는 12개 분석 주제. 카드를 클릭하면 즉시 해당 모드로 진입합니다.
+      - generic [ref=f12e30]:
+        - img [ref=f12e31]
+        - 'textbox "주제 검색 (예: 성수, 코로나, 카페)" [ref=f12e34]'
+        - generic [ref=f12e35]: ⌘K
+      - generic [ref=f12e36]:
+        - button "전체 (12)" [ref=f12e37] [cursor=pointer]
+        - button "트렌드 (4)" [ref=f12e38] [cursor=pointer]:
+          - img [ref=f12e39]
+          - text: 트렌드 (4)
+        - button "이상 탐지 (3)" [ref=f12e42] [cursor=pointer]:
+          - img [ref=f12e43]
+          - text: 이상 탐지 (3)
+        - button "파트너/매출 (3)" [ref=f12e45] [cursor=pointer]:
+          - img [ref=f12e46]
+          - text: 파트너/매출 (3)
+        - button "비교 분석 (2)" [ref=f12e50] [cursor=pointer]:
+          - img [ref=f12e51]
+          - text: 비교 분석 (2)
+      - generic [ref=f12e245]:
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f12e246]':
+          - generic:
+            - img
+          - generic [ref=f12e247]:
+            - img [ref=f12e249]
+            - generic [ref=f12e253]: 트렌드
+          - heading "성수동 부상 스토리" [level=3] [ref=f12e254]
+          - paragraph [ref=f12e255]: 2024년 트렌드 시프트 시점에 어떻게 솟아올랐나
+          - img [ref=f12e256]
+          - generic [ref=f12e265]:
+            - generic [ref=f12e266]: Analyze
+            - generic [ref=f12e267]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f12e268]':
+          - generic:
+            - img
+          - generic [ref=f12e269]:
+            - img [ref=f12e271]
+            - generic [ref=f12e275]: 트렌드
+          - heading "코로나 충격 분석" [level=3] [ref=f12e276]
+          - paragraph [ref=f12e277]: 2020-04 시점에 모든 단백질이 동시에 짧아지는 모습
+          - img [ref=f12e278]
+          - generic [ref=f12e287]:
+            - generic [ref=f12e288]: Analyze
+            - generic [ref=f12e289]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f12e290]':
+          - generic:
+            - img
+          - generic [ref=f12e291]:
+            - img [ref=f12e293]
+            - generic [ref=f12e297]: 트렌드
+          - heading "카페 폭증 핫스팟" [level=3] [ref=f12e298]
+          - paragraph [ref=f12e299]: 어디에서 카페가 가장 빠르게 늘어났나
+          - img [ref=f12e300]
+          - generic [ref=f12e309]:
+            - generic [ref=f12e310]: Analyze
+            - generic [ref=f12e311]: → 열기
+        - generic [ref=f12e312]:
+          - generic:
+            - img
+          - generic [ref=f12e313]:
+            - img [ref=f12e315]
+            - generic [ref=f12e321]: 트렌드
+          - heading "20대 청년 유입" [level=3] [ref=f12e322]
+          - paragraph [ref=f12e323]: 20대 유동인구가 집중되는 동
+          - img [ref=f12e324]
+          - generic [ref=f12e333]:
+            - generic [ref=f12e334]: Analyze
+            - generic [ref=f12e335]: → 열기
+        - generic "실 데이터 미축적" [ref=f12e336]:
+          - generic: DEMO
+          - generic [ref=f12e337]:
+            - img [ref=f12e339]
+            - generic [ref=f12e342]: 이상탐지
+          - heading "폐업 급증 동" [level=3] [ref=f12e343]
+          - paragraph [ref=f12e344]: 폐업률이 급격히 오르는 동 자동 탐지
+          - img [ref=f12e345]
+          - generic [ref=f12e354]:
+            - generic [ref=f12e355]: Explore
+            - generic [ref=f12e356]: → 열기
+        - generic [ref=f12e357]:
+          - generic:
+            - img
+          - generic [ref=f12e358]:
+            - img [ref=f12e360]
+            - generic [ref=f12e363]: 이상탐지
+          - heading "pLDDT 하락 경고" [level=3] [ref=f12e364]
+          - paragraph [ref=f12e365]: 예측 신뢰도가 떨어지는 불안정 지역
+          - img [ref=f12e366]
+          - generic [ref=f12e375]:
+            - generic [ref=f12e376]: Explore
+            - generic [ref=f12e377]: → 열기
+        - generic [ref=f12e378]:
+          - generic:
+            - img
+          - generic [ref=f12e379]:
+            - img [ref=f12e381]
+            - generic [ref=f12e383]: 이상탐지
+          - heading "유동 이탈 동" [level=3] [ref=f12e384]
+          - paragraph [ref=f12e385]: 유동인구 6개월 연속 하락한 동
+          - img [ref=f12e386]
+          - generic [ref=f12e395]:
+            - generic [ref=f12e396]: Explore
+            - generic [ref=f12e397]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f12e398]':
+          - generic:
+            - img
+          - generic [ref=f12e399]:
+            - img [ref=f12e401]
+            - generic [ref=f12e406]: 파트너
+          - heading "파트너 모집 후보지" [level=3] [ref=f12e407]
+          - paragraph [ref=f12e408]: 카페 부족 vs 20대 유동 풍부한 동
+          - img [ref=f12e409]
+          - generic [ref=f12e418]:
+            - generic [ref=f12e419]: Analyze
+            - generic [ref=f12e420]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f12e421]':
+          - generic:
+            - img
+          - generic [ref=f12e422]:
+            - img [ref=f12e424]
+            - generic [ref=f12e427]: 파트너
+          - heading "소상공인 매출 위험" [level=3] [ref=f12e428]
+          - paragraph [ref=f12e429]: 거래량/유동 대비 폐업 늘어나는 동
+          - img [ref=f12e430]
+          - generic [ref=f12e439]:
+            - generic [ref=f12e440]: Analyze
+            - generic [ref=f12e441]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz" [ref=f12e442]':
+          - generic:
+            - img
+          - generic [ref=f12e443]:
+            - img [ref=f12e445]
+            - generic [ref=f12e450]: 파트너
+          - heading "광고 집중 후보" [level=3] [ref=f12e451]
+          - paragraph [ref=f12e452]: 잠재 수요 높고 경쟁 적은 동
+          - img [ref=f12e453]
+          - generic [ref=f12e462]:
+            - generic [ref=f12e463]: Analyze
+            - generic [ref=f12e464]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz, vworld_geojson" [ref=f12e465]':
+          - generic:
+            - img
+          - generic [ref=f12e466]:
+            - img [ref=f12e468]
+            - generic [ref=f12e472]: 비교
+          - heading "성수 ↔ 부산 전포 Twin" [level=3] [ref=f12e473]
+          - paragraph [ref=f12e474]: 서울 성수와 부산 전포의 구조적 유사도
+          - img [ref=f12e475]
+          - generic [ref=f12e484]:
+            - generic [ref=f12e485]: Analyze
+            - generic [ref=f12e486]: → 열기
+        - 'generic "필요 데이터셋: localdata_biz, molit_landprice, vworld_geojson" [ref=f12e487]':
+          - generic:
+            - img
+          - generic [ref=f12e488]:
+            - img [ref=f12e490]
+            - generic [ref=f12e495]: 비교
+          - heading "강남 vs 성수 vs 마포" [level=3] [ref=f12e496]
+          - paragraph [ref=f12e497]: 세 지역의 27 레이어 프로필 비교
+          - img [ref=f12e498]
+          - generic [ref=f12e507]:
+            - generic [ref=f12e508]: Analyze
+            - generic [ref=f12e509]: → 열기
+    - text: →
+    - generic [ref=f12e54]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

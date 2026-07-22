@@ -1,0 +1,428 @@
+- generic [ref=e1]:
+  - complementary [ref=e2]:
+    - button "사이드바 고정 (펼친 상태 유지)" [ref=e511] [cursor=pointer]
+    - generic [ref=e513]:
+      - generic [ref=e514]:
+        - button [ref=e519] [cursor=pointer]
+        - button [ref=e525] [cursor=pointer]
+        - button [ref=e529] [cursor=pointer]
+        - button [ref=e531] [cursor=pointer]
+        - button [ref=e536] [cursor=pointer]
+        - button [ref=e541] [cursor=pointer]
+        - button [ref=e546] [cursor=pointer]
+      - generic [ref=e550]:
+        - generic [ref=e555]:
+          - button [ref=e556] [cursor=pointer]
+          - button [ref=e563] [cursor=pointer]
+          - button [ref=e568] [cursor=pointer]
+        - button [ref=e572] [cursor=pointer]
+        - button [ref=e582] [cursor=pointer]
+        - button [ref=e592] [cursor=pointer]
+        - button [ref=e602] [cursor=pointer]
+        - button [ref=e614] [cursor=pointer]
+      - generic [ref=e616]:
+        - button [ref=e621] [cursor=pointer]
+        - button [ref=e628] [cursor=pointer]
+        - button [ref=e637] [cursor=pointer]
+        - button [ref=e645] [cursor=pointer]
+      - generic [ref=e647]:
+        - button [ref=e652] [cursor=pointer]
+        - button [ref=e664] [cursor=pointer]
+        - button [ref=e672] [cursor=pointer]
+      - generic [ref=e674]:
+        - button [ref=e680] [cursor=pointer]
+        - button [ref=e689] [cursor=pointer]
+        - button [ref=e697] [cursor=pointer]
+  - banner [ref=e193]:
+    - generic [ref=e194]:
+      - generic [ref=e201]:
+        - heading "TowninGraph · Master Console" [level=1] [ref=e202]
+        - paragraph [ref=e203]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=e204]:
+        - link "매뉴얼" [ref=e205] [cursor=pointer]:
+          - /url: manual.html
+        - generic [ref=e209]: REAL POLY · 131 dongs · 60mo · 40 layers
+  - main [ref=e210]:
+    - text: →
+    - generic [ref=e701]:
+      - generic [ref=e702]:
+        - navigation "breadcrumb" [ref=e703]:
+          - generic [ref=e704]: 홈
+          - generic [ref=e705]: /
+          - generic [ref=e706]: 명분 사슬
+          - generic [ref=e707]: /
+          - generic [ref=e708]: 의정부시 금오동
+        - button "보고서 PDF 출력" [ref=e709] [cursor=pointer]
+      - generic [ref=e714]:
+        - generic [ref=e715]: "[1/7]"
+        - heading "권고 (Recommendation)" [level=2] [ref=e716]
+        - paragraph [ref=e717]: 결론 먼저 — 이 동에 대한 투자/운영 권고 요약
+        - generic [ref=e718]:
+          - generic [ref=e719]: 신중한 진입 — 6개월 관찰 후 재평가 권장
+          - generic "신뢰도 3/5" [ref=e720]: ★★★☆☆
+          - list [ref=e723]:
+            - listitem [ref=e724]:
+              - text: 인근 카페 폐업률 12개월 +18% 상승
+              - generic [ref=e725]: — 소상공인시장진흥공단 · 2026-03
+            - listitem [ref=e726]:
+              - text: 20대 유동인구 YoY -7% 감소 추세
+              - generic [ref=e727]: — KOSIS 생활인구 · 2026-04
+            - listitem [ref=e728]:
+              - text: 동일 분류 동(낙양동·민락동) 평균 생존율 64% (12M)
+              - generic [ref=e729]: — KM 추정 — 본 시스템 · 2026-05
+          - generic [ref=e730]:
+            - strong [ref=e731]: "단서:"
+            - text: 권고는 통계 패턴이며 개별 점포의 입지/임대 조건은 별도 평가 필요
+      - generic [ref=e732]:
+        - generic [ref=e733]: "[2/7]"
+        - heading "사실 (Fact Triple)" [level=2] [ref=e734]
+        - paragraph [ref=e735]: 가장 강한 팩트 3개 — 수치·출처·신뢰도
+        - generic [ref=e737]:
+          - generic [ref=e738]: 카페수 추이 — 5종 평균 시계열
+          - generic [ref=e739]: (의정부시 금오동) 시계열 마운트 — 자식 이슈 UI_FACT_TRIPLE-001에서 차트 연결 예정
+        - generic [ref=e740]:
+          - 'generic "출처: 국세청 사업자 등록 통계 https://kosis.kr 수집: 2026-03-15 신뢰도: 92%" [ref=e741]':
+            - generic [ref=e742]:
+              - generic "실데이터" [ref=e743]: ●
+              - generic [ref=e744]: 카페 수 추이
+            - generic [ref=e745]: 18 개
+            - generic [ref=e746]: "-3% YoY"
+            - generic [ref=e747]: 2026-06 이후 = 추정 (Prophet)
+            - generic [ref=e748]: — 국세청 사업자 등록 통계 · 2026-03-15
+          - 'generic "출처: KOSIS 생활인구 https://kosis.kr 수집: 2026-04-30 신뢰도: 95%" [ref=e749]':
+            - generic [ref=e750]:
+              - generic "실데이터" [ref=e751]: ●
+              - generic [ref=e752]: 인구 구조 (20대 비중)
+            - generic [ref=e753]: 11.4 %
+            - generic [ref=e754]: "-0.8pp YoY"
+            - generic [ref=e755]: 실데이터 (분기 갱신)
+            - generic [ref=e756]: — KOSIS 생활인구 · 2026-04-30
+          - 'generic "출처: 국토부 공시지가 + 본 시스템 보정 https://www.realtyprice.kr 수집: 2026-05-01 신뢰도: 78%" [ref=e757]':
+            - generic [ref=e758]:
+              - generic "추정" [ref=e759]: ◐
+              - generic [ref=e760]: 지가 추이 (원/㎡)
+            - generic [ref=e761]: 4,280,000 원/㎡
+            - generic [ref=e762]: +6.2% YoY
+            - generic [ref=e763]: 월 단위 추정
+            - generic [ref=e764]: — 국토부 공시지가 + 본 시스템 보정 · 2026-05-01
+      - generic [ref=e765]:
+        - generic [ref=e766]: "[3/7]"
+        - heading "해석 (Interpretation)" [level=2] [ref=e767]
+        - paragraph [ref=e768]: 왜 그 사실이 의미 있는가 — 인과 + 컨텍스트
+        - list [ref=e770]:
+          - listitem [ref=e771]:
+            - generic [ref=e772]: 인근 5개 동 코호트 대비 12개월 카페 생존율이 통계적으로 낮음
+            - generic [ref=e773]:
+              - generic [ref=e774]: n = 47
+              - generic [ref=e775]: p = 0.012
+              - generic [ref=e776]: "64% (95% CI: 51-77%)"
+              - 'button "방법: Kaplan-Meier 생존 분석 ▼" [ref=e777] [cursor=pointer]':
+                - generic [ref=e778]: "방법: Kaplan-Meier 생존 분석"
+                - generic [ref=e779]: ▼
+          - listitem [ref=e780]:
+            - generic [ref=e781]: 20대 유동인구 변화량이 카페 신규 진입의 선행 지표로 식별됨
+            - generic [ref=e782]:
+              - generic [ref=e783]: n = 130
+              - generic [ref=e784]: p = 0.003
+              - generic [ref=e785]: "r = -0.41 (95% CI: -0.55, -0.25), Bonferroni 보정 후"
+              - 'button "방법: 인과 추출 (Bonferroni 보정) ▼" [ref=e786] [cursor=pointer]':
+                - generic [ref=e787]: "방법: 인과 추출 (Bonferroni 보정)"
+                - generic [ref=e788]: ▼
+          - listitem [ref=e789]:
+            - generic [ref=e790]: 지가 상승률이 신규 카페 진입과 음의 상관 (한계 마진 가설과 부합)
+            - generic [ref=e791]:
+              - generic [ref=e792]: n = 130
+              - generic [ref=e793]: p = 0.018
+              - generic [ref=e794]: "r = -0.27 (95% CI: -0.43, -0.10), Bonferroni 보정 후"
+              - 'button "방법: 인과 추출 (Bonferroni 보정) ▼" [ref=e795] [cursor=pointer]':
+                - generic [ref=e796]: "방법: 인과 추출 (Bonferroni 보정)"
+                - generic [ref=e797]: ▼
+      - generic [ref=e798]:
+        - generic [ref=e799]: "[4/7]"
+        - heading "비교 (Benchmark)" [level=2] [ref=e800]
+        - paragraph [ref=e801]: KM 생존 곡선 — 유사 동 대비 이 동의 위치
+        - generic [ref=e802]: 준비 중 — 자식 이슈 UI_BENCHMARK_KM_CURVE-001에서 채워집니다
+        - generic [ref=e804]:
+          - generic [ref=e805]: 유사동 매칭 근거 (Top Causal Drivers)
+          - generic [ref=e806]: (의정부시 금오동) Top 인과 마운트 — 자식 이슈 UI_BENCHMARK_KM_CURVE-001에서 채움
+      - generic [ref=e807]:
+        - generic [ref=e808]: "[5/7]"
+        - heading "시나리오 (Scenarios)" [level=2] [ref=e809]
+        - paragraph [ref=e810]: 3가지 선택지 — 낙관/중립/보수 시나리오 비교
+        - generic [ref=e811]:
+          - generic [ref=e812]:
+            - article [ref=e813]:
+              - generic [ref=e814]:
+                - generic [ref=e815]: A
+                - generic [ref=e816]: 동일 위치 재창업
+              - generic [ref=e817]: 고위험
+              - img "12개월 생존율 cone (p10~p90)" [ref=e818]:
+                - generic [ref=e820]: 0%
+                - generic [ref=e821]: 50%
+                - generic [ref=e822]: 100%
+                - generic [ref=e823]: 0M
+                - generic [ref=e824]: 6M
+                - generic [ref=e825]: 12M
+              - generic [ref=e829]:
+                - generic [ref=e830]:
+                  - generic [ref=e831]: 12M 생존율
+                  - generic [ref=e832]: 58%
+                  - generic [ref=e833]: CI [45–71%]
+                - generic [ref=e834]:
+                  - generic [ref=e835]: 기대 ROI
+                  - generic [ref=e836]: +6%
+                - generic [ref=e837]:
+                  - generic [ref=e838]: 매칭 동 N
+                  - generic [ref=e839]: "41"
+              - list [ref=e840]:
+                - listitem [ref=e841]: · 카페 밀도 변화 없음
+                - listitem [ref=e842]: · 이전 폐업의 negative spillover 가능
+            - article [ref=e843]:
+              - generic [ref=e844]:
+                - generic [ref=e845]: B
+                - generic [ref=e846]: 이격 + 차별 업종(베이커리)
+                - generic [ref=e847]: ╲ 권고
+              - generic [ref=e848]: 저위험·권장
+              - img "12개월 생존율 cone (p10~p90)" [ref=e849]:
+                - generic [ref=e851]: 0%
+                - generic [ref=e852]: 50%
+                - generic [ref=e853]: 100%
+                - generic [ref=e854]: 0M
+                - generic [ref=e855]: 6M
+                - generic [ref=e856]: 12M
+              - generic [ref=e860]:
+                - generic [ref=e861]:
+                  - generic [ref=e862]: 12M 생존율
+                  - generic [ref=e863]: 73%
+                  - generic [ref=e864]: CI [61–85%]
+                - generic [ref=e865]:
+                  - generic [ref=e866]: 기대 ROI
+                  - generic [ref=e867]: +21%
+                - generic [ref=e868]:
+                  - generic [ref=e869]: 매칭 동 N
+                  - generic [ref=e870]: "41"
+              - list [ref=e871]:
+                - listitem [ref=e872]: · 밀도 회피 + 희소 카테고리 프리미엄
+                - listitem [ref=e873]: · 주거 비율 높은 골목 지점 추천
+            - article [ref=e874]:
+              - generic [ref=e875]:
+                - generic [ref=e876]: C
+                - generic [ref=e877]: 인접 동 이전 + 동일 업종
+              - generic [ref=e878]: 중위험
+              - img "12개월 생존율 cone (p10~p90)" [ref=e879]:
+                - generic [ref=e881]: 0%
+                - generic [ref=e882]: 50%
+                - generic [ref=e883]: 100%
+                - generic [ref=e884]: 0M
+                - generic [ref=e885]: 6M
+                - generic [ref=e886]: 12M
+              - generic [ref=e890]:
+                - generic [ref=e891]:
+                  - generic [ref=e892]: 12M 생존율
+                  - generic [ref=e893]: 62%
+                  - generic [ref=e894]: CI [49–75%]
+                - generic [ref=e895]:
+                  - generic [ref=e896]: 기대 ROI
+                  - generic [ref=e897]: +11%
+                - generic [ref=e898]:
+                  - generic [ref=e899]: 매칭 동 N
+                  - generic [ref=e900]: "41"
+              - list [ref=e901]:
+                - listitem [ref=e902]: · 지역 친숙도 손실 패널티
+                - listitem [ref=e903]: · 단순 이전 효과 제한적
+          - generic [ref=e904]: "방법: Propensity Score Matching(반사실) + KM 생존 · cone은 p10~p90 신뢰밴드 · 공변량 균형(balance) 0.93 (1.0=완전 균형, ≥0.8 양호) · 매칭 표본 41개 동. 출처: reports/build_meongbun_report.py · 결정론적."
+      - generic [ref=e905]:
+        - generic [ref=e906]: "[6/7]"
+        - heading "권고 추적 (Recommendation Trace)" [level=2] [ref=e907]
+        - paragraph [ref=e908]: 권고가 어떤 사실·해석·비교로부터 도출되었는지 역추적
+        - generic [ref=e909]:
+          - generic [ref=e910]:
+            - generic [ref=e911]:
+              - generic [ref=e912]: ① 변수별 기여도 (SHAP)
+              - generic [ref=e913]: 기준 생존율 64% 대비 · + 상향 / − 하향
+            - generic [ref=e914]:
+              - generic [ref=e915]:
+                - generic "12개월 카페 신규 진입 카운트." [ref=e916]: 카페 신규 진입 추세
+                - generic [ref=e917]: "-9.5%p"
+                - generic [ref=e921]: 인근 카페 폐업률 +18% → 위험 가중
+              - generic [ref=e922]:
+                - generic "월 평균 유동인구." [ref=e923]: 유동인구 평균
+                - generic [ref=e924]: "-6.2%p"
+                - generic [ref=e928]: 20대 유동 YoY -7% 감소
+              - generic [ref=e929]:
+                - generic "12개월 지가 변화율. 상승 = 임대료 상승 압력." [ref=e930]: 지가 추세
+                - generic [ref=e931]: "-3.4%p"
+                - generic [ref=e935]: 지가 +6.2% → 임대 마진 압박
+              - generic [ref=e936]:
+                - generic "동내 소상공인 평균 월 매출. 상권 활성도 지표." [ref=e937]: 소상공인 매출 평균
+                - generic [ref=e938]: +2.1%p
+                - generic [ref=e942]: 소상공인 매출 기반 유지
+              - generic [ref=e943]:
+                - generic "동 카페 수. 트렌디 상권 신호." [ref=e944]: 카페 수 평균
+                - generic [ref=e945]: +1.3%p
+                - generic [ref=e949]: 카페 밀도 아직 낮음(포화 여유)
+            - generic [ref=e950]: 기타 변수 4개 합산 기여도 -0.7%p
+          - generic [ref=e951]:
+            - button "② 분류 경로 (Decision Tree) 권고까지 4회 분기 → 개발 중 ▲" [expanded] [active] [ref=e1068] [cursor=pointer]:
+              - generic [ref=e953]: ② 분류 경로 (Decision Tree)
+              - generic [ref=e954]: 권고까지 4회 분기 → 개발 중
+              - generic [ref=e955]: ▲
+            - list [ref=e1069]:
+              - listitem [ref=e1070]:
+                - generic [ref=e1071]: "1"
+                - generic [ref=e1072]:
+                  - generic [ref=e1073]:
+                    - generic [ref=e1074]: 지가 평균
+                    - generic [ref=e1075]: ≤
+                    - generic [ref=e1076]: "12.73"
+                    - generic [ref=e1077]: 충족 → 좌측
+                  - generic [ref=e1078]: 이 노드에서 130개 동이 분기
+              - listitem [ref=e1079]:
+                - generic [ref=e1080]: "2"
+                - generic [ref=e1081]:
+                  - generic [ref=e1082]:
+                    - generic [ref=e1083]: 소상공인 매출 평균
+                    - generic [ref=e1084]: ">"
+                    - generic [ref=e1085]: "0.00"
+                    - generic [ref=e1086]: 초과 → 우측
+                  - generic [ref=e1087]: 이 노드에서 108개 동이 분기
+              - listitem [ref=e1088]:
+                - generic [ref=e1089]: "3"
+                - generic [ref=e1090]:
+                  - generic [ref=e1091]:
+                    - generic [ref=e1092]: 소상공인 매출 추세
+                    - generic [ref=e1093]: ≤
+                    - generic [ref=e1094]: "0.10"
+                    - generic [ref=e1095]: 충족 → 좌측
+                  - generic [ref=e1096]: 이 노드에서 81개 동이 분기
+              - listitem [ref=e1097]:
+                - generic [ref=e1098]: "4"
+                - generic [ref=e1099]:
+                  - generic [ref=e1100]:
+                    - generic [ref=e1101]: 지가 평균
+                    - generic [ref=e1102]: ">"
+                    - generic [ref=e1103]: "7.90"
+                    - generic [ref=e1104]: 초과 → 우측
+                  - generic [ref=e1105]: 이 노드에서 41개 동이 분기
+              - listitem [ref=e1106]:
+                - generic [ref=e1108]:
+                  - generic [ref=e1109]:
+                    - text: 최종 분류 →
+                    - generic [ref=e1110]: 개발 중
+                  - generic [ref=e1111]: 학습 데이터 7개 동이 이 분류에 속함
+          - generic [ref=e956]: "방법: SHAP(변수별 기여도, 부호=방향) + Decision Tree(vibe 분류 경로) · SHAP 기여도는 데모 표본이며, 분기 경로는 실제 학습 트리 tree_model.json에 동 특성을 통과시킨 결과 · 합성 데이터 학습 → 실데이터 도입(ISS-018) 시 값 변동 가능."
+      - generic [ref=e957]:
+        - generic [ref=e958]: "[7/7]"
+        - heading "한계 (Limitation)" [level=2] [ref=e959]
+        - paragraph [ref=e960]: 이 분석의 가정·불확실성·반증 가능성 명시
+        - generic [ref=e961]:
+          - generic [ref=e962]:
+            - button "① 한계 (Limitation) — 이 분석의 가정·불확실성 7개 항목 ▲" [expanded] [ref=e963] [cursor=pointer]:
+              - generic [ref=e964]: ① 한계 (Limitation) — 이 분석의 가정·불확실성
+              - generic [ref=e965]: 7개 항목
+              - generic [ref=e966]: ▲
+            - list [ref=e967]:
+              - listitem [ref=e968]:
+                - generic [ref=e969]: "1"
+                - generic [ref=e970]:
+                  - generic [ref=e971]:
+                    - generic [ref=e972]: DATA
+                    - generic [ref=e973]: PHASE2 실API 미확정
+                  - generic [ref=e974]:
+                    - text: developing 시계열은 등급 S 스키마를 충족하나 실API 확정 수집본이 아님. 키 확보 후
+                    - code [ref=e975]: etl_uijeongbu.py
+                    - text: 재수집으로 대체된다.
+              - listitem [ref=e976]:
+                - generic [ref=e977]: "2"
+                - generic [ref=e978]:
+                  - generic [ref=e979]:
+                    - generic [ref=e980]: PROXY
+                    - generic [ref=e981]: 거래량(tx_volume) 대리지표
+                  - generic [ref=e982]: 직접 거래량 출처 부재로 biz_count 변화율을 proxy로 사용. 실거래 API 확보 시 직접 지표로 교체.
+              - listitem [ref=e983]:
+                - generic [ref=e984]: "3"
+                - generic [ref=e985]:
+                  - generic [ref=e986]:
+                    - generic [ref=e987]: PROXY
+                    - generic [ref=e988]: 생존율 baseline hazard 근사
+                  - generic [ref=e989]: 인허가(개업/폐업일) 미보유 구간에서 카페 업종 baseline 폐업률(연 18%, 공개 통계 가정) + biz_cafe 월별 순감소를 합산한 proxy hazard로 근사. 집계 재고는 gross churn을 숨기므로 실측 대비 과대추정 소지 — 인허가 실데이터 확보 시 실측 hazard로 대체.
+              - listitem [ref=e990]:
+                - generic [ref=e991]: "4"
+                - generic [ref=e992]:
+                  - generic [ref=e993]:
+                    - generic [ref=e994]: MODEL
+                    - generic [ref=e995]: 합성 데이터 학습
+                  - generic [ref=e996]:
+                    - text: 권고 분류 트리·SHAP은 합성 코호트(
+                    - code [ref=e997]: simula_data_real.json
+                    - text: )로 학습. 실데이터 도입(ISS-018) 시 기여도·분기 임계값이 변동될 수 있다.
+              - listitem [ref=e998]:
+                - generic [ref=e999]: "5"
+                - generic [ref=e1000]:
+                  - generic [ref=e1001]:
+                    - generic [ref=e1002]: MODEL
+                    - generic [ref=e1003]: SHAP 기여도는 데모 표본
+                  - generic [ref=e1004]:
+                    - text: 변수별 기여도(%p)는 시연용 표본이며 절대값이 아님. 분기 경로만 실제 학습 트리
+                    - code [ref=e1005]: tree_model.json
+                    - text: 통과 결과다.
+              - listitem [ref=e1006]:
+                - generic [ref=e1007]: "6"
+                - generic [ref=e1008]:
+                  - generic [ref=e1009]:
+                    - generic [ref=e1010]: SCOPE
+                    - generic [ref=e1011]: 시연 범위 = 데모 동 2곳
+                  - generic [ref=e1012]: 1차 시연 데이터는 의정부시 금오동 / 성수1가1동 2개 동에만 적용. 그 외 동은 코호트 백분위·생존율만 근사 표시된다.
+              - listitem [ref=e1013]:
+                - generic [ref=e1014]: "7"
+                - generic [ref=e1015]:
+                  - generic [ref=e1016]:
+                    - generic [ref=e1017]: CAUSAL
+                    - generic [ref=e1018]: 인과 추론의 통계적 한계
+                  - generic [ref=e1019]: Top 인과쌍은 Pearson 상관 + Granger 선후행 기반이라 교란변수·역인과를 완전히 배제하지 못한다. RCT가 아닌 관측 데이터의 구조적 한계.
+          - generic [ref=e1020]:
+            - generic [ref=e1021]:
+              - generic [ref=e1022]: ② 반증 기준 (Falsifiability)
+              - generic [ref=e1023]: 다음이 확인되면 본 권고를 폐기하고 재실행
+            - generic [ref=e1024]:
+              - generic [ref=e1025]:
+                - generic [ref=e1026]: 6개월 후
+                - generic [ref=e1029]:
+                  - generic [ref=e1030]:
+                    - generic [ref=e1031]: 카페 비중 코호트 수렴
+                    - generic [ref=e1032]: 금오동 카페 비중이 코호트 중앙값 ±2%p 이내로 수렴 → 희소성 프리미엄 전제 붕괴.
+                  - generic [ref=e1033]:
+                    - generic [ref=e1034]: 베이커리 신규 입점 급증
+                    - generic [ref=e1035]: 인접 베이커리 신규 입점이 급증해 대체재 경쟁으로 희소성 프리미엄이 소실.
+              - generic [ref=e1037]:
+                - generic [ref=e1038]: 12개월 후
+                - generic [ref=e1041]:
+                  - generic [ref=e1042]:
+                    - generic [ref=e1043]: 타겟 고객층 축소
+                    - generic [ref=e1044]: 30·40대 유동 비중이 유의하게 하락 → 권고가 겨냥한 고객 코호트가 사라짐.
+                  - generic [ref=e1045]:
+                    - generic [ref=e1046]: 비용 가정 붕괴
+                    - generic [ref=e1047]: 주변 임대료가 급등해 시나리오 S2의 비용 가정이 무너짐.
+          - generic [ref=e1048]:
+            - generic [ref=e1049]: ③ 부록 (Appendix) — 방법·출처·재현
+            - generic [ref=e1051]:
+              - link "📐 Method Cards 분석 방법 카드 · 부록 A KM 생존 / 인과 추출 / wedge 검증" [ref=e1052] [cursor=pointer]:
+                - /url: docs/methods/km-survival.md
+                - generic [ref=e1053]: 📐
+                - generic [ref=e1054]: Method Cards
+                - generic [ref=e1055]: 분석 방법 카드 · 부록 A
+                - generic [ref=e1056]: KM 생존 / 인과 추출 / wedge 검증
+              - link "🔖 Provenance 출처 인덱스 · 부록 B 행안부·KOSIS·MOLIT·TAGO 출처+라이선스" [ref=e1057] [cursor=pointer]:
+                - /url: docs/methods/wedge-validation.md
+                - generic [ref=e1058]: 🔖
+                - generic [ref=e1059]: Provenance
+                - generic [ref=e1060]: 출처 인덱스 · 부록 B
+                - generic [ref=e1061]: 행안부·KOSIS·MOLIT·TAGO 출처+라이선스
+              - link "⚙️ 재현 코드 1줄 명령 재현 · 부록 C python3 reports/build_meongbun_report.py --dong <코드>" [ref=e1062] [cursor=pointer]:
+                - /url: reports/build_meongbun_report.py
+                - generic [ref=e1063]: ⚙️
+                - generic [ref=e1064]: 재현 코드
+                - generic [ref=e1065]: 1줄 명령 재현 · 부록 C
+                - generic [ref=e1066]: python3 reports/build_meongbun_report.py --dong <코드>
+          - generic [ref=e1067]: "출처: SIL 5장치(Provenance / Method / CI / Limitation / Falsifiability) · 본 섹션은 reports/build_meongbun_report.py §7의 웹 미러 · 한계·반증 조건은 PDF 보고서와 동일 소스에서 파생."
+    - generic [ref=e509]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

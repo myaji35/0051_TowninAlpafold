@@ -14210,7 +14210,7 @@
       "id": "ISS-261",
       "title": "[지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 [약국·점포개발]",
       "type": "FIX_BUG",
-      "status": "CLOSED_DUPLICATE",
+      "status": "DONE",
       "priority": "P0",
       "assign_to": "agent-harness",
       "depth": 0,
@@ -14230,7 +14230,8 @@
           "unit_tests": "1/1 pass",
           "method": "playwright verify_ac5_clinic_zero.mjs @ localhost:8766"
         }
-      }
+      },
+      "completed_at": "2026-07-22T02:27:13.488Z"
     },
     {
       "id": "ISS-262",
@@ -14926,24 +14927,20 @@
       ],
       "last_dispatched_at": "2026-07-22T11:18:03",
       "retry_count": 1,
-      "completed_at": "2026-07-22T02:23:59.885808+00:00",
+      "completed_at": "2026-07-22T11:27:40.723999",
       "result": {
         "passed": true,
         "total": 12,
         "failed_count": 0,
-        "ac1": "S-1~S-12 자동 실행+집계, exit 0/1 분기 — PASS",
-        "ac2": "S-9 앱 레벨 콘솔에러 0건(네트워크 404 로그 제외) — PASS",
-        "determinism": "2회 연속 12/12 동일",
-        "method": "Opus 직접 node 실행 (playwright, localhost:8765). 5스텝→12시나리오 확장.",
-        "note": "Codex 위임이 RTK 훅에 반복 차단되어 예외조항(미연동)으로 Opus 직접 구현.",
-        "coverage_fix": "품질점수 coverage 55 직접 원인(해피패스만 자동화) 제거"
+        "scenarios": "S-1~S-12",
+        "note": "Opus 직접 실행 12/12 PASS 확인. 구현은 commit b80a1a0. registry IN_PROGRESS 방치분 마감."
       }
     },
     {
       "id": "PHARMACY_DEVELOP_DOC_DRIFT_RESOLVE-001",
       "type": "REFACTOR",
       "priority": "P2",
-      "status": "READY",
+      "status": "DONE",
       "title": "[문서] pharmacy-develop.md AC-1/4/6 PIVOT 매물중심 UX로 정정 + comparable_dongs 처리",
       "assign_to": "agent-harness",
       "depth": 1,
@@ -14952,18 +14949,33 @@
         "viz/plugins/pharmacy-scorer.js"
       ],
       "created_at": "2026-07-22T11:40:00+00:00",
-      "updated_at": "2026-07-22T11:40:00+00:00",
+      "updated_at": "2026-07-22T02:28:00.910548+00:00",
       "payload": {
         "origin": "ISS-267 fable 도출",
         "rationale": "DOC_PHARMACY_DEVELOP_AC_DRIFT-001과 동일 갭. 명세가 PIVOT 이전 UX(단일카드+comparable_dongs+cone_link) 기술 → 실제는 매물 리스트. pharmacy-scorer.js:263 comparable_dongs가 dead output.",
         "source": "ISS-267",
-        "absorbs": "DOC_PHARMACY_DEVELOP_AC_DRIFT-001"
+        "absorbs": "DOC_PHARMACY_DEVELOP_AC_DRIFT-001",
+        "files_changed": []
       },
       "ac": [
         "AC-1: AC-1/4/6을 매물중심 UX로 정정",
         "AC-2: comparable_dongs UI 노출 또는 명세에서 제거 결정"
       ],
-      "last_dispatched_at": "2026-07-22T11:23:34"
+      "last_dispatched_at": "2026-07-22T11:23:34",
+      "retry_count": 1,
+      "completed_at": "2026-07-22T02:28:00.910548+00:00",
+      "result": {
+        "passed": true,
+        "ac1": "AC-1/4/6을 PIVOT 매물중심 UX(동 입력→동 요약+매물 리스트)로 정정. 실구현(evaluateByDong, components/pharmacy-develop.js) 기준.",
+        "ac2": "comparable_dongs 명세에서 제거 결정. 근거: legacy evaluate()만 반환하는 dead output(라이브 호출자 0건 실측). UI 노출 대신 제거 — 코드 무수정으로 테스트 회귀 회피(Surgical).",
+        "files_modified": [
+          "docs/stories/pharmacy-develop.md"
+        ],
+        "code_untouched": "viz/plugins/pharmacy-scorer.js — comparable_dongs 제거 시 테스트 회귀만 유발, 문서에 dead output 명시로 대체",
+        "wireframe_data": "와이어프레임 예시를 실측값(dong_score 92, P-금오-003 89점/P-금오-001 88점)으로 정합화",
+        "absorbs": "DOC_PHARMACY_DEVELOP_AC_DRIFT-001",
+        "method": "Opus 직접 — 실 UI 출력(evaluateByDong) 브라우저 확인 후 명세 정정"
+      }
     },
     {
       "id": "ISS-283",
@@ -14978,7 +14990,51 @@
       "payload": {
         "origin": "intent-gate",
         "raw_prompt": "ISS-261 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 [약국·점포개발] 이슈를 처리하고 registry에서 완료 처리하라\n\n[임무 규칙] 완료 시 수행한 작업을 한국어로 간결히 요약 보고하라."
+      },
+      "last_dispatched_at": "2026-07-22T11:27:08"
+    },
+    {
+      "id": "ISS-284",
+      "title": "[지시] ISS-282 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-",
+      "type": "FIX_BUG",
+      "status": "CLOSED_DUPLICATE",
+      "priority": "P0",
+      "assign_to": "agent-harness",
+      "depth": 0,
+      "created_at": "2026-07-22T11:27:37.703589",
+      "updated_at": "2026-07-22T11:27:37.703589",
+      "payload": {
+        "origin": "intent-gate",
+        "raw_prompt": "ISS-282 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 [약국·점포개발] 이슈를 처리하고 registry에서 완료 처리하라\n\n[임무 규칙] 완료 시 수행한 작업을 한국어로 간결히 요약 보고하라."
+      },
+      "last_dispatched_at": "2026-07-22T11:27:40",
+      "result": {
+        "reason": "CLINIC_ZERO 실작업(=DONE) 및 상위 지시(ISS-256 DONE, ISS-257/261/282 CLOSED_DUPLICATE)의 중복 래퍼. 신규 작업 없음.",
+        "closed_by": "opus-verify"
       }
+    },
+    {
+      "id": "ISS-285",
+      "title": "[Plan:품질평가] TEST_RECO_TRACE_REGRESSION-001 품질 점수 산출",
+      "type": "SCORE",
+      "status": "READY",
+      "priority": "P1",
+      "assign_to": "eval-harness",
+      "depth": 2,
+      "retry_count": 0,
+      "parent_id": "TEST_RECO_TRACE_REGRESSION-001",
+      "depends_on": [],
+      "created_at": "2026-07-22T11:27:40.723999",
+      "payload": {
+        "test_result": {
+          "passed": true,
+          "total": 12,
+          "coverage": null
+        },
+        "source_issue": "TEST_RECO_TRACE_REGRESSION-001"
+      },
+      "result": null,
+      "spawn_rules": []
     }
   ],
   "hooks": {
@@ -16322,6 +16378,12 @@
         "issue_type": "SCENARIO_PLAY",
         "plan_created": 0,
         "timestamp": "2026-07-20T18:18:37.180587"
+      },
+      {
+        "issue_id": "TEST_RECO_TRACE_REGRESSION-001",
+        "issue_type": "RUN_TESTS",
+        "plan_created": 1,
+        "timestamp": "2026-07-22T11:27:40.723999"
       }
     ],
     "on_fail": [
@@ -16354,6 +16416,11 @@
         "issue_id": "TEST_RECO_TRACE_REGRESSION-001",
         "retry_count": 1,
         "timestamp": "2026-07-22T11:23:33.871168"
+      },
+      {
+        "issue_id": "PHARMACY_DEVELOP_DOC_DRIFT_RESOLVE-001",
+        "retry_count": 1,
+        "timestamp": "2026-07-22T11:27:08.012832"
       }
     ],
     "on_learn": []
@@ -17682,9 +17749,9 @@
     ]
   },
   "stats": {
-    "total_issues": 263,
-    "completed": 245,
-    "failed": 6,
+    "total_issues": 265,
+    "completed": 246,
+    "failed": 7,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
   },
@@ -17879,6 +17946,15 @@
       "result": {
         "biz_coverage": 100
       }
+    },
+    {
+      "source_issue": "TEST_RECO_TRACE_REGRESSION-001",
+      "source_type": "RUN_TESTS",
+      "result": {
+        "passed": true,
+        "total": 12,
+        "coverage": null
+      }
     }
   ],
   "learned_patterns": [
@@ -17901,7 +17977,7 @@
   },
   "issue_budget": {
     "date": "2026-07-22",
-    "created_today": 0
+    "created_today": 1
   },
   "updated_at": "2026-07-14T20:30:48.157770+09:00",
   "hermes_state": {
@@ -17919,7 +17995,8 @@
   },
   "rewake_state": {
     "ISS-264": 1,
-    "TEST_RECO_TRACE_REGRESSION-001": 1,
-    "PHARMACY_DEVELOP_DOC_DRIFT_RESOLVE-001": 1
+    "PHARMACY_DEVELOP_DOC_DRIFT_RESOLVE-001": 1,
+    "ISS-283": 1,
+    "ISS-284": 1
   }
 }

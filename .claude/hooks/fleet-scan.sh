@@ -1,0 +1,1 @@
+/Users/gangseungsig/.claude/harness-core/hooks/fleet-scan.sh

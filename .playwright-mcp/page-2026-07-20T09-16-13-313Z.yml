@@ -1,0 +1,250 @@
+- generic [active] [ref=f8e1]:
+  - complementary [ref=f8e2]:
+    - button "사이드바 고정 (펼친 상태 유지)" [ref=f8e4] [cursor=pointer]
+    - generic [ref=f8e6]:
+      - generic [ref=f8e7]:
+        - button [ref=f8e12] [cursor=pointer]
+        - button [ref=f8e18] [cursor=pointer]
+        - button [ref=f8e22] [cursor=pointer]
+        - button [ref=f8e24] [cursor=pointer]
+        - button [ref=f8e29] [cursor=pointer]
+        - button [ref=f8e34] [cursor=pointer]
+        - button [ref=f8e39] [cursor=pointer]
+      - generic [ref=f8e43]:
+        - generic [ref=f8e48]:
+          - button [ref=f8e49] [cursor=pointer]
+          - button [ref=f8e56] [cursor=pointer]
+          - button [ref=f8e61] [cursor=pointer]
+        - button [ref=f8e65] [cursor=pointer]
+        - button [ref=f8e75] [cursor=pointer]
+        - button [ref=f8e85] [cursor=pointer]
+        - button [ref=f8e95] [cursor=pointer]
+        - button [ref=f8e107] [cursor=pointer]
+      - generic [ref=f8e109]:
+        - button [ref=f8e114] [cursor=pointer]
+        - button [ref=f8e121] [cursor=pointer]
+        - button [ref=f8e130] [cursor=pointer]
+        - button [ref=f8e138] [cursor=pointer]
+      - generic [ref=f8e140]:
+        - button [ref=f8e145] [cursor=pointer]
+        - button [ref=f8e157] [cursor=pointer]
+        - button [ref=f8e165] [cursor=pointer]
+      - generic [ref=f8e167]:
+        - button [ref=f8e173] [cursor=pointer]
+        - button [ref=f8e182] [cursor=pointer]
+        - button [ref=f8e190] [cursor=pointer]
+  - banner [ref=f8e193]:
+    - generic [ref=f8e194]:
+      - generic [ref=f8e201]:
+        - heading "TowninGraph · Master Console" [level=1] [ref=f8e202]
+        - paragraph [ref=f8e203]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=f8e204]:
+        - link "매뉴얼" [ref=f8e205] [cursor=pointer]:
+          - /url: manual.html
+        - generic [ref=f8e209]: REAL POLY · 131 dongs · 60mo · 40 layers
+  - main [ref=f8e210]:
+    - generic [ref=f8e211]:
+      - generic [ref=f8e212]:
+        - generic [ref=f8e213]:
+          - generic [ref=f8e214]:
+            - generic [ref=f8e215]: 선택 동 (없음)
+            - generic [ref=f8e216]: ·
+            - generic [ref=f8e217]: 의사결정 KPI + 명분 트리 + 권고 cone
+            - generic [ref=f8e218]: ·
+            - generic [ref=f8e219]: 2024-12
+          - generic [ref=f8e220]: 선택한 동의 의사결정 KPI를 한 화면에 펼친 임원 시연 보드
+        - heading "Decide — 임원/시연용 KPI (회의실 모니터용 단일 화면 의사결정 보드)" [level=2] [ref=f8e221]:
+          - text: Decide — 임원/시연용 KPI
+          - generic [ref=f8e226]: (회의실 모니터용 단일 화면 의사결정 보드)
+      - generic [ref=f8e227]:
+        - generic [ref=f8e228]:
+          - generic [ref=f8e229]: 서울 전체 평균 유동 (2024-12)
+          - generic [ref=f8e230]: 290k
+          - generic [ref=f8e231]: ▲ 18.2% vs 2020-01
+        - generic [ref=f8e232]:
+          - generic [ref=f8e233]: 평균 공시지가
+          - generic [ref=f8e234]: ₩4168만
+          - generic [ref=f8e235]: ▲ 23.7% 5년
+        - generic [ref=f8e236]:
+          - generic [ref=f8e237]: 신규 창업 (월 평균)
+          - generic [ref=f8e238]: "16"
+          - generic [ref=f8e239]: ▲ 12.4% 트렌드 시프트 후
+        - generic [ref=f8e240]:
+          - generic [ref=f8e241]: 평균 pLDDT
+          - generic [ref=f8e242]: "80.2"
+          - generic [ref=f8e243]: ▼ 5pt 충격기 평균
+      - generic [ref=f8e244]:
+        - generic [ref=f8e245]:
+          - generic [ref=f8e246]: 서울 전체 5종 데이터 60개월 트렌드
+          - img [ref=f8e247]:
+            - generic [ref=f8e248]:
+              - generic [ref=f8e250]: 2020-01
+              - generic [ref=f8e252]: 2021-01
+              - generic [ref=f8e254]: 2022-01
+              - generic [ref=f8e256]: 2023-01
+              - generic [ref=f8e258]: 2024-01
+              - generic [ref=f8e260]: 2024-12
+              - generic [ref=f8e262]: 2025-12
+            - generic [ref=f8e265]: ▶ Prophet 12mo (서울 평균)
+            - generic [ref=f8e281]: covid_start
+            - generic [ref=f8e282]: covid_easing
+            - generic [ref=f8e283]: rate_hike
+            - generic [ref=f8e284]: policy_relax
+            - generic [ref=f8e285]: trend_shift
+          - generic [ref=f8e286]:
+            - generic [ref=f8e287]: ━ 공시지가
+            - generic [ref=f8e288]: ━ 거래량
+            - generic [ref=f8e289]: ━ 유동인구
+            - generic [ref=f8e290]: ━ 소상공인
+            - generic [ref=f8e291]: ━ 카페 수
+        - generic [ref=f8e292]:
+          - generic [ref=f8e293]:
+            - generic [ref=f8e294]: 5년 누적 성장 Top 5
+            - generic [ref=f8e298]:
+              - generic [ref=f8e299]:
+                - generic [ref=f8e300]: 1.성수1가1동
+                - generic [ref=f8e301]: +3412.0%
+              - generic [ref=f8e302]:
+                - generic [ref=f8e303]: 2.성북구 C2동
+                - generic [ref=f8e304]: +3166.6%
+              - generic [ref=f8e305]:
+                - generic [ref=f8e306]: 3.성북구 C5동
+                - generic [ref=f8e307]: +2972.1%
+              - generic [ref=f8e308]:
+                - generic [ref=f8e309]: 4.영등포구 B3동
+                - generic [ref=f8e310]: +2709.4%
+              - generic [ref=f8e311]:
+                - generic [ref=f8e312]: 5.성북구 C4동
+                - generic [ref=f8e313]: +2668.2%
+          - generic [ref=f8e314]:
+            - generic [ref=f8e315]: 외부 충격 5건
+            - generic [ref=f8e318]:
+              - generic [ref=f8e319]:
+                - generic [ref=f8e320]: 2020-04 · covid_start
+                - generic [ref=f8e321]: "-25%"
+              - generic [ref=f8e322]:
+                - generic [ref=f8e323]: 2021-07 · covid_easing
+                - generic [ref=f8e324]: +10%
+              - generic [ref=f8e325]:
+                - generic [ref=f8e326]: 2022-05 · rate_hike
+                - generic [ref=f8e327]: "-8%"
+              - generic [ref=f8e328]:
+                - generic [ref=f8e329]: 2023-07 · policy_relax
+                - generic [ref=f8e330]: +6%
+              - generic [ref=f8e331]:
+                - generic [ref=f8e332]: 2024-03 · trend_shift
+                - generic [ref=f8e333]: +12%
+          - generic [ref=f8e334]:
+            - generic [ref=f8e335]:
+              - generic [ref=f8e336]: 전국 Top 인과 패턴
+              - generic [ref=f8e340]: Granger
+            - generic [ref=f8e341]:
+              - generic [ref=f8e342]:
+                - generic [ref=f8e343]: "1."
+                - generic [ref=f8e344]: 소상공 →2mo→ 카페
+                - generic [ref=f8e345]: 39%
+              - generic [ref=f8e346]:
+                - generic [ref=f8e347]: "2."
+                - generic [ref=f8e348]: 유동 →2mo→ 카페
+                - generic [ref=f8e349]: 32%
+              - generic [ref=f8e350]:
+                - generic [ref=f8e351]: "3."
+                - generic [ref=f8e352]: 카페 →6mo→ 소상공
+                - generic [ref=f8e353]: 31%
+              - generic [ref=f8e354]:
+                - generic [ref=f8e355]: "4."
+                - generic [ref=f8e356]: 카페 →6mo→ 거래
+                - generic [ref=f8e357]: 29%
+              - generic [ref=f8e358]:
+                - generic [ref=f8e359]: "5."
+                - generic [ref=f8e360]: 지가 →2mo→ 카페
+                - generic [ref=f8e361]: 27%
+            - generic [ref=f8e362]: 130개 동 분석 · Granger 2578건 · 지지율 = 패턴 발견 동 비율
+      - generic [ref=f8e363]:
+        - button "Vibe 분류 트리 — 클릭하면 큰 화면으로 펼치고 한글 해설을 봅니다" [ref=f8e364]:
+          - generic [ref=f8e365]:
+            - generic [ref=f8e366]: Vibe 분류 트리 (Decision Tree)
+            - generic [ref=f8e371]:
+              - generic [ref=f8e372]: "acc=76.9% · depth=6 · 잎 14 · 선택: 성수1가1동"
+              - generic [ref=f8e373]: ⛶ 크게 보기
+          - img [ref=f8e374]:
+            - generic [ref=f8e401] [cursor=pointer]: 지가 평균 ≤ 12.73
+            - generic [ref=f8e404] [cursor=pointer]: 소상공인 매출 평균 ≤ 0.00
+            - generic [ref=f8e407] [cursor=pointer]: 지가 평균 ≤ 4.69
+            - generic [ref=f8e410] [cursor=pointer]: 소상공인 매출 평균 ≤ 0.00
+            - generic [ref=f8e413] [cursor=pointer]:
+              - generic: 산업
+              - generic: n=5
+            - generic [ref=f8e416] [cursor=pointer]:
+              - generic: 산업
+              - generic: n=5
+            - generic [ref=f8e419] [cursor=pointer]: 카페 신규 진입 추세 ≤ 0.09
+            - generic [ref=f8e422] [cursor=pointer]:
+              - generic: 전통 상권
+              - generic: n=12
+            - generic [ref=f8e425] [cursor=pointer]:
+              - generic: 전통 상권
+              - generic: n=5
+            - generic [ref=f8e428] [cursor=pointer]: 소상공인 매출 추세 ≤ 0.10
+            - generic [ref=f8e431] [cursor=pointer]: 지가 평균 ≤ 7.90
+            - generic [ref=f8e434] [cursor=pointer]: 부동산 거래량 평균 ≤ 0.00
+            - generic [ref=f8e437] [cursor=pointer]: 유동인구 평균 ≤ 0.04
+            - generic [ref=f8e440] [cursor=pointer]:
+              - generic: 주거
+              - generic: n=12
+            - generic [ref=f8e443] [cursor=pointer]:
+              - generic: 안정
+              - generic: n=14
+            - generic [ref=f8e446] [cursor=pointer]:
+              - generic: 주거
+              - generic: n=8
+            - generic [ref=f8e449] [cursor=pointer]:
+              - generic: 개발 중
+              - generic: n=7
+            - generic [ref=f8e452] [cursor=pointer]: 지가 평균 ≤ 5.92
+            - generic [ref=f8e455] [cursor=pointer]:
+              - generic: 청년 상권
+              - generic: n=8
+            - generic [ref=f8e458] [cursor=pointer]: 지가 추세 ≤ 0.12
+            - generic [ref=f8e461] [cursor=pointer]: 카페 신규 진입 추세 ≤ 0.12
+            - generic [ref=f8e464] [cursor=pointer]:
+              - generic: 상승세
+              - generic: n=22
+            - generic [ref=f8e467] [cursor=pointer]:
+              - generic: 성수형 급상승
+              - generic: n=5
+            - generic [ref=f8e470] [cursor=pointer]:
+              - generic: 개발 중
+              - generic: n=5
+            - generic [ref=f8e473] [cursor=pointer]: 소상공인 매출 평균 ≤ 0.00
+            - generic [ref=f8e476] [cursor=pointer]:
+              - generic: 프리미엄
+              - generic: n=17
+            - generic [ref=f8e479] [cursor=pointer]:
+              - generic: 프리미엄
+              - generic: n=5
+          - generic [ref=f8e482]: → 트리 영역을 클릭하면 큰 화면 + 초보자용 한글 해설이 펼쳐집니다. (각 노드 자체도 개별 클릭 가능)
+          - generic [ref=f8e483]:
+            - text: 분기 조건은 학습 데이터 기준 임계값. 동을 선택하면 해당 동의 분기 경로가 하이라이트됩니다. 합성 데이터 위 학습 — 실데이터 도입(
+            - link "ISS-018" [ref=f8e484] [cursor=pointer]:
+              - /url: docs/data-integrity-diagnosis.md
+            - text: ) 시 정확도 변동 예상.
+        - generic [ref=f8e485]:
+          - generic [ref=f8e486]: 변수 중요도 (Feature Importance) — 가로형
+          - img [ref=f8e488]:
+            - generic [ref=f8e489]: 지가_평균
+            - generic [ref=f8e491]: 47.6%
+            - generic [ref=f8e492]: 소상공_평균
+            - generic [ref=f8e494]: 18.5%
+            - generic [ref=f8e495]: 소상공_추세
+            - generic [ref=f8e497]: 14.1%
+            - generic [ref=f8e498]: 유동_평균
+            - generic [ref=f8e500]: 7.1%
+            - generic [ref=f8e501]: 카페_추세
+            - generic [ref=f8e503]: 4.7%
+            - generic [ref=f8e504]: 지가_추세
+            - generic [ref=f8e506]: 4.5%
+            - generic [ref=f8e507]: 거래_평균
+            - generic [ref=f8e509]: 3.5%
+          - generic [ref=f8e510]: 의사결정에 기여하는 정도. 합산 1.0.
+    - generic [ref=f8e511]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

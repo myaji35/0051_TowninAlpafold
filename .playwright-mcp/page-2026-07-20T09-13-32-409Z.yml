@@ -1,0 +1,268 @@
+- generic [active] [ref=f4e1]:
+  - complementary [ref=f4e2]:
+    - generic [ref=f4e2681]:
+      - button "사이드바 고정 (펼친 상태 유지)" [ref=f4e2682] [cursor=pointer]
+      - generic [ref=f4e2684]: 카테고리
+    - generic [ref=f4e2685]:
+      - generic [ref=f4e2686]:
+        - generic [ref=f4e2687]: 분석 콘솔
+        - button "갤러리" [ref=f4e2692] [cursor=pointer]
+        - button "Explore" [ref=f4e2699] [cursor=pointer]
+        - button "Analyze" [ref=f4e2704] [cursor=pointer]
+        - button "Decide" [ref=f4e2707] [cursor=pointer]
+        - button "Data Studio" [ref=f4e2713] [cursor=pointer]
+        - button "Workflow" [ref=f4e2719] [cursor=pointer]
+        - button "명분 사슬" [ref=f4e2725] [cursor=pointer]
+      - generic [ref=f4e2730]:
+        - generic [ref=f4e2731]: 업종 SaaS
+        - generic [ref=f4e2736]:
+          - button "약국 (2)" [ref=f4e2737] [cursor=pointer]:
+            - generic [ref=f4e2744]: 약국
+            - generic [ref=f4e2745]: (2)
+          - button "점포개발" [ref=f4e2746] [cursor=pointer]
+          - button "폐업평가" [ref=f4e2752] [cursor=pointer]
+        - button "카페 (0)" [ref=f4e2757] [cursor=pointer]:
+          - generic [ref=f4e2763]: 카페
+          - generic [ref=f4e2764]: (0)
+        - button "편의점 (0)" [ref=f4e2769] [cursor=pointer]:
+          - generic [ref=f4e2775]: 편의점
+          - generic [ref=f4e2776]: (0)
+        - button "학원 (0)" [ref=f4e2781] [cursor=pointer]:
+          - generic [ref=f4e2787]: 학원
+          - generic [ref=f4e2788]: (0)
+        - button "미용실 (0)" [ref=f4e2793] [cursor=pointer]:
+          - generic [ref=f4e2802]: 미용실
+          - generic [ref=f4e2803]: (0)
+        - button "+ 새 업종" [ref=f4e2807] [cursor=pointer]
+      - generic [ref=f4e2810]:
+        - generic [ref=f4e2811]: 자산 / 부동산
+        - button "NPL (6)" [ref=f4e2816] [cursor=pointer]:
+          - generic [ref=f4e2822]: NPL
+          - generic [ref=f4e2823]: (6)
+        - button "상가 임대 (0)" [ref=f4e2825] [cursor=pointer]:
+          - generic [ref=f4e2830]: 상가 임대
+          - generic [ref=f4e2831]: (0)
+        - button "토지 개발 (0)" [ref=f4e2836] [cursor=pointer]:
+          - generic [ref=f4e2841]: 토지 개발
+          - generic [ref=f4e2842]: (0)
+        - button "+ 새 자산 유형" [ref=f4e2846] [cursor=pointer]
+      - generic [ref=f4e2849]:
+        - generic [ref=f4e2850]: 공공 / 정책
+        - button "인구 위기 (0)" [ref=f4e2855] [cursor=pointer]:
+          - generic [ref=f4e2863]: 인구 위기
+          - generic [ref=f4e2864]: (0)
+        - button "빈집 활용 (0)" [ref=f4e2869] [cursor=pointer]:
+          - generic [ref=f4e2874]: 빈집 활용
+          - generic [ref=f4e2875]: (0)
+        - button "+ 새 정책 영역" [ref=f4e2879] [cursor=pointer]
+      - generic [ref=f4e2882]:
+        - generic [ref=f4e2883]: 개인 의사결정
+        - button "이사 적합 동 (0)" [ref=f4e2889] [cursor=pointer]:
+          - generic [ref=f4e2894]: 이사 적합 동
+          - generic [ref=f4e2895]: (0)
+        - button "학교 주변 (0)" [ref=f4e2900] [cursor=pointer]:
+          - generic [ref=f4e2905]: 학교 주변
+          - generic [ref=f4e2906]: (0)
+        - button "+ 새 라이프 영역" [ref=f4e2910] [cursor=pointer]
+    - generic [ref=f4e2913]: categories v2
+  - banner [ref=f4e193]:
+    - generic [ref=f4e194]:
+      - generic [ref=f4e201]:
+        - heading "TowninGraph · Master Console" [level=1] [ref=f4e202]
+        - paragraph [ref=f4e203]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=f4e204]:
+        - link "매뉴얼" [ref=f4e205] [cursor=pointer]:
+          - /url: manual.html
+        - generic [ref=f4e209]: REAL POLY · 131 dongs · 60mo · 40 layers
+  - main [ref=f4e210]:
+    - text: →
+    - generic [ref=f4e939]:
+      - generic [ref=f4e940]:
+        - generic [ref=f4e941]:
+          - navigation "breadcrumb" [ref=f4e942]:
+            - generic [ref=f4e943]: 홈
+            - generic [ref=f4e944]: /
+            - generic [ref=f4e945]: 명분 사슬
+            - generic [ref=f4e946]: /
+            - generic [ref=f4e947]: 성수2가3동
+          - button "보고서 PDF 출력" [ref=f4e948] [cursor=pointer]
+        - generic [ref=f4e953]:
+          - generic [ref=f4e954]: "[1/7]"
+          - heading "권고 (Recommendation)" [level=2] [ref=f4e955]
+          - paragraph [ref=f4e956]: 결론 먼저 — 이 동에 대한 투자/운영 권고 요약
+          - generic [ref=f4e2914]:
+            - generic [ref=f4e2915]: 성수2가3동 — 상세 권고 데이터 준비 중
+            - generic "신뢰도 2/5" [ref=f4e2916]: ★★☆☆☆
+            - list [ref=f4e2919]:
+              - listitem [ref=f4e2920]:
+                - text: 시연 데이터 미정의 — 데모 동 선택을 권장합니다
+                - generic [ref=f4e2921]: — 시스템 안내 · 2026-05
+            - generic [ref=f4e2922]:
+              - strong [ref=f4e2923]: "단서:"
+              - text: 데모 동(의정부시 금오동 / 성수1가1동) 외에는 1차 시연 데이터 미적용
+        - generic [ref=f4e971]:
+          - generic [ref=f4e972]: "[2/7]"
+          - heading "사실 (Fact Triple)" [level=2] [ref=f4e973]
+          - paragraph [ref=f4e974]: 가장 강한 팩트 3개 — 수치·출처·신뢰도
+          - generic [ref=f4e2924]:
+            - generic [ref=f4e2925]: 카페수 추이 — 5종 평균 시계열
+            - generic [ref=f4e2926]: (성수2가3동) 시계열 마운트 — 자식 이슈 UI_FACT_TRIPLE-001에서 차트 연결 예정
+          - generic [ref=f4e2927]: 성수2가3동 — 시연 데이터 미정의. 데모 동(의정부시 금오동 / 성수1가1동)을 선택하세요.
+        - generic [ref=f4e1004]:
+          - generic [ref=f4e1005]: "[3/7]"
+          - heading "해석 (Interpretation)" [level=2] [ref=f4e1006]
+          - paragraph [ref=f4e1007]: 왜 그 사실이 의미 있는가 — 인과 + 컨텍스트
+          - generic [ref=f4e2928]: 성수2가3동 — 시연 해석 데이터 미정의. 데모 동을 선택하세요.
+        - generic [ref=f4e1037]:
+          - generic [ref=f4e1038]: "[4/7]"
+          - heading "비교 (Benchmark)" [level=2] [ref=f4e1039]
+          - paragraph [ref=f4e1040]: KM 생존 곡선 — 유사 동 대비 이 동의 위치
+          - generic [ref=f4e1041]: 준비 중 — 자식 이슈 UI_BENCHMARK_KM_CURVE-001에서 채워집니다
+          - generic [ref=f4e2929]:
+            - generic [ref=f4e2930]: 유사동 매칭 근거 (Top Causal Drivers)
+            - generic [ref=f4e2931]: (성수2가3동) Top 인과 마운트 — 자식 이슈 UI_BENCHMARK_KM_CURVE-001에서 채움
+        - generic [ref=f4e1046]:
+          - generic [ref=f4e1047]: "[5/7]"
+          - heading "시나리오 (Scenarios)" [level=2] [ref=f4e1048]
+          - paragraph [ref=f4e1049]: 3가지 선택지 — 낙관/중립/보수 시나리오 비교
+          - generic [ref=f4e2932]: 성수2가3동 — 시연 시나리오 데이터 미정의. 데모 동(의정부시 금오동 / 성수1가1동)을 선택하세요.
+        - generic [ref=f4e1144]:
+          - generic [ref=f4e1145]: "[6/7]"
+          - heading "권고 추적 (Recommendation Trace)" [level=2] [ref=f4e1146]
+          - paragraph [ref=f4e1147]: 권고가 어떤 사실·해석·비교로부터 도출되었는지 역추적
+          - generic [ref=f4e2933]:
+            - button "② 분류 경로 (Decision Tree) 권고까지 6회 분기 → 성수형 급상승 ▼" [ref=f4e2935] [cursor=pointer]:
+              - generic [ref=f4e2936]: ② 분류 경로 (Decision Tree)
+              - generic [ref=f4e2937]: 권고까지 6회 분기 → 성수형 급상승
+              - generic [ref=f4e2938]: ▼
+            - generic [ref=f4e2939]: "방법: SHAP(변수별 기여도, 부호=방향) + Decision Tree(vibe 분류 경로) · SHAP 기여도는 데모 표본이며, 분기 경로는 실제 학습 트리 tree_model.json에 동 특성을 통과시킨 결과 · 합성 데이터 학습 → 실데이터 도입(ISS-018) 시 값 변동 가능."
+        - generic [ref=f4e1196]:
+          - generic [ref=f4e1197]: "[7/7]"
+          - heading "한계 (Limitation)" [level=2] [ref=f4e1198]
+          - paragraph [ref=f4e1199]: 이 분석의 가정·불확실성·반증 가능성 명시
+          - generic [ref=f4e2940]:
+            - generic [ref=f4e2941]:
+              - button "① 한계 (Limitation) — 이 분석의 가정·불확실성 7개 항목 ▲" [expanded] [ref=f4e2942] [cursor=pointer]:
+                - generic [ref=f4e2943]: ① 한계 (Limitation) — 이 분석의 가정·불확실성
+                - generic [ref=f4e2944]: 7개 항목
+                - generic [ref=f4e2945]: ▲
+              - list [ref=f4e2946]:
+                - listitem [ref=f4e2947]:
+                  - generic [ref=f4e2948]: "1"
+                  - generic [ref=f4e2949]:
+                    - generic [ref=f4e2950]:
+                      - generic [ref=f4e2951]: DATA
+                      - generic [ref=f4e2952]: PHASE2 실API 미확정
+                    - generic [ref=f4e2953]:
+                      - text: developing 시계열은 등급 S 스키마를 충족하나 실API 확정 수집본이 아님. 키 확보 후
+                      - code [ref=f4e2954]: etl_uijeongbu.py
+                      - text: 재수집으로 대체된다.
+                - listitem [ref=f4e2955]:
+                  - generic [ref=f4e2956]: "2"
+                  - generic [ref=f4e2957]:
+                    - generic [ref=f4e2958]:
+                      - generic [ref=f4e2959]: PROXY
+                      - generic [ref=f4e2960]: 거래량(tx_volume) 대리지표
+                    - generic [ref=f4e2961]: 직접 거래량 출처 부재로 biz_count 변화율을 proxy로 사용. 실거래 API 확보 시 직접 지표로 교체.
+                - listitem [ref=f4e2962]:
+                  - generic [ref=f4e2963]: "3"
+                  - generic [ref=f4e2964]:
+                    - generic [ref=f4e2965]:
+                      - generic [ref=f4e2966]: PROXY
+                      - generic [ref=f4e2967]: 생존율 baseline hazard 근사
+                    - generic [ref=f4e2968]: 인허가(개업/폐업일) 미보유 구간에서 카페 업종 baseline 폐업률(연 18%, 공개 통계 가정) + biz_cafe 월별 순감소를 합산한 proxy hazard로 근사. 집계 재고는 gross churn을 숨기므로 실측 대비 과대추정 소지 — 인허가 실데이터 확보 시 실측 hazard로 대체.
+                - listitem [ref=f4e2969]:
+                  - generic [ref=f4e2970]: "4"
+                  - generic [ref=f4e2971]:
+                    - generic [ref=f4e2972]:
+                      - generic [ref=f4e2973]: MODEL
+                      - generic [ref=f4e2974]: 합성 데이터 학습
+                    - generic [ref=f4e2975]:
+                      - text: 권고 분류 트리·SHAP은 합성 코호트(
+                      - code [ref=f4e2976]: simula_data_real.json
+                      - text: )로 학습. 실데이터 도입(ISS-018) 시 기여도·분기 임계값이 변동될 수 있다.
+                - listitem [ref=f4e2977]:
+                  - generic [ref=f4e2978]: "5"
+                  - generic [ref=f4e2979]:
+                    - generic [ref=f4e2980]:
+                      - generic [ref=f4e2981]: MODEL
+                      - generic [ref=f4e2982]: SHAP 기여도는 데모 표본
+                    - generic [ref=f4e2983]:
+                      - text: 변수별 기여도(%p)는 시연용 표본이며 절대값이 아님. 분기 경로만 실제 학습 트리
+                      - code [ref=f4e2984]: tree_model.json
+                      - text: 통과 결과다.
+                - listitem [ref=f4e2985]:
+                  - generic [ref=f4e2986]: "6"
+                  - generic [ref=f4e2987]:
+                    - generic [ref=f4e2988]:
+                      - generic [ref=f4e2989]: SCOPE
+                      - generic [ref=f4e2990]: 시연 범위 = 데모 동 2곳
+                    - generic [ref=f4e2991]: 1차 시연 데이터는 의정부시 금오동 / 성수1가1동 2개 동에만 적용. 그 외 동은 코호트 백분위·생존율만 근사 표시된다.
+                - listitem [ref=f4e2992]:
+                  - generic [ref=f4e2993]: "7"
+                  - generic [ref=f4e2994]:
+                    - generic [ref=f4e2995]:
+                      - generic [ref=f4e2996]: CAUSAL
+                      - generic [ref=f4e2997]: 인과 추론의 통계적 한계
+                    - generic [ref=f4e2998]: Top 인과쌍은 Pearson 상관 + Granger 선후행 기반이라 교란변수·역인과를 완전히 배제하지 못한다. RCT가 아닌 관측 데이터의 구조적 한계.
+            - generic [ref=f4e2999]:
+              - generic [ref=f4e3000]:
+                - generic [ref=f4e3001]: ② 반증 기준 (Falsifiability)
+                - generic [ref=f4e3002]: 다음이 확인되면 본 권고를 폐기하고 재실행
+              - generic [ref=f4e3003]:
+                - generic [ref=f4e3004]:
+                  - generic [ref=f4e3005]: 6개월 후
+                  - generic [ref=f4e3008]:
+                    - generic [ref=f4e3009]:
+                      - generic [ref=f4e3010]: 카페 비중 코호트 수렴
+                      - generic [ref=f4e3011]: 금오동 카페 비중이 코호트 중앙값 ±2%p 이내로 수렴 → 희소성 프리미엄 전제 붕괴.
+                    - generic [ref=f4e3012]:
+                      - generic [ref=f4e3013]: 베이커리 신규 입점 급증
+                      - generic [ref=f4e3014]: 인접 베이커리 신규 입점이 급증해 대체재 경쟁으로 희소성 프리미엄이 소실.
+                - generic [ref=f4e3016]:
+                  - generic [ref=f4e3017]: 12개월 후
+                  - generic [ref=f4e3020]:
+                    - generic [ref=f4e3021]:
+                      - generic [ref=f4e3022]: 타겟 고객층 축소
+                      - generic [ref=f4e3023]: 30·40대 유동 비중이 유의하게 하락 → 권고가 겨냥한 고객 코호트가 사라짐.
+                    - generic [ref=f4e3024]:
+                      - generic [ref=f4e3025]: 비용 가정 붕괴
+                      - generic [ref=f4e3026]: 주변 임대료가 급등해 시나리오 S2의 비용 가정이 무너짐.
+            - generic [ref=f4e3027]:
+              - generic [ref=f4e3028]: ③ 부록 (Appendix) — 방법·출처·재현
+              - generic [ref=f4e3030]:
+                - link "📐 Method Cards 분석 방법 카드 · 부록 A KM 생존 / 인과 추출 / wedge 검증" [ref=f4e3031] [cursor=pointer]:
+                  - /url: docs/methods/km-survival.md
+                  - generic [ref=f4e3032]: 📐
+                  - generic [ref=f4e3033]: Method Cards
+                  - generic [ref=f4e3034]: 분석 방법 카드 · 부록 A
+                  - generic [ref=f4e3035]: KM 생존 / 인과 추출 / wedge 검증
+                - link "🔖 Provenance 출처 인덱스 · 부록 B 행안부·KOSIS·MOLIT·TAGO 출처+라이선스" [ref=f4e3036] [cursor=pointer]:
+                  - /url: docs/methods/wedge-validation.md
+                  - generic [ref=f4e3037]: 🔖
+                  - generic [ref=f4e3038]: Provenance
+                  - generic [ref=f4e3039]: 출처 인덱스 · 부록 B
+                  - generic [ref=f4e3040]: 행안부·KOSIS·MOLIT·TAGO 출처+라이선스
+                - link "⚙️ 재현 코드 1줄 명령 재현 · 부록 C python3 reports/build_meongbun_report.py --dong <코드>" [ref=f4e3041] [cursor=pointer]:
+                  - /url: reports/build_meongbun_report.py
+                  - generic [ref=f4e3042]: ⚙️
+                  - generic [ref=f4e3043]: 재현 코드
+                  - generic [ref=f4e3044]: 1줄 명령 재현 · 부록 C
+                  - generic [ref=f4e3045]: python3 reports/build_meongbun_report.py --dong <코드>
+            - generic [ref=f4e3046]: "출처: SIL 5장치(Provenance / Method / CI / Limitation / Falsifiability) · 본 섹션은 reports/build_meongbun_report.py §7의 웹 미러 · 한계·반증 조건은 PDF 보고서와 동일 소스에서 파생."
+      - navigation "섹션 점프 네비게이션" [ref=f4e1307]:
+        - link "1" [ref=f4e1308] [cursor=pointer]:
+          - /url: "#meongbun-sec-1"
+        - link "2" [ref=f4e1309] [cursor=pointer]:
+          - /url: "#meongbun-sec-2"
+        - link "3" [ref=f4e1310] [cursor=pointer]:
+          - /url: "#meongbun-sec-3"
+        - link "4" [ref=f4e1311] [cursor=pointer]:
+          - /url: "#meongbun-sec-4"
+        - link "5" [ref=f4e1312] [cursor=pointer]:
+          - /url: "#meongbun-sec-5"
+        - link "6" [ref=f4e1313] [cursor=pointer]:
+          - /url: "#meongbun-sec-6"
+        - link "7" [ref=f4e1314] [cursor=pointer]:
+          - /url: "#meongbun-sec-7"
+    - generic [ref=f4e356]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

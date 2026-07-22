@@ -1,0 +1,200 @@
+- generic [ref=f2e1]:
+  - complementary [ref=f2e2]:
+    - button "사이드바 고정 (펼친 상태 유지)" [ref=f2e833] [cursor=pointer]:
+      - img [ref=f2e834]
+    - generic [ref=f2e835]:
+      - generic [ref=f2e836]:
+        - img [ref=f2e838]
+        - button [ref=f2e841] [cursor=pointer]:
+          - img [ref=f2e842]
+        - button [ref=f2e847] [cursor=pointer]:
+          - img [ref=f2e848]
+        - button [ref=f2e851] [cursor=pointer]:
+          - img [ref=f2e852]
+        - button [ref=f2e853] [cursor=pointer]:
+          - img [ref=f2e854]
+        - button [ref=f2e858] [cursor=pointer]:
+          - img [ref=f2e859]
+        - button [ref=f2e863] [cursor=pointer]:
+          - img [ref=f2e864]
+        - button [ref=f2e868] [cursor=pointer]:
+          - img [ref=f2e869]
+      - generic [ref=f2e872]:
+        - img [ref=f2e874]
+        - generic [ref=f2e877]:
+          - button [ref=f2e878] [cursor=pointer]:
+            - img [ref=f2e879]
+            - img [ref=f2e881]
+          - button [ref=f2e885] [cursor=pointer]:
+            - img [ref=f2e886]
+          - button [ref=f2e890] [cursor=pointer]:
+            - img [ref=f2e891]
+        - button [ref=f2e894] [cursor=pointer]:
+          - img [ref=f2e895]
+          - img [ref=f2e897]
+          - img [ref=f2e900]
+        - button [ref=f2e904] [cursor=pointer]:
+          - img [ref=f2e905]
+          - img [ref=f2e907]
+          - img [ref=f2e910]
+        - button [ref=f2e914] [cursor=pointer]:
+          - img [ref=f2e915]
+          - img [ref=f2e917]
+          - img [ref=f2e920]
+        - button [ref=f2e924] [cursor=pointer]:
+          - img [ref=f2e925]
+          - img [ref=f2e927]
+          - img [ref=f2e933]
+        - button [ref=f2e936] [cursor=pointer]:
+          - img [ref=f2e937]
+      - generic [ref=f2e938]:
+        - img [ref=f2e940]
+        - generic [ref=f2e942]:
+          - button [ref=f2e943] [cursor=pointer]:
+            - img [ref=f2e944]
+            - img [ref=f2e946]
+          - button [ref=f2e949] [cursor=pointer]:
+            - img [ref=f2e950]
+          - button [ref=f2e953] [cursor=pointer]:
+            - img [ref=f2e954]
+          - button [ref=f2e957] [cursor=pointer]:
+            - img [ref=f2e958]
+          - button [ref=f2e959] [cursor=pointer]:
+            - img [ref=f2e960]
+          - button [ref=f2e965] [cursor=pointer]:
+            - img [ref=f2e966]
+          - button [ref=f2e969] [cursor=pointer]:
+            - img [ref=f2e970]
+        - button [ref=f2e974] [cursor=pointer]:
+          - img [ref=f2e975]
+          - img [ref=f2e977]
+          - img [ref=f2e979]
+        - button [ref=f2e983] [cursor=pointer]:
+          - img [ref=f2e984]
+          - img [ref=f2e986]
+          - img [ref=f2e988]
+        - button [ref=f2e991] [cursor=pointer]:
+          - img [ref=f2e992]
+      - generic [ref=f2e993]:
+        - img [ref=f2e995]
+        - button [ref=f2e998] [cursor=pointer]:
+          - img [ref=f2e999]
+          - img [ref=f2e1001]
+          - img [ref=f2e1006]
+        - button [ref=f2e1010] [cursor=pointer]:
+          - img [ref=f2e1011]
+          - img [ref=f2e1013]
+          - img [ref=f2e1015]
+        - button [ref=f2e1018] [cursor=pointer]:
+          - img [ref=f2e1019]
+      - generic [ref=f2e1020]:
+        - img [ref=f2e1022]
+        - button [ref=f2e1026] [cursor=pointer]:
+          - img [ref=f2e1027]
+          - img [ref=f2e1029]
+          - img [ref=f2e1031]
+        - button [ref=f2e1035] [cursor=pointer]:
+          - img [ref=f2e1036]
+          - img [ref=f2e1038]
+          - img [ref=f2e1040]
+        - button [ref=f2e1043] [cursor=pointer]:
+          - img [ref=f2e1044]
+  - banner [ref=f2e193]:
+    - generic [ref=f2e194]:
+      - generic [ref=f2e195]:
+        - img [ref=f2e197]
+        - generic [ref=f2e201]:
+          - heading "TowninGraph · Master Console" [level=1] [ref=f2e202]
+          - paragraph [ref=f2e203]: Townin 운영자용 지역 경제구조 분석 도구 · v0.3
+      - navigation [ref=f2e204]:
+        - link "매뉴얼" [ref=f2e205] [cursor=pointer]:
+          - /url: manual.html
+          - img [ref=f2e206]
+          - text: 매뉴얼
+        - generic [ref=f2e209]: REAL POLY · 130 dongs · 60mo · 40 layers
+  - main [ref=f2e210]:
+    - text: →
+    - generic [ref=f2e1046]:
+      - navigation "breadcrumb" [ref=f2e1047]:
+        - button "홈" [ref=f2e1048] [cursor=pointer]
+        - generic [ref=f2e1049]: ›
+        - button "NPL" [ref=f2e1050] [cursor=pointer]
+        - generic [ref=f2e1051]: ›
+        - generic [ref=f2e1052]: 리포트
+      - generic [ref=f2e1053]:
+        - heading "NPL 상권분석 · 감정평가 리포트" [level=2] [ref=f2e1054]
+        - paragraph [ref=f2e1055]: 실제 담보물건 상권분석 + NPL 감정평가 산출물. VWorld 기반 상권/공시지가/실거래 + 4단 밸류에이션.
+      - generic [ref=f2e1056]:
+        - generic [ref=f2e1057]:
+          - button "효자동2가 1313-9 최신 전북은행 담보물건 · 상권분석 + NPL평가 전주 완산구 전북은행 2026-07-06 HTML PDF" [ref=f2e1058] [cursor=pointer]:
+            - img [ref=f2e1060]
+            - generic [ref=f2e1063]:
+              - generic [ref=f2e1064]:
+                - generic [ref=f2e1065]: 효자동2가 1313-9
+                - generic [ref=f2e1066]: 최신
+              - generic [ref=f2e1067]: 전북은행 담보물건 · 상권분석 + NPL평가
+              - generic [ref=f2e1068]:
+                - generic [ref=f2e1069]: 전주 완산구
+                - generic [ref=f2e1070]: 전북은행
+                - generic [ref=f2e1071]: 2026-07-06
+            - generic [ref=f2e1072]:
+              - generic [ref=f2e1073]: HTML
+              - generic [ref=f2e1074]: PDF
+          - button "청담동 49-8 샘플 상권분석 + NPL평가 (샘플) 강남구 청담동 2026-07-01 PDF" [active] [ref=f2e1075] [cursor=pointer]:
+            - img [ref=f2e1077]
+            - generic [ref=f2e1080]:
+              - generic [ref=f2e1081]:
+                - generic [ref=f2e1082]: 청담동 49-8
+                - generic [ref=f2e1083]: 샘플
+              - generic [ref=f2e1084]: 상권분석 + NPL평가 (샘플)
+              - generic [ref=f2e1085]:
+                - generic [ref=f2e1086]: 강남구 청담동
+                - generic [ref=f2e1087]: 2026-07-01
+            - generic [ref=f2e1089]: PDF
+          - button "역삼동 837-10 (해븐리치) 상권분석 + NPL평가 강남구 역삼동 2026-07-01 PDF" [ref=f2e1090] [cursor=pointer]:
+            - img [ref=f2e1092]
+            - generic [ref=f2e1095]:
+              - generic [ref=f2e1097]: 역삼동 837-10 (해븐리치)
+              - generic [ref=f2e1098]: 상권분석 + NPL평가
+              - generic [ref=f2e1099]:
+                - generic [ref=f2e1100]: 강남구 역삼동
+                - generic [ref=f2e1101]: 2026-07-01
+            - generic [ref=f2e1103]: PDF
+          - button "여의도동 48-1 상권분석 + NPL평가 영등포구 여의도동 2026-07-01 PDF" [ref=f2e1104] [cursor=pointer]:
+            - img [ref=f2e1106]
+            - generic [ref=f2e1109]:
+              - generic [ref=f2e1111]: 여의도동 48-1
+              - generic [ref=f2e1112]: 상권분석 + NPL평가
+              - generic [ref=f2e1113]:
+                - generic [ref=f2e1114]: 영등포구 여의도동
+                - generic [ref=f2e1115]: 2026-07-01
+            - generic [ref=f2e1117]: PDF
+          - button "신월동 44-5 상권분석 + NPL평가 양천구 신월동 2026-07-01 PDF" [ref=f2e1118] [cursor=pointer]:
+            - img [ref=f2e1120]
+            - generic [ref=f2e1123]:
+              - generic [ref=f2e1125]: 신월동 44-5
+              - generic [ref=f2e1126]: 상권분석 + NPL평가
+              - generic [ref=f2e1127]:
+                - generic [ref=f2e1128]: 양천구 신월동
+                - generic [ref=f2e1129]: 2026-07-01
+            - generic [ref=f2e1131]: PDF
+          - button "NPL 담보물건 종합의견서 담보물건 종합 평가의견 종합 2026-07-01 PDF" [ref=f2e1132] [cursor=pointer]:
+            - img [ref=f2e1134]
+            - generic [ref=f2e1137]:
+              - generic [ref=f2e1139]: NPL 담보물건 종합의견서
+              - generic [ref=f2e1140]: 담보물건 종합 평가의견
+              - generic [ref=f2e1141]:
+                - generic [ref=f2e1142]: 종합
+                - generic [ref=f2e1143]: 2026-07-01
+            - generic [ref=f2e1145]: PDF
+        - generic [ref=f2e1146]:
+          - generic [ref=f2e1159]:
+            - generic [ref=f2e1160]: 청담동 49-8 — 상권분석 + NPL평가 (샘플)
+            - generic [ref=f2e1161]:
+              - link "PDF 새 탭 ↗" [ref=f2e1162] [cursor=pointer]:
+                - /url: /reports/cheongdam-49-8_260701.pdf
+              - link "다운로드 ↓" [ref=f2e1163] [cursor=pointer]:
+                - /url: /reports/cheongdam-49-8_260701.pdf
+          - iframe [ref=f2e1164]:
+            
+    - generic [ref=f2e509]: Simula synthetic data · 130 dongs · 40 layers · Townin Master Console v0.5 · Gagahoho Inc.

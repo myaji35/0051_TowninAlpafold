@@ -17,7 +17,7 @@
 
 ### 보조 스토리 (1차 스코프 IN)
 - **B1.** As-a 개발담당자, I-want 결과 카드의 "Decide에서 보기" 버튼으로 cone(p10/p50/p90)이 그려진 Decide 모드로 한 번에 점프하기, So-that 동일 후보지를 시간 축에서 다시 검증할 수 있다.
-- **B2.** As-a 개발담당자, I-want 평가 결과 하단에서 비슷한 동(comparable_dongs Top 5)과 점수 비교를 보기, So-that 후보지의 상대적 매력도를 빠르게 가늠한다.
+- **B2.** ~~As-a 개발담당자, I-want 평가 결과 하단에서 비슷한 동(comparable_dongs Top 5)과 점수 비교를 보기~~ → **PIVOT으로 폐기**: 동 입력 → 매물 리스트 흐름으로 전환되며 "동 간 비교"가 아니라 "동 내 매물 간 비교(적합도순 정렬)"가 그 역할을 대체한다. `comparable_dongs`는 legacy `evaluate()`만 반환하는 dead output이라 UI에 노출하지 않는다.
 
 ### 1차 스코프 OUT (다음 분기/별도 이슈)
 | 기능 | 사유 | 후속 이슈 후보 |
@@ -36,12 +36,12 @@
 
 | # | Given | When | Then |
 |---|---|---|---|
-| AC-1 | 후보 주소 (예: "의정부시 금오동")가 입력 폼에 채워지고 필수 검증 통과 | "평가 실행" CTA 클릭 | 3초 이내 결과 카드에 `score`(정수), `grade`(plddt 4단계 라벨), `top_drivers[3]`, `comparable_dongs[≤5]`, `cone_link` URL이 렌더된다. |
+| AC-1 | 동(읍면동) 이름 (예: "의정부시 금오동")이 입력 폼에 채워지고 필수 검증 통과 | "매물 추천" CTA 클릭 | 3초 이내 요약 카드에 동 종합 `dong_score`(정수) · `dong_grade`(plddt 4단계 라벨) · `dong_drivers[3]`(동 공통 근거)가 렌더되고, 그 아래 해당 동의 매물 리스트가 적합도순으로 노출된다. 각 매물 카드는 `score`·`grade`·매물별 `top_drivers`(동 대비 delta 근거)·`fit_reason`을 포함한다. ⚠️ **PIVOT** (`PIVOT_PHARMACY_DEVELOP_PROPERTY_CENTRIC-001`): 단일 주소 → 단일 결과 카드 흐름을 "동 입력 → 매물 리스트" 흐름으로 전환. `comparable_dongs`/`cone_link`는 PIVOT으로 제거됨(C절 참조). |
 | AC-2 | `score >= 90` (`grade = very_high`) | 결과 카드 렌더 | 좌측 보더와 등급 배지가 brand-dna `plddt_high = #00529B`로 표시되고, 등급 라벨은 "적극 추천"으로 노출. |
 | AC-3 | `50 <= score < 70` (`grade = medium`) | 결과 카드 렌더 | 좌측 보더 `#FED766`, 등급 라벨 "신중 검토", 상단 인라인 안내 "근거 검토를 권장합니다" 1줄. ⚠️ **인라인 안내 미구현** (`DOC_PHARMACY_DEVELOP_AC_DRIFT-001` 확인 — 보더/라벨만 구현됨). |
-| AC-4 | 입력 주소를 geocoding으로 매칭 실패 (`real_adm_cd` null) | "평가 실행" 클릭 | 폼 하단에 inline 에러 "주소를 찾을 수 없습니다. 동/구/시 단위로 다시 입력해 주세요" 표시 + CTA 비활성 해제(재시도 가능). 결과 카드 영역은 변경 없음. |
+| AC-4 | 입력한 동이 데이터에 없음 (`evaluateByDong` null 반환 = `DONG_NOT_FOUND`) | "매물 추천" 클릭 | 폼 하단에 inline 에러(`role=alert`, `aria-live=polite`) "동을 찾을 수 없습니다" + 데모 가능 동 안내 표시 + CTA 재활성(재시도 가능). 결과/매물 리스트 영역은 hidden 유지. (구현: `components/pharmacy-develop.js:118-124`, `data-region=error`) |
 | AC-5 | 후보지 반경 500m 의원수 = 0 (처방원 부재) | 평가 실행 → 결과 카드 렌더 | `top_drivers`에 `{feature:"반경 500m 의원수", contribution:<0, direction:"negative"}`가 반드시 포함되고, "약점" 섹션 최상단에 표시. |
-| AC-6 | 결과 카드 노출 상태 | 카드 우측 보조 버튼 "Decide에서 보기" 클릭 | `switchMode('decide')` 호출되며 URL이 `?mode=decide&ctx=pharmacy.develop&address=<encoded>` 로 갱신된다. Decide 모드 도착 시 해당 동이 자동 선택되고, 상단 헤더에 "← 약국 점포개발 평가로 돌아가기" 복귀 링크가 노출된다. |
+| AC-6 | 매물 추천 결과 노출 상태 | 보조 버튼 "Decide 모드에서 동 cone 보기" 클릭 | `switchMode('decide')` 호출 후 `UrlContext.build({mode:'decide', ctx:'pharmacy.develop', address:<동이름>})`로 URL이 갱신된다(app.js가 URL을 덮어쓰지 않도록 build 경유 — `FIX_BUG_PHARMACY_DEVELOP_DEEPLINK-001`). Decide 데이터셋에 있는 동이면 자동 선택, 없는 데모 전용 동이면 안내 노트 표시. 상단에 약국 점포개발로 복귀하는 링크(`switchMode('pharmacy-develop')`) 노출. (구현: `components/pharmacy-develop.js:246-302`) |
 | AC-7 | 동일한 주소로 평가 실행 2회 연속 | 두 번째 결과 렌더 | 동일한 `score` ± 0 (캐시 또는 결정성 보장). `trace.generated_at`은 갱신, `trace.model_version`은 동일. |
 
 ---
@@ -53,9 +53,11 @@
 - 자동 계산 (geo 기반): population, visitors_total, biz_count, transit_score, 60대 인구 비중, 평균 소득 분위, 반경 500m 의원수, 반경 500m 약국수
 - 상세 정의: [`docs/domain-menu-ia.md#b1-pharmacydevelop--입력`](../domain-menu-ia.md#b1-pharmacydevelop--입력)
 
-### 출력
-- 공통 필드: `score`, `grade`, `top_drivers[]`, `cone`, `recommendation`, `trace` — [C.1 공통 출력 컨벤션](../domain-menu-ia.md#c1-공통-출력-컨벤션)
-- 약국 점포개발 추가: `comparable_dongs[]`, `expected_rx_cone` — [C.2 모델별 추가 필드](../domain-menu-ia.md#c2-모델별-추가-필드)
+### 출력 (PIVOT 이후 — `evaluateByDong` 진입점)
+- 동 요약: `dong`, `dong_score`, `dong_grade{label,color,actionLabel}`, `dong_drivers[3]` (동 공통 근거)
+- 매물 리스트: `properties[]` — 각 항목 `{id, address, area_pyeong, rent_man, deposit_man, floor, listing_source, score, grade, top_drivers(동 대비 delta 근거), fit_reason}`, 적합도(score) 내림차순 정렬
+- 메타: `property_count`, `source`, `confidence`
+- ⚠️ **제거됨**: `comparable_dongs[]`, `cone_link`/`expected_rx_cone` — PIVOT 이전 단일 카드 UX 전용. legacy `evaluate()`에는 `comparable_dongs`가 남아있으나 UI 미사용(dead output).
 
 ---
 
@@ -126,43 +128,47 @@
 
 ## F. 화면 명세 (와이어프레임 텍스트)
 
+> ⚠️ **PIVOT** (`PIVOT_PHARMACY_DEVELOP_PROPERTY_CENTRIC-001`): 아래는 정정된 매물중심 와이어프레임이다.
+> 단일 주소 → 결과 카드 1개 흐름은 폐기되고, 동 입력 → 동 요약 + 매물 리스트로 전환되었다.
+
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
 │ [홈] > [약국 ▾] > 점포개발                              (브레드크럼) │
 ├──────────────────────────────────────────────────────────────────────┤
-│  [좌 60% — 입력 폼]                  │ [우 40% — 결과 카드]           │
-│                                       │                                │
-│  주소 *                               │  ┌─ pLDDT 등급 ──────────┐    │
-│  [_______________________________]    │  │ ▌ 87 / 100  추천 (mid) │    │
-│  (autocomplete 지원, 빈값 시 비활성)  │  └────────────────────────┘    │
-│                                       │                                │
-│  평형 (선택)         [____] 평        │  Top 강점                      │
-│  임대료 (선택)       [____] 만원/월   │  • 반경 500m 의원수 (+18)      │
-│  운영자본 (선택)     [____] 만원      │  • 60대 비중 (+12)             │
-│  기대 처방건수 (선택)[____] /일       │  • 인구 밀도 (+8)              │
-│                                       │                                │
-│  ┌──────────────────────┐             │  Top 약점                      │
-│  │  ▶ 평가 실행 (CTA)   │ ← primary   │  • 경쟁 약국수 (-9)            │
-│  └──────────────────────┘             │  • 임대료 ratio (-4)           │
-│                                       │                                │
-│  (입력 안내: brand voice 톤)          │  ┌──────────────────────┐      │
-│  "후보 주소를 입력하면 적합도 평가가  │  │ Decide에서 보기 →    │ 보조│
-│   시작됩니다."                        │  └──────────────────────┘      │
+│  동(읍면동) *                                                          │
+│  [_______________________________]   ┌──────────────────┐             │
+│  (예: 의정부시 금오동)                │ ▶ 매물 추천 (CTA)│ ← primary   │
+│                                       └──────────────────┘             │
 ├──────────────────────────────────────────────────────────────────────┤
-│  비교 매물 (comparable_dongs Top 5) — 표 (동명/score/grade/주요 차이) │
+│  ┌─ 동 요약 카드 ────────────────────────────────────────────────┐   │
+│  │ ▌ 92 / 100  적극 추천 (very_high)   ·  의정부시 금오동          │   │
+│  │ 동 공통 근거: +인근 의원수 / +60대 비중 / +인구 밀도            │   │
+│  └────────────────────────────────────────────────────────────────┘   │
+│                                                                        │
+│  매물 리스트 (적합도순, N개)                                           │
+│  ┌────────────────────────────────────────────────────────────────┐   │
+│  │ ▌ 89  P-금오-003  금오동 200-3 2층 · 25평 · 95만원             │   │
+│  │   fit: 충분한 면적 · 2층 — 처방원 시너지 검토                   │   │
+│  ├────────────────────────────────────────────────────────────────┤   │
+│  │ ▌ 88  P-금오-001  금오동 123-45 1층 · 18평 · 120만원           │   │
+│  │   fit: 1층 접근성 우수                                          │   │
+│  └────────────────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────┐                                      │
+│  │ Decide 모드에서 동 cone 보기 →│ 보조                                │
+│  └──────────────────────────────┘                                      │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-### 명세 요약
+### 명세 요약 (PIVOT 정정)
 - **상단**: 브레드크럼 `홈 > 약국 ▾ > 점포개발`. 컨텍스트 배지(`pharmacy.develop`).
-- **좌 60%**: 입력 폼. 주소만 필수. 나머지 4개 필드 선택. 화면당 primary CTA 1개 = "평가 실행". (`primary_action_per_screen: MUST_EXIST`)
-- **우 40%**: 결과 카드. 큰 score 숫자 + 좌측 보더 색상으로 grade 즉각 식별. Top 강점/약점 각 ≤ 3개. 보조 버튼 "Decide에서 보기" (secondary, outline).
-- **하단**: comparable_dongs 테이블. 빈 상태 시 "비교 가능한 동을 찾는 중입니다." (brand voice: 절제된 안내).
-- **빈 상태(평가 전)**: 우 40% 영역에 "후보 주소를 입력하면 적합도 평가가 시작됩니다" 1줄 안내 (brand_voice: 분석가의 절제). 일러스트 없음 (anti-pattern).
-- **에러 상태**: 주소 매칭 실패 inline 에러 + 폼 활성 유지 (AC-4).
+- **입력**: 동(읍면동) 이름만 필수. 화면당 primary CTA 1개 = "매물 추천". (`primary_action_per_screen: MUST_EXIST`)
+- **동 요약 카드**: 큰 `dong_score` 숫자 + 좌측 보더 색상으로 `dong_grade` 즉각 식별. 동 공통 근거(`dong_drivers`) 3개를 요약 카드에 1회만 표시(매물 카드 간 변별력 확보 — `FIX_BUG_PHARMACY_DEVELOP_DRIVERS-001`).
+- **매물 리스트**: `properties[]`를 적합도(score) 내림차순으로 카드 나열. 각 카드 = 매물 score/grade + 동 대비 delta 근거(`top_drivers`) + `fit_reason` 1줄. 보조 버튼 "Decide 모드에서 동 cone 보기" (secondary, outline).
+- **빈 상태(평가 전)**: 결과 영역에 "동을 입력하면 매물 추천이 시작됩니다" 류 1줄 안내 (brand_voice: 분석가의 절제). 일러스트 없음 (anti-pattern).
+- **에러 상태(AC-4)**: 데이터에 없는 동 입력 시 inline 에러(`role=alert`) + 데모 동 안내 + CTA 재활성. 결과/매물 영역 hidden 유지.
 
 ### Brand 자가 검증 (UI 자식 이슈에서 적용)
-- [ ] hero_color `#00529B`를 "평가 실행" CTA 배경에 사용.
+- [ ] hero_color `#00529B`를 "매물 추천" CTA 배경에 사용.
 - [ ] Top 강점/약점 색상은 `plddt_high`(긍정) / `plddt_poor`(부정) 또는 `text_secondary` 톤만 사용. 무지개/그라디언트 금지.
 - [ ] CTA는 화면당 정확히 1개 (보조 버튼은 outline/ghost로 시각 weight 차별).
 - [ ] 0.5초 룰: score 숫자 → 등급 라벨 → 다음 액션(Decide에서 보기) 이 좌→우→하 시선 흐름 안에 배치.
