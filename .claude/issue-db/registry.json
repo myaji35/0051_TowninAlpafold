@@ -14087,7 +14087,7 @@
       "id": "ISS-257",
       "title": "[지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 [약국·점포개발] 의원수 0일 때 약점 ",
       "type": "FIX_BUG",
-      "status": "CLOSED_DUPLICATE",
+      "status": "DONE",
       "priority": "P0",
       "assign_to": "agent-harness",
       "depth": 0,
@@ -14104,12 +14104,14 @@
           "ac": "AC-5",
           "method": "Opus 직접 node 실행 (Codex 자기보고 미인용)",
           "clinics_0_contribution": -0.2,
-          "clinics_10_contribution": 0.0,
+          "clinics_10_contribution": 0,
           "top1_driver": "-인근 의원수 (반경 500m)",
           "verdict": "PASS",
-          "note": "원본 실작업 commit df3b78e (ISS-256). centered(v,CLINIC_BASE=10,CLINIC_CAP=50) 코드 실존 재확인. 재구현 시 회귀 위험만 있어 신규 코드 미작성."
+          "note": "원본 실작업 commit df3b78e (ISS-256). centered(v,CLINIC_BASE=10,CLINIC_CAP=50) 코드 실존 재확인. 재구현 시 회귀 위험만 있어 신규 코드 미작성.",
+          "reconfirm_run": "Opus node 직접실행: clinics=0 contribution=-0.2, clinics=10=0, top1=-인근 의원수, 단위 20/20 PASS"
         }
-      }
+      },
+      "completed_at": "2026-07-22T02:23:36.256Z"
     },
     {
       "id": "ISS-258",
@@ -14902,7 +14904,7 @@
       "id": "TEST_RECO_TRACE_REGRESSION-001",
       "type": "RUN_TESTS",
       "priority": "P1",
-      "status": "READY",
+      "status": "DONE",
       "title": "[테스트] Recommendation Trace S-1~S-12 자동 회귀 확장 — coverage 55 원인 제거",
       "assign_to": "test-harness",
       "depth": 1,
@@ -14911,16 +14913,31 @@
         "docs/domain/recommendation-trace-rules.json"
       ],
       "created_at": "2026-07-22T11:40:00+00:00",
-      "updated_at": "2026-07-22T11:40:00+00:00",
+      "updated_at": "2026-07-22T02:23:59.885808+00:00",
       "payload": {
         "origin": "ISS-267 fable 도출",
         "rationale": "verify_recommendation_trace.mjs가 5스텝 해피패스만 자동화. S-1~S-12 전체를 자동 회귀로 확장하면 품질점수 coverage 55의 직접 원인 제거.",
-        "source": "ISS-267"
+        "source": "ISS-267",
+        "files_changed": []
       },
       "ac": [
         "AC-1: S-1~S-12 자동 실행 + PASS/FAIL 집계",
         "AC-2: S-9는 정정된 명세(앱 레벨 콘솔에러) 기준 PASS"
-      ]
+      ],
+      "last_dispatched_at": "2026-07-22T11:18:03",
+      "retry_count": 1,
+      "completed_at": "2026-07-22T02:23:59.885808+00:00",
+      "result": {
+        "passed": true,
+        "total": 12,
+        "failed_count": 0,
+        "ac1": "S-1~S-12 자동 실행+집계, exit 0/1 분기 — PASS",
+        "ac2": "S-9 앱 레벨 콘솔에러 0건(네트워크 404 로그 제외) — PASS",
+        "determinism": "2회 연속 12/12 동일",
+        "method": "Opus 직접 node 실행 (playwright, localhost:8765). 5스텝→12시나리오 확장.",
+        "note": "Codex 위임이 RTK 훅에 반복 차단되어 예외조항(미연동)으로 Opus 직접 구현.",
+        "coverage_fix": "품질점수 coverage 55 직접 원인(해피패스만 자동화) 제거"
+      }
     },
     {
       "id": "PHARMACY_DEVELOP_DOC_DRIFT_RESOLVE-001",
@@ -14945,7 +14962,23 @@
       "ac": [
         "AC-1: AC-1/4/6을 매물중심 UX로 정정",
         "AC-2: comparable_dongs UI 노출 또는 명세에서 제거 결정"
-      ]
+      ],
+      "last_dispatched_at": "2026-07-22T11:23:34"
+    },
+    {
+      "id": "ISS-283",
+      "title": "[지시] ISS-261 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-",
+      "type": "FIX_BUG",
+      "status": "READY",
+      "priority": "P0",
+      "assign_to": "agent-harness",
+      "depth": 0,
+      "created_at": "2026-07-22T11:23:55.048956",
+      "updated_at": "2026-07-22T11:23:55.048956",
+      "payload": {
+        "origin": "intent-gate",
+        "raw_prompt": "ISS-261 [지시] ISS-257 [지시] ISS-256 [지시] BIZ_FIX_PHARMACY_SCORER_CLINIC_ZERO-001 [약국·점포개발] 이슈를 처리하고 registry에서 완료 처리하라\n\n[임무 규칙] 완료 시 수행한 작업을 한국어로 간결히 요약 보고하라."
+      }
     }
   ],
   "hooks": {
@@ -16316,6 +16349,11 @@
         "issue_id": "ISS-263",
         "retry_count": 3,
         "timestamp": "2026-07-20T18:09:08.518188"
+      },
+      {
+        "issue_id": "TEST_RECO_TRACE_REGRESSION-001",
+        "retry_count": 1,
+        "timestamp": "2026-07-22T11:23:33.871168"
       }
     ],
     "on_learn": []
@@ -17644,9 +17682,9 @@
     ]
   },
   "stats": {
-    "total_issues": 262,
+    "total_issues": 263,
     "completed": 245,
-    "failed": 5,
+    "failed": 6,
     "evolved": 65,
     "last_updated_at": "2026-05-04T04:41:47Z"
   },
@@ -17880,7 +17918,8 @@
     "issues": []
   },
   "rewake_state": {
-    "ISS-267": 1,
-    "ISS-264": 1
+    "ISS-264": 1,
+    "TEST_RECO_TRACE_REGRESSION-001": 1,
+    "PHARMACY_DEVELOP_DOC_DRIFT_RESOLVE-001": 1
   }
 }
